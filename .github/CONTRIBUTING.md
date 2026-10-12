@@ -1,48 +1,34 @@
-# Contributing to [TODO: PROJECT NAME]
+# Contributing to Clinic Appointment System
 
-Thank you for helping improve this project. The project values small, reviewable changes, clear
-problem statements, and a release process that keeps ordinary contributions separate from
-publishing a version.
+Thank you for helping improve the Clinic Appointment System. Please use the workflow below so
+changes stay focused, reviewable, and visible in the project history.
 
-## Before you start
+## From issue to pull request
 
-For a substantial change, please find an existing issue or open one first. Wait for the issue to
-be accepted and scoped by a maintainer before investing in implementation. Ask to claim accepted
-work so that two contributors do not solve the same problem. Small documentation and focused bug
-fixes can go straight to a pull request when the intent is clear.
+1. Find an existing issue or open one describing the bug or proposed change. For substantial work,
+   wait until the scope is agreed before starting.
+2. Create a branch from `main` using a short name such as `feat/<issue>-short-name`,
+   `fix/<issue>-short-name`, or `chore/<issue>-short-name`.
+3. Open a pull request into `main`, link the issue, and summarize the change and validation.
 
-Please do not disclose a security vulnerability in a public issue. Follow [the security policy](SECURITY.md).
+Pull request titles must follow [Conventional Commits](https://www.conventionalcommits.org/), for
+example `feat: add appointment approval` or `fix: prevent overlapping appointments`.
 
-## Local development
+Merge pull requests with a rebase or a merge commit. Never squash. The course requires commits on
+at least 10 different days to remain visible in the repository history.
 
-[TODO: describe how to install dependencies and run the project locally — this is entirely
-stack-specific (`npm ci`, `flutter pub get`, `./gradlew build`, `pip install -r requirements.txt`, ...).]
+## Development and checks
 
-Useful checks are:
+Use test-driven development for the domain layer: write or update tests first, then implement the
+behavior. Keep domain code independent of Flutter and Firebase.
+
+Run these local checks when the Flutter skeleton is available:
 
 ```sh
-[TODO: lint command]
-[TODO: test command]
-[TODO: build command]
+dart format --output=none --set-exit-if-changed .
+flutter analyze
+flutter test
 ```
 
-Please run the relevant checks before opening a pull request and include any limitation in the PR
-description.
-
-## Branches and pull requests
-
-Use a short-lived branch based on `main`, for example `feat/issue-42-command`,
-`fix/issue-42-permission-prompt`, or `docs/contributing-guide`. There is no permanent
-`development` branch — reviewed pull requests land directly on `main`.
-
-Pull request titles must follow [Conventional Commits](https://www.conventionalcommits.org/)
-(`feat: ...`, `fix: ...`, `docs: ...`, `chore: ...`, etc.) — the title is what becomes the
-changelog entry and drives the version bump on release, and a required check rejects any title
-that does not match.
-
-## Release process
-
-Releases are automated with [Release Please](https://github.com/googleapis/release-please) from
-Conventional Commit history on `main`. Merging a normal pull request never publishes a release by
-itself; a maintainer reviews and merges the accumulated Release Please pull request when ready to
-publish.
+If a check cannot run, explain why in the pull request. Do not add AI attribution trailers such as
+`Co-Authored-By` to commits or pull request descriptions.
