@@ -15,18 +15,26 @@ jobs:
     timeout-minutes: 5
 
     steps:
-      - name: Check the pushed commit message
+      - name: Check out pushed history
         uses: actions/checkout@v7
         with:
-          fetch-depth: 1
+          fetch-depth: 0
 
       - name: Reject Co-Authored-By trailers
         env:
-          PUSHED_SHA: ${{ github.sha }}
+          PUSH_BEFORE: ${{ github.event.before }}
+          PUSH_SHA: ${{ github.sha }}
         run: |
           set -eu
-          if git show --no-patch --format=%B "$PUSHED_SHA" | grep -Eiq '(^|[[:space:]])co-authored-by:'; then
-            echo '::error::The pushed commit contains a prohibited Co-Authored-By trailer.'
-            exit 1
+          if printf '%s' "$PUSH_BEFORE" | grep -Eq '^0+$'; then
+            commits="$PUSH_SHA"
+          else
+            commits=$(git rev-list "$PUSH_BEFORE..$PUSH_SHA")
           fi
-          echo 'PASS: pushed commit contains no Co-Authored-By trailer.'
+          for commit in $commits; do
+            if git show --no-patch --format=%B "$commit" | grep -Eiq '(^|[[:space:]])co-authored-by:'; then
+              echo '::error::The pushed commit contains a prohibited Co-Authored-By trailer.'
+              exit 1
+            fi
+          done
+          echo 'PASS: pushed commits contain no Co-Authored-By trailer.'

@@ -125,8 +125,8 @@ jobs:
             console.error('  chore(deps): update esbuild to 0.25.5');
             console.error('  feat(api)!: drop deprecated settings method\n');
             console.error('Why this is required:');
-            console.error('  Pull requests are squash-merged into main using the PR title, which');
-            console.error('  feeds automated changelog generation and version calculation.\n');
+            console.error('  Pull requests use Conventional Commits titles to keep the project history');
+            console.error('  clear and consistent.\n');
             console.error('How to fix:');
             console.error('  Click "Edit" next to the PR title at the top of the GitHub pull request');
             console.error('  page and update the title to match the Conventional Commits specification.');

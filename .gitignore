@@ -1,12 +1,30 @@
-# OS and editor junk — safe for every stack.
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
 .DS_Store
 Thumbs.db
-.vscode/
-.idea/
-*.swp
+.env*
 
-# TODO: add this project's real stack-specific ignores, e.g.:
-#   node_modules/, dist/, build/          (Node)
-#   .dart_tool/, build/, .flutter-plugins* (Flutter)
-#   .gradle/, build/, *.iml               (Kotlin/Android)
-#   __pycache__/, *.pyc, .venv/           (Python)
+# IDEs and editors
+.idea/
+.vscode/
+*.iml
+
+# Dart / Flutter
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+build/
+.flutter-plugins*
+coverage/
+
+# Flutter web build output
+web/canvaskit/
+
+# Generated platform configuration
+android/local.properties
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh

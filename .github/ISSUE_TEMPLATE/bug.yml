@@ -44,17 +44,18 @@ body:
     id: project-version
     attributes:
       label: Project version
-      placeholder: e.g. 1.1.3
+      placeholder: e.g. 0.1.0 or commit SHA
     validations:
       required: true
-  - type: input
+  - type: textarea
     id: environment
     attributes:
       label: Environment
-      description: >-
-        TODO: adapt this field to the project — e.g. "Obsidian version" for a plugin,
-        "Android/iOS version + device" for a mobile app, "OS + runtime version" for a CLI.
-      placeholder: e.g. macOS 15.6, Windows 11, Ubuntu 24.04
+      description: Include your browser and version, user role, and Flutter version.
+      placeholder: |
+        Browser: Chrome 129
+        User role: Patient / Doctor / Admin
+        Flutter: 3.x.x
     validations:
       required: true
   - type: textarea

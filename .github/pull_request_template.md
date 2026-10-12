@@ -8,12 +8,8 @@
 
 ## Validation
 
-- [ ] I ran the relevant checks (lint / test / build — see CONTRIBUTING.md).
+- [ ] I ran `dart format --output=none --set-exit-if-changed .`.
+- [ ] I ran `flutter analyze`.
+- [ ] I ran `flutter test`.
 - [ ] I described any check that could not be run and why.
 - [ ] I updated documentation or examples when the user-facing behavior changed.
-- [ ] I checked that logs, fixtures, screenshots, and examples contain no credentials, tokens,
-      or personal/private data.
-
-## Release and security notes
-
-<!-- Ordinary PR merges do not publish a release. Mention any release or security impact. -->

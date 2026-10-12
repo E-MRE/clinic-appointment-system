@@ -1,49 +1,132 @@
-# repo-governance-template
+**English** | [Türkçe](README.tr.md)
 
-A reusable GitHub repository governance baseline: issue/PR templates, CODEOWNERS, Dependabot
-config, CI quality gates, Release Please wiring, and a squash-merge wrapper that prevents
-unwanted commit-attribution trailers. Extracted from a real campaign that hardened
-[GuKi Chat](https://github.com/E-MRE/guki-obsidian-chat)'s release process.
+# Clinic Appointment System
 
-This repo is **generic on purpose**. Nothing here assumes a specific language or build tool.
-Every place that had to be specific in the source project (Node/npm commands, Obsidian plugin
-asset names, a manifest-file version sync) is marked `TODO` and listed in
-[`TEMPLATE_CHECKLIST.md`](TEMPLATE_CHECKLIST.md).
+A Flutter web app for managing hospital and clinic appointments.
 
-Community-health files (`CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SECURITY.md`) live under
-`.github/` rather than the repo root — GitHub recognizes them there. [`AGENTS.md`](AGENTS.md) at
-the root carries the same commit/PR rules for coding agents other than Claude Code.
+## Roles
 
-## Two halves
+- **Patient:** browse services and doctors, see available appointment slots, and request or cancel
+  appointments.
+- **Doctor / Staff:** define availability, approve or reject requests, and mark appointments as
+  completed or no-show.
+- **Admin:** manage the clinic, branches, departments, services, and staff; view all appointments;
+  and optionally approve requests.
 
-1. **Files** (this repo's content) — copied automatically when you create a new repository
-   "from this template," or copied by hand into an existing repo.
-2. **Repository/organization settings** — branch ruleset, merge behavior, security alerts,
-   CodeQL. These are **not files**; GitHub does not copy them from a template. Apply them with
-   [`bootstrap/setup.sh`](bootstrap/setup.sh) after the repo exists.
+## Planned features
 
-## Using this template
+- Clinic, branches, departments, and working hours.
+- Services with a duration and fee, including examinations, radiology, and lab tests.
+- Availability windows for staff.
+- Booking only within staff availability, with appointment conflict checks.
+- An approval workflow and a managed appointment lifecycle.
 
-1. On GitHub: **Use this template → Create a new repository**.
-2. In a Claude Code session inside the new repo, ask for "audit repo governance" — the bundled
-   `.claude/skills/repo-governance-audit/` skill reads `TEMPLATE_CHECKLIST.md`, detects the
-   project's real stack and visibility, proposes every fix as an approval-gated item, and applies
-   only what's approved (including running `bootstrap/setup.sh` for the settings half).
-3. Without Claude Code: work through [`TEMPLATE_CHECKLIST.md`](TEMPLATE_CHECKLIST.md) by hand,
-   then run `bootstrap/setup.sh --repo OWNER/NAME` yourself (interactive by default; see
-   `bootstrap/README.md` for flags).
-4. `TEMPLATE_CHECKLIST.md` and this section of the README are meant to be deleted once every
-   item is resolved — the skill proposes this once it detects nothing is left. `bootstrap/` and
-   `scripts/merge-pr.mjs` are not setup scaffolding; keep them, they're used for the life of the
-   repo.
+## Planned domain model
 
-## What's deliberately not included
+```mermaid
+classDiagram
+  User <|-- Patient
+  User <|-- Staff
+  User <|-- Admin
+  Staff <|-- Doctor
+  Staff <|-- Technician
 
-- A working CI build — `ci.yml`/`release.yml` ship a Node/npm *example* to replace, not a
-  working pipeline for every stack.
-- Code scanning / secret scanning on private repos — these require a paid GitHub Advanced
-  Security add-on once a repo is private; `setup.sh` will still offer to enable code scanning,
-  but confirm the org's plan supports it first.
-- Organization-wide policy — if the org is on GitHub Team or higher, an
-  [organization-level ruleset](https://docs.github.com/en/organizations/managing-organization-settings/creating-rulesets-for-repositories-in-your-organization)
-  applied once beats copying `bootstrap/setup.sh`'s ruleset into every repo individually.
+  MedicalService <|-- Examination
+  MedicalService <|-- RadiologyService
+  MedicalService <|-- LabTest
+
+  Clinic "1" --> "*" Branch
+  Branch "1" --> "*" Department
+  Appointment --> Patient : patient
+  Appointment --> Staff : assigned staff
+  Appointment --> MedicalService : service
+  Appointment --> AppointmentStatus : status
+
+  AppointmentRule <|-- WithinAvailabilityRule
+  AppointmentRule <|-- NoStaffOverlapRule
+  AppointmentRule <|-- NoPatientOverlapRule
+  AppointmentRule <|-- StaffProvidesServiceRule
+
+  class User {
+    <<abstract>>
+  }
+  class Staff {
+    <<abstract>>
+  }
+  class MedicalService {
+    <<abstract>>
+  }
+  class AppointmentRule {
+    <<abstract>>
+  }
+```
+
+## Planned appointment lifecycle
+
+```mermaid
+stateDiagram-v2
+  [*] --> Pending
+  Pending --> Approved
+  Pending --> Rejected
+  Pending --> CancelledByPatient
+  Approved --> Completed
+  Approved --> NoShow
+  Approved --> CancelledByPatient
+  Approved --> CancelledByStaff
+```
+
+A doctor marks a patient as a no-show manually after the allowed tolerance period.
+
+## Tech stack
+
+- Flutter (web) and Dart
+- Firebase Authentication and Cloud Firestore
+- flutter_bloc (Cubit), get_it, and go_router
+- easy_localization (English and Turkish)
+- mocktail, fake_cloud_firestore, and firebase_auth_mocks for tests
+
+## Architecture
+
+The app is planned as feature-based clean architecture:
+
+```text
+lib/
+  core/        # theme, design tokens, localization, DI, router, errors
+  features/
+    <feature>/
+      domain/        # entities, value objects, rules, repository interfaces (pure Dart)
+      data/          # Firestore/Auth implementations, DTOs
+      presentation/  # cubits, pages, widgets
+test/          # mirrors lib/
+```
+
+## Roadmap
+
+- [ ] Repository, CI, and core foundation
+- [ ] Authentication and roles
+- [ ] Institution, services, and staff availability
+- [ ] Appointments, rules, transaction, and lifecycle
+- [ ] Role-specific screens
+- [ ] Documentation, UML, and presentation
+- [ ] Extra: scenario simulation with four patients—one cancels, one completes an appointment, one is cancelled by staff, and one is a no-show
+
+## Getting started
+
+Prerequisites: Flutter stable and a Firebase project. Setup and run instructions will be added when
+the Flutter skeleton lands. The planned commands are:
+
+```sh
+flutter pub get
+flutter run -d chrome
+flutter test
+```
+
+## Contributing
+
+The workflow is issue → branch → pull request into `main`. Use a Conventional Commits PR title and
+merge with a rebase or merge commit; never squash. See [the contribution guide](.github/CONTRIBUTING.md)
+for details.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
