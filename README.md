@@ -2,7 +2,7 @@
 
 # Clinic Appointment System
 
-A Flutter web app for managing hospital and clinic appointments.
+A Flutter app (web and Android) for managing hospital and clinic appointments.
 
 ## Roles
 
@@ -79,7 +79,7 @@ A doctor marks a patient as a no-show manually after the allowed tolerance perio
 
 ## Tech stack
 
-- Flutter (web) and Dart
+- Flutter (web, Android) and Dart
 - Firebase Authentication and Cloud Firestore
 - flutter_bloc (Cubit), get_it, and go_router
 - easy_localization (English and Turkish)
@@ -112,13 +112,13 @@ test/          # mirrors lib/
 
 ## Getting started
 
-Prerequisites: Flutter stable and a Firebase project. Setup and run instructions will be added when
-the Flutter skeleton lands. The planned commands are:
+Prerequisite: Flutter 3.41.9.
 
 ```sh
 flutter pub get
 flutter run -d chrome
 flutter test
+flutter analyze
 ```
 
 ## Contributing

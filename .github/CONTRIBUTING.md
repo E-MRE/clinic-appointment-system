@@ -30,5 +30,4 @@ flutter analyze
 flutter test
 ```
 
-If a check cannot run, explain why in the pull request. Do not add AI attribution trailers such as
-`Co-Authored-By` to commits or pull request descriptions.
+If a check cannot run, explain why in the pull request.
