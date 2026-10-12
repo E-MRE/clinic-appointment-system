@@ -23,6 +23,8 @@ Hastane ve klinik randevularını yönetmek için geliştirilen Flutter web uygu
 
 ## Planlanan alan modeli
 
+Sınıf adları koddaki adlarla aynı kalması için İngilizcedir.
+
 ```mermaid
 classDiagram
   User <|-- Patient
@@ -37,10 +39,10 @@ classDiagram
 
   Clinic "1" --> "*" Branch
   Branch "1" --> "*" Department
-  Appointment --> Patient : patient
-  Appointment --> Staff : assigned staff
-  Appointment --> MedicalService : service
-  Appointment --> AppointmentStatus : status
+  Appointment --> Patient : hasta
+  Appointment --> Staff : atanan personel
+  Appointment --> MedicalService : hizmet
+  Appointment --> AppointmentStatus : durum
 
   AppointmentRule <|-- WithinAvailabilityRule
   AppointmentRule <|-- NoStaffOverlapRule
@@ -65,6 +67,13 @@ classDiagram
 
 ```mermaid
 stateDiagram-v2
+  state "Beklemede (Pending)" as Pending
+  state "Onaylandı (Approved)" as Approved
+  state "Reddedildi (Rejected)" as Rejected
+  state "Hasta iptal etti (CancelledByPatient)" as CancelledByPatient
+  state "Personel iptal etti (CancelledByStaff)" as CancelledByStaff
+  state "Tamamlandı (Completed)" as Completed
+  state "Gelmedi (NoShow)" as NoShow
   [*] --> Pending
   Pending --> Approved
   Pending --> Rejected
@@ -112,13 +121,13 @@ test/          # lib/ yapısını yansıtır
 
 ## Başlarken
 
-Ön koşullar: Flutter stable ve bir Firebase projesi. Kurulum ve çalıştırma yönergeleri Flutter
-iskeleti eklendiğinde yazılacak. Planlanan komutlar:
+Ön koşul: Flutter 3.41.9.
 
 ```sh
 flutter pub get
 flutter run -d chrome
 flutter test
+flutter analyze
 ```
 
 ## Katkıda bulunma

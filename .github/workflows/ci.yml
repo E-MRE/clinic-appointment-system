@@ -26,29 +26,21 @@ jobs:
       - name: Check out source
         uses: actions/checkout@v7
 
-      - name: Note missing Flutter skeleton
-        if: hashFiles('pubspec.yaml') == ''
-        run: echo "Flutter checks are skipped because pubspec.yaml is not present yet."
-
       - name: Set up Flutter
-        if: hashFiles('pubspec.yaml') != ''
         uses: subosito/flutter-action@v2
         with:
+          flutter-version: 3.41.9
           channel: stable
           cache: true
 
       - name: Get dependencies
-        if: hashFiles('pubspec.yaml') != ''
         run: flutter pub get
 
       - name: Check formatting
-        if: hashFiles('pubspec.yaml') != ''
         run: dart format --output=none --set-exit-if-changed .
 
       - name: Analyze
-        if: hashFiles('pubspec.yaml') != ''
         run: flutter analyze
 
       - name: Test
-        if: hashFiles('pubspec.yaml') != ''
         run: flutter test

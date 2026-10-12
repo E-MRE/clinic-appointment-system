@@ -112,13 +112,13 @@ test/          # mirrors lib/
 
 ## Getting started
 
-Prerequisites: Flutter stable and a Firebase project. Setup and run instructions will be added when
-the Flutter skeleton lands. The planned commands are:
+Prerequisite: Flutter 3.41.9.
 
 ```sh
 flutter pub get
 flutter run -d chrome
 flutter test
+flutter analyze
 ```
 
 ## Contributing
