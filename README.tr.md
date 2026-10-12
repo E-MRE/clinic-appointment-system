@@ -2,7 +2,7 @@
 
 # Klinik Randevu Sistemi
 
-Hastane ve klinik randevularını yönetmek için geliştirilen Flutter web uygulaması.
+Hastane ve klinik randevularını yönetmek için geliştirilen Flutter uygulaması (web ve Android).
 
 ## Kullanıcı rolleri
 
@@ -88,7 +88,7 @@ stateDiagram-v2
 
 ## Teknoloji yığını
 
-- Flutter (web) ve Dart
+- Flutter (web, Android) ve Dart
 - Firebase Authentication ve Cloud Firestore
 - flutter_bloc (Cubit), get_it ve go_router
 - easy_localization (İngilizce ve Türkçe)
