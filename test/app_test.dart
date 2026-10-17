@@ -7,14 +7,16 @@ void main() {
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(const App());
+    await tester.pumpAndSettle();
 
-    expect(find.text('Clinic Appointment System'), findsOneWidget);
+    expect(find.text('Klinik Randevu Sistemi'), findsOneWidget);
   });
 
   testWidgets('theme toggle switches between light and dark', (
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(const App());
+    await tester.pumpAndSettle();
     MaterialApp app() => tester.widget<MaterialApp>(find.byType(MaterialApp));
 
     expect(app().themeMode, ThemeMode.light);
