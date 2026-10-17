@@ -1,0 +1,49 @@
+{
+  "appName": "Klinik Randevu Sistemi",
+  "common": {
+    "appName": "Klinik Randevu Sistemi",
+    "themeToggle": "Tema Değiştir",
+    "language": "Dil",
+    "turkish": "Türkçe",
+    "english": "İngilizce",
+    "save": "Kaydet",
+    "cancel": "İptal",
+    "delete": "Sil",
+    "edit": "Düzenle",
+    "back": "Geri",
+    "retry": "Tekrar Dene",
+    "loading": "Yükleniyor...",
+    "search": "Ara",
+    "confirm": "Onayla"
+  },
+  "roles": {
+    "patient": "Hasta",
+    "doctor": "Doktor",
+    "staff": "Personel",
+    "technician": "Teknisyen",
+    "admin": "Yönetici"
+  },
+  "appointment": {
+    "title": "Randevu",
+    "appointments": "Randevular",
+    "newAppointment": "Yeni Randevu",
+    "cancelAppointment": "Randevuyu İptal Et",
+    "appointmentTime": "Randevu Zamanı",
+    "serviceFee": "Hizmet Ücreti",
+    "status": {
+      "pending": "Beklemede",
+      "approved": "Onaylandı",
+      "rejected": "Reddedildi",
+      "completed": "Tamamlandı",
+      "noShow": "Gelmedi",
+      "cancelled": "İptal Edildi"
+    }
+  },
+  "services": {
+    "title": "Hizmetler",
+    "examination": "Muayene",
+    "radiology": "Radyoloji",
+    "labTest": "Laboratuvar Testi"
+  }
+}
+
