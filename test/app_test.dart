@@ -1,4 +1,5 @@
 import 'package:clinic_appointment_system/app.dart';
+import 'package:clinic_appointment_system/core/constants/widget_key.dart';
 import 'package:clinic_appointment_system/core/router/app_router.dart';
 import 'package:clinic_appointment_system/core/states/theme_cubit.dart';
 import 'package:flutter/material.dart';
@@ -49,11 +50,11 @@ void main() {
 
     expect(app().themeMode, ThemeMode.light);
 
-    await tester.tap(find.byKey(const Key('theme_toggle')));
+    await tester.tap(find.byKey(const WidgetKey.themeToggleKey()));
     await tester.pump();
     expect(app().themeMode, ThemeMode.dark);
 
-    await tester.tap(find.byKey(const Key('theme_toggle')));
+    await tester.tap(find.byKey(const WidgetKey.themeToggleKey()));
     await tester.pump();
     expect(app().themeMode, ThemeMode.light);
   });

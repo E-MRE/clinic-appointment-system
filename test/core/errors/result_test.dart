@@ -3,35 +3,32 @@ import 'package:clinic_appointment_system/core/errors/result.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('success retains its typed value and maps it', () {
+  test('success exposes its typed value through pattern matching', () {
     const Result<int> result = Success(21);
-    expect(
-      result.fold(onSuccess: (value) => value * 2, onFailure: (_) => -1),
-      42,
-    );
-    expect((result.map((value) => '$value') as Success<String>).value, '21');
+    final value = switch (result) {
+      Success<int>(:final value) => value,
+      Failed<int>() => fail('Unexpected failure'),
+    };
+    expect(value, 21);
   });
 
-  test('failure propagates unchanged without calling success callbacks', () {
+  test('failed result retains the original failure', () {
     const failure = ConflictFailure();
     const Result<int> result = Failed(failure);
-    expect(
-      result.fold(
-        onSuccess: (_) => fail('Unexpected success'),
-        onFailure: (error) => error,
-      ),
-      same(failure),
-    );
-    final mapped = result.map<String>((_) => fail('Unexpected mapping'));
-    expect((mapped as Failed<String>).failure, same(failure));
+    final error = switch (result) {
+      Success<int>() => fail('Unexpected success'),
+      Failed<int>(:final failure) => failure,
+    };
+    expect(error, same(failure));
   });
 
   test('nullable success is distinct from failure', () {
     const Result<String?> result = Success(null);
-    expect(
-      result.fold(onSuccess: (value) => value == null, onFailure: (_) => false),
-      isTrue,
-    );
+    final isNullSuccess = switch (result) {
+      Success<String?>(:final value) => value == null,
+      Failed<String?>() => false,
+    };
+    expect(isNullSuccess, isTrue);
   });
 
   test(

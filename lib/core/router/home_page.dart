@@ -1,3 +1,4 @@
+import 'package:clinic_appointment_system/core/constants/widget_key.dart';
 import 'package:clinic_appointment_system/core/localization/localization.dart';
 import 'package:clinic_appointment_system/core/states/theme_cubit.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -16,7 +17,7 @@ final class HomePage extends StatelessWidget {
           Text(LocaleKeys.appName.tr()),
           BlocBuilder<ThemeCubit, ThemeMode>(
             builder: (context, mode) => IconButton(
-              key: const Key('theme_toggle'),
+              key: const WidgetKey.themeToggleKey(),
               tooltip: LocaleKeys.common_themeToggle.tr(),
               onPressed: context.read<ThemeCubit>().toggle,
               icon: Icon(
