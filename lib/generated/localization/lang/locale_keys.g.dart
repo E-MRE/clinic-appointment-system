@@ -44,4 +44,7 @@ abstract class LocaleKeys {
   static const services_radiology = 'services.radiology';
   static const services_labTest = 'services.labTest';
   static const services = 'services';
+  static const navigation_notFound = 'navigation.notFound';
+  static const navigation_goHome = 'navigation.goHome';
+  static const navigation = 'navigation';
 }
