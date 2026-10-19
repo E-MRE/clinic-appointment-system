@@ -23,13 +23,19 @@ void main() {
   test(
     'factory registrations create separate instances and can be removed',
     () async {
-      container.registerFactory<Object>(Object.new, instanceName: 'factory');
-      expect(
-        container.get<Object>(instanceName: 'factory'),
-        isNot(same(container.get<Object>(instanceName: 'factory'))),
+      container.registerFactory<_TestService>(
+        _TestService.new,
+        instanceName: 'factory',
       );
-      await container.unregister<Object>(instanceName: 'factory');
-      expect(container.isRegistered<Object>(instanceName: 'factory'), isFalse);
+      expect(
+        container.get<_TestService>(instanceName: 'factory'),
+        isNot(same(container.get<_TestService>(instanceName: 'factory'))),
+      );
+      await container.unregister<_TestService>(instanceName: 'factory');
+      expect(
+        container.isRegistered<_TestService>(instanceName: 'factory'),
+        isFalse,
+      );
     },
   );
 
@@ -37,21 +43,21 @@ void main() {
     'lazy reset awaits cleanup and recreates the service on next access',
     () async {
       var disposals = 0;
-      container.registerLazySingleton<Object>(
-        Object.new,
+      container.registerLazySingleton<_TestService>(
+        _TestService.new,
         instanceName: 'lazy',
         dispose: (_) async {
           disposals++;
         },
       );
-      final original = container.get<Object>(instanceName: 'lazy');
-      await container.resetLazySingleton<Object>(instanceName: 'lazy');
+      final original = container.get<_TestService>(instanceName: 'lazy');
+      await container.resetLazySingleton<_TestService>(instanceName: 'lazy');
       expect(disposals, 1);
       expect(
-        container.get<Object>(instanceName: 'lazy'),
+        container.get<_TestService>(instanceName: 'lazy'),
         isNot(same(original)),
       );
-      await container.unregister<Object>(instanceName: 'lazy');
+      await container.unregister<_TestService>(instanceName: 'lazy');
       expect(disposals, 2);
     },
   );
@@ -80,3 +86,5 @@ void main() {
 }
 
 final class _DependencyRegistrar with AppDependencyRegisterMixin {}
+
+final class _TestService {}
