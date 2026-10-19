@@ -98,9 +98,6 @@ stateDiagram-v2
 
 Uygulama, özellik bazlı temiz mimariyle geliştirilecek:
 
-DI, yönlendirme, domain sonuçları ve özellik bazlı Cubit yaklaşımı için
-[altyapı rehberine](docs/core-foundation.md) bakın.
-
 ```text
 lib/
   core/        # tema, tasarım token'ları, yerelleştirme, DI, yönlendirici, hatalar
