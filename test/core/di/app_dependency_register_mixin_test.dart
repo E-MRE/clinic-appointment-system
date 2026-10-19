@@ -1,4 +1,4 @@
-import 'package:clinic_appointment_system/core/di/configure_dependencies.dart';
+import 'package:clinic_appointment_system/core/di/app_dependency_register_mixin.dart';
 import 'package:clinic_appointment_system/core/states/theme_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -11,7 +11,7 @@ void main() {
 
   setUp(() {
     container = GetIt.asNewInstance();
-    configureDependencies(container);
+    _DependencyRegistrar().registerDependencies(container);
   });
   tearDown(() => container.reset());
 
@@ -31,9 +31,11 @@ void main() {
     await container.reset();
     expect(oldCubit.isClosed, isTrue);
     expect(container.isRegistered<GoRouter>(), isFalse);
-    configureDependencies(container);
+    _DependencyRegistrar().registerDependencies(container);
     expect(container<ThemeCubit>(), isNot(same(oldCubit)));
     expect(container<ThemeCubit>().state, ThemeMode.light);
     expect(container<GoRouter>(), isNot(same(oldRouter)));
   });
 }
+
+final class _DependencyRegistrar with AppDependencyRegisterMixin {}
