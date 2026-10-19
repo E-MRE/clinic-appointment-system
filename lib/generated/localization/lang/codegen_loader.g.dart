@@ -61,6 +61,7 @@ class CodegenLoader extends AssetLoader {
       "radiology": "Radyoloji",
       "labTest": "Laboratuvar Testi",
     },
+    "navigation": {"notFound": "Sayfa bulunamadı", "goHome": "Ana sayfaya dön"},
   };
   static const Map<String, Map<String, dynamic>> mapLocales = {"tr_TR": _tr_TR};
 }

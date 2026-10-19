@@ -89,6 +89,9 @@ A doctor marks a patient as a no-show manually after the allowed tolerance perio
 
 The app is planned as feature-based clean architecture:
 
+Core DI, routing, domain outcomes, and the feature Cubit pattern are documented in
+[Core foundation](docs/core-foundation.md).
+
 ```text
 lib/
   core/        # theme, design tokens, localization, DI, router, errors

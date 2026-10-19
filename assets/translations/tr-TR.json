@@ -44,6 +44,9 @@
     "examination": "Muayene",
     "radiology": "Radyoloji",
     "labTest": "Laboratuvar Testi"
+  },
+  "navigation": {
+    "notFound": "Sayfa bulunamadı",
+    "goHome": "Ana sayfaya dön"
   }
 }
-
