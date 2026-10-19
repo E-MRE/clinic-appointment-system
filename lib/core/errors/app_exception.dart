@@ -8,24 +8,29 @@ class AppException implements Exception {
   String toString() => '$runtimeType: $message';
 }
 
-class ValidationException extends AppException {
+/// An exception that is thrown when a validation error occurs.
+final class ValidationException extends AppException {
   const ValidationException({required this.field, super.message});
 
   final String field;
 }
 
-class UnauthorizedException extends AppException {
+/// An exception that is thrown when the user is not authorized to perform an action.
+final class UnauthorizedException extends AppException {
   const UnauthorizedException({super.message});
 }
 
-class NotFoundException extends AppException {
+/// An exception that is thrown when a resource is not found.
+final class NotFoundException extends AppException {
   const NotFoundException({super.message});
 }
 
-class ConflictException extends AppException {
+/// An exception that is thrown when a conflict occurs.
+final class ConflictException extends AppException {
   const ConflictException({super.message});
 }
 
-class UnexpectedException extends AppException {
+/// An exception that is thrown when an unexpected error occurs.
+final class UnexpectedException extends AppException {
   const UnexpectedException({super.message});
 }
