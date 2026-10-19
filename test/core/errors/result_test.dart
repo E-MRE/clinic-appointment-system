@@ -3,32 +3,39 @@ import 'package:clinic_appointment_system/core/errors/result.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('success exposes its typed value through pattern matching', () {
-    const Result<int> result = Success(21);
-    final value = switch (result) {
-      Success<int>(:final value) => value,
-      Failed<int>() => fail('Unexpected failure'),
-    };
-    expect(value, 21);
+  test('Result.success represents an operation without data', () {
+    const result = Result.success();
+    expect(result.isSuccess, isTrue);
+    expect(result.failure, isNull);
   });
 
-  test('failed result retains the original failure', () {
+  test('Result.error retains the original failure', () {
     const failure = ConflictFailure();
-    const Result<int> result = Failed(failure);
-    final error = switch (result) {
-      Success<int>() => fail('Unexpected success'),
-      Failed<int>(:final failure) => failure,
-    };
-    expect(error, same(failure));
+    const result = Result.error(failure: failure);
+    expect(result.isSuccess, isFalse);
+    expect(result.failure, same(failure));
   });
 
-  test('nullable success is distinct from failure', () {
-    const Result<String?> result = Success(null);
-    final isNullSuccess = switch (result) {
-      Success<String?>(:final value) => value == null,
-      Failed<String?>() => false,
-    };
-    expect(isNullSuccess, isTrue);
+  test('DataResult.success retains typed data', () {
+    const result = DataResult<int>.success(data: 21);
+    expect(result.isSuccess, isTrue);
+    expect(result.data, 21);
+    expect(result.failure, isNull);
+  });
+
+  test('DataResult.error retains failure without data', () {
+    const failure = ConflictFailure();
+    const result = DataResult<int>.error(failure: failure);
+    expect(result.isSuccess, isFalse);
+    expect(result.failure, same(failure));
+    expect(result.data, isNull);
+  });
+
+  test('nullable successful data is distinct from an error', () {
+    const result = DataResult<String?>.success(data: null);
+    expect(result.isSuccess, isTrue);
+    expect(result.data, isNull);
+    expect(result.failure, isNull);
   });
 
   test(
