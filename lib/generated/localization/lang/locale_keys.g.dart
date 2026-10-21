@@ -47,4 +47,8 @@ abstract class LocaleKeys {
   static const navigation_notFound = 'navigation.notFound';
   static const navigation_goHome = 'navigation.goHome';
   static const navigation = 'navigation';
+  static const validation_invalidEmail = 'validation.invalidEmail';
+  static const validation_passwordRequired = 'validation.passwordRequired';
+  static const validation_passwordTooShort = 'validation.passwordTooShort';
+  static const validation = 'validation';
 }

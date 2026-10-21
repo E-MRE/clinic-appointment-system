@@ -62,6 +62,11 @@ class CodegenLoader extends AssetLoader {
       "labTest": "Laboratuvar Testi",
     },
     "navigation": {"notFound": "Sayfa bulunamadı", "goHome": "Ana sayfaya dön"},
+    "validation": {
+      "invalidEmail": "Geçerli bir e-posta adresi girin.",
+      "passwordRequired": "Şifrenizi girin.",
+      "passwordTooShort": "Şifreniz en az {minimumLength} karakter olmalıdır.",
+    },
   };
   static const Map<String, Map<String, dynamic>> mapLocales = {"tr_TR": _tr_TR};
 }
