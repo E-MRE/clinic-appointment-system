@@ -9,6 +9,9 @@ class Result {
   /// Whether the operation was successful.
   final bool isSuccess;
 
+  /// Whether the operation was unsuccessful.
+  bool get isNotSuccess => !isSuccess;
+
   /// A message describing the result of the operation.
   final String message;
 }

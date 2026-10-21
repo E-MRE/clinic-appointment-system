@@ -5,6 +5,7 @@ import 'package:clinic_appointment_system/features/auth/data/mappers/firebase_au
 import 'package:clinic_appointment_system/features/auth/data/repositories/firebase_auth_repository.dart';
 import 'package:clinic_appointment_system/features/auth/domain/mappers/auth_exception_mapper.dart';
 import 'package:clinic_appointment_system/features/auth/domain/repositories/auth_repository.dart';
+import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 
@@ -25,6 +26,10 @@ mixin AppDependencyRegisterMixin {
     );
     injector.registerLazySingleton<ThemeCubit>(
       ThemeCubit.new,
+      dispose: (cubit) => cubit.close(),
+    );
+    injector.registerLazySingleton<AuthCubit>(
+      () => AuthCubit(injector.get<AuthRepository>()),
       dispose: (cubit) => cubit.close(),
     );
     injector.registerLazySingleton<GoRouter>(

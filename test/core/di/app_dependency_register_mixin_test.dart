@@ -7,6 +7,7 @@ import 'package:clinic_appointment_system/features/auth/data/mappers/firebase_au
 import 'package:clinic_appointment_system/features/auth/data/repositories/firebase_auth_repository.dart';
 import 'package:clinic_appointment_system/features/auth/domain/mappers/auth_exception_mapper.dart';
 import 'package:clinic_appointment_system/features/auth/domain/repositories/auth_repository.dart';
+import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -29,6 +30,7 @@ void main() {
     );
     await container.unregister<FirebaseAuth>();
     auth = MockFirebaseAuth();
+    when(() => auth.authStateChanges()).thenAnswer((_) => const Stream.empty());
     container.registerSingleton<FirebaseAuth>(auth);
   });
   tearDown(() => container.reset());
@@ -88,6 +90,8 @@ void main() {
     final mapper = container.get<AuthExceptionMapper>();
     expect(mapper, isA<FirebaseAuthExceptionMapper>());
     expect(container.get<AuthExceptionMapper>(), same(mapper));
+    final authCubit = container.get<AuthCubit>();
+    expect(container.get<AuthCubit>(), same(authCubit));
   });
 
   test('auth repository uses the injected Firebase instance', () async {
@@ -120,10 +124,13 @@ void main() {
   test('reset closes the cubit and a fresh setup has isolated state', () async {
     final oldCubit = container.get<ThemeCubit>();
     final oldRouter = container.get<GoRouter>();
+    final oldAuthCubit = container.get<AuthCubit>();
     oldCubit.toggle();
     expect(oldCubit.state, ThemeMode.dark);
     await container.reset();
     expect(oldCubit.isClosed, isTrue);
+    expect(oldAuthCubit.isClosed, isTrue);
+    expect(container.isRegistered<AuthCubit>(), isFalse);
     expect(container.isRegistered<GoRouter>(), isFalse);
     _DependencyRegistrar().registerDependencies(container);
     expect(container.get<ThemeCubit>(), isNot(same(oldCubit)));

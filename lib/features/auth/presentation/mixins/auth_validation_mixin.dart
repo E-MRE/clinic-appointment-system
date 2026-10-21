@@ -38,7 +38,7 @@ mixin AuthValidationMixin {
     bool isSignUp = false,
   }) {
     final emailResult = validateEmail(credentials.email);
-    if (!emailResult.isSuccess) return emailResult;
+    if (emailResult.isNotSuccess) return emailResult;
     return validatePassword(credentials.password, isSignUp: isSignUp);
   }
 }
