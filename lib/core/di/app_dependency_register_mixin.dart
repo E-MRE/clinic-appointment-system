@@ -6,6 +6,9 @@ import 'package:clinic_appointment_system/features/auth/data/repositories/fireba
 import 'package:clinic_appointment_system/features/auth/domain/mappers/auth_exception_mapper.dart';
 import 'package:clinic_appointment_system/features/auth/domain/repositories/auth_repository.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:clinic_appointment_system/features/auth/presentation/cubit/password_reset_cubit.dart';
+import 'package:clinic_appointment_system/features/auth/presentation/cubit/sign_in_cubit.dart';
+import 'package:clinic_appointment_system/features/auth/presentation/cubit/sign_up_cubit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 
@@ -31,6 +34,16 @@ mixin AppDependencyRegisterMixin {
     injector.registerLazySingleton<AuthCubit>(
       () => AuthCubit(injector.get<AuthRepository>()),
       dispose: (cubit) => cubit.close(),
+    );
+    // Each screen owns and closes its request cubit.
+    injector.registerFactory<SignInCubit>(
+      () => SignInCubit(injector.get<AuthRepository>()),
+    );
+    injector.registerFactory<SignUpCubit>(
+      () => SignUpCubit(injector.get<AuthRepository>()),
+    );
+    injector.registerFactory<PasswordResetCubit>(
+      () => PasswordResetCubit(injector.get<AuthRepository>()),
     );
     injector.registerLazySingleton<GoRouter>(
       createAppRouter,

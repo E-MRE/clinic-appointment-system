@@ -8,6 +8,11 @@ import 'package:clinic_appointment_system/features/auth/data/repositories/fireba
 import 'package:clinic_appointment_system/features/auth/domain/mappers/auth_exception_mapper.dart';
 import 'package:clinic_appointment_system/features/auth/domain/repositories/auth_repository.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_request_cubit.dart';
+import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_request_state.dart';
+import 'package:clinic_appointment_system/features/auth/presentation/cubit/password_reset_cubit.dart';
+import 'package:clinic_appointment_system/features/auth/presentation/cubit/sign_in_cubit.dart';
+import 'package:clinic_appointment_system/features/auth/presentation/cubit/sign_up_cubit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -104,6 +109,27 @@ void main() {
     expect(result.data, isNull);
     verify(() => auth.authStateChanges()).called(1);
   });
+
+  test(
+    'request cubits resolve as independent screen-owned instances',
+    () async {
+      final pairs = <(AuthRequestCubit, AuthRequestCubit)>[
+        (container.get<SignInCubit>(), container.get<SignInCubit>()),
+        (container.get<SignUpCubit>(), container.get<SignUpCubit>()),
+        (
+          container.get<PasswordResetCubit>(),
+          container.get<PasswordResetCubit>(),
+        ),
+      ];
+      for (final (first, second) in pairs) {
+        expect(first, isNot(same(second)));
+        expect(first.state, isA<AuthRequestInitial>());
+        expect(second.state, isA<AuthRequestInitial>());
+        await first.close();
+        await second.close();
+      }
+    },
+  );
 
   test('repository uses the mapper registered through its interface', () async {
     final mapper = _MockAuthExceptionMapper();

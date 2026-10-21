@@ -2,9 +2,9 @@ import 'package:clinic_appointment_system/core/constants/validation_constants.da
 import 'package:clinic_appointment_system/core/localization/localization.dart';
 import 'package:clinic_appointment_system/features/auth/domain/models/auth_credentials.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/mixins/auth_validation_mixin.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import '../../../../support/localization_test_app.dart';
 
 void main() {
   final validator = _Validator();
@@ -26,7 +26,7 @@ void main() {
   testWidgets('malformed emails return translated error messages', (
     tester,
   ) async {
-    await _loadTranslations(tester);
+    await loadTestTranslations(tester);
     for (final email in [
       '',
       'patient',
@@ -42,7 +42,7 @@ void main() {
   });
 
   testWidgets('missing password returns a translated error', (tester) async {
-    await _loadTranslations(tester);
+    await loadTestTranslations(tester);
     final result = validator.validatePassword('');
     expect(result.isSuccess, isFalse);
     expect(result.message, 'Şifrenizi girin.');
@@ -51,7 +51,7 @@ void main() {
   testWidgets('shared password minimum is interpolated into the translation', (
     tester,
   ) async {
-    await _loadTranslations(tester);
+    await loadTestTranslations(tester);
     const minimum = ValidationConstants.minimumPasswordLength;
     final shortPassword = 'a' * (minimum - 1);
     final result = validator.validatePassword(shortPassword, isSignUp: true);
@@ -70,7 +70,7 @@ void main() {
   testWidgets('credential validation returns the first localized failure', (
     tester,
   ) async {
-    await _loadTranslations(tester);
+    await loadTestTranslations(tester);
     expect(
       validator
           .validateCredentials(
@@ -109,19 +109,3 @@ void main() {
 }
 
 final class _Validator with AuthValidationMixin {}
-
-Future<void> _loadTranslations(WidgetTester tester) async {
-  await tester.pumpWidget(
-    LocalizationWrapper(
-      child: Builder(
-        builder: (context) => MaterialApp(
-          locale: context.locale,
-          supportedLocales: context.supportedLocales,
-          localizationsDelegates: context.localizationDelegates,
-          home: const SizedBox(),
-        ),
-      ),
-    ),
-  );
-  await tester.pumpAndSettle();
-}
