@@ -1,14 +1,24 @@
 import 'package:clinic_appointment_system/core/di/app_dependency_register_mixin.dart';
 import 'package:clinic_appointment_system/core/di/get_it/get_it_dependency_injection_manager.dart';
 import 'package:clinic_appointment_system/core/di/injector/dependency_injector.dart';
+import 'package:clinic_appointment_system/core/errors/app_exception.dart';
 import 'package:clinic_appointment_system/core/states/theme_cubit.dart';
+import 'package:clinic_appointment_system/features/auth/data/mappers/firebase_auth_exception_mapper.dart';
+import 'package:clinic_appointment_system/features/auth/data/repositories/firebase_auth_repository.dart';
+import 'package:clinic_appointment_system/features/auth/domain/mappers/auth_exception_mapper.dart';
+import 'package:clinic_appointment_system/features/auth/domain/repositories/auth_repository.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mocktail/mocktail.dart';
+
+import '../../support/firebase_auth_doubles.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   late DependencyInjector container;
+  late MockFirebaseAuth auth;
 
   setUp(() async {
     final dependency = GetItDependencyInjectionManager();
@@ -17,6 +27,9 @@ void main() {
     dependency.register(
       customInjections: _DependencyRegistrar().registerDependencies,
     );
+    await container.unregister<FirebaseAuth>();
+    auth = MockFirebaseAuth();
+    container.registerSingleton<FirebaseAuth>(auth);
   });
   tearDown(() => container.reset());
 
@@ -68,6 +81,40 @@ void main() {
     expect(container.get<ThemeCubit>(), same(cubit));
     expect(container.get<GoRouter>(), same(router));
     expect(cubit.state, ThemeMode.light);
+    final repository = container.get<AuthRepository>();
+    expect(repository, isA<FirebaseAuthRepository>());
+    expect(container.get<AuthRepository>(), same(repository));
+    expect(container.get<FirebaseAuth>(), same(auth));
+    final mapper = container.get<AuthExceptionMapper>();
+    expect(mapper, isA<FirebaseAuthExceptionMapper>());
+    expect(container.get<AuthExceptionMapper>(), same(mapper));
+  });
+
+  test('auth repository uses the injected Firebase instance', () async {
+    when(() => auth.authStateChanges()).thenAnswer((_) => Stream.value(null));
+    final result = await container
+        .get<AuthRepository>()
+        .authStateChanges()
+        .first;
+    expect(result.isSuccess, isTrue);
+    expect(result.data, isNull);
+    verify(() => auth.authStateChanges()).called(1);
+  });
+
+  test('repository uses the mapper registered through its interface', () async {
+    final mapper = _MockAuthExceptionMapper();
+    final providerError = FirebaseAuthException(code: 'network-request-failed');
+    const mappedError = UnexpectedException(message: 'Custom mapping');
+    when(() => mapper.map(providerError)).thenReturn(mappedError);
+    when(() => auth.signOut()).thenThrow(providerError);
+    await container.unregister<AuthExceptionMapper>();
+    container.registerSingleton<AuthExceptionMapper>(mapper);
+
+    await expectLater(
+      container.get<AuthRepository>().signOut(),
+      throwsA(same(mappedError)),
+    );
+    verify(() => mapper.map(providerError)).called(1);
   });
 
   test('reset closes the cubit and a fresh setup has isolated state', () async {
@@ -88,3 +135,5 @@ void main() {
 final class _DependencyRegistrar with AppDependencyRegisterMixin {}
 
 final class _TestService {}
+
+class _MockAuthExceptionMapper extends Mock implements AuthExceptionMapper {}
