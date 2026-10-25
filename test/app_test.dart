@@ -13,6 +13,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
 
 import 'support/auth_repository_doubles.dart';
+import 'support/localization_test_app.dart';
 
 void main() {
   late GoRouter router;
@@ -38,7 +39,8 @@ void main() {
   ) async {
     router.dispose();
     router = createAppRouter(initialLocation: '/missing/nested?source=test');
-    await tester.pumpWidget(
+    await pumpLocalizedWidget(
+      tester,
       App(router: router, themeCubit: themeCubit, authCubit: authCubit),
     );
     await tester.pumpAndSettle();
@@ -52,7 +54,8 @@ void main() {
   testWidgets('shows the clinic appointment system title', (
     WidgetTester tester,
   ) async {
-    await tester.pumpWidget(
+    await pumpLocalizedWidget(
+      tester,
       App(router: router, themeCubit: themeCubit, authCubit: authCubit),
     );
     await tester.pumpAndSettle();
@@ -66,7 +69,8 @@ void main() {
   testWidgets('theme toggle switches between light and dark', (
     WidgetTester tester,
   ) async {
-    await tester.pumpWidget(
+    await pumpLocalizedWidget(
+      tester,
       App(router: router, themeCubit: themeCubit, authCubit: authCubit),
     );
     await tester.pumpAndSettle();

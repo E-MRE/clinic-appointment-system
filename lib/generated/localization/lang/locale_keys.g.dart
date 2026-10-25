@@ -51,4 +51,11 @@ abstract class LocaleKeys {
   static const validation_passwordRequired = 'validation.passwordRequired';
   static const validation_passwordTooShort = 'validation.passwordTooShort';
   static const validation = 'validation';
+  static const splash_subtitle = 'splash.subtitle';
+  static const splash = 'splash';
+  static const startup_offlineTitle = 'startup.offlineTitle';
+  static const startup_offlineDescription = 'startup.offlineDescription';
+  static const startup_errorTitle = 'startup.errorTitle';
+  static const startup_errorDescription = 'startup.errorDescription';
+  static const startup = 'startup';
 }

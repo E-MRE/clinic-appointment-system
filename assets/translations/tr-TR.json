@@ -53,5 +53,14 @@
     "invalidEmail": "Geçerli bir e-posta adresi girin.",
     "passwordRequired": "Şifrenizi girin.",
     "passwordTooShort": "Şifreniz en az {minimumLength} karakter olmalıdır."
+  },
+  "splash": {
+    "subtitle": "Hastane ve klinik randevuları"
+  },
+  "startup": {
+    "offlineTitle": "Bağlantı kurulamadı",
+    "offlineDescription": "İnternet bağlantınızı kontrol edip tekrar deneyin. Girdiğiniz bilgiler kaybolmadı.",
+    "errorTitle": "Bir şeyler ters gitti",
+    "errorDescription": "İsteğiniz tamamlanamadı. Birkaç saniye sonra tekrar deneyin; sorun sürerse klinik yönetimine bildirin."
   }
 }

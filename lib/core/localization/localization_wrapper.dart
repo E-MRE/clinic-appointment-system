@@ -1,5 +1,4 @@
 import 'package:clinic_appointment_system/core/localization/localization_config.dart';
-import 'package:clinic_appointment_system/generated/localization/lang/codegen_loader.g.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +15,6 @@ final class LocalizationWrapper extends StatelessWidget {
       fallbackLocale: LocalizationConfig.fallbackLocale,
       startLocale: LocalizationConfig.fallbackLocale,
       path: LocalizationConfig.path,
-      assetLoader: const CodegenLoader(),
       child: child,
     );
   }

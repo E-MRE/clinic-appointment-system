@@ -3,21 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-Future<void> _loadTranslations(WidgetTester tester) async {
-  await tester.pumpWidget(
-    LocalizationWrapper(
-      child: Builder(
-        builder: (context) => MaterialApp(
-          locale: context.locale,
-          supportedLocales: context.supportedLocales,
-          localizationsDelegates: context.localizationDelegates,
-          home: const SizedBox(),
-        ),
-      ),
-    ),
-  );
-  await tester.pumpAndSettle();
-}
+import '../../support/localization_test_app.dart';
 
 void main() {
   group('LocalizationConfig', () {
@@ -43,12 +29,12 @@ void main() {
 
   group('LocaleKeys & Translations', () {
     testWidgets('translates appName in Turkish', (tester) async {
-      await _loadTranslations(tester);
+      await loadTestTranslations(tester);
       expect(LocaleKeys.appName.tr(), 'Klinik Randevu Sistemi');
     });
 
     testWidgets('translates common keys', (tester) async {
-      await _loadTranslations(tester);
+      await loadTestTranslations(tester);
       expect(LocaleKeys.common_themeToggle.tr(), 'Tema Değiştir');
       expect(LocaleKeys.common_save.tr(), 'Kaydet');
       expect(LocaleKeys.common_cancel.tr(), 'İptal');
@@ -56,7 +42,7 @@ void main() {
     });
 
     testWidgets('translates role keys', (tester) async {
-      await _loadTranslations(tester);
+      await loadTestTranslations(tester);
       expect(LocaleKeys.roles_patient.tr(), 'Hasta');
       expect(LocaleKeys.roles_doctor.tr(), 'Doktor');
       expect(LocaleKeys.roles_staff.tr(), 'Personel');
@@ -64,7 +50,7 @@ void main() {
     });
 
     testWidgets('translates appointment status keys', (tester) async {
-      await _loadTranslations(tester);
+      await loadTestTranslations(tester);
       expect(LocaleKeys.appointment_status_pending.tr(), 'Beklemede');
       expect(LocaleKeys.appointment_status_approved.tr(), 'Onaylandı');
       expect(LocaleKeys.appointment_status_rejected.tr(), 'Reddedildi');
@@ -74,7 +60,7 @@ void main() {
     });
 
     testWidgets('translates medical service keys', (tester) async {
-      await _loadTranslations(tester);
+      await loadTestTranslations(tester);
       expect(LocaleKeys.services_examination.tr(), 'Muayene');
       expect(LocaleKeys.services_radiology.tr(), 'Radyoloji');
       expect(LocaleKeys.services_labTest.tr(), 'Laboratuvar Testi');
@@ -83,14 +69,14 @@ void main() {
 
   group('LocalizationExtension', () {
     testWidgets('translate extension translates keys', (tester) async {
-      await _loadTranslations(tester);
+      await loadTestTranslations(tester);
       expect(LocaleKeys.appName.translate(), 'Klinik Randevu Sistemi');
     });
 
     testWidgets('isTranslateExists returns true for existing keys', (
       tester,
     ) async {
-      await _loadTranslations(tester);
+      await loadTestTranslations(tester);
       expect(LocaleKeys.appName.isTranslateExists(), isTrue);
       expect('non_existent_key_xyz'.isTranslateExists(), isFalse);
     });
