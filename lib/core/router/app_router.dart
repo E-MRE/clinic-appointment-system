@@ -11,6 +11,8 @@ import 'package:clinic_appointment_system/features/auth/presentation/pages/auth_
 import 'package:clinic_appointment_system/features/auth/presentation/pages/password_reset_page.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/pages/sign_in_page.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/pages/sign_up_page.dart';
+import 'package:clinic_appointment_system/features/debug/presentation/pages/component_preview/component_preview_page.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -20,6 +22,7 @@ export 'package:clinic_appointment_system/core/router/app_routes.dart';
 /// Auth screens share one shell; registration and reset stack on sign-in.
 GoRouter createAppRouter({
   String? initialLocation,
+  bool enableDebugRoutes = kDebugMode,
   AuthRouteGuard? authGuard,
   SignInCubit Function()? signInCubitFactory,
   SignUpCubit Function()? signUpCubitFactory,
@@ -33,6 +36,13 @@ GoRouter createAppRouter({
     refreshListenable: refreshListenable ?? authGuard,
     errorBuilder: (context, state) => const NotFoundPage(),
     routes: [
+      if (kDebugMode && enableDebugRoutes)
+        GoRoute(
+          path: AppRoutes.componentPreview,
+          pageBuilder: (_, state) {
+            return _fadePage(state, const ComponentPreviewPage());
+          },
+        ),
       GoRoute(
         path: AppRoutes.home,
         pageBuilder: (_, state) {
