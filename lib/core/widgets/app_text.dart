@@ -12,6 +12,7 @@ final class AppText extends StatelessWidget {
     this.maxLines,
     this.overflow,
     this.softWrap,
+    this.fontWeight,
     this.semanticsLabel,
     super.key,
   });
