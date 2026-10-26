@@ -1,4 +1,4 @@
-import 'package:clinic_appointment_system/core/theme/app_colors.dart';
+import 'package:clinic_appointment_system/generated/colors.gen.dart';
 import 'package:flutter/material.dart';
 
 /// Appointment status shown in the UI.
@@ -143,10 +143,4 @@ final class AppointmentStatusColors
       cancelledFg: Color.lerp(cancelledFg, other.cancelledFg, t)!,
     );
   }
-}
-
-/// Convenience access: `context.statusColors`.
-extension AppointmentStatusColorsContext on BuildContext {
-  AppointmentStatusColors get statusColors =>
-      Theme.of(this).extension<AppointmentStatusColors>()!;
 }

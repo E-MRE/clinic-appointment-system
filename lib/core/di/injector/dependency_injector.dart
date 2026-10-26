@@ -6,6 +6,11 @@ typedef FactoryFunc<T> = T Function();
 /// Cleanup callback, optionally asynchronous.
 typedef DisposingFunc<T> = FutureOr<void> Function(T param);
 
+/// Container contract that registers and resolves application dependencies.
+///
+/// Callers depend on this abstraction instead of a concrete container;
+/// implementations (such as `GetItDependencyInjector`) supply registration,
+/// lookup and disposal.
 abstract class DependencyInjector {
   /// retrieves or creates an instance of a registered type [T] depending on
   /// the registration function used for this type or based on a name.

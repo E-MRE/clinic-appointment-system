@@ -8,8 +8,10 @@ void main() {
       const success = Result.success();
       const error = Result.error();
       expect(success.isSuccess, isTrue);
+      expect(success.isNotSuccess, isFalse);
       expect(success.message, isEmpty);
       expect(error.isSuccess, isFalse);
+      expect(error.isNotSuccess, isTrue);
       expect(error.message, isEmpty);
     },
   );

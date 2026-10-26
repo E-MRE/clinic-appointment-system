@@ -3,11 +3,39 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('resolves width boundaries', () {
-    expect(Breakpoints.resolve(0), ScreenSize.mobile);
-    expect(Breakpoints.resolve(599), ScreenSize.mobile);
-    expect(Breakpoints.resolve(600), ScreenSize.tablet);
-    expect(Breakpoints.resolve(839), ScreenSize.tablet);
-    expect(Breakpoints.resolve(840), ScreenSize.desktop);
-    expect(Breakpoints.resolve(2000), ScreenSize.desktop);
+    expect(BreakpointsConstants.resolve(0, 800), ScreenSize.mobile);
+    expect(BreakpointsConstants.resolve(599, 800), ScreenSize.mobile);
+    expect(BreakpointsConstants.resolve(600, 800), ScreenSize.tablet);
+    expect(BreakpointsConstants.resolve(839, 800), ScreenSize.tablet);
+    expect(BreakpointsConstants.resolve(840, 800), ScreenSize.desktop);
+    expect(BreakpointsConstants.resolve(2000, 800), ScreenSize.desktop);
+  });
+
+  test('short viewports such as landscape phones resolve to mobile', () {
+    expect(BreakpointsConstants.resolve(844, 390), ScreenSize.mobile);
+    expect(BreakpointsConstants.resolve(1400, 479), ScreenSize.mobile);
+    expect(BreakpointsConstants.resolve(1400, 480), ScreenSize.desktop);
+  });
+
+  test('ScreenSizeExtension helpers and select match active variant', () {
+    expect(ScreenSize.mobile.isMobile, isTrue);
+    expect(ScreenSize.mobile.isTablet, isFalse);
+    expect(ScreenSize.mobile.isDesktop, isFalse);
+    expect(
+      ScreenSize.mobile.select(mobile: 'm', tablet: 't', desktop: 'd'),
+      'm',
+    );
+
+    expect(ScreenSize.tablet.isTablet, isTrue);
+    expect(
+      ScreenSize.tablet.select(mobile: 'm', tablet: 't', desktop: 'd'),
+      't',
+    );
+
+    expect(ScreenSize.desktop.isDesktop, isTrue);
+    expect(
+      ScreenSize.desktop.select(mobile: 'm', tablet: 't', desktop: 'd'),
+      'd',
+    );
   });
 }

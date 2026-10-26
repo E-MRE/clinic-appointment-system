@@ -8,12 +8,14 @@ void main() {
     const Result outcome = result;
     expect(result.data, 21);
     expect(outcome.isSuccess, isTrue);
+    expect(outcome.isNotSuccess, isFalse);
     expect(outcome.message, 'Loaded');
   });
 
   test('error defaults to no data and an empty message', () {
     const result = DataResult<int>.error();
     expect(result.isSuccess, isFalse);
+    expect(result.isNotSuccess, isTrue);
     expect(result.data, isNull);
     expect(result.message, isEmpty);
   });
@@ -29,9 +31,11 @@ void main() {
     const success = DataResult<String?>.success(data: null);
     const error = DataResult<String?>.error();
     expect(success.isSuccess, isTrue);
+    expect(success.isNotSuccess, isFalse);
     expect(success.data, isNull);
     expect(success.message, isEmpty);
     expect(error.isSuccess, isFalse);
+    expect(error.isNotSuccess, isTrue);
     expect(error.data, isNull);
   });
 }
