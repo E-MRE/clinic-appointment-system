@@ -1,4 +1,5 @@
-import 'package:clinic_appointment_system/core/widgets/state_layout.dart';
+import 'package:clinic_appointment_system/core/widgets/state/state_layout.dart';
+import 'package:clinic_appointment_system/core/widgets/state/state_layout_variant.dart';
 
 /// No-content presentation using the shared state layout.
 final class EmptyState extends StateLayout {

@@ -1,9 +1,9 @@
 import 'package:clinic_appointment_system/core/theme/theme.dart';
-import 'package:clinic_appointment_system/core/widgets/page_header.dart';
+import 'package:clinic_appointment_system/core/widgets/page_header/page_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../support/widget_test_host.dart';
+import '../../../support/widget_test_host.dart';
 
 void main() {
   testWidgets('supports each tier in dark theme at text scale 2', (

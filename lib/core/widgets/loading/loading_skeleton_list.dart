@@ -9,13 +9,13 @@ final class _SkeletonList extends StatelessWidget {
     return const Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _SkeletonLine(variant: _SkeletonLineVariant.headingWide),
+        _SkeletonLine(variant: LoadingSkeletonLineVariant.headingWide),
         EmptySize.s16Height(),
-        _SkeletonCard(variant: _SkeletonCardVariant.featured),
+        _SkeletonCard(variant: LoadingSkeletonCardVariant.featured),
         EmptySize.s16Height(),
-        _SkeletonLine(variant: _SkeletonLineVariant.headingShort),
+        _SkeletonLine(variant: LoadingSkeletonLineVariant.headingShort),
         EmptySize.s8Height(),
-        _SkeletonCard(variant: _SkeletonCardVariant.compact),
+        _SkeletonCard(variant: LoadingSkeletonCardVariant.compact),
       ],
     );
   }

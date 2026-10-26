@@ -4,7 +4,7 @@ part of 'loading_state.dart';
 final class _SkeletonCard extends StatelessWidget {
   const _SkeletonCard({required this.variant});
 
-  final _SkeletonCardVariant variant;
+  final LoadingSkeletonCardVariant variant;
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +23,9 @@ final class _SkeletonCard extends StatelessWidget {
               const Expanded(
                 child: Column(
                   children: [
-                    _SkeletonLine(variant: _SkeletonLineVariant.title),
+                    _SkeletonLine(variant: LoadingSkeletonLineVariant.title),
                     EmptySize.s8Height(),
-                    _SkeletonLine(variant: _SkeletonLineVariant.metadata),
+                    _SkeletonLine(variant: LoadingSkeletonLineVariant.metadata),
                   ],
                 ),
               ),
@@ -33,9 +33,9 @@ final class _SkeletonCard extends StatelessWidget {
           ),
           if (variant.hasDetails) ...[
             const EmptySize.s16Height(),
-            const _SkeletonLine(variant: _SkeletonLineVariant.fullWidth),
+            const _SkeletonLine(variant: LoadingSkeletonLineVariant.fullWidth),
             const EmptySize.s8Height(),
-            const _SkeletonLine(variant: _SkeletonLineVariant.body),
+            const _SkeletonLine(variant: LoadingSkeletonLineVariant.body),
             const EmptySize.s16Height(),
             const Row(
               children: [

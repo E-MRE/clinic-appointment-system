@@ -1,8 +1,9 @@
-import 'package:clinic_appointment_system/core/widgets/status_badge.dart';
+import 'package:clinic_appointment_system/core/widgets/status_badge/status_badge.dart';
+import 'package:clinic_appointment_system/core/widgets/status_badge/status_badge_variant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../support/widget_test_host.dart';
+import '../../../support/widget_test_host.dart';
 
 void main() {
   testWidgets('renders every status variant in dark theme at text scale 2', (

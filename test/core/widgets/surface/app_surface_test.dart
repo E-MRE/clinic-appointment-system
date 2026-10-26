@@ -1,8 +1,11 @@
-import 'package:clinic_appointment_system/core/widgets/app_surface.dart';
+import 'package:clinic_appointment_system/core/widgets/surface/app_surface.dart';
+import 'package:clinic_appointment_system/core/widgets/surface/app_surface_padding.dart';
+import 'package:clinic_appointment_system/core/widgets/surface/app_surface_radius.dart';
+import 'package:clinic_appointment_system/core/widgets/surface/app_surface_variant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../support/widget_test_host.dart';
+import '../../../support/widget_test_host.dart';
 
 void main() {
   testWidgets('renders every variant in dark theme at text scale 2', (

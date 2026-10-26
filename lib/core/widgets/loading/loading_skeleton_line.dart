@@ -4,7 +4,7 @@ part of 'loading_state.dart';
 final class _SkeletonLine extends StatelessWidget {
   const _SkeletonLine({required this.variant});
 
-  final _SkeletonLineVariant variant;
+  final LoadingSkeletonLineVariant variant;
 
   @override
   Widget build(BuildContext context) {
