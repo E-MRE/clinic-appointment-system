@@ -1,3 +1,6 @@
+import 'package:json_annotation/json_annotation.dart';
+
+@JsonEnum(valueField: 'storageValue')
 /// A user profile's role, its stable storage value and what the role may do.
 enum UserRole {
   /// A patient who books appointments.

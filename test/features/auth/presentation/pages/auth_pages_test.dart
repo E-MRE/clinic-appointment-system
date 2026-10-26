@@ -6,6 +6,7 @@ import 'package:clinic_appointment_system/core/enums/auth_error_code.dart';
 import 'package:clinic_appointment_system/core/errors/app_exception.dart';
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
 import 'package:clinic_appointment_system/core/errors/result.dart';
+import 'package:clinic_appointment_system/core/errors/user_exception.dart';
 import 'package:clinic_appointment_system/core/router/app_router.dart';
 import 'package:clinic_appointment_system/core/states/theme_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/domain/entities/auth_session.dart';
@@ -13,6 +14,7 @@ import 'package:clinic_appointment_system/features/auth/domain/models/auth_crede
 import 'package:clinic_appointment_system/features/auth/domain/models/auth_registration.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/auth_route_guard.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_state.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/password_reset_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/sign_in_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/sign_up_cubit.dart';
@@ -20,6 +22,8 @@ import 'package:clinic_appointment_system/features/auth/presentation/pages/auth_
 import 'package:clinic_appointment_system/features/auth/presentation/pages/password_reset_page.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/pages/sign_in_page.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/pages/sign_up_page.dart';
+import 'package:clinic_appointment_system/features/users/domain/entities/user.dart';
+import 'package:clinic_appointment_system/features/users/domain/enums/user_error_code.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -28,6 +32,7 @@ import 'package:mocktail/mocktail.dart';
 
 import '../../../../support/auth_repository_doubles.dart';
 import '../../../../support/localization_test_app.dart';
+import '../../../../support/user_repository_double.dart';
 
 void main() {
   setUpAll(() {
@@ -38,6 +43,33 @@ void main() {
         password: 'secret12',
       ),
     );
+  });
+
+  testWidgets('missing profile keeps registration open', (tester) async {
+    final app = await _pump(tester, route: AppRoutes.signUp);
+    final profiles = StreamController<DataResult<User>>.broadcast();
+    app.users.profileStream = profiles.stream;
+    app.sessions.add(const DataResult.success(data: _session));
+    await tester.pump();
+    profiles.addError(const UserException(UserErrorCode.profileMissing));
+    await tester.pumpAndSettle();
+    expect(
+      app.authCubit.state,
+      isA<AuthProfileFailure>().having(
+        (state) => state.errorCode,
+        'code',
+        UserErrorCode.profileMissing,
+      ),
+    );
+    expect(
+      app.router.routeInformationProvider.value.uri.path,
+      AppRoutes.signUp,
+    );
+    expect(find.byKey(const WidgetKey.authSubmit()), findsOneWidget);
+    expect(find.byKey(const WidgetKey.startupErrorPage()), findsNothing);
+    app.sessions.add(const DataResult.success(data: null));
+    await tester.pumpAndSettle();
+    await profiles.close();
   });
 
   testWidgets(
@@ -268,6 +300,29 @@ void main() {
     expect(updates.last['replace'], isTrue);
   });
 
+  testWidgets(
+    'sign-in without a profile leaves the form for the profile error',
+    (tester) async {
+      final app = await _pump(tester);
+      final profiles = StreamController<DataResult<User>>.broadcast();
+      app.users.profileStream = profiles.stream;
+      when(
+        () => app.repository.signIn(any()),
+      ).thenAnswer((_) async => const DataResult.success(data: _session));
+      await _credentials(tester);
+      await _submit(tester);
+      app.sessions.add(const DataResult.success(data: _session));
+      await tester.pump();
+      profiles.addError(const UserException(UserErrorCode.profileMissing));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const WidgetKey.startupErrorPage()), findsOneWidget);
+      expect(find.text('Profil bulunamadı'), findsOneWidget);
+      expect(find.byKey(const WidgetKey.startupRetry()), findsNothing);
+      expect(find.text('Çıkış yap'), findsOneWidget);
+      await profiles.close();
+    },
+  );
+
   testWidgets('registration validates confirmation and submits the full name', (
     tester,
   ) async {
@@ -435,7 +490,7 @@ final class _AuthTestApp {
     when(
       () => repository.authStateChanges(),
     ).thenAnswer((_) => sessions.stream);
-    authCubit = AuthCubit(repository);
+    authCubit = AuthCubit(repository, users);
     configuration = AuthRouteGuard(authCubit);
     router = createAppRouter(
       initialLocation: route,
@@ -446,7 +501,7 @@ final class _AuthTestApp {
         return cubit;
       },
       signUpCubitFactory: () {
-        return SignUpCubit(repository);
+        return SignUpCubit(repository, TestUserRepository());
       },
       passwordResetCubitFactory: () {
         return PasswordResetCubit(repository);
@@ -454,6 +509,7 @@ final class _AuthTestApp {
     );
     sessions.add(DataResult.success(data: restored));
   }
+  final users = TestUserRepository();
   final repository = MockAuthRepository();
   final sessions = StreamController<DataResult<AuthSession>>();
   final themeCubit = ThemeCubit();

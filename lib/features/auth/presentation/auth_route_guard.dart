@@ -20,7 +20,16 @@ final class AuthRouteGuard extends ChangeNotifier {
   /// A form request signed in; the form opens home after its request finishes,
   /// so a refresh here would hide a failure such as the profile-name update.
   bool _isSignedInByRequest(AuthState state) {
-    return _previous is AuthSignedOut && state is AuthSignedIn;
+    return state is AuthSignedIn && _wasAwaitingSignIn;
+  }
+
+  /// Whether the previous state still waited for a session or its profile.
+  bool get _wasAwaitingSignIn {
+    return switch (_previous) {
+      AuthSignedOut() => true,
+      AuthProfileFailure(:final isProfileMissing) => isProfileMissing,
+      _ => false,
+    };
   }
 
   void _onSessionChanged(AuthState state) {

@@ -2,20 +2,24 @@ import 'package:clinic_appointment_system/core/constants/validation_constants.da
 import 'package:clinic_appointment_system/core/enums/auth_error_code.dart';
 import 'package:clinic_appointment_system/core/errors/app_exception.dart';
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
+import 'package:clinic_appointment_system/core/errors/user_exception.dart';
 import 'package:clinic_appointment_system/core/localization/localization.dart';
 import 'package:clinic_appointment_system/features/auth/domain/entities/auth_session.dart';
 import 'package:clinic_appointment_system/features/auth/domain/models/auth_registration.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_request_state.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/sign_up_cubit.dart';
+import 'package:clinic_appointment_system/features/users/domain/enums/user_error_code.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../../support/auth_repository_doubles.dart';
 import '../../../../support/localization_test_app.dart';
+import '../../../../support/user_repository_double.dart';
 
 void main() {
   late MockAuthRepository repository;
   late SignUpCubit cubit;
+  late TestUserRepository users;
   const credentials = AuthRegistration(
     fullName: 'Elif Kaya',
     email: 'patient@example.com',
@@ -28,9 +32,13 @@ void main() {
   );
   setUp(() {
     repository = MockAuthRepository();
-    cubit = SignUpCubit(repository);
+    users = TestUserRepository();
+    cubit = SignUpCubit(repository, users);
+    clearInteractions(repository);
   });
-  tearDown(() => cubit.close());
+  tearDown(() async {
+    await cubit.close();
+  });
 
   test('valid registration calls only sign up and emits success', () async {
     when(
@@ -44,6 +52,25 @@ void main() {
     await expectation;
     verify(() => repository.signUp(credentials)).called(1);
     verifyNoMoreInteractions(repository);
+    expect(users.created?.id, session.userId);
+    expect(users.created?.fullName, credentials.fullName);
+    expect(users.created?.email, session.email);
+  });
+
+  test('profile write failure reports that the account exists', () async {
+    users.createError = const UserException(UserErrorCode.unavailable);
+    when(
+      () => repository.signUp(credentials),
+    ).thenAnswer((_) async => const DataResult.success(data: session));
+    await cubit.signUp(credentials);
+    expect(
+      cubit.state,
+      isA<AuthRequestFailure>().having(
+        (s) => s.errorCode,
+        'code',
+        AuthErrorCode.profileCreationFailed,
+      ),
+    );
   });
 
   testWidgets(

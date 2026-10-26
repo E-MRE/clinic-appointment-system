@@ -13,6 +13,8 @@ import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/password_reset_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/sign_in_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/sign_up_cubit.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -33,6 +35,8 @@ void main() {
     dependency.register(
       customInjections: _DependencyRegistrar().registerDependencies,
     );
+    await container.unregister<FirebaseFirestore>();
+    container.registerSingleton<FirebaseFirestore>(FakeFirebaseFirestore());
     await container.unregister<FirebaseAuth>();
     auth = MockFirebaseAuth();
     when(() => auth.authStateChanges()).thenAnswer((_) => const Stream.empty());
@@ -159,6 +163,8 @@ void main() {
     expect(container.isRegistered<AuthCubit>(), isFalse);
     expect(container.isRegistered<GoRouter>(), isFalse);
     _DependencyRegistrar().registerDependencies(container);
+    await container.unregister<FirebaseFirestore>();
+    container.registerSingleton<FirebaseFirestore>(FakeFirebaseFirestore());
     await container.unregister<FirebaseAuth>();
     container.registerSingleton<FirebaseAuth>(auth);
     expect(container.get<ThemeCubit>(), isNot(same(oldCubit)));

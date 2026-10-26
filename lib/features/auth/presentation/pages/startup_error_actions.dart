@@ -6,11 +6,13 @@ final class _StartupErrorActions extends StatelessWidget {
     required this.isMobile,
     required this.onRetry,
     required this.onGoHome,
+    this.onSignOut,
   });
   final StartupErrorKind kind;
   final bool isMobile;
   final VoidCallback onRetry;
   final VoidCallback onGoHome;
+  final VoidCallback? onSignOut;
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +20,13 @@ final class _StartupErrorActions extends StatelessWidget {
       return Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: AppSizes.s8,
         children: [
-          _retryButton,
-          if (kind.offersGoHome) ...[const EmptySize.s8Height(), _goHomeButton],
+          if (kind.offersRetry) _buildRetryButton(),
+          if (onSignOut != null)
+            _buildSignOutButton()
+          else if (kind.offersGoHome)
+            _buildGoHomeButton(),
         ],
       );
     }
@@ -29,11 +35,17 @@ final class _StartupErrorActions extends StatelessWidget {
       alignment: WrapAlignment.center,
       spacing: AppSizes.s12,
       runSpacing: AppSizes.s8,
-      children: [if (kind.offersGoHome) _goHomeButton, _retryButton],
+      children: [
+        if (onSignOut != null)
+          _buildSignOutButton()
+        else if (kind.offersGoHome)
+          _buildGoHomeButton(),
+        if (kind.offersRetry) _buildRetryButton(),
+      ],
     );
   }
 
-  FilledButton get _retryButton {
+  FilledButton _buildRetryButton() {
     return FilledButton.icon(
       key: const WidgetKey.startupRetry(),
       onPressed: onRetry,
@@ -45,7 +57,14 @@ final class _StartupErrorActions extends StatelessWidget {
     );
   }
 
-  OutlinedButton get _goHomeButton {
+  OutlinedButton _buildSignOutButton() {
+    return OutlinedButton(
+      onPressed: onSignOut,
+      child: Text(LocaleKeys.auth_signOut.translate()),
+    );
+  }
+
+  OutlinedButton _buildGoHomeButton() {
     return OutlinedButton(
       onPressed: onGoHome,
       child: Text(LocaleKeys.navigation_goHome.translate()),

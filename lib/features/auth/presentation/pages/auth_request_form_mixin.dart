@@ -54,11 +54,20 @@ mixin _AuthRequestFormMixin<C extends AuthRequestCubit>
   void _finishIfReady() {
     if (!_kind.opensHomeOnSuccess ||
         _cubit.state is! AuthRequestSuccess ||
-        context.read<AuthCubit>().state is! AuthSignedIn) {
+        !_hasSettledSession) {
       return;
     }
     TextInput.finishAutofillContext();
     Router.neglect(context, _openHome);
+  }
+
+  /// Whether the session finished loading its profile, successfully or not;
+  /// home shows the profile failure with retry and sign-out.
+  bool get _hasSettledSession {
+    return switch (context.read<AuthCubit>().state) {
+      AuthSignedIn() || AuthProfileFailure() => true,
+      _ => false,
+    };
   }
 
   /// Runs inside [Router.neglect], so the browser replaces the auth history

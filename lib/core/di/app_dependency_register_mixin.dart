@@ -10,6 +10,9 @@ import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/password_reset_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/sign_in_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/sign_up_cubit.dart';
+import 'package:clinic_appointment_system/features/users/data/repositories/firestore_user_repository.dart';
+import 'package:clinic_appointment_system/features/users/domain/repositories/user_repository.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 
@@ -19,6 +22,12 @@ mixin AppDependencyRegisterMixin {
   void registerDependencies(DependencyInjector injector) {
     // FirebaseApp owns this SDK instance; container reset must not delete it.
     injector.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
+    injector.registerLazySingleton<FirebaseFirestore>(
+      () => FirebaseFirestore.instance,
+    );
+    injector.registerLazySingleton<UserRepository>(
+      () => FirestoreUserRepository(injector.get<FirebaseFirestore>()),
+    );
     injector.registerLazySingleton<AuthExceptionMapper>(
       FirebaseAuthExceptionMapper.new,
     );
@@ -33,7 +42,10 @@ mixin AppDependencyRegisterMixin {
       dispose: (cubit) => cubit.close(),
     );
     injector.registerLazySingleton<AuthCubit>(
-      () => AuthCubit(injector.get<AuthRepository>()),
+      () => AuthCubit(
+        injector.get<AuthRepository>(),
+        injector.get<UserRepository>(),
+      ),
       dispose: (cubit) => cubit.close(),
     );
     // Each screen owns and closes its request cubit.
@@ -41,7 +53,10 @@ mixin AppDependencyRegisterMixin {
       () => SignInCubit(injector.get<AuthRepository>()),
     );
     injector.registerFactory<SignUpCubit>(
-      () => SignUpCubit(injector.get<AuthRepository>()),
+      () => SignUpCubit(
+        injector.get<AuthRepository>(),
+        injector.get<UserRepository>(),
+      ),
     );
     injector.registerFactory<PasswordResetCubit>(
       () => PasswordResetCubit(injector.get<AuthRepository>()),

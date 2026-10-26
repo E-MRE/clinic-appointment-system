@@ -20,6 +20,8 @@ extension AuthErrorCodeLocalization on AuthErrorCode {
         LocaleKeys.auth_errors_operationNotAllowed,
       AuthErrorCode.profileUpdateFailed =>
         LocaleKeys.auth_errors_profileUpdateFailed,
+      AuthErrorCode.profileCreationFailed =>
+        LocaleKeys.auth_errors_profileCreationFailed,
       AuthErrorCode.unexpected => LocaleKeys.auth_errors_unexpected,
     };
   }

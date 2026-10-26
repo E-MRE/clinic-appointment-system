@@ -3,18 +3,25 @@ import 'dart:async';
 import 'package:clinic_appointment_system/core/enums/auth_error_code.dart';
 import 'package:clinic_appointment_system/core/errors/app_exception.dart';
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
+import 'package:clinic_appointment_system/core/errors/result.dart';
+import 'package:clinic_appointment_system/core/errors/user_exception.dart';
 import 'package:clinic_appointment_system/features/auth/domain/entities/auth_session.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_state.dart';
+import 'package:clinic_appointment_system/features/users/domain/entities/patient.dart';
+import 'package:clinic_appointment_system/features/users/domain/entities/user.dart';
+import 'package:clinic_appointment_system/features/users/domain/enums/user_error_code.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../../support/auth_repository_doubles.dart';
+import '../../../../support/user_repository_double.dart';
 
 void main() {
   late MockAuthRepository repository;
   late StreamController<DataResult<AuthSession>> controller;
   late AuthCubit cubit;
+  late TestUserRepository users;
   const session = AuthSession(
     userId: 'patient-1',
     email: 'patient@example.com',
@@ -27,7 +34,8 @@ void main() {
     when(
       () => repository.authStateChanges(),
     ).thenAnswer((_) => controller.stream);
-    cubit = AuthCubit(repository);
+    users = TestUserRepository();
+    cubit = AuthCubit(repository, users);
   });
   tearDown(() async {
     await cubit.close();
@@ -45,11 +53,9 @@ void main() {
       final expectation = expectLater(
         cubit.stream,
         emits(
-          isA<AuthSignedIn>().having(
-            (s) => s.session,
-            'session',
-            same(session),
-          ),
+          isA<AuthSignedIn>()
+              .having((s) => s.session, 'session', same(session))
+              .having((s) => s.user, 'profile', isA<Patient>()),
         ),
       );
       controller.add(const DataResult.success(data: session));
@@ -58,6 +64,81 @@ void main() {
       verifyNoMoreInteractions(repository);
     },
   );
+
+  test('missing profile emits a coded failure and can sign out', () async {
+    users.profileStream = Stream.error(
+      const UserException(UserErrorCode.profileMissing),
+    );
+    when(
+      () => repository.signOut(),
+    ).thenAnswer((_) async => const Result.success());
+    final expectation = expectLater(
+      cubit.stream,
+      emits(
+        isA<AuthProfileFailure>().having(
+          (s) => s.errorCode,
+          'code',
+          UserErrorCode.profileMissing,
+        ),
+      ),
+    );
+    controller.add(const DataResult.success(data: session));
+    await expectation;
+    await cubit.signOut();
+    verify(() => repository.signOut()).called(1);
+  });
+
+  test('live profile recovers from missing and sign out cancels it', () async {
+    final profiles = StreamController<DataResult<User>>();
+    users.profileStream = profiles.stream;
+    controller.add(const DataResult.success(data: session));
+    await Future<void>.delayed(Duration.zero);
+    final expectation = expectLater(
+      cubit.stream,
+      emitsInOrder([
+        isA<AuthProfileFailure>().having(
+          (s) => s.errorCode,
+          'code',
+          UserErrorCode.profileMissing,
+        ),
+        isA<AuthSignedIn>(),
+        isA<AuthSignedOut>(),
+      ]),
+    );
+    profiles.addError(const UserException(UserErrorCode.profileMissing));
+    profiles.add(
+      const DataResult.success(
+        data: Patient(
+          id: 'patient-1',
+          fullName: 'Elif',
+          email: 'a@example.com',
+        ),
+      ),
+    );
+    await Future<void>.delayed(Duration.zero);
+    controller.add(const DataResult.success(data: null));
+    await expectation;
+    expect(profiles.hasListener, isFalse);
+    await profiles.close();
+  });
+
+  test('invalid profile emits its typed failure', () async {
+    users.profileStream = Stream.error(
+      const UserException(UserErrorCode.invalidProfile),
+    );
+    final expectation = expectLater(
+      cubit.stream,
+      emits(
+        isA<AuthProfileFailure>().having(
+          (s) => s.errorCode,
+          'code',
+          UserErrorCode.invalidProfile,
+        ),
+      ),
+    );
+    controller.add(const DataResult.success(data: session));
+    await expectation;
+  });
 
   test('successful null session means unauthenticated', () async {
     final expectation = expectLater(cubit.stream, emits(isA<AuthSignedOut>()));
@@ -76,6 +157,7 @@ void main() {
     );
     controller.add(const DataResult.success(data: null));
     controller.add(const DataResult.success(data: session));
+    await Future<void>.delayed(Duration.zero);
     controller.add(const DataResult.success(data: null));
     await expectation;
   });
@@ -107,7 +189,7 @@ void main() {
     when(
       () => repository.authStateChanges(),
     ).thenThrow(const AuthException(AuthErrorCode.userDisabled));
-    cubit = AuthCubit(repository);
+    cubit = AuthCubit(repository, users);
     expect(
       cubit.state,
       isA<AuthFailure>().having(
@@ -179,7 +261,7 @@ void main() {
       when(
         () => repository.authStateChanges(),
       ).thenAnswer((_) => controller.stream);
-      cubit = AuthCubit(repository);
+      cubit = AuthCubit(repository, users);
       final replacement = StreamController<DataResult<AuthSession>>();
       when(
         () => repository.authStateChanges(),
@@ -217,7 +299,7 @@ void main() {
     when(
       () => repository.authStateChanges(),
     ).thenAnswer((_) => controller.stream);
-    cubit = AuthCubit(repository);
+    cubit = AuthCubit(repository, users);
     clearInteractions(repository);
     final retry = cubit.retry();
     final close = cubit.close();
