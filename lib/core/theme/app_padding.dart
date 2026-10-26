@@ -21,6 +21,11 @@ import 'package:flutter/material.dart';
 /// * verticalXl → vertical 24
 /// * control → horizontal 16, vertical 12
 /// * chip → horizontal 12, vertical 4
+/// * horizontalXs → horizontal 4
+/// * listTileDense → horizontal 16, vertical 8
+/// * segmentedControl → all 2
+/// * listTileSubtitle → top 2
+/// * navigationDestination → bottom 8
 /// * pageMobile → all 16
 /// * pageTablet → all 24
 /// * pageDesktop → all 32
@@ -84,6 +89,22 @@ final class AppPadding extends EdgeInsets {
   /// value = horizontal 12, vertical 4
   const AppPadding.chip()
     : super.symmetric(horizontal: AppSizes.s12, vertical: AppSizes.s4);
+
+  /// value = horizontal 4
+  const AppPadding.horizontalXs() : super.symmetric(horizontal: AppSizes.s4);
+
+  /// value = horizontal 16, vertical 8
+  const AppPadding.listTileDense()
+    : super.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s8);
+
+  /// value = all 2
+  const AppPadding.segmentedControl() : super.all(AppSizes.s2);
+
+  /// value = top 2
+  const AppPadding.listTileSubtitle() : super.only(top: AppSizes.s2);
+
+  /// value = bottom 8
+  const AppPadding.navigationDestination() : super.only(bottom: AppSizes.s8);
 
   /// value = all 16
   const AppPadding.pageMobile() : super.all(AppSizes.s16);

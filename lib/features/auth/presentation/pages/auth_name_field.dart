@@ -9,7 +9,7 @@ final class _AuthNameField extends StatelessWidget with AuthValidationMixin {
 
   @override
   Widget build(BuildContext context) {
-    return _AuthTextField(
+    return AppTextField(
       label: LocaleKeys.auth_fullName.translate(),
       hint: LocaleKeys.auth_fullNameHint.translate(),
       fieldKey: const WidgetKey.authFullName(),

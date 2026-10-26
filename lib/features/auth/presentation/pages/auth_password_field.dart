@@ -40,7 +40,7 @@ final class _AuthPasswordFieldState extends State<_AuthPasswordField> {
 
   @override
   Widget build(BuildContext context) {
-    return _AuthTextField(
+    return AppTextField(
       label: widget.label,
       controller: widget.controller,
       enabled: widget.enabled,
@@ -51,8 +51,8 @@ final class _AuthPasswordFieldState extends State<_AuthPasswordField> {
       onSubmitted: widget.onSubmitted,
       helper: widget.helper,
       obscureText: _obscured,
-      prefixAsset: widget.showPrefix ? Assets.images.auth.lock : null,
-      suffixIcon: _buildSuffix(context),
+      prefixIconAsset: widget.showPrefix ? Assets.images.auth.lock : null,
+      suffix: _buildSuffix(context),
     );
   }
 

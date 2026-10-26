@@ -7,6 +7,7 @@ import 'package:clinic_appointment_system/core/widgets/announced_semantics.dart'
 import 'package:clinic_appointment_system/core/widgets/app_brand_header.dart';
 import 'package:clinic_appointment_system/core/widgets/app_scaffold.dart';
 import 'package:clinic_appointment_system/core/widgets/square_svg_icon.dart';
+import 'package:clinic_appointment_system/core/widgets/text_field/app_text_field.dart';
 import 'package:clinic_appointment_system/core/widgets/viewport_scroll_view.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_request_cubit.dart';
@@ -49,7 +50,6 @@ part 'auth_role_item.dart';
 part 'auth_shell.dart';
 part 'auth_step_item.dart';
 part 'auth_submit_button.dart';
-part 'auth_text_field.dart';
 
 /// Template for a screen-owned request Cubit and the shared form lifecycle.
 /// Subclasses provide the visual variant and invoke their concrete request.
