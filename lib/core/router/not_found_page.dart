@@ -10,23 +10,27 @@ final class NotFoundPage extends StatelessWidget {
   const NotFoundPage({super.key});
 
   @override
-  Widget build(BuildContext context) => AppScaffold(
-    child: Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        spacing: AppSizes.lg,
-        children: [
-          Text(
-            LocaleKeys.navigation_notFound.tr(),
-            style: context.textTheme.headlineSmall,
-            textAlign: TextAlign.center,
-          ),
-          FilledButton(
-            onPressed: () => context.go(AppRoutes.home),
-            child: Text(LocaleKeys.navigation_goHome.tr()),
-          ),
-        ],
+  Widget build(BuildContext context) {
+    return AppScaffold(
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          spacing: AppSizes.s16,
+          children: [
+            Text(
+              LocaleKeys.navigation_notFound.tr(),
+              style: context.textTheme.headlineSmall,
+              textAlign: TextAlign.center,
+            ),
+            FilledButton(
+              onPressed: () {
+                context.go(AppRoutes.home);
+              },
+              child: Text(LocaleKeys.navigation_goHome.tr()),
+            ),
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }

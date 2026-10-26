@@ -62,7 +62,7 @@ void main() {
       isTrue,
     );
     expect(
-      validator.validatePassword(' abcd ', isSignUp: true).isSuccess,
+      validator.validatePassword(' abcdef ', isSignUp: true).isSuccess,
       isTrue,
     );
   });
@@ -99,7 +99,7 @@ void main() {
     expect(
       validator
           .validateCredentials(
-            const AuthCredentials(email: 'a@example.com', password: 'secret'),
+            const AuthCredentials(email: 'a@example.com', password: 'secret12'),
             isSignUp: true,
           )
           .isSuccess,

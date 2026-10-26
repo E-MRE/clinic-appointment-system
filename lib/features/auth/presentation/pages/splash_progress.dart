@@ -25,7 +25,7 @@ final class _SplashProgress extends StatelessWidget {
             ),
             child: _indicator(context, onPrimary),
           ),
-          const EmptySize.mdHeight(),
+          const EmptySize.s12Height(),
           Text(
             LocaleKeys.common_loading.translate(),
             style: context.textTheme.labelLarge?.copyWith(color: onPrimary),
@@ -35,14 +35,15 @@ final class _SplashProgress extends StatelessWidget {
     );
   }
 
-  LinearProgressIndicator _indicator(BuildContext context, Color color) =>
-      LinearProgressIndicator(
-        value: MediaQuery.disableAnimationsOf(context)
-            ? _reducedMotionValue
-            : null,
-        color: color,
-        backgroundColor: color.withValues(alpha: _trackAlpha),
-        minHeight: AppSizes.xs,
-        borderRadius: const AppRadius.full(),
-      );
+  LinearProgressIndicator _indicator(BuildContext context, Color color) {
+    return LinearProgressIndicator(
+      value: MediaQuery.disableAnimationsOf(context)
+          ? _reducedMotionValue
+          : null,
+      color: color,
+      backgroundColor: color.withValues(alpha: _trackAlpha),
+      borderRadius: const AppRadius.full(),
+      minHeight: AppSizes.s4,
+    );
+  }
 }

@@ -7,6 +7,7 @@ import 'package:clinic_appointment_system/core/errors/result.dart';
 import 'package:clinic_appointment_system/features/auth/domain/entities/auth_session.dart';
 import 'package:clinic_appointment_system/features/auth/domain/mappers/auth_exception_mapper.dart';
 import 'package:clinic_appointment_system/features/auth/domain/models/auth_credentials.dart';
+import 'package:clinic_appointment_system/features/auth/domain/models/auth_registration.dart';
 import 'package:clinic_appointment_system/features/auth/domain/repositories/auth_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -22,11 +23,11 @@ final class FirebaseAuthRepository implements AuthRepository {
     try {
       return _auth
           .authStateChanges()
-          .map(
-            (user) => DataResult<AuthSession>.success(
+          .map((user) {
+            return DataResult<AuthSession>.success(
               data: user == null ? null : _sessionFromUser(user),
-            ),
-          )
+            );
+          })
           .transform(
             StreamTransformer<
               DataResult<AuthSession>,
@@ -47,31 +48,47 @@ final class FirebaseAuthRepository implements AuthRepository {
   }
 
   @override
-  Future<DataResult<AuthSession>> signUp(AuthCredentials credentials) =>
-      _execute(() async {
-        final result = await _auth.createUserWithEmailAndPassword(
-          email: credentials.email.trim(),
-          password: credentials.password,
+  Future<DataResult<AuthSession>> signUp(AuthRegistration registration) {
+    return _execute(() async {
+      final result = await _auth.createUserWithEmailAndPassword(
+        email: registration.email.trim(),
+        password: registration.password,
+      );
+      final session = _sessionFromCredential(result);
+      try {
+        await result.user!.updateDisplayName(registration.fullName.trim());
+      } on Exception catch (_, stackTrace) {
+        Error.throwWithStackTrace(
+          const AuthException(AuthErrorCode.profileUpdateFailed),
+          stackTrace,
         );
-        return _sessionFromCredential(result);
-      });
+      }
+      return session;
+    });
+  }
 
   @override
-  Future<DataResult<AuthSession>> signIn(AuthCredentials credentials) =>
-      _execute(() async {
-        final result = await _auth.signInWithEmailAndPassword(
-          email: credentials.email.trim(),
-          password: credentials.password,
-        );
-        return _sessionFromCredential(result);
-      });
+  Future<DataResult<AuthSession>> signIn(AuthCredentials credentials) {
+    return _execute(() async {
+      final result = await _auth.signInWithEmailAndPassword(
+        email: credentials.email.trim(),
+        password: credentials.password,
+      );
+      return _sessionFromCredential(result);
+    });
+  }
 
   @override
-  Future<Result> signOut() => _executeAction(_auth.signOut);
+  Future<Result> signOut() {
+    return _executeAction(_auth.signOut);
+  }
 
   @override
-  Future<Result> sendPasswordResetEmail(String email) =>
-      _executeAction(() => _auth.sendPasswordResetEmail(email: email.trim()));
+  Future<Result> sendPasswordResetEmail(String email) {
+    return _executeAction(() {
+      return _auth.sendPasswordResetEmail(email: email.trim());
+    });
+  }
 
   AuthSession _sessionFromCredential(UserCredential credential) {
     final user = credential.user;

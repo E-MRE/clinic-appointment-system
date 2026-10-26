@@ -5,13 +5,15 @@ final class _SplashCompactLayout extends StatelessWidget {
   const _SplashCompactLayout();
 
   @override
-  Widget build(BuildContext context) => const ViewportScrollView(
-    child: Padding(
-      padding: AppPadding.allXl(),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [_SplashBrand(), EmptySize.xxxlHeight(), _SplashProgress()],
+  Widget build(BuildContext context) {
+    return const ViewportScrollView(
+      child: Padding(
+        padding: AppPadding.allXl(),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [_SplashBrand(), EmptySize.s48Height(), _SplashProgress()],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }

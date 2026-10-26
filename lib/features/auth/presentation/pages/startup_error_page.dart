@@ -2,17 +2,17 @@ import 'package:clinic_appointment_system/core/constants/widget_key.dart';
 import 'package:clinic_appointment_system/core/enums/auth_error_code.dart';
 import 'package:clinic_appointment_system/core/localization/localization.dart';
 import 'package:clinic_appointment_system/core/theme/theme.dart';
+import 'package:clinic_appointment_system/core/widgets/app_brand_header.dart';
 import 'package:clinic_appointment_system/core/widgets/app_scaffold.dart';
+import 'package:clinic_appointment_system/core/widgets/square_svg_icon.dart';
 import 'package:clinic_appointment_system/core/widgets/viewport_scroll_view.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/enums/startup_error_kind.dart';
 import 'package:clinic_appointment_system/generated/assets.gen.dart';
 import 'package:flutter/material.dart';
 
-part 'startup_header.dart';
 part 'startup_error_badge.dart';
 part 'startup_error_message.dart';
 part 'startup_error_actions.dart';
-part 'startup_retry_icon.dart';
 
 /// Recoverable session-startup failure using the approved shared error designs.
 final class StartupErrorPage extends StatelessWidget {
@@ -40,7 +40,11 @@ final class StartupErrorPage extends StatelessWidget {
       key: const WidgetKey.startupErrorPage(),
       child: Column(
         children: [
-          const _StartupHeader(),
+          AppBrandHeader(
+            logo: Assets.images.brand.clinicLogo,
+            logoSize: AppSizes.s32,
+            minimumHeight: AppSizes.s48,
+          ),
           Expanded(child: _buildScrollView(isMobile, actions)),
           if (isMobile)
             Padding(padding: const AppPadding.verticalSm(), child: actions),
@@ -61,9 +65,9 @@ final class StartupErrorPage extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               _StartupErrorBadge(kind: _kind),
-              const EmptySize.xlHeight(),
+              const EmptySize.s24Height(),
               _StartupErrorMessage(kind: _kind),
-              if (!isMobile) ...[const EmptySize.xlHeight(), actions],
+              if (!isMobile) ...[const EmptySize.s24Height(), actions],
             ],
           ),
         ),

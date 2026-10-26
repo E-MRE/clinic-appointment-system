@@ -8,6 +8,7 @@ import 'package:clinic_appointment_system/features/auth/data/repositories/fireba
 import 'package:clinic_appointment_system/features/auth/domain/entities/auth_session.dart';
 import 'package:clinic_appointment_system/features/auth/domain/mappers/auth_exception_mapper.dart';
 import 'package:clinic_appointment_system/features/auth/domain/models/auth_credentials.dart';
+import 'package:clinic_appointment_system/features/auth/domain/models/auth_registration.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -24,6 +25,12 @@ void main() {
     password: ' secret ',
   );
 
+  const registration = AuthRegistration(
+    fullName: ' Elif Kaya ',
+    email: ' patient@example.com ',
+    password: ' secret ',
+  );
+
   setUp(() {
     auth = MockFirebaseAuth();
     user = MockFirebaseUser();
@@ -36,6 +43,7 @@ void main() {
     when(() => user.email).thenReturn('patient@example.com');
     when(() => user.emailVerified).thenReturn(false);
     when(() => credential.user).thenReturn(user);
+    when(() => user.updateDisplayName(any())).thenAnswer((_) async {});
     when(
       () => auth.signInWithEmailAndPassword(
         email: any(named: 'email'),
@@ -51,10 +59,37 @@ void main() {
   });
 
   test('sign up returns DataResult and normalizes only the email', () async {
-    final result = await repository.signUp(credentials);
+    final result = await repository.signUp(registration);
     expect(result.isSuccess, isTrue);
     expect(result.data!.userId, 'patient-1');
     expect(result.data!.email, 'patient@example.com');
+    verify(
+      () => auth.createUserWithEmailAndPassword(
+        email: 'patient@example.com',
+        password: ' secret ',
+      ),
+    ).called(1);
+  });
+
+  test('registration saves the trimmed full name', () async {
+    await repository.signUp(registration);
+    verify(() => user.updateDisplayName('Elif Kaya')).called(1);
+  });
+
+  test('profile failure identifies an already created account', () async {
+    when(
+      () => user.updateDisplayName(any()),
+    ).thenThrow(FirebaseAuthException(code: 'network-request-failed'));
+    await expectLater(
+      repository.signUp(registration),
+      throwsA(
+        isA<AuthException>().having(
+          (e) => e.code,
+          'code',
+          AuthErrorCode.profileUpdateFailed,
+        ),
+      ),
+    );
     verify(
       () => auth.createUserWithEmailAndPassword(
         email: 'patient@example.com',
@@ -179,7 +214,7 @@ void main() {
       ).thenThrow(error);
       final operations = <Future<Object?> Function()>[
         () => repository.signIn(credentials),
-        () => repository.signUp(credentials),
+        () => repository.signUp(registration),
         repository.signOut,
         () => repository.sendPasswordResetEmail('a@example.com'),
       ];

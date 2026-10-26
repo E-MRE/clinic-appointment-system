@@ -5,6 +5,7 @@ import 'package:clinic_appointment_system/features/auth/data/mappers/firebase_au
 import 'package:clinic_appointment_system/features/auth/data/repositories/firebase_auth_repository.dart';
 import 'package:clinic_appointment_system/features/auth/domain/mappers/auth_exception_mapper.dart';
 import 'package:clinic_appointment_system/features/auth/domain/repositories/auth_repository.dart';
+import 'package:clinic_appointment_system/features/auth/presentation/auth_route_guard.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/password_reset_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/sign_in_cubit.dart';
@@ -21,12 +22,12 @@ mixin AppDependencyRegisterMixin {
     injector.registerLazySingleton<AuthExceptionMapper>(
       FirebaseAuthExceptionMapper.new,
     );
-    injector.registerLazySingleton<AuthRepository>(
-      () => FirebaseAuthRepository(
+    injector.registerLazySingleton<AuthRepository>(() {
+      return FirebaseAuthRepository(
         injector.get<FirebaseAuth>(),
         injector.get<AuthExceptionMapper>(),
-      ),
-    );
+      );
+    });
     injector.registerLazySingleton<ThemeCubit>(
       ThemeCubit.new,
       dispose: (cubit) => cubit.close(),
@@ -45,9 +46,22 @@ mixin AppDependencyRegisterMixin {
     injector.registerFactory<PasswordResetCubit>(
       () => PasswordResetCubit(injector.get<AuthRepository>()),
     );
+    injector.registerLazySingleton<AuthRouteGuard>(
+      () => AuthRouteGuard(injector.get<AuthCubit>()),
+      dispose: (guard) => guard.dispose(),
+    );
     injector.registerLazySingleton<GoRouter>(
-      createAppRouter,
-      dispose: (router) => router.dispose(),
+      () {
+        return createAppRouter(
+          authGuard: injector.get<AuthRouteGuard>(),
+          signInCubitFactory: injector.get<SignInCubit>,
+          signUpCubitFactory: injector.get<SignUpCubit>,
+          passwordResetCubitFactory: injector.get<PasswordResetCubit>,
+        );
+      },
+      dispose: (router) {
+        router.dispose();
+      },
     );
   }
 }

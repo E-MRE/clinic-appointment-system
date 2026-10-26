@@ -12,19 +12,19 @@ import 'package:flutter/painting.dart';
 /// * full → 999
 final class AppRadius extends BorderRadius {
   /// value = 8
-  const AppRadius.small() : super.all(const Radius.circular(AppSizes.sm));
+  const AppRadius.small() : super.all(const Radius.circular(AppSizes.s8));
 
   /// value = 12
-  const AppRadius.medium() : super.all(const Radius.circular(AppSizes.md));
+  const AppRadius.medium() : super.all(const Radius.circular(AppSizes.s12));
 
   /// value = 16
-  const AppRadius.large() : super.all(const Radius.circular(AppSizes.lg));
+  const AppRadius.large() : super.all(const Radius.circular(AppSizes.s16));
 
   /// value = 24
-  const AppRadius.xLarge() : super.all(const Radius.circular(AppSizes.xl));
+  const AppRadius.xLarge() : super.all(const Radius.circular(AppSizes.s24));
 
   /// value = 32
-  const AppRadius.xxLarge() : super.all(const Radius.circular(AppSizes.xxl));
+  const AppRadius.xxLarge() : super.all(const Radius.circular(AppSizes.s32));
 
   /// Pill shape. Large enough to fully round any control.
   ///

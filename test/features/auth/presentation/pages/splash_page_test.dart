@@ -10,7 +10,7 @@ import '../../../../support/localization_test_app.dart';
 
 void main() {
   for (final (size, logoSize) in [
-    (const Size(390, 844), AppSizes.section),
+    (const Size(390, 844), AppSizes.s96),
     (const Size(834, 1194), AppSizes.logoTablet),
     (const Size(1440, 900), AppSizes.logoDesktop),
   ]) {

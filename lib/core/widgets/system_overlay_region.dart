@@ -13,14 +13,17 @@ final class SystemOverlayRegion extends StatelessWidget {
   final Widget child;
 
   @override
-  Widget build(BuildContext context) => AnnotatedRegion<SystemUiOverlayStyle>(
-    value: _overlayStyleFor(background),
-    child: child,
-  );
+  Widget build(BuildContext context) {
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: _overlayStyleFor(background),
+      child: child,
+    );
+  }
 
   /// Light icons on dark backgrounds, dark icons on light ones.
-  SystemUiOverlayStyle _overlayStyleFor(Color background) =>
-      ThemeData.estimateBrightnessForColor(background) == Brightness.dark
-      ? SystemUiOverlayStyle.light
-      : SystemUiOverlayStyle.dark;
+  SystemUiOverlayStyle _overlayStyleFor(Color background) {
+    return ThemeData.estimateBrightnessForColor(background) == Brightness.dark
+        ? SystemUiOverlayStyle.light
+        : SystemUiOverlayStyle.dark;
+  }
 }

@@ -5,6 +5,6 @@ import 'package:flutter/widgets.dart';
 extension BreakpointsContext on BuildContext {
   ScreenSize get screenSize {
     final size = MediaQuery.sizeOf(this);
-    return Breakpoints.resolve(size.width, size.height);
+    return BreakpointsConstants.resolve(size.width, size.height);
   }
 }

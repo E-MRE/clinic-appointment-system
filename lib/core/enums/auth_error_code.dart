@@ -9,5 +9,6 @@ enum AuthErrorCode {
   tooManyRequests,
   networkRequestFailed,
   operationNotAllowed,
+  profileUpdateFailed,
   unexpected,
 }

@@ -14,6 +14,7 @@ final class _StartupErrorMessage extends StatelessWidget {
         liveRegion: true,
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          spacing: AppSizes.s8,
           children: [
             Semantics(
               header: true,
@@ -23,7 +24,6 @@ final class _StartupErrorMessage extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ),
-            const EmptySize.smHeight(),
             Text(
               kind.descriptionKey.translate(),
               style: textTheme.bodyMedium?.copyWith(

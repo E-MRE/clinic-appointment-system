@@ -27,6 +27,9 @@ class $AssetsColorsGen {
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
+  /// Directory path: assets/images/auth
+  $AssetsImagesAuthGen get auth => const $AssetsImagesAuthGen();
+
   /// Directory path: assets/images/brand
   $AssetsImagesBrandGen get brand => const $AssetsImagesBrandGen();
 
@@ -42,6 +45,53 @@ class $AssetsTranslationsGen {
 
   /// List of all assets
   List<String> get values => [trTR];
+}
+
+class $AssetsImagesAuthGen {
+  const $AssetsImagesAuthGen();
+
+  /// File path: assets/images/auth/admin.svg
+  SvgGenImage get admin => const SvgGenImage('assets/images/auth/admin.svg');
+
+  /// File path: assets/images/auth/back.svg
+  SvgGenImage get back => const SvgGenImage('assets/images/auth/back.svg');
+
+  /// File path: assets/images/auth/email.svg
+  SvgGenImage get email => const SvgGenImage('assets/images/auth/email.svg');
+
+  /// File path: assets/images/auth/eye.svg
+  SvgGenImage get eye => const SvgGenImage('assets/images/auth/eye.svg');
+
+  /// File path: assets/images/auth/lock.svg
+  SvgGenImage get lock => const SvgGenImage('assets/images/auth/lock.svg');
+
+  /// File path: assets/images/auth/panel_logo.svg
+  SvgGenImage get panelLogo =>
+      const SvgGenImage('assets/images/auth/panel_logo.svg');
+
+  /// File path: assets/images/auth/patient.svg
+  SvgGenImage get patient =>
+      const SvgGenImage('assets/images/auth/patient.svg');
+
+  /// File path: assets/images/auth/sign_in_logo.svg
+  SvgGenImage get signInLogo =>
+      const SvgGenImage('assets/images/auth/sign_in_logo.svg');
+
+  /// File path: assets/images/auth/staff.svg
+  SvgGenImage get staff => const SvgGenImage('assets/images/auth/staff.svg');
+
+  /// List of all assets
+  List<SvgGenImage> get values => [
+    admin,
+    back,
+    email,
+    eye,
+    lock,
+    panelLogo,
+    patient,
+    signInLogo,
+    staff,
+  ];
 }
 
 class $AssetsImagesBrandGen {

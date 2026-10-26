@@ -13,19 +13,26 @@ final class AuthStartupGate extends StatelessWidget {
     required this.onGoHome,
     super.key,
   });
+
   final Widget child;
   final VoidCallback onGoHome;
 
   @override
-  Widget build(BuildContext context) => BlocBuilder<AuthCubit, AuthState>(
-    builder: (context, state) => switch (state) {
-      AuthInitial() || AuthLoading() => const SplashPage(),
-      AuthFailure(:final errorCode) => StartupErrorPage(
-        errorCode: errorCode,
-        onRetry: context.read<AuthCubit>().retry,
-        onGoHome: onGoHome,
-      ),
-      AuthSignedIn() || AuthSignedOut() => child,
-    },
-  );
+  Widget build(BuildContext context) {
+    return BlocBuilder<AuthCubit, AuthState>(
+      builder: (context, state) {
+        if (state is AuthInitial || state is AuthLoading) {
+          return const SplashPage();
+        }
+        if (state is AuthFailure) {
+          return StartupErrorPage(
+            errorCode: state.errorCode,
+            onRetry: context.read<AuthCubit>().retry,
+            onGoHome: onGoHome,
+          );
+        }
+        return child;
+      },
+    );
+  }
 }

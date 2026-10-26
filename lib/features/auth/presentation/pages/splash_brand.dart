@@ -8,7 +8,7 @@ final class _SplashBrand extends StatelessWidget {
     final textTheme = context.textTheme;
     final onPrimary = context.colorScheme.onPrimary;
     final logoSize = context.screenSize.select(
-      mobile: AppSizes.section,
+      mobile: AppSizes.s96,
       tablet: AppSizes.logoTablet,
       desktop: AppSizes.logoDesktop,
     );
@@ -22,13 +22,13 @@ final class _SplashBrand extends StatelessWidget {
             height: logoSize,
             excludeFromSemantics: true,
           ),
-          const EmptySize.xlHeight(),
+          const EmptySize.s24Height(),
           Text(
             LocaleKeys.appName.translate(),
             textAlign: TextAlign.center,
             style: textTheme.headlineLarge?.copyWith(color: onPrimary),
           ),
-          const EmptySize.smHeight(),
+          const EmptySize.s8Height(),
           Text(
             LocaleKeys.splash_subtitle.translate(),
             textAlign: TextAlign.center,

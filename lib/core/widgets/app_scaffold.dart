@@ -8,16 +8,18 @@ final class AppScaffold extends StatelessWidget {
   final Widget child;
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    body: SafeArea(
-      child: Padding(
-        padding: context.screenSize.select(
-          mobile: const AppPadding.pageMobile(),
-          tablet: const AppPadding.pageTablet(),
-          desktop: const AppPadding.pageDesktop(),
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: context.screenSize.select(
+            mobile: const AppPadding.pageMobile(),
+            tablet: const AppPadding.pageTablet(),
+            desktop: const AppPadding.pageDesktop(),
+          ),
+          child: child,
         ),
-        child: child,
       ),
-    ),
-  );
+    );
+  }
 }

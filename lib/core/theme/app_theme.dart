@@ -29,7 +29,7 @@ abstract base class AppTheme {
   static const _buttonShape = RoundedRectangleBorder(
     borderRadius: AppRadius.medium(),
   );
-  static const _buttonSize = Size(0, AppSizes.xxxl);
+  static const _buttonSize = Size(0, AppSizes.s48);
 
   ThemeData _build() {
     final scheme = colorScheme;

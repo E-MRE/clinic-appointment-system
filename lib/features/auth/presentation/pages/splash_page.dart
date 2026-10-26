@@ -26,10 +26,11 @@ final class SplashPage extends StatelessWidget {
         backgroundColor: background,
         body: SafeArea(
           child: LayoutBuilder(
-            builder: (context, constraints) =>
-                _isCompact(context, constraints.maxHeight)
-                ? const _SplashCompactLayout()
-                : const _SplashCenteredLayout(),
+            builder: (context, constraints) {
+              return _isCompact(context, constraints.maxHeight)
+                  ? const _SplashCompactLayout()
+                  : const _SplashCenteredLayout();
+            },
           ),
         ),
       ),
@@ -37,8 +38,9 @@ final class SplashPage extends StatelessWidget {
   }
 
   /// Short viewports and large text scroll instead of pinning the progress.
-  bool _isCompact(BuildContext context, double height) =>
-      height < Breakpoints.compactHeight ||
-      context.textScaleFor(context.textTheme.headlineLarge!.fontSize!) >
-          Breakpoints.largeTextScale;
+  bool _isCompact(BuildContext context, double height) {
+    return height < BreakpointsConstants.compactHeight ||
+        context.textScaleFor(context.textTheme.headlineLarge!.fontSize!) >
+            BreakpointsConstants.largeTextScale;
+  }
 }

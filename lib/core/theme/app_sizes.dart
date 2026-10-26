@@ -2,20 +2,25 @@
 /// Use these instead of numeric literals.
 ///
 /// Scale (4px grid):
-/// * xs → 4
-/// * sm → 8
-/// * md → 12
-/// * lg → 16
-/// * xl → 24
-/// * xxl → 32
-/// * xxxl → 48
-/// * section → 96
-/// * sectionLarge → 144
+/// * s4 → 4
+/// * s8 → 8
+/// * s12 → 12
+/// * s16 → 16
+/// * s20 → 20
+/// * s24 → 24
+/// * s32 → 32
+/// * s40 → 40
+/// * s48 → 48
+/// * s56 → 56
+/// * s64 → 64
+/// * s72 → 72
+/// * s80 → 80
+/// * s96 → 96
+/// * s144 → 144
 ///
 /// Widget-specific sizes that do not fit the scale:
 /// * borderThin → 1
 /// * retryIcon → 20
-/// * errorGlyphMobile → 40
 /// * logoTablet → 112
 /// * logoDesktop → 120
 /// * illustrationLarge → 120
@@ -23,37 +28,75 @@
 /// * progressWidthMd → 200
 /// * progressWidthLg → 240
 /// * messageMaxWidth → 520
+/// * authFormWidth → 400
+/// * registrationFormWidth → 440
+/// * authCardWidth → 480
+/// * authCardPadding → 40
 abstract final class AppSizes {
   // Scale
 
   /// value = 4
-  static const double xs = 4;
+  static const double s4 = 4;
 
   /// value = 8
-  static const double sm = 8;
+  static const double s8 = 8;
 
   /// value = 12
-  static const double md = 12;
+  static const double s12 = 12;
 
   /// value = 16
-  static const double lg = 16;
+  static const double s16 = 16;
+
+  /// value = 20
+  static const double s20 = 20;
 
   /// value = 24
-  static const double xl = 24;
+  static const double s24 = 24;
 
   /// value = 32
-  static const double xxl = 32;
+  static const double s32 = 32;
+
+  /// value = 40
+  static const double s40 = 40;
 
   /// value = 48
-  static const double xxxl = 48;
+  static const double s48 = 48;
+
+  /// value = 56
+  static const double s56 = 56;
+
+  /// value = 64
+  static const double s64 = 64;
+
+  /// value = 72
+  static const double s72 = 72;
+
+  /// value = 80
+  static const double s80 = 80;
 
   /// value = 96
-  static const double section = 96;
+  static const double s96 = 96;
 
   /// value = 144
-  static const double sectionLarge = 144;
+  static const double s144 = 144;
 
   // Widget-specific
+
+  /// Auth sign-in form maximum width.
+  /// value = 400
+  static const double authFormWidth = 400;
+
+  /// Registration form maximum width.
+  /// value = 440
+  static const double registrationFormWidth = 440;
+
+  /// Tablet sign-in card maximum width.
+  /// value = 480
+  static const double authCardWidth = 480;
+
+  /// Tablet authentication card inset.
+  /// value = 40
+  static const double authCardPadding = s40;
 
   /// Border and divider thickness.
   ///
@@ -63,12 +106,7 @@ abstract final class AppSizes {
   /// Retry button icon.
   ///
   /// value = 20
-  static const double retryIcon = 20;
-
-  /// Startup error glyph on mobile.
-  ///
-  /// value = 40
-  static const double errorGlyphMobile = 40;
+  static const double retryIcon = s20;
 
   /// Splash logo on tablet.
   ///

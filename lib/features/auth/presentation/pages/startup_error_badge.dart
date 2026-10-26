@@ -9,8 +9,8 @@ final class _StartupErrorBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colorScheme;
     final isMobile = context.screenSize.isMobile;
-    final badgeSize = isMobile ? AppSizes.section : AppSizes.illustrationLarge;
-    final glyphSize = isMobile ? AppSizes.errorGlyphMobile : AppSizes.xxxl;
+    final badgeSize = isMobile ? AppSizes.s96 : AppSizes.illustrationLarge;
+    final glyphSize = isMobile ? AppSizes.s32 : AppSizes.s48;
     return Container(
       width: badgeSize,
       height: badgeSize,
@@ -19,14 +19,10 @@ final class _StartupErrorBadge extends StatelessWidget {
         borderRadius: const AppRadius.xxLarge(),
       ),
       alignment: Alignment.center,
-      child: kind.illustration.svg(
-        width: glyphSize,
-        height: glyphSize,
-        colorFilter: ColorFilter.mode(
-          kind.onContainerColor(colors),
-          BlendMode.srcIn,
-        ),
-        excludeFromSemantics: true,
+      child: SquareSvgIcon(
+        asset: kind.illustration,
+        size: glyphSize,
+        color: kind.onContainerColor(colors),
       ),
     );
   }

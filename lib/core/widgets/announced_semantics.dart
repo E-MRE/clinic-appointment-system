@@ -17,9 +17,11 @@ final class AnnouncedSemantics extends StatelessWidget {
   final Widget child;
 
   @override
-  Widget build(BuildContext context) => Semantics(
-    label: label,
-    liveRegion: liveRegion,
-    child: ExcludeSemantics(child: child),
-  );
+  Widget build(BuildContext context) {
+    return Semantics(
+      label: label,
+      liveRegion: liveRegion,
+      child: ExcludeSemantics(child: child),
+    );
+  }
 }

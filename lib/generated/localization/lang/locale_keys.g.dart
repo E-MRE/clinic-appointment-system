@@ -50,6 +50,8 @@ abstract class LocaleKeys {
   static const validation_invalidEmail = 'validation.invalidEmail';
   static const validation_passwordRequired = 'validation.passwordRequired';
   static const validation_passwordTooShort = 'validation.passwordTooShort';
+  static const validation_fullNameRequired = 'validation.fullNameRequired';
+  static const validation_passwordMismatch = 'validation.passwordMismatch';
   static const validation = 'validation';
   static const splash_subtitle = 'splash.subtitle';
   static const splash = 'splash';
@@ -58,4 +60,58 @@ abstract class LocaleKeys {
   static const startup_errorTitle = 'startup.errorTitle';
   static const startup_errorDescription = 'startup.errorDescription';
   static const startup = 'startup';
+  static const auth_signInTitle = 'auth.signInTitle';
+  static const auth_signInAction = 'auth.signInAction';
+  static const auth_signInDescriptionMobile = 'auth.signInDescriptionMobile';
+  static const auth_signInDescriptionTablet = 'auth.signInDescriptionTablet';
+  static const auth_signInDescriptionDesktop = 'auth.signInDescriptionDesktop';
+  static const auth_signUpTitle = 'auth.signUpTitle';
+  static const auth_signUpDescriptionMobile = 'auth.signUpDescriptionMobile';
+  static const auth_signUpDescriptionTablet = 'auth.signUpDescriptionTablet';
+  static const auth_signUpDescriptionDesktop = 'auth.signUpDescriptionDesktop';
+  static const auth_email = 'auth.email';
+  static const auth_emailHint = 'auth.emailHint';
+  static const auth_fullName = 'auth.fullName';
+  static const auth_fullNameHint = 'auth.fullNameHint';
+  static const auth_password = 'auth.password';
+  static const auth_passwordConfirmation = 'auth.passwordConfirmation';
+  static const auth_passwordHint = 'auth.passwordHint';
+  static const auth_showPassword = 'auth.showPassword';
+  static const auth_hidePassword = 'auth.hidePassword';
+  static const auth_forgotPassword = 'auth.forgotPassword';
+  static const auth_resetTitle = 'auth.resetTitle';
+  static const auth_resetDescription = 'auth.resetDescription';
+  static const auth_resetAction = 'auth.resetAction';
+  static const auth_resetSent = 'auth.resetSent';
+  static const auth_noAccount = 'auth.noAccount';
+  static const auth_registerPatient = 'auth.registerPatient';
+  static const auth_hasAccount = 'auth.hasAccount';
+  static const auth_staffNotice = 'auth.staffNotice';
+  static const auth_signInBrandTitle = 'auth.signInBrandTitle';
+  static const auth_patientDescription = 'auth.patientDescription';
+  static const auth_staffDescription = 'auth.staffDescription';
+  static const auth_adminDescription = 'auth.adminDescription';
+  static const auth_signUpBrandTitle = 'auth.signUpBrandTitle';
+  static const auth_stepService = 'auth.stepService';
+  static const auth_stepDoctor = 'auth.stepDoctor';
+  static const auth_stepApproval = 'auth.stepApproval';
+  static const auth_submitting = 'auth.submitting';
+  static const auth_signOut = 'auth.signOut';
+  static const auth_errors_invalidEmail = 'auth.errors.invalidEmail';
+  static const auth_errors_missingPassword = 'auth.errors.missingPassword';
+  static const auth_errors_weakPassword = 'auth.errors.weakPassword';
+  static const auth_errors_invalidCredentials =
+      'auth.errors.invalidCredentials';
+  static const auth_errors_emailAlreadyInUse = 'auth.errors.emailAlreadyInUse';
+  static const auth_errors_userDisabled = 'auth.errors.userDisabled';
+  static const auth_errors_tooManyRequests = 'auth.errors.tooManyRequests';
+  static const auth_errors_networkRequestFailed =
+      'auth.errors.networkRequestFailed';
+  static const auth_errors_operationNotAllowed =
+      'auth.errors.operationNotAllowed';
+  static const auth_errors_profileUpdateFailed =
+      'auth.errors.profileUpdateFailed';
+  static const auth_errors_unexpected = 'auth.errors.unexpected';
+  static const auth_errors = 'auth.errors';
+  static const auth = 'auth';
 }

@@ -18,28 +18,35 @@ final class _StartupErrorActions extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _retryButton,
-          if (kind.offersGoHome) ...[const EmptySize.smHeight(), _goHomeButton],
+          if (kind.offersGoHome) ...[const EmptySize.s8Height(), _goHomeButton],
         ],
       );
     }
 
     return Wrap(
       alignment: WrapAlignment.center,
-      spacing: AppSizes.md,
-      runSpacing: AppSizes.sm,
+      spacing: AppSizes.s12,
+      runSpacing: AppSizes.s8,
       children: [if (kind.offersGoHome) _goHomeButton, _retryButton],
     );
   }
 
-  FilledButton get _retryButton => FilledButton.icon(
-    key: const WidgetKey.startupRetry(),
-    onPressed: onRetry,
-    icon: const _StartupRetryIcon(),
-    label: Text(LocaleKeys.common_retry.translate()),
-  );
+  FilledButton get _retryButton {
+    return FilledButton.icon(
+      key: const WidgetKey.startupRetry(),
+      onPressed: onRetry,
+      icon: SquareSvgIcon(
+        asset: Assets.images.status.retry,
+        size: AppSizes.s20,
+      ),
+      label: Text(LocaleKeys.common_retry.translate()),
+    );
+  }
 
-  OutlinedButton get _goHomeButton => OutlinedButton(
-    onPressed: onGoHome,
-    child: Text(LocaleKeys.navigation_goHome.translate()),
-  );
+  OutlinedButton get _goHomeButton {
+    return OutlinedButton(
+      onPressed: onGoHome,
+      child: Text(LocaleKeys.navigation_goHome.translate()),
+    );
+  }
 }

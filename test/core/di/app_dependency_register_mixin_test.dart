@@ -159,6 +159,8 @@ void main() {
     expect(container.isRegistered<AuthCubit>(), isFalse);
     expect(container.isRegistered<GoRouter>(), isFalse);
     _DependencyRegistrar().registerDependencies(container);
+    await container.unregister<FirebaseAuth>();
+    container.registerSingleton<FirebaseAuth>(auth);
     expect(container.get<ThemeCubit>(), isNot(same(oldCubit)));
     expect(container.get<ThemeCubit>().state, ThemeMode.light);
     expect(container.get<GoRouter>(), isNot(same(oldRouter)));

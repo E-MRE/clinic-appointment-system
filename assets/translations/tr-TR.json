@@ -52,7 +52,9 @@
   "validation": {
     "invalidEmail": "Geçerli bir e-posta adresi girin.",
     "passwordRequired": "Şifrenizi girin.",
-    "passwordTooShort": "Şifreniz en az {minimumLength} karakter olmalıdır."
+    "passwordTooShort": "Şifreniz en az {minimumLength} karakter olmalıdır.",
+    "fullNameRequired": "Adınızı ve soyadınızı girin.",
+    "passwordMismatch": "Şifreler eşleşmiyor."
   },
   "splash": {
     "subtitle": "Hastane ve klinik randevuları"
@@ -62,5 +64,57 @@
     "offlineDescription": "İnternet bağlantınızı kontrol edip tekrar deneyin. Girdiğiniz bilgiler kaybolmadı.",
     "errorTitle": "Bir şeyler ters gitti",
     "errorDescription": "İsteğiniz tamamlanamadı. Birkaç saniye sonra tekrar deneyin; sorun sürerse klinik yönetimine bildirin."
+  },
+  "auth": {
+    "signInTitle": "Giriş yapın",
+    "signInAction": "Giriş yap",
+    "signInDescriptionMobile": "Randevularınızı görmek ve yönetmek için hesabınıza giriş yapın.",
+    "signInDescriptionTablet": "Klinik Randevu Sistemi hesabınızla devam edin.",
+    "signInDescriptionDesktop": "Hesabınıza e-posta adresiniz ve şifrenizle girin.",
+    "signUpTitle": "Hesap oluştur",
+    "signUpDescriptionMobile": "Hasta hesabınızla randevu talep edebilir, durumunu anlık takip edebilirsiniz.",
+    "signUpDescriptionTablet": "Hasta hesabıyla randevu talep edin, durumunu anlık takip edin.",
+    "signUpDescriptionDesktop": "Hasta hesabınızı birkaç bilgiyle açın.",
+    "email": "E-posta",
+    "emailHint": "ornek@eposta.com",
+    "fullName": "Ad soyad",
+    "fullNameHint": "Adınız ve soyadınız",
+    "password": "Şifre",
+    "passwordConfirmation": "Şifre (tekrar)",
+    "passwordHint": "En az {minimumLength} karakter.",
+    "showPassword": "Şifreyi göster",
+    "hidePassword": "Şifreyi gizle",
+    "forgotPassword": "Şifremi unuttum",
+    "resetTitle": "Şifrenizi sıfırlayın",
+    "resetDescription": "Şifre sıfırlama bağlantısı için hesabınızın e-posta adresini girin.",
+    "resetAction": "Sıfırlama bağlantısı gönder",
+    "resetSent": "Bu adresle bir hesap varsa şifre sıfırlama bağlantısı gönderildi. Gelen kutunuzu kontrol edin.",
+    "noAccount": "Hesabınız yok mu?",
+    "registerPatient": "Hasta olarak kayıt olun",
+    "hasAccount": "Zaten hesabınız var mı?",
+    "staffNotice": "Doktor ve personel hesapları klinik yönetimi tarafından açılır.",
+    "signInBrandTitle": "Randevu talebinden onaya kadar her adım tek yerde.",
+    "patientDescription": "Hasta — hizmeti ve doktoru seçer, uygun saati görür, talebinin onaylandığını anında görür.",
+    "staffDescription": "Doktor ve personel — uygunluğunu tanımlar, talepleri onaylar ya da reddeder, gününü yönetir.",
+    "adminDescription": "Yönetici — şubeleri, bölümleri, hizmetleri ve personeli yönetir; her randevuyu görür.",
+    "signUpBrandTitle": "Üç adımda randevu.",
+    "stepService": "Hizmeti seçin: muayene, radyoloji ya da laboratuvar.",
+    "stepDoctor": "Doktoru ve uygun saati seçin.",
+    "stepApproval": "Doktor onayladığında randevunuz kesinleşir.",
+    "submitting": "İşleminiz sürüyor…",
+    "signOut": "Çıkış yap",
+    "errors": {
+      "invalidEmail": "Geçerli bir e-posta adresi girin.",
+      "missingPassword": "Şifrenizi girin.",
+      "weakPassword": "Daha güçlü bir şifre seçin.",
+      "invalidCredentials": "E-posta adresi veya şifre hatalı. Bilgilerinizi kontrol edin.",
+      "emailAlreadyInUse": "Bu e-posta adresiyle bir hesap zaten var. Giriş yapabilir veya şifrenizi sıfırlayabilirsiniz.",
+      "userDisabled": "Bu hesap devre dışı bırakılmış. Klinik yönetimiyle iletişime geçin.",
+      "tooManyRequests": "Çok fazla deneme yapıldı. Bir süre sonra tekrar deneyin.",
+      "networkRequestFailed": "Bağlantı kurulamadı. İnternet bağlantınızı kontrol edip tekrar deneyin.",
+      "operationNotAllowed": "Bu giriş yöntemi şu anda kullanılamıyor. Klinik yönetimiyle iletişime geçin.",
+      "profileUpdateFailed": "Hesabınız oluşturuldu ancak adınız kaydedilemedi. Hesabınıza giriş yapabilirsiniz; yeniden kayıt olmayın.",
+      "unexpected": "İşlem tamamlanamadı. Lütfen tekrar deneyin."
+    }
   }
 }
