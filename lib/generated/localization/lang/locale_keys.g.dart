@@ -25,6 +25,10 @@ abstract class LocaleKeys {
   static const roles_technician = 'roles.technician';
   static const roles_admin = 'roles.admin';
   static const roles = 'roles';
+  static const home_patient = 'home.patient';
+  static const home_staff = 'home.staff';
+  static const home_admin = 'home.admin';
+  static const home = 'home';
   static const appointment_title = 'appointment.title';
   static const appointment_appointments = 'appointment.appointments';
   static const appointment_newAppointment = 'appointment.newAppointment';

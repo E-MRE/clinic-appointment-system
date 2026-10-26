@@ -23,6 +23,11 @@
     "technician": "Teknisyen",
     "admin": "Yönetici"
   },
+  "home": {
+    "patient": "Hasta ana sayfası",
+    "staff": "Personel ana sayfası",
+    "admin": "Yönetici ana sayfası"
+  },
   "appointment": {
     "title": "Randevu",
     "appointments": "Randevular",

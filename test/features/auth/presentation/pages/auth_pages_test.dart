@@ -22,6 +22,10 @@ import 'package:clinic_appointment_system/features/auth/presentation/pages/auth_
 import 'package:clinic_appointment_system/features/auth/presentation/pages/password_reset_page.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/pages/sign_in_page.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/pages/sign_up_page.dart';
+import 'package:clinic_appointment_system/features/users/domain/entities/admin.dart';
+import 'package:clinic_appointment_system/features/users/domain/entities/doctor.dart';
+import 'package:clinic_appointment_system/features/users/domain/entities/patient.dart';
+import 'package:clinic_appointment_system/features/users/domain/entities/technician.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/user.dart';
 import 'package:clinic_appointment_system/features/users/domain/enums/user_error_code.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +48,62 @@ void main() {
       ),
     );
   });
+
+  const roles = [
+    (
+      Patient(id: 'patient-1', fullName: 'A', email: 'patient@example.com'),
+      '/patient',
+      'Hasta ana sayfası',
+    ),
+    (
+      Doctor(
+        id: 'patient-1',
+        fullName: 'A',
+        email: 'patient@example.com',
+        branchId: 'b',
+        departmentId: 'd',
+      ),
+      '/staff',
+      'Personel ana sayfası',
+    ),
+    (
+      Technician(
+        id: 'patient-1',
+        fullName: 'A',
+        email: 'patient@example.com',
+        branchId: 'b',
+        departmentId: 'd',
+      ),
+      '/staff',
+      'Personel ana sayfası',
+    ),
+    (
+      Admin(id: 'patient-1', fullName: 'A', email: 'patient@example.com'),
+      '/admin',
+      'Yönetici ana sayfası',
+    ),
+  ];
+  for (final (user, home, title) in roles) {
+    testWidgets('${user.role} signs in to its home and cannot open another', (
+      tester,
+    ) async {
+      final app = await _pump(tester);
+      app.users.getResult = DataResult.success(data: user);
+      when(
+        () => app.repository.signIn(any()),
+      ).thenAnswer((_) async => const DataResult.success(data: _session));
+      await _credentials(tester);
+      await _submit(tester);
+      app.sessions.add(const DataResult.success(data: _session));
+      await tester.pumpAndSettle();
+      expect(app.router.routeInformationProvider.value.uri.path, home);
+      expect(find.text(title), findsOneWidget);
+      app.router.go(home == '/admin' ? '/patient' : '/admin');
+      await tester.pumpAndSettle();
+      expect(app.router.routeInformationProvider.value.uri.path, home);
+      expect(find.text(title), findsOneWidget);
+    });
+  }
 
   testWidgets('missing profile keeps registration open', (tester) async {
     final app = await _pump(tester, route: AppRoutes.signUp);
@@ -126,7 +186,10 @@ void main() {
       route: AppRoutes.signUp,
       restored: _session,
     );
-    expect(app.router.routeInformationProvider.value.uri.path, AppRoutes.home);
+    expect(
+      app.router.routeInformationProvider.value.uri.path,
+      AppRoutes.patientHome,
+    );
     expect(find.byType(AuthShell), findsNothing);
   });
 
@@ -136,7 +199,10 @@ void main() {
     final app = await _pump(tester, restored: _session);
     app.router.go(AppRoutes.signUp);
     await tester.pumpAndSettle();
-    expect(app.router.routeInformationProvider.value.uri.path, AppRoutes.home);
+    expect(
+      app.router.routeInformationProvider.value.uri.path,
+      AppRoutes.patientHome,
+    );
     expect(find.byType(SignUpPage), findsNothing);
   });
 
@@ -221,7 +287,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(
         app.router.routeInformationProvider.value.uri.path,
-        AppRoutes.home,
+        AppRoutes.patientHome,
       );
       final credentials =
           verify(() => app.repository.signIn(captureAny())).captured.single
@@ -296,7 +362,7 @@ void main() {
     await _submit(tester);
     app.sessions.add(const DataResult.success(data: _session));
     await tester.pumpAndSettle();
-    expect(updates.last['uri'], AppRoutes.home);
+    expect(updates.last['uri'], AppRoutes.patientHome);
     expect(updates.last['replace'], isTrue);
   });
 
@@ -352,7 +418,10 @@ void main() {
     expect(find.byType(SignUpPage), findsOneWidget);
     pending.complete(const DataResult.success(data: _session));
     await tester.pumpAndSettle();
-    expect(app.router.routeInformationProvider.value.uri.path, AppRoutes.home);
+    expect(
+      app.router.routeInformationProvider.value.uri.path,
+      AppRoutes.patientHome,
+    );
     final registration =
         verify(() => app.repository.signUp(captureAny())).captured.single
             as AuthRegistration;
