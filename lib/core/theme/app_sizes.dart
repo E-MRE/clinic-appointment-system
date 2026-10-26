@@ -25,6 +25,9 @@
 /// * retryIcon → 20
 /// * logoTablet → 112
 /// * logoDesktop → 120
+/// * navigationRail → 88
+/// * navigationSidebar → 264
+/// * navigationIndicatorWidth → 64
 /// * illustrationLarge → 120
 /// * progressWidthSm → 160
 /// * progressWidthMd → 200
@@ -135,6 +138,18 @@ abstract final class AppSizes {
   ///
   /// value = 120
   static const double logoDesktop = 120;
+
+  /// Tablet navigation rail width.
+  /// value = 88
+  static const double navigationRail = 88;
+
+  /// Desktop navigation sidebar width.
+  /// value = 264
+  static const double navigationSidebar = 264;
+
+  /// Mobile navigation selected indicator width.
+  /// value = 64
+  static const double navigationIndicatorWidth = s64;
 
   /// Startup error illustration on tablet and desktop.
   ///

@@ -16,7 +16,7 @@ final class _AuthEmailField extends StatelessWidget with AuthValidationMixin {
 
   @override
   Widget build(BuildContext context) {
-    return _AuthTextField(
+    return AppTextField(
       label: LocaleKeys.auth_email.translate(),
       hint: LocaleKeys.auth_emailHint.translate(),
       fieldKey: const WidgetKey.authEmail(),
@@ -28,7 +28,7 @@ final class _AuthEmailField extends StatelessWidget with AuthValidationMixin {
           ? TextInputAction.next
           : TextInputAction.done,
       onSubmitted: kind.isPasswordReset ? onSubmit : null,
-      prefixAsset: kind.isSignIn ? Assets.images.auth.email : null,
+      prefixIconAsset: kind.isSignIn ? Assets.images.auth.email : null,
       validator: _validate,
     );
   }
