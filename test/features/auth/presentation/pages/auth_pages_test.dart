@@ -21,6 +21,7 @@ import 'package:clinic_appointment_system/features/auth/presentation/pages/passw
 import 'package:clinic_appointment_system/features/auth/presentation/pages/sign_in_page.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/pages/sign_up_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
@@ -235,6 +236,37 @@ void main() {
       );
     },
   );
+
+  testWidgets('successful sign-in replaces the auth history entry with home', (
+    tester,
+  ) async {
+    final app = await _pump(tester);
+    final updates = <Map<Object?, Object?>>[];
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+      SystemChannels.navigation,
+      (call) async {
+        if (call.method == 'routeInformationUpdated') {
+          updates.add(call.arguments as Map<Object?, Object?>);
+        }
+        return null;
+      },
+    );
+    addTearDown(() {
+      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.navigation,
+        null,
+      );
+    });
+    when(
+      () => app.repository.signIn(any()),
+    ).thenAnswer((_) async => const DataResult.success(data: _session));
+    await _credentials(tester);
+    await _submit(tester);
+    app.sessions.add(const DataResult.success(data: _session));
+    await tester.pumpAndSettle();
+    expect(updates.last['uri'], AppRoutes.home);
+    expect(updates.last['replace'], isTrue);
+  });
 
   testWidgets('registration validates confirmation and submits the full name', (
     tester,

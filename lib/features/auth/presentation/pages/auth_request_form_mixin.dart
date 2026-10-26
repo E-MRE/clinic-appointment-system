@@ -58,6 +58,12 @@ mixin _AuthRequestFormMixin<C extends AuthRequestCubit>
       return;
     }
     TextInput.finishAutofillContext();
+    Router.neglect(context, _openHome);
+  }
+
+  /// Runs inside [Router.neglect], so the browser replaces the auth history
+  /// entry with home instead of keeping the form one back step away.
+  void _openHome() {
     context.go(AppRoutes.home);
   }
 }
