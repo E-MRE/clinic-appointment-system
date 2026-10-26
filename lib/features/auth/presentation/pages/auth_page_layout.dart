@@ -96,10 +96,7 @@ final class _AuthPageLayout extends StatelessWidget {
         Expanded(
           child: Semantics(
             header: true,
-            child: Text(
-              kind.titleKey.translate(),
-              style: context.textTheme.titleLarge,
-            ),
+            child: AppText.sectionTitle(kind.titleKey.translate()),
           ),
         ),
       ],

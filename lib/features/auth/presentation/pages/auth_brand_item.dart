@@ -24,11 +24,9 @@ final class _AuthBrandItem extends StatelessWidget {
             ),
             const EmptySize.s12Width(),
             Expanded(
-              child: Text(
+              child: AppText.body(
                 textKey.translate(),
-                style: context.textTheme.bodyMedium?.copyWith(
-                  color: context.colorScheme.onPrimary,
-                ),
+                tone: TextTone.onPrimary,
               ),
             ),
           ],

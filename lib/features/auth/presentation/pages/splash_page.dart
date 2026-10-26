@@ -2,6 +2,7 @@ import 'package:clinic_appointment_system/core/constants/widget_key.dart';
 import 'package:clinic_appointment_system/core/localization/localization.dart';
 import 'package:clinic_appointment_system/core/theme/theme.dart';
 import 'package:clinic_appointment_system/core/widgets/announced_semantics.dart';
+import 'package:clinic_appointment_system/core/widgets/app_text.dart';
 import 'package:clinic_appointment_system/core/widgets/system_overlay_region.dart';
 import 'package:clinic_appointment_system/core/widgets/viewport_scroll_view.dart';
 import 'package:clinic_appointment_system/generated/assets.gen.dart';

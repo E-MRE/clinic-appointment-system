@@ -18,7 +18,7 @@ final class _AuthAccountLink extends StatelessWidget {
       alignment: centered ? WrapAlignment.center : WrapAlignment.start,
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        Text(footer.promptKey.translate(), style: context.textTheme.labelLarge),
+        AppText.bodyStrong(footer.promptKey.translate()),
         TextButton(
           onPressed: enabled
               ? () {
