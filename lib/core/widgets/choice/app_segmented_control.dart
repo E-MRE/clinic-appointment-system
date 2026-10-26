@@ -1,4 +1,10 @@
-part of 'app_choice_controls.dart';
+import 'package:clinic_appointment_system/core/theme/theme.dart';
+import 'package:clinic_appointment_system/core/widgets/app_text.dart';
+import 'package:clinic_appointment_system/core/widgets/choice/app_choice.dart';
+import 'package:flutter/material.dart';
+
+part 'segment_item.dart';
+part 'segment_style.dart';
 
 /// Outlined pill control for selecting one value from a short list.
 final class AppSegmentedControl<T> extends StatelessWidget {

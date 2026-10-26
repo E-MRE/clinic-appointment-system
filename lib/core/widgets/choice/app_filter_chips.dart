@@ -1,4 +1,10 @@
-part of 'app_choice_controls.dart';
+import 'package:clinic_appointment_system/core/theme/theme.dart';
+import 'package:clinic_appointment_system/core/widgets/app_text.dart';
+import 'package:clinic_appointment_system/core/widgets/choice/app_choice.dart';
+import 'package:flutter/material.dart';
+
+part 'filter_chip_item.dart';
+part 'filter_chip_style.dart';
 
 /// Horizontally scrollable single-select filter chips.
 final class AppFilterChips<T> extends StatelessWidget {
@@ -24,15 +30,14 @@ final class AppFilterChips<T> extends StatelessWidget {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
+        spacing: AppSizes.s8,
         children: [
-          for (final choice in choices) ...[
+          for (final choice in choices)
             _FilterChip<T>(
               choice: choice,
               selected: choice.value == selected,
               onSelected: onSelected,
             ),
-            const EmptySize.s8Width(),
-          ],
         ],
       ),
     );

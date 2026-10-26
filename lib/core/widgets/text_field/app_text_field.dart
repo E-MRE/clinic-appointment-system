@@ -85,57 +85,72 @@ final class AppTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final decorationTheme = context.theme.inputDecorationTheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         ExcludeSemantics(child: AppText.label(label)),
         const EmptySize.s8Height(),
-        Semantics(
-          label: label,
-          child: TextFormField(
-            key: fieldKey,
-            controller: controller,
-            enabled: enabled,
-            validator: validator,
-            keyboardType: keyboardType,
-            autofillHints: autofillHints,
-            textInputAction: textInputAction,
-            onFieldSubmitted: (_) {
-              onSubmitted?.call();
-            },
-            obscureText: obscureText,
-            autocorrect: autocorrect,
-            enableSuggestions: enableSuggestions,
-            style: context.textTheme.bodyLarge,
-            decoration: InputDecoration(
-              fillColor:
-                  fillColor ??
-                  context.screenSize.select(
-                    mobile: decorationTheme.fillColor,
-                    tablet: context.colorScheme.surface,
-                    desktop: decorationTheme.fillColor,
-                  ),
-              hintText: hint,
-              helperText: helper,
-              helperMaxLines: null,
-              errorMaxLines: null,
-              prefixIcon: switch (prefixIconAsset) {
-                final iconAsset? => SizedBox.square(
-                  dimension: AppSizes.s48,
-                  child: SquareSvgIcon(
-                    asset: iconAsset,
-                    size: AppSizes.retryIcon,
-                    color: context.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-                _ => prefix,
-              },
-              suffixIcon: suffix,
-            ),
-          ),
-        ),
+        _field(context),
       ],
     );
+  }
+
+  Widget _field(BuildContext context) {
+    return Semantics(
+      label: label,
+      child: TextFormField(
+        key: fieldKey,
+        controller: controller,
+        enabled: enabled,
+        validator: validator,
+        keyboardType: keyboardType,
+        autofillHints: autofillHints,
+        textInputAction: textInputAction,
+        onFieldSubmitted: (_) {
+          onSubmitted?.call();
+        },
+        obscureText: obscureText,
+        autocorrect: autocorrect,
+        enableSuggestions: enableSuggestions,
+        style: context.textTheme.bodyLarge,
+        decoration: _decoration(context),
+      ),
+    );
+  }
+
+  InputDecoration _decoration(BuildContext context) {
+    return InputDecoration(
+      fillColor: _fillColor(context),
+      hintText: hint,
+      helperText: helper,
+      helperMaxLines: null,
+      errorMaxLines: null,
+      prefixIcon: _prefixIcon(context),
+      suffixIcon: suffix,
+    );
+  }
+
+  Color? _fillColor(BuildContext context) {
+    final decorationTheme = context.theme.inputDecorationTheme;
+    return fillColor ??
+        context.screenSize.select(
+          mobile: decorationTheme.fillColor,
+          tablet: context.colorScheme.surface,
+          desktop: decorationTheme.fillColor,
+        );
+  }
+
+  Widget? _prefixIcon(BuildContext context) {
+    return switch (prefixIconAsset) {
+      final iconAsset? => SizedBox.square(
+        dimension: AppSizes.s48,
+        child: SquareSvgIcon(
+          asset: iconAsset,
+          size: AppSizes.retryIcon,
+          color: context.colorScheme.onSurfaceVariant,
+        ),
+      ),
+      _ => prefix,
+    };
   }
 }

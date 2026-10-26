@@ -31,23 +31,25 @@ final class _DesktopNavigation extends StatelessWidget {
             action,
           ],
           const EmptySize.s24Height(),
-          Expanded(
-            child: ListView(
-              padding: const AppPadding.none(),
-              children: [
-                for (var index = 0; index < destinations.length; index++)
-                  _DesktopNavigationItem(
-                    destination: destinations[index],
-                    selected: index == selectedIndex,
-                    onTap: () {
-                      onDestinationSelected(index);
-                    },
-                  ),
-              ],
-            ),
-          ),
+          Expanded(child: _listView()),
         ],
       ),
+    );
+  }
+
+  Widget _listView() {
+    return ListView(
+      padding: const AppPadding.none(),
+      children: [
+        for (var index = 0; index < destinations.length; index++)
+          _DesktopNavigationItem(
+            destination: destinations[index],
+            selected: index == selectedIndex,
+            onTap: () {
+              onDestinationSelected(index);
+            },
+          ),
+      ],
     );
   }
 }

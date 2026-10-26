@@ -1,18 +1,9 @@
 import 'package:clinic_appointment_system/core/theme/theme.dart';
 import 'package:clinic_appointment_system/core/widgets/app_text.dart';
+import 'package:clinic_appointment_system/core/widgets/select_field/app_select_option.dart';
 import 'package:flutter/material.dart';
 
-/// A display option for [AppSelectField].
-final class AppSelectOption<T> {
-  /// Creates an option from a typed value and its visible label.
-  const AppSelectOption({required this.value, required this.label});
-
-  /// Value passed to the selection callback.
-  final T value;
-
-  /// Visible option text.
-  final String label;
-}
+export 'package:clinic_appointment_system/core/widgets/select_field/app_select_option.dart';
 
 /// Labeled themed select field backed by display options.
 final class AppSelectField<T> extends StatelessWidget {
@@ -60,30 +51,34 @@ final class AppSelectField<T> extends StatelessWidget {
       children: [
         ExcludeSemantics(child: AppText.label(label)),
         const EmptySize.s8Height(),
-        Semantics(
-          label: label,
-          child: KeyedSubtree(
-            key: fieldKey,
-            child: DropdownButtonFormField<T>(
-              key: ValueKey<T?>(value),
-              initialValue: value,
-              isExpanded: true,
-              hint: hint == null ? null : AppText.body(hint!),
-              items: options
-                  .map(
-                    (option) => DropdownMenuItem<T>(
-                      value: option.value,
-                      child: AppText.body(option.label),
-                    ),
-                  )
-                  .toList(),
-              onChanged: enabled ? onChanged : null,
-              validator: validator,
-              decoration: const InputDecoration(),
-            ),
-          ),
-        ),
+        _field(),
       ],
+    );
+  }
+
+  Widget _field() {
+    return Semantics(
+      label: label,
+      child: KeyedSubtree(
+        key: fieldKey,
+        child: DropdownButtonFormField<T>(
+          key: ValueKey<T?>(value),
+          initialValue: value,
+          isExpanded: true,
+          hint: hint == null ? null : AppText.body(hint!),
+          items: options
+              .map(
+                (option) => DropdownMenuItem<T>(
+                  value: option.value,
+                  child: AppText.body(option.label),
+                ),
+              )
+              .toList(),
+          onChanged: enabled ? onChanged : null,
+          validator: validator,
+          decoration: const InputDecoration(),
+        ),
+      ),
     );
   }
 }

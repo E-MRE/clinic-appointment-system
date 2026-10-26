@@ -25,31 +25,32 @@ final class _DesktopNavigationItem extends StatelessWidget {
         child: Material(
           color: style.background(scheme),
           borderRadius: const AppRadius.full(),
-          child: SizedBox(
-            height: AppSizes.s48,
-            child: Row(
-              children: [
-                const EmptySize.s12Width(),
-                Icon(style.icon(destination), color: style.iconColor(scheme)),
-                const EmptySize.s12Width(),
-                Expanded(
-                  child: AppText.label(
-                    destination.label,
-                    tone: style.sidebarTone,
-                    fontWeight: style.weight,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                if (destination.badgeCount case final count?) ...[
-                  _NavigationCountBadge(count: count),
-                  const EmptySize.s8Width(),
-                ],
-              ],
-            ),
-          ),
+          child: SizedBox(height: AppSizes.s48, child: _row(style, scheme)),
         ),
       ),
+    );
+  }
+
+  Widget _row(_NavItemStyle style, ColorScheme scheme) {
+    return Row(
+      children: [
+        const EmptySize.s12Width(),
+        Icon(style.icon(destination), color: style.iconColor(scheme)),
+        const EmptySize.s12Width(),
+        Expanded(
+          child: AppText.label(
+            destination.label,
+            tone: style.sidebarTone,
+            fontWeight: style.weight,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        if (destination.badgeCount case final count?) ...[
+          _NavigationCountBadge(count: count),
+          const EmptySize.s8Width(),
+        ],
+      ],
     );
   }
 }

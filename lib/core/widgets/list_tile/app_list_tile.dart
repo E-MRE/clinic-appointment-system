@@ -1,20 +1,9 @@
 import 'package:clinic_appointment_system/core/theme/theme.dart';
 import 'package:clinic_appointment_system/core/widgets/app_text.dart';
+import 'package:clinic_appointment_system/core/widgets/list_tile/app_list_tile_density.dart';
 import 'package:flutter/material.dart';
 
-/// Vertical spacing variants for a shared list row.
-enum AppListTileDensity {
-  /// Compact row padding.
-  dense(AppPadding.listTileDense()),
-
-  /// Standard row padding.
-  regular(AppPadding.allLg());
-
-  const AppListTileDensity(this.padding);
-
-  /// Full padding around the row contents.
-  final EdgeInsets padding;
-}
+export 'package:clinic_appointment_system/core/widgets/list_tile/app_list_tile_density.dart';
 
 /// Shared list row with optional leading and trailing content.
 final class AppListTile extends StatelessWidget {

@@ -22,30 +22,30 @@ final class _TabletNavigationItem extends StatelessWidget {
         label: destination.label,
         selected: selected,
         onTap: onTap,
-        child: Column(
-          children: [
-            Container(
-              width: AppSizes.s56,
-              height: AppSizes.s32,
-              decoration: BoxDecoration(
-                color: style.background(scheme),
-                borderRadius: const AppRadius.full(),
-              ),
-              child: Icon(
-                style.icon(destination),
-                color: style.iconColor(scheme),
-              ),
-            ),
-            AppText.badge(
-              destination.label,
-              tone: style.indicatorTone,
-              fontWeight: style.weight,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-        ),
+        child: Column(children: [_icon(style, scheme), _label(style)]),
       ),
+    );
+  }
+
+  Widget _icon(_NavItemStyle style, ColorScheme scheme) {
+    return Container(
+      width: AppSizes.s56,
+      height: AppSizes.s32,
+      decoration: BoxDecoration(
+        color: style.background(scheme),
+        borderRadius: const AppRadius.full(),
+      ),
+      child: Icon(style.icon(destination), color: style.iconColor(scheme)),
+    );
+  }
+
+  Widget _label(_NavItemStyle style) {
+    return AppText.badge(
+      destination.label,
+      tone: style.indicatorTone,
+      fontWeight: style.weight,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
     );
   }
 }
