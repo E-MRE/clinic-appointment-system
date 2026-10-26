@@ -141,6 +141,7 @@
     "automatic": "Pencere",
     "mobile": "Mobil",
     "tablet": "Tablet",
-    "desktop": "Masaüstü"
+    "desktop": "Masaüstü",
+    "dataTable": "Veri tablosu"
   }
 }

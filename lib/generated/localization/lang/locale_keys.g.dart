@@ -138,5 +138,6 @@ abstract class LocaleKeys {
   static const componentPreview_mobile = 'componentPreview.mobile';
   static const componentPreview_tablet = 'componentPreview.tablet';
   static const componentPreview_desktop = 'componentPreview.desktop';
+  static const componentPreview_dataTable = 'componentPreview.dataTable';
   static const componentPreview = 'componentPreview';
 }

@@ -23,6 +23,9 @@ enum _PreviewSection {
   /// List samples.
   list(label: LocaleKeys.componentPreview_list),
 
+  /// Data table samples.
+  dataTable(label: LocaleKeys.componentPreview_dataTable),
+
   /// Avatar samples.
   avatar(label: LocaleKeys.componentPreview_avatar),
 
@@ -52,6 +55,7 @@ enum _PreviewSection {
       states => const _StatesSection(),
       loading => const _LoadingSection(),
       list => const _ListSection(),
+      dataTable => const _DataTableSection(),
       avatar => const _AvatarSection(),
       fields => const _FieldsSection(),
       choices => const _ChoicesSection(),
