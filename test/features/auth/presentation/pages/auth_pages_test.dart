@@ -85,6 +85,28 @@ void main() {
     expect(find.text('Üç adımda randevu.'), findsOneWidget);
   });
 
+  testWidgets('a restored session reloading an auth route opens home', (
+    tester,
+  ) async {
+    final app = await _pump(
+      tester,
+      route: AppRoutes.signUp,
+      restored: _session,
+    );
+    expect(app.router.routeInformationProvider.value.uri.path, AppRoutes.home);
+    expect(find.byType(AuthShell), findsNothing);
+  });
+
+  testWidgets('signed-in back navigation to an auth route returns home', (
+    tester,
+  ) async {
+    final app = await _pump(tester, restored: _session);
+    app.router.go(AppRoutes.signUp);
+    await tester.pumpAndSettle();
+    expect(app.router.routeInformationProvider.value.uri.path, AppRoutes.home);
+    expect(find.byType(SignUpPage), findsNothing);
+  });
+
   testWidgets('leaving auth for home closes the stacked request Cubits', (
     tester,
   ) async {
@@ -353,6 +375,7 @@ Future<_AuthTestApp> _pump(
   Size size = const Size(390, 844),
   bool largeText = false,
   bool dark = false,
+  AuthSession? restored,
 }) async {
   tester.view.devicePixelRatio = 1;
   tester.view.physicalSize = size;
@@ -360,7 +383,7 @@ Future<_AuthTestApp> _pump(
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
   addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
-  final app = _AuthTestApp(route);
+  final app = _AuthTestApp(route, restored);
   if (dark) app.themeCubit.toggle();
   addTearDown(app.dispose);
   await pumpLocalizedWidget(
@@ -376,7 +399,7 @@ Future<_AuthTestApp> _pump(
 }
 
 final class _AuthTestApp {
-  _AuthTestApp(String route) {
+  _AuthTestApp(String route, AuthSession? restored) {
     when(
       () => repository.authStateChanges(),
     ).thenAnswer((_) => sessions.stream);
@@ -397,7 +420,7 @@ final class _AuthTestApp {
         return PasswordResetCubit(repository);
       },
     );
-    sessions.add(const DataResult.success(data: null));
+    sessions.add(DataResult.success(data: restored));
   }
   final repository = MockAuthRepository();
   final sessions = StreamController<DataResult<AuthSession>>();
