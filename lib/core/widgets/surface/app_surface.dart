@@ -11,6 +11,7 @@ final class AppSurface extends StatelessWidget {
     this.variant = AppSurfaceVariant.standard,
     this.radius = AppSurfaceRadius.card,
     this.padding = AppSurfacePadding.compact,
+    this.clipBehavior = Clip.none,
     super.key,
   });
 
@@ -18,12 +19,14 @@ final class AppSurface extends StatelessWidget {
   final AppSurfaceVariant variant;
   final AppSurfaceRadius radius;
   final AppSurfacePadding padding;
+  final Clip clipBehavior;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colorScheme;
     return Container(
       padding: padding.value,
+      clipBehavior: clipBehavior,
       decoration: BoxDecoration(
         color: variant.background(colors),
         borderRadius: radius.value,

@@ -2,6 +2,9 @@ import 'package:clinic_appointment_system/core/theme/theme.dart';
 
 /// Preset inner spacing for a surface.
 enum AppSurfacePadding {
+  /// Padding = 0.
+  none(AppPadding.none()),
+
   /// Padding = 16.
   compact(AppPadding.allLg()),
 
