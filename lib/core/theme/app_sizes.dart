@@ -20,6 +20,10 @@
 /// * s144 → 144
 ///
 /// Widget-specific sizes that do not fit the scale:
+/// * previewMobileWidth → 390
+/// * previewTabletWidth → 720
+/// * previewDesktopWidth → 1024
+/// * previewHeight → 480
 /// * borderThin → 1
 /// * borderThick → 2
 /// * retryIcon → 20
@@ -97,6 +101,22 @@ abstract final class AppSizes {
   static const double s144 = 144;
 
   // Widget-specific
+
+  /// Component preview mobile viewport width.
+  /// value = 390
+  static const double previewMobileWidth = 390;
+
+  /// Component preview tablet viewport width.
+  /// value = 720
+  static const double previewTabletWidth = 720;
+
+  /// Component preview desktop viewport width.
+  /// value = 1024
+  static const double previewDesktopWidth = 1024;
+
+  /// Component preview embedded viewport height.
+  /// value = 480
+  static const double previewHeight = 480;
 
   /// Auth sign-in form maximum width.
   /// value = 400

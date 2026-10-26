@@ -116,5 +116,31 @@
       "profileUpdateFailed": "Hesabınız oluşturuldu ancak adınız kaydedilemedi. Hesabınıza giriş yapabilirsiniz; yeniden kayıt olmayın.",
       "unexpected": "İşlem tamamlanamadı. Lütfen tekrar deneyin."
     }
+  },
+  "componentPreview": {
+    "title": "Bileşen önizleme",
+    "subtitle": "Paylaşılan bileşenler ve temalar",
+    "text": "Metin rolleri",
+    "surface": "Yüzey",
+    "status": "Durum rozetleri",
+    "header": "Sayfa başlığı",
+    "states": "Boş ve hata durumları",
+    "loading": "Yükleme durumları",
+    "list": "Liste satırları",
+    "avatar": "Avatarlar",
+    "fields": "Alanlar",
+    "choices": "Seçim kontrolleri",
+    "navigation": "Gezinme",
+    "extras": "Diğer bileşenler",
+    "sample": "Örnek içerik",
+    "helper": "Yardım metni",
+    "disabled": "Devre dışı",
+    "error": "Hatalı değer",
+    "light": "Açık",
+    "dark": "Koyu",
+    "automatic": "Pencere",
+    "mobile": "Mobil",
+    "tablet": "Tablet",
+    "desktop": "Masaüstü"
   }
 }
