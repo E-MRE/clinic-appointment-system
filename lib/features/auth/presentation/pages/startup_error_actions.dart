@@ -3,16 +3,18 @@ part of 'startup_error_page.dart';
 final class _StartupErrorActions extends StatelessWidget {
   const _StartupErrorActions({
     required this.kind,
+    required this.isMobile,
     required this.onRetry,
     required this.onGoHome,
   });
   final StartupErrorKind kind;
+  final bool isMobile;
   final VoidCallback onRetry;
   final VoidCallback onGoHome;
 
   @override
   Widget build(BuildContext context) {
-    if (context.screenSize.isMobile) {
+    if (isMobile) {
       return Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,

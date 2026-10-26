@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 /// * allSm → all 8
 /// * allMd → all 12
 /// * allLg → all 16
+/// * all20 → all 20
 /// * allXl → all 24
 /// * allXxl → all 32
 /// * allXxxl → all 48
@@ -38,6 +39,9 @@ final class AppPadding extends EdgeInsets {
 
   /// value = all 16
   const AppPadding.allLg() : super.all(AppSizes.s16);
+
+  /// value = all 20
+  const AppPadding.all20() : super.all(AppSizes.s20);
 
   /// value = all 24
   const AppPadding.allXl() : super.all(AppSizes.s24);
