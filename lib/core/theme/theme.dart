@@ -1,4 +1,5 @@
 export 'package:clinic_appointment_system/core/extensions/build_context_extension.dart';
+export 'package:clinic_appointment_system/core/theme/app_brand_colors.dart';
 export 'package:clinic_appointment_system/core/theme/app_padding.dart';
 export 'package:clinic_appointment_system/core/theme/app_radius.dart';
 export 'package:clinic_appointment_system/core/theme/app_sizes.dart';
@@ -10,3 +11,5 @@ export 'package:clinic_appointment_system/core/theme/breakpoints_context.dart';
 export 'package:clinic_appointment_system/core/theme/dark_theme.dart';
 export 'package:clinic_appointment_system/core/theme/empty_size.dart';
 export 'package:clinic_appointment_system/core/theme/light_theme.dart';
+export 'package:clinic_appointment_system/core/theme/text_role.dart';
+export 'package:clinic_appointment_system/core/theme/text_tone.dart';

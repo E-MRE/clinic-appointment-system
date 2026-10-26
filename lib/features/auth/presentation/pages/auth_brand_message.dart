@@ -17,8 +17,8 @@ final class _AuthBrandMessage extends StatelessWidget {
         children: [
           Text(
             kind.brandTitleKey.translate(),
-            style: context.textTheme.headlineLarge?.copyWith(
-              color: context.colorScheme.onPrimary,
+            style: context.textTheme.displaySmall?.copyWith(
+              color: context.brandColors.splashForeground,
             ),
           ),
           kind.isRegistration

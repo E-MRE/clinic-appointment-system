@@ -6,57 +6,52 @@ import 'package:flutter/material.dart';
 ///
 /// Shared text roles for every screen, built on top of [base] (which carries
 /// the brightness-specific colors) and resolved at the app's breakpoint.
+///
+/// * displaySmall → 28 / 32 / 40, height 1.2
+/// * headlineMedium → 24 / 28 / 32, height 1.25
+/// * headlineSmall → 22 / 26 / 30, height 1.25
+/// * titleLarge → 18 / 20 / 20, height 1.3
+/// * titleMedium → 16 / 16 / 16, height 1.375
+/// * bodyLarge → 16 / 16 / 16, height 1.5
+/// * bodyMedium → 14 / 14 / 14, height 1.43
+/// * bodySmall → 12 / 12 / 12, height 1.33
+/// * labelLarge → 14 / 14 / 14, height 1.43
+/// * labelMedium → 14 / 14 / 14, height 1.43
+/// * labelSmall → 12 / 12 / 12, height 1.33
 final class AppTypography extends TextTheme {
   AppTypography(TextTheme base, {ScreenSize screenSize = ScreenSize.mobile})
     : super(
-        displayLarge: _heading(
-          base.displayLarge,
-          screenSize.select(mobile: 48, tablet: 56, desktop: 64),
-          bold: true,
-        ),
-        displayMedium: _heading(
-          base.displayMedium,
-          screenSize.select(mobile: 40, tablet: 48, desktop: 56),
-          bold: true,
-        ),
         displaySmall: _heading(
           base.displaySmall,
-          screenSize.select(mobile: 36, tablet: 40, desktop: 48),
-        ),
-        headlineLarge: _heading(
-          base.headlineLarge,
-          screenSize.select(mobile: 28, tablet: 36, desktop: 40),
-          bold: true,
+          screenSize.select(mobile: 28, tablet: 32, desktop: 40),
+          FontWeight.w700,
+          1.2,
         ),
         headlineMedium: _heading(
           base.headlineMedium,
           screenSize.select(mobile: 24, tablet: 28, desktop: 32),
+          FontWeight.w600,
+          1.25,
         ),
         headlineSmall: _heading(
           base.headlineSmall,
-          screenSize.select(mobile: 20, tablet: 24, desktop: 28),
+          screenSize.select(mobile: 22, tablet: 26, desktop: 30),
+          FontWeight.w600,
+          1.25,
         ),
         titleLarge: _heading(
           base.titleLarge,
-          screenSize.select(mobile: 20, tablet: 22, desktop: 24),
+          screenSize.select(mobile: 18, tablet: 20, desktop: 20),
+          FontWeight.w600,
+          1.3,
         ),
-        titleMedium: _heading(
-          base.titleMedium,
-          screenSize.select(mobile: 16, tablet: 18, desktop: 20),
-        ),
-        titleSmall: _heading(
-          base.titleSmall,
-          screenSize.select(mobile: 14, tablet: 16, desktop: 16),
-        ),
-        bodyLarge: _body(base.bodyLarge, 16),
-        bodyMedium: _body(
-          base.bodyMedium,
-          screenSize.select(mobile: 14, tablet: 16, desktop: 16),
-        ),
-        bodySmall: _body(base.bodySmall, 12),
-        labelLarge: _label(base.labelLarge, 14),
-        labelMedium: _label(base.labelMedium, 12),
-        labelSmall: _label(base.labelSmall, 11),
+        titleMedium: _heading(base.titleMedium, 16, FontWeight.w600, 1.375),
+        bodyLarge: _body(base.bodyLarge, 16, 1.5),
+        bodyMedium: _body(base.bodyMedium, 14, 1.43),
+        bodySmall: _body(base.bodySmall, 12, 1.33),
+        labelLarge: _label(base.labelLarge, 14, FontWeight.w600, 1.43),
+        labelMedium: _label(base.labelMedium, 14, FontWeight.w500, 1.43),
+        labelSmall: _label(base.labelSmall, 12, FontWeight.w600, 1.33),
       );
 
   static TextStyle? _style(
@@ -65,29 +60,35 @@ final class AppTypography extends TextTheme {
     FontWeight weight,
     double size,
     double height,
-  ) => base?.copyWith(
-    fontFamily: family,
-    fontWeight: weight,
-    fontSize: size,
-    height: height,
-    letterSpacing: 0,
-  );
+  ) {
+    return base?.copyWith(
+      fontFamily: family,
+      fontWeight: weight,
+      fontSize: size,
+      height: height,
+      letterSpacing: 0,
+    );
+  }
 
   static TextStyle? _heading(
     TextStyle? base,
-    double size, {
-    bool bold = false,
-  }) => _style(
-    base,
-    FontFamily.figtree,
-    bold ? FontWeight.w700 : FontWeight.w600,
-    size,
-    1.25,
-  );
+    double size,
+    FontWeight weight,
+    double height,
+  ) {
+    return _style(base, FontFamily.figtree, weight, size, height);
+  }
 
-  static TextStyle? _body(TextStyle? base, double size) =>
-      _style(base, FontFamily.notoSans, FontWeight.w400, size, 1.5);
+  static TextStyle? _body(TextStyle? base, double size, double height) {
+    return _style(base, FontFamily.notoSans, FontWeight.w400, size, height);
+  }
 
-  static TextStyle? _label(TextStyle? base, double size) =>
-      _style(base, FontFamily.notoSans, FontWeight.w500, size, 1.4);
+  static TextStyle? _label(
+    TextStyle? base,
+    double size,
+    FontWeight weight,
+    double height,
+  ) {
+    return _style(base, FontFamily.notoSans, weight, size, height);
+  }
 }

@@ -5,12 +5,16 @@ import 'package:flutter/painting.dart';
 /// scale. Use these instead of inline `BorderRadius` values.
 ///
 /// * small → 8
+/// * xSmall → 4
 /// * medium → 12
 /// * large → 16
 /// * xLarge → 24
 /// * xxLarge → 32
 /// * full → 999
 final class AppRadius extends BorderRadius {
+  /// value = 4
+  const AppRadius.xSmall() : super.all(const Radius.circular(AppSizes.s4));
+
   /// value = 8
   const AppRadius.small() : super.all(const Radius.circular(AppSizes.s8));
 

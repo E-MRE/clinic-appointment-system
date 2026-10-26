@@ -32,11 +32,7 @@ final class _AuthHeading extends StatelessWidget {
             header: true,
             child: Text(
               kind.titleKey.translate(),
-              style: size.isMobile
-                  ? context.textTheme.headlineLarge?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    )
-                  : context.textTheme.headlineMedium,
+              style: context.textTheme.headlineMedium,
             ),
           ),
         const EmptySize.s8Height(),

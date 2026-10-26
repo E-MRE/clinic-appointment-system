@@ -8,9 +8,9 @@ final class _AuthBrandPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final onPrimary = context.colorScheme.onPrimary;
+    final brandColors = context.brandColors;
     return ColoredBox(
-      color: context.colorScheme.primary,
+      color: brandColors.splashBackground,
       child: Padding(
         padding: const AppPadding.allXxxl(),
         child: ViewportScrollView(
@@ -22,7 +22,7 @@ final class _AuthBrandPanel extends StatelessWidget {
               AppBrandHeader(
                 logo: Assets.images.auth.panelLogo,
                 logoSize: AppSizes.s32,
-                textColor: onPrimary,
+                textColor: brandColors.splashForeground,
               ),
               Align(
                 alignment: Alignment.centerLeft,
@@ -36,7 +36,9 @@ final class _AuthBrandPanel extends StatelessWidget {
               ),
               Text(
                 LocaleKeys.splash_subtitle.translate(),
-                style: context.textTheme.bodySmall?.copyWith(color: onPrimary),
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: brandColors.splashForeground,
+                ),
               ),
             ],
           ),
