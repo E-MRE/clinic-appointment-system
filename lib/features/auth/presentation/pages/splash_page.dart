@@ -18,7 +18,7 @@ final class SplashPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final background = context.colorScheme.primary;
+    final background = context.brandColors.splashBackground;
     return SystemOverlayRegion(
       background: background,
       child: Scaffold(
@@ -40,7 +40,7 @@ final class SplashPage extends StatelessWidget {
   /// Short viewports and large text scroll instead of pinning the progress.
   bool _isCompact(BuildContext context, double height) {
     return height < BreakpointsConstants.compactHeight ||
-        context.textScaleFor(context.textTheme.headlineLarge!.fontSize!) >
+        context.textScaleFor(context.textTheme.displaySmall!.fontSize!) >
             BreakpointsConstants.largeTextScale;
   }
 }

@@ -1,3 +1,4 @@
+import 'package:clinic_appointment_system/core/theme/app_brand_colors.dart';
 import 'package:clinic_appointment_system/core/theme/appointment_status_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +16,8 @@ extension BuildContextExtension on BuildContext {
 
   AppointmentStatusColors get statusColors =>
       themeExtension<AppointmentStatusColors>()!;
+
+  AppBrandColors get brandColors => themeExtension<AppBrandColors>()!;
 
   /// How many times the user's text scaling enlarges [fontSize].
   ///

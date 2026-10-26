@@ -11,7 +11,7 @@ final class _SplashProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final onPrimary = context.colorScheme.onPrimary;
+    final onBrand = context.brandColors.splashForeground;
     return AnnouncedSemantics(
       label: LocaleKeys.common_loading.translate(),
       child: Column(
@@ -23,12 +23,12 @@ final class _SplashProgress extends StatelessWidget {
               tablet: AppSizes.progressWidthMd,
               desktop: AppSizes.progressWidthLg,
             ),
-            child: _indicator(context, onPrimary),
+            child: _indicator(context, onBrand),
           ),
           const EmptySize.s12Height(),
           Text(
             LocaleKeys.common_loading.translate(),
-            style: context.textTheme.labelLarge?.copyWith(color: onPrimary),
+            style: context.textTheme.labelLarge?.copyWith(color: onBrand),
           ),
         ],
       ),

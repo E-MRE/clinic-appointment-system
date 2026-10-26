@@ -1,3 +1,4 @@
+import 'package:clinic_appointment_system/core/theme/app_brand_colors.dart';
 import 'package:clinic_appointment_system/core/theme/app_padding.dart';
 import 'package:clinic_appointment_system/core/theme/app_radius.dart';
 import 'package:clinic_appointment_system/core/theme/app_sizes.dart';
@@ -20,6 +21,9 @@ abstract base class AppTheme {
   /// Brightness-specific Material color roles.
   ColorScheme get colorScheme;
 
+  /// Brightness-specific colors for splash and brand surfaces.
+  AppBrandColors get brandColors;
+
   /// Brightness-specific appointment status colors.
   AppointmentStatusColors get statusColors;
 
@@ -39,7 +43,7 @@ abstract base class AppTheme {
     return defaults.copyWith(
       textTheme: textTheme,
       scaffoldBackgroundColor: scheme.surface,
-      extensions: <ThemeExtension<dynamic>>[statusColors],
+      extensions: <ThemeExtension<dynamic>>[statusColors, brandColors],
       appBarTheme: _appBarTheme(scheme, textTheme),
       filledButtonTheme: _filledButtonTheme(textTheme),
       outlinedButtonTheme: _outlinedButtonTheme(scheme, textTheme),
@@ -52,97 +56,118 @@ abstract base class AppTheme {
     );
   }
 
-  AppBarTheme _appBarTheme(ColorScheme scheme, TextTheme textTheme) =>
-      AppBarTheme(
-        backgroundColor: scheme.surface,
-        foregroundColor: scheme.onSurface,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        titleTextStyle: textTheme.titleLarge?.copyWith(color: scheme.onSurface),
-      );
+  AppBarTheme _appBarTheme(ColorScheme scheme, TextTheme textTheme) {
+    return AppBarTheme(
+      backgroundColor: scheme.surface,
+      foregroundColor: scheme.onSurface,
+      elevation: 0,
+      scrolledUnderElevation: 0,
+      titleTextStyle: textTheme.titleLarge?.copyWith(color: scheme.onSurface),
+    );
+  }
 
-  FilledButtonThemeData _filledButtonTheme(TextTheme textTheme) =>
-      FilledButtonThemeData(
-        style: FilledButton.styleFrom(
-          minimumSize: _buttonSize,
-          visualDensity: VisualDensity.standard,
-          padding: const AppPadding.control(),
-          shape: _buttonShape,
-          textStyle: textTheme.labelLarge,
-        ),
-      );
+  FilledButtonThemeData _filledButtonTheme(TextTheme textTheme) {
+    return FilledButtonThemeData(
+      style: FilledButton.styleFrom(
+        minimumSize: _buttonSize,
+        visualDensity: VisualDensity.standard,
+        padding: const AppPadding.control(),
+        shape: _buttonShape,
+        textStyle: textTheme.labelLarge,
+      ),
+    );
+  }
 
   OutlinedButtonThemeData _outlinedButtonTheme(
     ColorScheme scheme,
     TextTheme textTheme,
-  ) => OutlinedButtonThemeData(
-    style: OutlinedButton.styleFrom(
-      minimumSize: _buttonSize,
-      visualDensity: VisualDensity.standard,
-      padding: const AppPadding.control(),
-      shape: _buttonShape,
-      side: BorderSide(color: scheme.outline),
-      textStyle: textTheme.labelLarge,
-    ),
-  );
-
-  TextButtonThemeData _textButtonTheme(TextTheme textTheme) =>
-      TextButtonThemeData(
-        style: TextButton.styleFrom(
-          minimumSize: _buttonSize,
-          visualDensity: VisualDensity.standard,
-          shape: _buttonShape,
-          textStyle: textTheme.labelLarge,
-        ),
-      );
-
-  CardThemeData _cardTheme(ColorScheme scheme) => CardThemeData(
-    elevation: 0,
-    color: scheme.surfaceContainerLow,
-    margin: const AppPadding.none(),
-    shape: RoundedRectangleBorder(
-      borderRadius: const AppRadius.medium(),
-      side: BorderSide(
-        color: scheme.outlineVariant,
-        width: AppSizes.borderThin,
+  ) {
+    return OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        minimumSize: _buttonSize,
+        visualDensity: VisualDensity.standard,
+        padding: const AppPadding.control(),
+        shape: _buttonShape,
+        side: BorderSide(color: scheme.outline),
+        textStyle: textTheme.labelLarge,
       ),
-    ),
-  );
+    );
+  }
 
-  InputDecorationTheme _inputDecorationTheme(ColorScheme scheme) =>
-      InputDecorationTheme(
-        filled: true,
-        fillColor: scheme.surfaceContainerLow,
-        contentPadding: const AppPadding.control(),
-        border: _inputBorder(scheme.outlineVariant),
-        enabledBorder: _inputBorder(scheme.outlineVariant),
-        focusedBorder: _inputBorder(scheme.primary, width: 2),
-        errorBorder: _inputBorder(scheme.error),
-        focusedErrorBorder: _inputBorder(scheme.error, width: 2),
-      );
+  TextButtonThemeData _textButtonTheme(TextTheme textTheme) {
+    return TextButtonThemeData(
+      style: TextButton.styleFrom(
+        minimumSize: _buttonSize,
+        visualDensity: VisualDensity.standard,
+        shape: _buttonShape,
+        textStyle: textTheme.labelLarge,
+      ),
+    );
+  }
 
-  OutlineInputBorder _inputBorder(Color color, {double width = 1}) =>
-      OutlineInputBorder(
+  CardThemeData _cardTheme(ColorScheme scheme) {
+    return CardThemeData(
+      elevation: 0,
+      color: scheme.surfaceContainerLow,
+      margin: const AppPadding.none(),
+      shape: RoundedRectangleBorder(
         borderRadius: const AppRadius.medium(),
-        borderSide: BorderSide(color: color, width: width),
-      );
+        side: BorderSide(
+          color: scheme.outlineVariant,
+          width: AppSizes.borderThin,
+        ),
+      ),
+    );
+  }
 
-  ChipThemeData _chipTheme(TextTheme textTheme) => ChipThemeData(
-    shape: const StadiumBorder(),
-    side: BorderSide.none,
-    padding: const AppPadding.chip(),
-    labelStyle: textTheme.labelMedium,
-  );
+  InputDecorationTheme _inputDecorationTheme(ColorScheme scheme) {
+    return InputDecorationTheme(
+      filled: true,
+      fillColor: scheme.surfaceContainerLow,
+      contentPadding: const AppPadding.control(),
+      border: _inputBorder(scheme.outlineVariant),
+      enabledBorder: _inputBorder(scheme.outlineVariant),
+      focusedBorder: _inputBorder(scheme.primary, width: AppSizes.borderThick),
+      errorBorder: _inputBorder(scheme.error, width: AppSizes.borderThick),
+      focusedErrorBorder: _inputBorder(
+        scheme.error,
+        width: AppSizes.borderThick,
+      ),
+    );
+  }
 
-  DividerThemeData _dividerTheme(ColorScheme scheme) => DividerThemeData(
-    color: scheme.outlineVariant,
-    thickness: AppSizes.borderThin,
-    space: AppSizes.borderThin,
-  );
+  OutlineInputBorder _inputBorder(
+    Color color, {
+    double width = AppSizes.borderThin,
+  }) {
+    return OutlineInputBorder(
+      borderRadius: const AppRadius.medium(),
+      borderSide: BorderSide(color: color, width: width),
+    );
+  }
 
-  DialogThemeData _dialogTheme(ColorScheme scheme) => DialogThemeData(
-    elevation: 0,
-    backgroundColor: scheme.surface,
-    shape: const RoundedRectangleBorder(borderRadius: AppRadius.large()),
-  );
+  ChipThemeData _chipTheme(TextTheme textTheme) {
+    return ChipThemeData(
+      shape: const StadiumBorder(),
+      side: BorderSide.none,
+      padding: const AppPadding.chip(),
+      labelStyle: textTheme.labelMedium,
+    );
+  }
+
+  DividerThemeData _dividerTheme(ColorScheme scheme) {
+    return DividerThemeData(
+      color: scheme.outlineVariant,
+      thickness: AppSizes.borderThin,
+      space: AppSizes.borderThin,
+    );
+  }
+
+  DialogThemeData _dialogTheme(ColorScheme scheme) {
+    return DialogThemeData(
+      elevation: 0,
+      backgroundColor: scheme.surface,
+      shape: const RoundedRectangleBorder(borderRadius: AppRadius.large()),
+    );
+  }
 }

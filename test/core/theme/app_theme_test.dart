@@ -71,8 +71,8 @@ void main() {
     double? headlineSize(ScreenSize size) =>
         LightTheme(size).themeData.textTheme.headlineSmall?.fontSize;
 
-    expect(headlineSize(ScreenSize.mobile), 20);
-    expect(headlineSize(ScreenSize.tablet), 24);
-    expect(headlineSize(ScreenSize.desktop), 28);
+    expect(headlineSize(ScreenSize.mobile), 22);
+    expect(headlineSize(ScreenSize.tablet), 26);
+    expect(headlineSize(ScreenSize.desktop), 30);
   });
 }

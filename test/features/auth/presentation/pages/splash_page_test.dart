@@ -66,37 +66,33 @@ void main() {
     LightTheme(ScreenSize.mobile).themeData,
     DarkTheme(ScreenSize.mobile).themeData,
   ]) {
-    testWidgets(
-      'Splash follows an overridden ${baseTheme.brightness.name} color scheme',
-      (tester) async {
-        final colors = baseTheme.colorScheme.copyWith(
-          primary: baseTheme.colorScheme.tertiary,
-          onPrimary: baseTheme.colorScheme.onTertiary,
-        );
-        await loadTestTranslations(
-          tester,
-          child: const SplashPage(),
-          disableAnimations: true,
-          theme: baseTheme.copyWith(colorScheme: colors),
-        );
-        await tester.pumpAndSettle();
-        final scaffold = tester.widget<Scaffold>(
-          find.byKey(const WidgetKey.splashPage()),
-        );
-        expect(scaffold.backgroundColor, colors.primary);
-        final title = tester.widget<Text>(find.text('Klinik Randevu Sistemi'));
-        expect(title.style?.color, colors.onPrimary);
-        final progress = tester.widget<LinearProgressIndicator>(
-          find.byType(LinearProgressIndicator),
-        );
-        expect(progress.color, colors.onPrimary);
-        expect(
-          progress.backgroundColor,
-          colors.onPrimary.withValues(alpha: 0.25),
-        );
-        expect(tester.takeException(), isNull);
-      },
-    );
+    testWidgets('Splash uses ${baseTheme.brightness.name} brand colors', (
+      tester,
+    ) async {
+      final brandColors = baseTheme.extension<AppBrandColors>()!;
+      await loadTestTranslations(
+        tester,
+        child: const SplashPage(),
+        disableAnimations: true,
+        theme: baseTheme,
+      );
+      await tester.pumpAndSettle();
+      final scaffold = tester.widget<Scaffold>(
+        find.byKey(const WidgetKey.splashPage()),
+      );
+      expect(scaffold.backgroundColor, brandColors.splashBackground);
+      final title = tester.widget<Text>(find.text('Klinik Randevu Sistemi'));
+      expect(title.style?.color, brandColors.splashForeground);
+      final progress = tester.widget<LinearProgressIndicator>(
+        find.byType(LinearProgressIndicator),
+      );
+      expect(progress.color, brandColors.splashForeground);
+      expect(
+        progress.backgroundColor,
+        brandColors.splashForeground.withValues(alpha: 0.25),
+      );
+      expect(tester.takeException(), isNull);
+    });
   }
 
   testWidgets('loading animation is disposed when Splash leaves the tree', (

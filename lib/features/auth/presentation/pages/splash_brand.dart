@@ -6,7 +6,7 @@ final class _SplashBrand extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = context.textTheme;
-    final onPrimary = context.colorScheme.onPrimary;
+    final onBrand = context.brandColors.splashForeground;
     final logoSize = context.screenSize.select(
       mobile: AppSizes.s96,
       tablet: AppSizes.logoTablet,
@@ -26,13 +26,13 @@ final class _SplashBrand extends StatelessWidget {
           Text(
             LocaleKeys.appName.translate(),
             textAlign: TextAlign.center,
-            style: textTheme.headlineLarge?.copyWith(color: onPrimary),
+            style: textTheme.displaySmall?.copyWith(color: onBrand),
           ),
           const EmptySize.s8Height(),
           Text(
             LocaleKeys.splash_subtitle.translate(),
             textAlign: TextAlign.center,
-            style: textTheme.bodyMedium?.copyWith(color: onPrimary),
+            style: textTheme.bodyMedium?.copyWith(color: onBrand),
           ),
         ],
       ),

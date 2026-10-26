@@ -2,6 +2,7 @@
 /// Use these instead of numeric literals.
 ///
 /// Scale (4px grid):
+/// * s2 → 2
 /// * s4 → 4
 /// * s8 → 8
 /// * s12 → 12
@@ -20,6 +21,7 @@
 ///
 /// Widget-specific sizes that do not fit the scale:
 /// * borderThin → 1
+/// * borderThick → 2
 /// * retryIcon → 20
 /// * logoTablet → 112
 /// * logoDesktop → 120
@@ -34,6 +36,9 @@
 /// * authCardPadding → 40
 abstract final class AppSizes {
   // Scale
+
+  /// value = 2
+  static const double s2 = 2;
 
   /// value = 4
   static const double s4 = 4;
@@ -102,6 +107,11 @@ abstract final class AppSizes {
   ///
   /// value = 1
   static const double borderThin = 1;
+
+  /// Selected and invalid border thickness.
+  ///
+  /// value = 2
+  static const double borderThick = 2;
 
   /// Retry button icon.
   ///

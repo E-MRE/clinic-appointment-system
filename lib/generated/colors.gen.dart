@@ -54,17 +54,41 @@ abstract final class AppColors {
   /// Color: #FFB4AB
   static const Color darkError = Color(0xFFFFB4AB);
 
+  /// Color: #93000A
+  static const Color darkErrorContainer = Color(0xFF93000A);
+
+  /// Color: #DDE7EA
+  static const Color darkInverseSurface = Color(0xFFDDE7EA);
+
+  /// Color: #690005
+  static const Color darkOnError = Color(0xFF690005);
+
+  /// Color: #FFDAD6
+  static const Color darkOnErrorContainer = Color(0xFFFFDAD6);
+
+  /// Color: #15262C
+  static const Color darkOnInverseSurface = Color(0xFF15262C);
+
   /// Color: #00363F
   static const Color darkOnPrimary = Color(0xFF00363F);
 
   /// Color: #CFF3FA
   static const Color darkOnPrimaryContainer = Color(0xFFCFF3FA);
 
+  /// Color: #D3E5EC
+  static const Color darkOnSecondaryContainer = Color(0xFFD3E5EC);
+
+  /// Color: #FFFFFF
+  static const Color darkOnSplash = Color(0xFFFFFFFF);
+
   /// Color: #DDE7EA
   static const Color darkOnSurface = Color(0xFFDDE7EA);
 
   /// Color: #B0C0C5
   static const Color darkOnSurfaceVariant = Color(0xFFB0C0C5);
+
+  /// Color: #FCE3D6
+  static const Color darkOnTertiaryContainer = Color(0xFFFCE3D6);
 
   /// Color: #7A8E94
   static const Color darkOutline = Color(0xFF7A8E94);
@@ -81,8 +105,17 @@ abstract final class AppColors {
   /// Color: #B2CAD4
   static const Color darkSecondary = Color(0xFFB2CAD4);
 
+  /// Color: #2C4148
+  static const Color darkSecondaryContainer = Color(0xFF2C4148);
+
   /// Color: #0F1A1E
   static const Color darkSurface = Color(0xFF0F1A1E);
+
+  /// Color: #1B2A2F
+  static const Color darkSurfaceContainer = Color(0xFF1B2A2F);
+
+  /// Color: #233439
+  static const Color darkSurfaceContainerHigh = Color(0xFF233439);
 
   /// Color: #162328
   static const Color darkSurfaceContainerLow = Color(0xFF162328);
@@ -90,11 +123,26 @@ abstract final class AppColors {
   /// Color: #F2B79A
   static const Color darkTertiary = Color(0xFFF2B79A);
 
+  /// Color: #6E3216
+  static const Color darkTertiaryContainer = Color(0xFF6E3216);
+
   /// Color: #BA1A1A
   static const Color lightError = Color(0xFFBA1A1A);
 
   /// Color: #FFDAD6
   static const Color lightErrorContainer = Color(0xFFFFDAD6);
+
+  /// Color: #2A3B41
+  static const Color lightInverseSurface = Color(0xFF2A3B41);
+
+  /// Color: #FFFFFF
+  static const Color lightOnError = Color(0xFFFFFFFF);
+
+  /// Color: #410002
+  static const Color lightOnErrorContainer = Color(0xFF410002);
+
+  /// Color: #E6F1F4
+  static const Color lightOnInverseSurface = Color(0xFFE6F1F4);
 
   /// Color: #FFFFFF
   static const Color lightOnPrimary = Color(0xFFFFFFFF);
@@ -102,11 +150,17 @@ abstract final class AppColors {
   /// Color: #06303B
   static const Color lightOnPrimaryContainer = Color(0xFF06303B);
 
+  /// Color: #0B2731
+  static const Color lightOnSecondaryContainer = Color(0xFF0B2731);
+
   /// Color: #15262C
   static const Color lightOnSurface = Color(0xFF15262C);
 
   /// Color: #46595F
   static const Color lightOnSurfaceVariant = Color(0xFF46595F);
+
+  /// Color: #3A1300
+  static const Color lightOnTertiaryContainer = Color(0xFF3A1300);
 
   /// Color: #6F8389
   static const Color lightOutline = Color(0xFF6F8389);
@@ -129,11 +183,20 @@ abstract final class AppColors {
   /// Color: #F7FBFC
   static const Color lightSurface = Color(0xFFF7FBFC);
 
+  /// Color: #E6EFF2
+  static const Color lightSurfaceContainer = Color(0xFFE6EFF2);
+
+  /// Color: #DDE9EC
+  static const Color lightSurfaceContainerHigh = Color(0xFFDDE9EC);
+
   /// Color: #EEF5F7
   static const Color lightSurfaceContainerLow = Color(0xFFEEF5F7);
 
   /// Color: #B4572E
   static const Color lightTertiary = Color(0xFFB4572E);
+
+  /// Color: #FCE3D6
+  static const Color lightTertiaryContainer = Color(0xFFFCE3D6);
 
   /// Color: #3F1A4A
   static const Color noShowDarkBg = Color(0xFF3F1A4A);
