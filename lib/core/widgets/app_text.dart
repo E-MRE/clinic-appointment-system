@@ -3,6 +3,19 @@ import 'package:flutter/material.dart';
 
 /// Text rendered with one semantic role and tone from the active theme.
 final class AppText extends StatelessWidget {
+  /// Displays text using a runtime-selected semantic role.
+  const AppText(
+    this.data, {
+    required this.role,
+    this.tone = TextTone.normal,
+    this.textAlign,
+    this.maxLines,
+    this.overflow,
+    this.softWrap,
+    this.semanticsLabel,
+    super.key,
+  });
+
   /// Displays splash, authentication hero or KPI value text.
   const AppText.display(
     this.data, {

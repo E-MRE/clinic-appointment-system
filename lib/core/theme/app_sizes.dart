@@ -30,6 +30,14 @@
 /// * progressWidthMd → 200
 /// * progressWidthLg → 240
 /// * messageMaxWidth → 520
+/// * statusBadgeHeight → 24
+/// * statusIcon → 12
+/// * errorMessageTabletWidth → 480
+/// * emptyMessageMobileWidth → 320
+/// * emptyMessageTabletWidth → 400
+/// * pageHeaderMobileHeight → 64
+/// * pageHeaderTabletHeight → 88
+/// * pageHeaderDesktopMinimumHeight → 0
 /// * authFormWidth → 400
 /// * registrationFormWidth → 440
 /// * authCardWidth → 480
@@ -152,4 +160,36 @@ abstract final class AppSizes {
   ///
   /// value = 520
   static const double messageMaxWidth = 520;
+
+  /// Status badge minimum height.
+  /// value = 24
+  static const double statusBadgeHeight = s24;
+
+  /// Status badge icon size.
+  /// value = 12
+  static const double statusIcon = s12;
+
+  /// Error-state message maximum width on tablet.
+  /// value = 480
+  static const double errorMessageTabletWidth = 480;
+
+  /// Empty-state message maximum width on mobile.
+  /// value = 320
+  static const double emptyMessageMobileWidth = 320;
+
+  /// Empty-state message maximum width on tablet and desktop.
+  /// value = 400
+  static const double emptyMessageTabletWidth = 400;
+
+  /// Desktop page header minimum height.
+  /// value = 0
+  static const double pageHeaderDesktopMinimumHeight = 0;
+
+  /// Page header height on mobile.
+  /// value = 64
+  static const double pageHeaderMobileHeight = s64;
+
+  /// Tablet page header minimum height.
+  /// value = 88
+  static const double pageHeaderTabletHeight = 88;
 }

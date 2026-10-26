@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 /// `SizedBox(height: AppSizes.s16)` on each page.
 ///
 /// * s4Height / s4Width → 4
+/// * s2Height / s2Width → 2
 /// * s8Height / s8Width → 8
 /// * s12Height / s12Width → 12
 /// * s16Height / s16Width → 16
@@ -22,6 +23,9 @@ import 'package:flutter/widgets.dart';
 /// * s96Height / s96Width → 96
 final class EmptySize extends SizedBox {
   // Vertical (height) — Scale
+
+  /// value = height 2
+  const EmptySize.s2Height({super.key}) : super(height: AppSizes.s2);
 
   /// value = height 4
   const EmptySize.s4Height({super.key}) : super(height: AppSizes.s4);
@@ -66,6 +70,9 @@ final class EmptySize extends SizedBox {
   const EmptySize.s96Height({super.key}) : super(height: AppSizes.s96);
 
   // Horizontal (width) — Scale
+
+  /// value = width 2
+  const EmptySize.s2Width({super.key}) : super(width: AppSizes.s2);
 
   /// value = width 4
   const EmptySize.s4Width({super.key}) : super(width: AppSizes.s4);
