@@ -22,6 +22,10 @@ at least 10 different days to remain visible in the repository history.
 Use test-driven development for the domain layer: write or update tests first, then implement the
 behavior. Keep domain code independent of Flutter and Firebase.
 
+Feature pages compose the shared UI layer: text uses `AppText` roles and tones, and components come
+from `lib/core/widgets/` (browse them on the debug-only `/debug/components` route). Raw text styles
+and spacing values belong only in the shared layer; page-specific customization stays in the page.
+
 Run these local checks when the Flutter skeleton is available:
 
 ```sh

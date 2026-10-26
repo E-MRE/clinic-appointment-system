@@ -30,18 +30,13 @@ final class _AuthHeading extends StatelessWidget {
         if (!size.isMobile || !kind.offersBack)
           Semantics(
             header: true,
-            child: Text(
-              kind.titleKey.translate(),
-              style: context.textTheme.headlineMedium,
-            ),
+            child: AppText.headline(kind.titleKey.translate()),
           ),
         const EmptySize.s8Height(),
-        Text(
+        AppText.body(
           kind.descriptionKeyFor(size).translate(),
           textAlign: centered ? TextAlign.center : TextAlign.start,
-          style: context.textTheme.bodyMedium?.copyWith(
-            color: context.colorScheme.onSurfaceVariant,
-          ),
+          tone: TextTone.muted,
         ),
       ],
     );

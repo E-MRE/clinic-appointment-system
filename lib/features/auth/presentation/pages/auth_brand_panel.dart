@@ -34,11 +34,9 @@ final class _AuthBrandPanel extends StatelessWidget {
                   ),
                 ),
               ),
-              Text(
+              AppText.caption(
                 LocaleKeys.splash_subtitle.translate(),
-                style: context.textTheme.bodySmall?.copyWith(
-                  color: brandColors.splashForeground,
-                ),
+                tone: TextTone.onBrand,
               ),
             ],
           ),

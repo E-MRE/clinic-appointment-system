@@ -26,9 +26,9 @@ final class _SplashProgress extends StatelessWidget {
             child: _indicator(context, onBrand),
           ),
           const EmptySize.s12Height(),
-          Text(
+          AppText.bodyStrong(
             LocaleKeys.common_loading.translate(),
-            style: context.textTheme.labelLarge?.copyWith(color: onBrand),
+            tone: TextTone.onBrand,
           ),
         ],
       ),

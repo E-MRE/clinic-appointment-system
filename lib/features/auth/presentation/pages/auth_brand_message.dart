@@ -15,11 +15,9 @@ final class _AuthBrandMessage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         spacing: AppSizes.s32,
         children: [
-          Text(
+          AppText.display(
             kind.brandTitleKey.translate(),
-            style: context.textTheme.displaySmall?.copyWith(
-              color: context.brandColors.splashForeground,
-            ),
+            tone: TextTone.onBrand,
           ),
           kind.isRegistration
               ? const _AuthRegistrationSteps()

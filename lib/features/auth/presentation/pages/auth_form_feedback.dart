@@ -15,16 +15,13 @@ final class _AuthFormFeedback<C extends AuthRequestCubit>
           final message =
               state.errorCode?.messageKey.translate() ?? state.message ?? '';
 
-          return _AuthFeedbackMessage(
-            message: message,
-            color: context.colorScheme.error,
-          );
+          return _AuthFeedbackMessage(message: message, tone: TextTone.error);
         }
         final successKey = kind.successMessageKey;
         if (state is AuthRequestSuccess && successKey != null) {
           return _AuthFeedbackMessage(
             message: successKey.translate(),
-            color: context.colorScheme.onSurface,
+            tone: TextTone.normal,
           );
         }
         return const SizedBox.shrink();

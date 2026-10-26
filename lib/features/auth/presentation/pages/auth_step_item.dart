@@ -11,12 +11,7 @@ final class _AuthStepItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return _AuthBrandItem(
       textKey: textKey,
-      leading: Text(
-        number,
-        style: context.textTheme.labelLarge?.copyWith(
-          color: context.colorScheme.onPrimary,
-        ),
-      ),
+      leading: AppText.bodyStrong(number, tone: TextTone.onPrimary),
     );
   }
 }
