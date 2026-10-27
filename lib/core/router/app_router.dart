@@ -42,33 +42,24 @@ GoRouter createAppRouter({
       if (kDebugMode && enableDebugRoutes)
         GoRoute(
           path: AppRoutes.componentPreview,
-          pageBuilder: (_, state) {
-            return _fadePage(state, const ComponentPreviewPage());
-          },
+          pageBuilder: (_, state) =>
+              _fadePage(state, const ComponentPreviewPage()),
         ),
       GoRoute(
         path: AppRoutes.home,
-        pageBuilder: (_, state) {
-          return _fadePage(state, const HomePage());
-        },
+        pageBuilder: (_, state) => _fadePage(state, const HomePage()),
       ),
       GoRoute(
         path: AppRoutes.patientHome,
-        pageBuilder: (_, state) {
-          return _fadePage(state, const PatientHomePage());
-        },
+        pageBuilder: (_, state) => _fadePage(state, const PatientHomePage()),
       ),
       GoRoute(
         path: AppRoutes.staffHome,
-        pageBuilder: (_, state) {
-          return _fadePage(state, const StaffHomePage());
-        },
+        pageBuilder: (_, state) => _fadePage(state, const StaffHomePage()),
       ),
       GoRoute(
         path: AppRoutes.adminHome,
-        pageBuilder: (_, state) {
-          return _fadePage(state, const AdminHomePage());
-        },
+        pageBuilder: (_, state) => _fadePage(state, const AdminHomePage()),
       ),
       if (signInCubitFactory != null)
         ShellRoute(

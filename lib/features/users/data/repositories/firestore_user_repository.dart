@@ -21,16 +21,19 @@ final class FirestoreUserRepository implements UserRepository {
         .collection(FirestoreConstants.users)
         .doc(uid)
         .snapshots()
-        .handleError((Object error, StackTrace stackTrace) {
-          if (error is FirebaseException) {
-            Error.throwWithStackTrace(
-              const UserException(UserErrorCode.unavailable),
-              stackTrace,
-            );
-          }
-          Error.throwWithStackTrace(error, stackTrace);
-        })
+        .handleError(_handleError)
         .map(_toUser);
+  }
+
+  void _handleError(Object error, StackTrace stackTrace) {
+    if (error is FirebaseException) {
+      Error.throwWithStackTrace(
+        const UserException(UserErrorCode.unavailable),
+        stackTrace,
+      );
+    }
+
+    Error.throwWithStackTrace(error, stackTrace);
   }
 
   /// Reads a profile snapshot; missing or malformed documents throw

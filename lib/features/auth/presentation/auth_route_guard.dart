@@ -27,11 +27,15 @@ final class AuthRouteGuard extends ChangeNotifier {
 
   /// Whether the previous state still waited for a session or its profile.
   bool get _wasAwaitingSignIn {
-    return switch (_previous) {
-      AuthSignedOut() => true,
-      AuthProfileFailure(:final isProfileMissing) => isProfileMissing,
-      _ => false,
-    };
+    if (_previous is AuthSignedOut) {
+      return true;
+    }
+
+    if (_previous is AuthProfileFailure) {
+      return (_previous as AuthProfileFailure).isProfileMissing;
+    }
+
+    return false;
   }
 
   void _onSessionChanged(AuthState state) {
@@ -46,13 +50,23 @@ final class AuthRouteGuard extends ChangeNotifier {
   /// Redirects home and authentication locations according to the session.
   String? redirect(BuildContext context, GoRouterState route) {
     final path = route.uri.path;
-    return switch (_authCubit.state) {
-      AuthSignedOut() when _isProtectedHome(path) => AppRoutes.signIn,
-      AuthSignedIn(:final user)
-          when _needsHomeRedirect(path, user.role.homePath) =>
-        user.role.homePath,
-      _ => null,
-    };
+    final state = _authCubit.state;
+
+    if (state is AuthSignedOut) {
+      if (_isProtectedHome(path)) {
+        return AppRoutes.signIn;
+      }
+    }
+
+    if (state is AuthSignedIn) {
+      final user = state.user;
+
+      if (_needsHomeRedirect(path, user.role.homePath)) {
+        return user.role.homePath;
+      }
+    }
+
+    return null;
   }
 
   /// Role homes come from the role mapping, so a new role needs no edit here.

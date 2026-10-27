@@ -64,10 +64,12 @@ mixin _AuthRequestFormMixin<C extends AuthRequestCubit>
   /// Whether the session finished loading its profile, successfully or not;
   /// home shows the profile failure with retry and sign-out.
   bool get _hasSettledSession {
-    return switch (context.read<AuthCubit>().state) {
-      AuthSignedIn() || AuthProfileFailure() => true,
-      _ => false,
-    };
+    final state = context.read<AuthCubit>().state;
+    if (state is AuthSignedIn || state is AuthProfileFailure) {
+      return true;
+    }
+
+    return false;
   }
 
   /// Runs inside [Router.neglect], so the browser replaces the auth history
