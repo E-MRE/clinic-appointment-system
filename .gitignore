@@ -28,3 +28,7 @@ web/canvaskit/
 android/local.properties
 ios/Flutter/Generated.xcconfig
 ios/Flutter/flutter_export_environment.sh
+
+# Firebase emulator and rules tests
+firebase/rules_test/node_modules/
+*-debug.log

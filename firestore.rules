@@ -1,0 +1,65 @@
+rules_version = '2';
+
+// Role-based access for the clinic appointment system. Anything not matched
+// below is denied. Each collection issue adds its own block and rules tests
+// under firebase/rules_test/.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isUser(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    // Reads the caller's own profile; only callable when signed in.
+    function hasAdminProfile() {
+      let profile = /databases/$(database)/documents/users/$(request.auth.uid);
+      return exists(profile) && get(profile).data.role == 'admin';
+    }
+
+    function isAdmin() {
+      return isSignedIn() && hasAdminProfile();
+    }
+
+    function isFilledString(value) {
+      return value is string && value.trim().size() > 0;
+    }
+
+    // users/{uid}: profiles keyed by the authentication uid.
+    match /users/{uid} {
+      // Owners and admins read any profile; signed-in users read staff
+      // profiles so patients can choose a doctor.
+      allow read: if isUser(uid)
+        || isAdmin()
+        || (isSignedIn() && resource.data.role in ['doctor', 'technician']);
+
+      // Registration creates only the caller's own patient profile.
+      allow create: if isAdmin() || isOwnPatientProfile();
+
+      // Owners change only their name; role, email and createdAt are fixed.
+      allow update: if isAdmin() || isOwnNameChange();
+
+      allow delete: if isAdmin();
+
+      function isOwnPatientProfile() {
+        let profile = request.resource.data;
+        return isUser(uid)
+          && profile.keys().hasOnly(['role', 'fullName', 'email', 'createdAt'])
+          && profile.keys().hasAll(['role', 'fullName', 'email', 'createdAt'])
+          && profile.role == 'patient'
+          && isFilledString(profile.fullName)
+          && profile.email == request.auth.token.email
+          && profile.createdAt == request.time;
+      }
+
+      function isOwnNameChange() {
+        return isUser(uid)
+          && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['fullName'])
+          && isFilledString(request.resource.data.fullName);
+      }
+    }
+  }
+}
