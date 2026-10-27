@@ -2,7 +2,7 @@ part of 'auth_page.dart';
 
 /// Password input with the existing-account or new-registration rules.
 final class _AuthPasswordInput extends StatelessWidget
-    with AuthValidationMixin {
+    with AuthInputValidationMixin {
   const _AuthPasswordInput({
     required this.kind,
     required this.controller,
@@ -49,7 +49,6 @@ final class _AuthPasswordInput extends StatelessWidget
   }
 
   String? _validate(String? value) {
-    final result = validatePassword(value ?? '', isSignUp: kind.isRegistration);
-    return result.isNotSuccess ? result.message : null;
+    return passwordError(value ?? '', isSignUp: kind.isRegistration)?.message;
   }
 }

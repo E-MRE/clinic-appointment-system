@@ -1,8 +1,7 @@
 part of 'auth_page.dart';
 
 /// UI-only password confirmation, checked by the enclosing Form.
-final class _AuthConfirmationField extends StatelessWidget
-    with AuthValidationMixin {
+final class _AuthConfirmationField extends StatelessWidget {
   const _AuthConfirmationField({
     required this.password,
     required this.controller,
@@ -30,7 +29,8 @@ final class _AuthConfirmationField extends StatelessWidget
   }
 
   String? _validate(String? value) {
-    final result = validatePasswordConfirmation(password.text, value);
-    return result.isNotSuccess ? result.message : null;
+    return password.text == value
+        ? null
+        : LocaleKeys.validation_passwordMismatch.translate();
   }
 }

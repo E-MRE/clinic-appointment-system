@@ -1,24 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'technician.dart';
+part of 'doctor_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-Technician _$TechnicianFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('Technician', json, ($checkedConvert) {
-      $checkKeys(
-        json,
-        requiredKeys: const [
-          'id',
-          'fullName',
-          'email',
-          'branchId',
-          'departmentId',
-        ],
-      );
-      final val = Technician(
+DoctorModel _$DoctorModelFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('DoctorModel', json, ($checkedConvert) {
+      final val = DoctorModel(
         id: $checkedConvert('id', (v) => v as String),
         fullName: $checkedConvert('fullName', (v) => v as String),
         email: $checkedConvert('email', (v) => v as String),
@@ -28,7 +18,7 @@ Technician _$TechnicianFromJson(Map<String, dynamic> json) =>
       return val;
     });
 
-Map<String, dynamic> _$TechnicianToJson(Technician instance) =>
+Map<String, dynamic> _$DoctorModelToJson(DoctorModel instance) =>
     <String, dynamic>{
       'fullName': instance.fullName,
       'email': instance.email,

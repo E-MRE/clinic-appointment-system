@@ -1,24 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'doctor.dart';
+part of 'technician_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-Doctor _$DoctorFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('Doctor', json, ($checkedConvert) {
-      $checkKeys(
-        json,
-        requiredKeys: const [
-          'id',
-          'fullName',
-          'email',
-          'branchId',
-          'departmentId',
-        ],
-      );
-      final val = Doctor(
+TechnicianModel _$TechnicianModelFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('TechnicianModel', json, ($checkedConvert) {
+      final val = TechnicianModel(
         id: $checkedConvert('id', (v) => v as String),
         fullName: $checkedConvert('fullName', (v) => v as String),
         email: $checkedConvert('email', (v) => v as String),
@@ -28,13 +18,14 @@ Doctor _$DoctorFromJson(Map<String, dynamic> json) =>
       return val;
     });
 
-Map<String, dynamic> _$DoctorToJson(Doctor instance) => <String, dynamic>{
-  'fullName': instance.fullName,
-  'email': instance.email,
-  'branchId': instance.branchId,
-  'departmentId': instance.departmentId,
-  'role': _$UserRoleEnumMap[instance.role]!,
-};
+Map<String, dynamic> _$TechnicianModelToJson(TechnicianModel instance) =>
+    <String, dynamic>{
+      'fullName': instance.fullName,
+      'email': instance.email,
+      'branchId': instance.branchId,
+      'departmentId': instance.departmentId,
+      'role': _$UserRoleEnumMap[instance.role]!,
+    };
 
 const _$UserRoleEnumMap = {
   UserRole.patient: 'patient',

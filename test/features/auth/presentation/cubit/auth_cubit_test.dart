@@ -14,6 +14,7 @@ import 'package:clinic_appointment_system/features/users/domain/enums/user_error
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../../../support/auth_cubit_factory.dart';
 import '../../../../support/auth_repository_doubles.dart';
 import '../../../../support/user_repository_double.dart';
 
@@ -35,7 +36,7 @@ void main() {
       () => repository.authStateChanges(),
     ).thenAnswer((_) => controller.stream);
     users = TestUserRepository();
-    cubit = AuthCubit(repository, users);
+    cubit = createAuthCubit(repository, users);
   });
   tearDown(() async {
     await cubit.close();
@@ -189,7 +190,7 @@ void main() {
     when(
       () => repository.authStateChanges(),
     ).thenThrow(const AuthException(AuthErrorCode.userDisabled));
-    cubit = AuthCubit(repository, users);
+    cubit = createAuthCubit(repository, users);
     expect(
       cubit.state,
       isA<AuthFailure>().having(
@@ -261,7 +262,7 @@ void main() {
       when(
         () => repository.authStateChanges(),
       ).thenAnswer((_) => controller.stream);
-      cubit = AuthCubit(repository, users);
+      cubit = createAuthCubit(repository, users);
       final replacement = StreamController<DataResult<AuthSession>>();
       when(
         () => repository.authStateChanges(),
@@ -299,7 +300,7 @@ void main() {
     when(
       () => repository.authStateChanges(),
     ).thenAnswer((_) => controller.stream);
-    cubit = AuthCubit(repository, users);
+    cubit = createAuthCubit(repository, users);
     clearInteractions(repository);
     final retry = cubit.retry();
     final close = cubit.close();

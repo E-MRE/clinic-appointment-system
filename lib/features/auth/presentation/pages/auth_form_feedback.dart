@@ -12,8 +12,7 @@ final class _AuthFormFeedback<C extends AuthRequestCubit>
     return BlocBuilder<C, AuthRequestState>(
       builder: (context, state) {
         if (state is AuthRequestFailure) {
-          final message =
-              state.errorCode?.messageKey.translate() ?? state.message ?? '';
+          final message = state.errorCode?.message ?? state.message ?? '';
 
           return _AuthFeedbackMessage(message: message, tone: TextTone.error);
         }

@@ -7,6 +7,7 @@ import 'package:clinic_appointment_system/features/auth/data/mappers/firebase_au
 import 'package:clinic_appointment_system/features/auth/data/repositories/firebase_auth_repository.dart';
 import 'package:clinic_appointment_system/features/auth/domain/mappers/auth_exception_mapper.dart';
 import 'package:clinic_appointment_system/features/auth/domain/repositories/auth_repository.dart';
+import 'package:clinic_appointment_system/features/auth/domain/usecases/register_patient_use_case.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_request_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_request_state.dart';
@@ -101,6 +102,8 @@ void main() {
     expect(container.get<AuthExceptionMapper>(), same(mapper));
     final authCubit = container.get<AuthCubit>();
     expect(container.get<AuthCubit>(), same(authCubit));
+    final registerPatient = container.get<RegisterPatientUseCase>();
+    expect(container.get<RegisterPatientUseCase>(), same(registerPatient));
   });
 
   test('auth repository uses the injected Firebase instance', () async {

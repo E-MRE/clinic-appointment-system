@@ -1,7 +1,8 @@
 part of 'auth_page.dart';
 
 /// Email input reused by sign-in, registration and password reset.
-final class _AuthEmailField extends StatelessWidget with AuthValidationMixin {
+final class _AuthEmailField extends StatelessWidget
+    with AuthInputValidationMixin {
   const _AuthEmailField({
     required this.kind,
     required this.controller,
@@ -34,7 +35,6 @@ final class _AuthEmailField extends StatelessWidget with AuthValidationMixin {
   }
 
   String? _validate(String? value) {
-    final result = validateEmail(value ?? '');
-    return result.isNotSuccess ? result.message : null;
+    return emailError(value ?? '')?.message;
   }
 }

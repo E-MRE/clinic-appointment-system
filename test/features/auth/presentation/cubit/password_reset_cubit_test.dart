@@ -1,14 +1,13 @@
 import 'package:clinic_appointment_system/core/enums/auth_error_code.dart';
 import 'package:clinic_appointment_system/core/errors/app_exception.dart';
 import 'package:clinic_appointment_system/core/errors/result.dart';
-import 'package:clinic_appointment_system/core/localization/localization.dart';
+import 'package:clinic_appointment_system/features/auth/domain/usecases/send_password_reset_email_use_case.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_request_state.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/password_reset_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../../support/auth_repository_doubles.dart';
-import '../../../../support/localization_test_app.dart';
 
 void main() {
   late MockAuthRepository repository;
@@ -16,7 +15,7 @@ void main() {
   const email = ' patient@example.com ';
   setUp(() {
     repository = MockAuthRepository();
-    cubit = PasswordResetCubit(repository);
+    cubit = PasswordResetCubit(SendPasswordResetEmailUseCase(repository));
   });
   tearDown(() => cubit.close());
 
@@ -34,22 +33,18 @@ void main() {
     verifyNoMoreInteractions(repository);
   });
 
-  testWidgets(
-    'invalid emails return a localized message without requesting reset',
-    (tester) async {
-      await loadTestTranslations(tester);
-      await cubit.sendPasswordResetEmail('invalid');
-      expect(
-        cubit.state,
-        isA<AuthRequestFailure>().having(
-          (s) => s.message,
-          'message',
-          LocaleKeys.validation_invalidEmail.translate(),
-        ),
-      );
-      verifyZeroInteractions(repository);
-    },
-  );
+  test('invalid emails report their code without requesting reset', () async {
+    await cubit.sendPasswordResetEmail('invalid');
+    expect(
+      cubit.state,
+      isA<AuthRequestFailure>().having(
+        (s) => s.errorCode,
+        'errorCode',
+        AuthErrorCode.invalidEmail,
+      ),
+    );
+    verifyZeroInteractions(repository);
+  });
 
   test('rate limiting exposes its authentication error code', () async {
     when(

@@ -1,5 +1,7 @@
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
 import 'package:clinic_appointment_system/core/errors/user_exception.dart';
+import 'package:clinic_appointment_system/features/users/data/models/patient_model.dart';
+import 'package:clinic_appointment_system/features/users/data/models/user_model_factory.dart';
 import 'package:clinic_appointment_system/features/users/data/repositories/firestore_user_repository.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/patient.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/user.dart';
@@ -30,7 +32,7 @@ void main() {
   );
   setUp(() {
     firestore = FakeFirebaseFirestore();
-    repository = FirestoreUserRepository(firestore);
+    repository = FirestoreUserRepository(firestore, const UserModelFactory());
   });
   test('watches a missing profile and the later patient write', () async {
     final expectation = expectLater(
@@ -47,7 +49,10 @@ void main() {
       ]),
     );
     await Future<void>.delayed(Duration.zero);
-    await firestore.collection('users').doc('uid').set(patient.toJson());
+    await firestore
+        .collection('users')
+        .doc('uid')
+        .set(PatientModel.fromEntity(patient).toJson());
     await expectation;
   });
   test('invalid document emits a typed stream error', () async {
@@ -84,7 +89,10 @@ void main() {
       () => document.set(any()),
     ).thenThrow(FirebaseException(plugin: 'firestore'));
     await expectLater(
-      FirestoreUserRepository(db).createPatient(patient),
+      FirestoreUserRepository(
+        db,
+        const UserModelFactory(),
+      ).createPatient(patient),
       throwsA(
         isA<UserException>().having(
           (e) => e.code,

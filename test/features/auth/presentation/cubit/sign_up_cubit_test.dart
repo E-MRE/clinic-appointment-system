@@ -1,11 +1,10 @@
-import 'package:clinic_appointment_system/core/constants/validation_constants.dart';
 import 'package:clinic_appointment_system/core/enums/auth_error_code.dart';
 import 'package:clinic_appointment_system/core/errors/app_exception.dart';
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
 import 'package:clinic_appointment_system/core/errors/user_exception.dart';
-import 'package:clinic_appointment_system/core/localization/localization.dart';
 import 'package:clinic_appointment_system/features/auth/domain/entities/auth_session.dart';
 import 'package:clinic_appointment_system/features/auth/domain/models/auth_registration.dart';
+import 'package:clinic_appointment_system/features/auth/domain/usecases/register_patient_use_case.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_request_state.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/sign_up_cubit.dart';
 import 'package:clinic_appointment_system/features/users/domain/enums/user_error_code.dart';
@@ -13,7 +12,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../../support/auth_repository_doubles.dart';
-import '../../../../support/localization_test_app.dart';
 import '../../../../support/user_repository_double.dart';
 
 void main() {
@@ -33,7 +31,7 @@ void main() {
   setUp(() {
     repository = MockAuthRepository();
     users = TestUserRepository();
-    cubit = SignUpCubit(repository, users);
+    cubit = SignUpCubit(RegisterPatientUseCase(repository, users));
     clearInteractions(repository);
   });
   tearDown(() async {
@@ -73,35 +71,26 @@ void main() {
     );
   });
 
-  testWidgets(
-    'short passwords fail before registration with a localized message',
-    (tester) async {
-      await loadTestTranslations(tester);
-      await cubit.signUp(
-        const AuthRegistration(
-          fullName: 'Elif Kaya',
-          email: 'a@example.com',
-          password: '12345',
-        ),
-      );
-      expect(
-        cubit.state,
-        isA<AuthRequestFailure>().having(
-          (s) => s.message,
-          'message',
-          LocaleKeys.validation_passwordTooShort.translate(
-            namedArgs: TranslationArgs.forMinimumLength(
-              ValidationConstants.minimumPasswordLength,
-            ),
-          ),
-        ),
-      );
-      verifyZeroInteractions(repository);
-    },
-  );
+  test('short passwords fail before registration', () async {
+    await cubit.signUp(
+      const AuthRegistration(
+        fullName: 'Elif Kaya',
+        email: 'a@example.com',
+        password: '12345',
+      ),
+    );
+    expect(
+      cubit.state,
+      isA<AuthRequestFailure>().having(
+        (s) => s.errorCode,
+        'errorCode',
+        AuthErrorCode.passwordTooShort,
+      ),
+    );
+    verifyZeroInteractions(repository);
+  });
 
-  testWidgets('invalid emails fail before registration', (tester) async {
-    await loadTestTranslations(tester);
+  test('invalid emails fail before registration', () async {
     await cubit.signUp(
       const AuthRegistration(
         fullName: 'Elif Kaya',
@@ -112,16 +101,15 @@ void main() {
     expect(
       cubit.state,
       isA<AuthRequestFailure>().having(
-        (s) => s.message,
-        'message',
-        LocaleKeys.validation_invalidEmail.translate(),
+        (s) => s.errorCode,
+        'errorCode',
+        AuthErrorCode.invalidEmail,
       ),
     );
     verifyZeroInteractions(repository);
   });
 
-  testWidgets('blank names do not reach the repository', (tester) async {
-    await loadTestTranslations(tester);
+  test('blank names do not reach the repository', () async {
     await cubit.signUp(
       const AuthRegistration(
         fullName: '   ',
@@ -132,9 +120,9 @@ void main() {
     expect(
       cubit.state,
       isA<AuthRequestFailure>().having(
-        (s) => s.message,
-        'message',
-        'Adınızı ve soyadınızı girin.',
+        (s) => s.errorCode,
+        'errorCode',
+        AuthErrorCode.fullNameRequired,
       ),
     );
     verifyZeroInteractions(repository);

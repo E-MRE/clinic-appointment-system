@@ -1,17 +1,14 @@
-import 'package:clinic_appointment_system/features/auth/domain/repositories/auth_repository.dart';
+import 'package:clinic_appointment_system/features/auth/domain/usecases/send_password_reset_email_use_case.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_request_cubit.dart';
-import 'package:clinic_appointment_system/features/auth/presentation/mixins/auth_validation_mixin.dart';
 
-/// Validates an email address and requests the password-reset email.
-final class PasswordResetCubit extends AuthRequestCubit
-    with AuthValidationMixin {
-  PasswordResetCubit(this._repository);
+/// Requests the password-reset email through its use case.
+final class PasswordResetCubit extends AuthRequestCubit {
+  PasswordResetCubit(this._sendPasswordResetEmail);
 
-  final AuthRepository _repository;
+  final SendPasswordResetEmailUseCase _sendPasswordResetEmail;
 
   /// Requests a reset email without changing the application's session state.
-  Future<void> sendPasswordResetEmail(String email) => executeRequest(
-    validate: () => validateEmail(email),
-    request: () => _repository.sendPasswordResetEmail(email),
-  );
+  Future<void> sendPasswordResetEmail(String email) {
+    return executeRequest(() => _sendPasswordResetEmail(email));
+  }
 }

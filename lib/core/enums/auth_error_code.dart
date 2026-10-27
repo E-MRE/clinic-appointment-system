@@ -2,6 +2,8 @@
 enum AuthErrorCode {
   invalidEmail,
   missingPassword,
+  passwordTooShort,
+  fullNameRequired,
   weakPassword,
   invalidCredentials,
   emailAlreadyInUse,
