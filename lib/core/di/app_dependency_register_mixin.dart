@@ -10,6 +10,7 @@ import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/password_reset_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/sign_in_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/sign_up_cubit.dart';
+import 'package:clinic_appointment_system/features/users/data/models/user_model_factory.dart';
 import 'package:clinic_appointment_system/features/users/data/repositories/firestore_user_repository.dart';
 import 'package:clinic_appointment_system/features/users/domain/repositories/user_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -26,7 +27,10 @@ mixin AppDependencyRegisterMixin {
       () => FirebaseFirestore.instance,
     );
     injector.registerLazySingleton<UserRepository>(
-      () => FirestoreUserRepository(injector.get<FirebaseFirestore>()),
+      () => FirestoreUserRepository(
+        injector.get<FirebaseFirestore>(),
+        const UserModelFactory(),
+      ),
     );
     injector.registerLazySingleton<AuthExceptionMapper>(
       FirebaseAuthExceptionMapper.new,

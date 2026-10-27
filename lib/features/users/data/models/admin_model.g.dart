@@ -1,15 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'admin.dart';
+part of 'admin_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-Admin _$AdminFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('Admin', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['id', 'fullName', 'email']);
-      final val = Admin(
+AdminModel _$AdminModelFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('AdminModel', json, ($checkedConvert) {
+      final val = AdminModel(
         id: $checkedConvert('id', (v) => v as String),
         fullName: $checkedConvert('fullName', (v) => v as String),
         email: $checkedConvert('email', (v) => v as String),
@@ -17,11 +16,12 @@ Admin _$AdminFromJson(Map<String, dynamic> json) =>
       return val;
     });
 
-Map<String, dynamic> _$AdminToJson(Admin instance) => <String, dynamic>{
-  'fullName': instance.fullName,
-  'email': instance.email,
-  'role': _$UserRoleEnumMap[instance.role]!,
-};
+Map<String, dynamic> _$AdminModelToJson(AdminModel instance) =>
+    <String, dynamic>{
+      'fullName': instance.fullName,
+      'email': instance.email,
+      'role': _$UserRoleEnumMap[instance.role]!,
+    };
 
 const _$UserRoleEnumMap = {
   UserRole.patient: 'patient',

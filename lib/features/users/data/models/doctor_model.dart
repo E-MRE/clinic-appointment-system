@@ -1,0 +1,26 @@
+import 'package:clinic_appointment_system/features/users/data/models/user_model.dart';
+import 'package:clinic_appointment_system/features/users/domain/entities/doctor.dart';
+import 'package:clinic_appointment_system/features/users/domain/enums/user_role.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'doctor_model.g.dart';
+
+/// The stored form of a doctor profile.
+@JsonSerializable()
+final class DoctorModel extends Doctor with UserModel {
+  /// Creates a doctor profile model.
+  const DoctorModel({
+    required super.id,
+    required super.fullName,
+    required super.email,
+    required super.branchId,
+    required super.departmentId,
+  });
+
+  /// Creates a profile model from stored document fields.
+  factory DoctorModel.fromJson(Map<String, dynamic> json) =>
+      _$DoctorModelFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$DoctorModelToJson(this);
+}

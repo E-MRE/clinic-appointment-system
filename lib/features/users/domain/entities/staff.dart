@@ -1,8 +1,8 @@
 import 'package:clinic_appointment_system/features/users/domain/entities/user.dart';
-import 'package:json_annotation/json_annotation.dart';
 
-/// A clinic staff profile assigned to a branch and department.
-abstract class Staff extends User {
+/// A clinic staff profile assigned to a branch and department. Subclasses
+/// provide the staff role.
+abstract base class Staff extends User {
   /// Creates a staff profile assigned to a branch and department.
   const Staff({
     required super.id,
@@ -13,10 +13,8 @@ abstract class Staff extends User {
   });
 
   /// The identifier of the staff member's branch.
-  @JsonKey(required: true)
   final String branchId;
 
   /// The identifier of the staff member's department.
-  @JsonKey(required: true)
   final String departmentId;
 }

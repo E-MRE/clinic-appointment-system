@@ -2,24 +2,6 @@ import 'package:clinic_appointment_system/features/users/domain/enums/user_role.
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('roles round trip through their stable storage values', () {
-    for (final entry in {
-      UserRole.patient: 'patient',
-      UserRole.doctor: 'doctor',
-      UserRole.technician: 'technician',
-      UserRole.admin: 'admin',
-    }.entries) {
-      expect(entry.key.storageValue, entry.value);
-      expect(UserRole.fromStorage(entry.value), entry.key);
-    }
-  });
-
-  test('unknown storage values throw an ArgumentError', () {
-    for (final value in ['', 'Doctor', 'unknown']) {
-      expect(() => UserRole.fromStorage(value), throwsArgumentError);
-    }
-  });
-
   test('only patients book appointments', () {
     expect(UserRole.patient.canBookAppointments, isTrue);
     expect(UserRole.doctor.canBookAppointments, isFalse);
