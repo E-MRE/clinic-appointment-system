@@ -34,4 +34,7 @@ flutter analyze
 flutter test
 ```
 
+When `firestore.rules` changes, run `bash scripts/rules_test.sh` (Node.js, the Firebase CLI and Java
+are required) and add rules tests for every allowed and denied case.
+
 If a check cannot run, explain why in the pull request.
