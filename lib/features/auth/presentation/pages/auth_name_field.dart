@@ -1,7 +1,8 @@
 part of 'auth_page.dart';
 
 /// Patient name input with the shared name validation rule.
-final class _AuthNameField extends StatelessWidget with AuthValidationMixin {
+final class _AuthNameField extends StatelessWidget
+    with AuthInputValidationMixin {
   const _AuthNameField({required this.controller, required this.enabled});
 
   final TextEditingController controller;
@@ -22,7 +23,6 @@ final class _AuthNameField extends StatelessWidget with AuthValidationMixin {
   }
 
   String? _validate(String? value) {
-    final result = validateFullName(value ?? '');
-    return result.isNotSuccess ? result.message : null;
+    return fullNameError(value ?? '')?.message;
   }
 }

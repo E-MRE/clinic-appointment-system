@@ -55,8 +55,6 @@
     "goHome": "Ana sayfaya dön"
   },
   "validation": {
-    "invalidEmail": "Geçerli bir e-posta adresi girin.",
-    "passwordRequired": "Şifrenizi girin.",
     "passwordTooShort": "Şifreniz en az {minimumLength} karakter olmalıdır.",
     "fullNameRequired": "Adınızı ve soyadınızı girin.",
     "passwordMismatch": "Şifreler eşleşmiyor."

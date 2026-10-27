@@ -1,7 +1,6 @@
 import 'package:clinic_appointment_system/core/enums/auth_error_code.dart';
 import 'package:clinic_appointment_system/core/errors/app_exception.dart';
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
-import 'package:clinic_appointment_system/core/localization/localization.dart';
 import 'package:clinic_appointment_system/features/auth/domain/entities/auth_session.dart';
 import 'package:clinic_appointment_system/features/auth/domain/models/auth_credentials.dart';
 import 'package:clinic_appointment_system/features/auth/domain/usecases/sign_in_use_case.dart';
@@ -11,7 +10,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../../support/auth_repository_doubles.dart';
-import '../../../../support/localization_test_app.dart';
 
 void main() {
   late MockAuthRepository repository;
@@ -48,35 +46,31 @@ void main() {
     },
   );
 
-  testWidgets('invalid email returns a localized message without a request', (
-    tester,
-  ) async {
-    await loadTestTranslations(tester);
+  test('invalid email reports its code without a request', () async {
     await cubit.signIn(
       const AuthCredentials(email: 'invalid', password: 'secret'),
     );
     expect(
       cubit.state,
       isA<AuthRequestFailure>().having(
-        (s) => s.message,
-        'message',
-        LocaleKeys.validation_invalidEmail.translate(),
+        (s) => s.errorCode,
+        'errorCode',
+        AuthErrorCode.invalidEmail,
       ),
     );
     verifyZeroInteractions(repository);
   });
 
-  testWidgets('missing password is validated before sign in', (tester) async {
-    await loadTestTranslations(tester);
+  test('missing password is validated before sign in', () async {
     await cubit.signIn(
       const AuthCredentials(email: 'a@example.com', password: ''),
     );
     expect(
       cubit.state,
       isA<AuthRequestFailure>().having(
-        (s) => s.message,
-        'message',
-        LocaleKeys.validation_passwordRequired.translate(),
+        (s) => s.errorCode,
+        'errorCode',
+        AuthErrorCode.missingPassword,
       ),
     );
     verifyZeroInteractions(repository);

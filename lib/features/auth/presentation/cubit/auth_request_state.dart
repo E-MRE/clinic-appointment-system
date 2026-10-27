@@ -11,7 +11,7 @@ final class AuthRequestInitial extends AuthRequestState {
   const AuthRequestInitial();
 }
 
-/// A validated request is in progress.
+/// A request is in progress.
 final class AuthRequestLoading extends AuthRequestState {
   const AuthRequestLoading();
 }
@@ -21,7 +21,7 @@ final class AuthRequestSuccess extends AuthRequestState {
   const AuthRequestSuccess();
 }
 
-/// Either a validation/result message or an exception code, never both.
+/// Either a result message or an exception code, never both.
 final class AuthRequestFailure extends AuthRequestState {
   const AuthRequestFailure.message(String this.message) : errorCode = null;
 

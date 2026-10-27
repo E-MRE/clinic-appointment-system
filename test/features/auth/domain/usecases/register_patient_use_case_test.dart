@@ -43,6 +43,27 @@ void main() {
     expect(users.created?.email, session.email);
   });
 
+  test('invalid input fails before creating the account', () async {
+    await expectLater(
+      registerPatient(
+        const AuthRegistration(
+          fullName: 'Elif Kaya',
+          email: 'patient@example.com',
+          password: 'short',
+        ),
+      ),
+      throwsA(
+        isA<AuthException>().having(
+          (e) => e.code,
+          'code',
+          AuthErrorCode.passwordTooShort,
+        ),
+      ),
+    );
+    verifyZeroInteractions(repository);
+    expect(users.created, isNull);
+  });
+
   test('an unsuccessful sign-up returns without a profile', () async {
     const failure = DataResult<AuthSession>.error(message: 'failed');
     when(

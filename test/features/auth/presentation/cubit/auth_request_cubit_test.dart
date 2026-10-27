@@ -16,30 +16,6 @@ void main() {
     expect(cubit.state, isA<AuthRequestInitial>());
   });
 
-  test(
-    'invalid input fails without loading or contacting the repository',
-    () async {
-      var calls = 0;
-      final expectation = expectLater(
-        cubit.stream,
-        emits(
-          isA<AuthRequestFailure>()
-              .having((s) => s.message, 'message', 'Localized validation')
-              .having((s) => s.errorCode, 'errorCode', isNull),
-        ),
-      );
-      await cubit.submit(
-        validation: const Result.error(message: 'Localized validation'),
-        request: () async {
-          calls++;
-          return const Result.success();
-        },
-      );
-      await expectation;
-      expect(calls, 0);
-    },
-  );
-
   test('valid requests emit loading then success', () async {
     final expectation = expectLater(
       cubit.stream,
@@ -107,29 +83,22 @@ void main() {
     );
   });
 
-  test(
-    'a pending request ignores duplicate submissions before validating',
-    () async {
-      final pending = Completer<Result>();
-      final first = cubit.submit(request: () => pending.future);
-      expect(cubit.state, isA<AuthRequestLoading>());
-      var duplicateCalls = 0;
-      await cubit.submitWithValidation(
-        validate: () {
-          duplicateCalls++;
-          return const Result.success();
-        },
-        request: () async {
-          duplicateCalls++;
-          return const Result.success();
-        },
-      );
-      expect(duplicateCalls, 0);
-      pending.complete(const Result.success());
-      await first;
-      expect(cubit.state, isA<AuthRequestSuccess>());
-    },
-  );
+  test('a pending request ignores duplicate submissions', () async {
+    final pending = Completer<Result>();
+    final first = cubit.submit(request: () => pending.future);
+    expect(cubit.state, isA<AuthRequestLoading>());
+    var duplicateCalls = 0;
+    await cubit.submit(
+      request: () async {
+        duplicateCalls++;
+        return const Result.success();
+      },
+    );
+    expect(duplicateCalls, 0);
+    pending.complete(const Result.success());
+    await first;
+    expect(cubit.state, isA<AuthRequestSuccess>());
+  });
 
   test('failure permits a later successful submission', () async {
     await cubit.submit(
@@ -161,14 +130,10 @@ void main() {
     expect(cubit.state, isA<AuthRequestLoading>());
   });
 
-  test('closed cubits ignore validation and repository requests', () async {
+  test('closed cubits ignore requests', () async {
     await cubit.close();
     var calls = 0;
-    await cubit.submitWithValidation(
-      validate: () {
-        calls++;
-        return const Result.success();
-      },
+    await cubit.submit(
       request: () async {
         calls++;
         return const Result.success();
@@ -179,13 +144,7 @@ void main() {
 }
 
 final class _RequestCubit extends AuthRequestCubit {
-  Future<void> submit({
-    Result validation = const Result.success(),
-    required Future<Result> Function() request,
-  }) => executeRequest(validate: () => validation, request: request);
-
-  Future<void> submitWithValidation({
-    required Result Function() validate,
-    required Future<Result> Function() request,
-  }) => executeRequest(validate: validate, request: request);
+  Future<void> submit({required Future<Result> Function() request}) {
+    return executeRequest(request);
+  }
 }

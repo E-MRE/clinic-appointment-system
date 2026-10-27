@@ -1,12 +1,26 @@
+import 'package:clinic_appointment_system/core/constants/validation_constants.dart';
 import 'package:clinic_appointment_system/core/enums/auth_error_code.dart';
 import 'package:clinic_appointment_system/core/localization/localization.dart';
 
 /// Resolves provider-independent authentication codes at the UI boundary.
 extension AuthErrorCodeLocalization on AuthErrorCode {
+  /// The localized message, with the arguments its key needs.
+  String get message => messageKey.translate(namedArgs: _namedArgs);
+
+  Map<String, String>? get _namedArgs {
+    return this == AuthErrorCode.passwordTooShort
+        ? TranslationArgs.forMinimumLength(
+            ValidationConstants.minimumPasswordLength,
+          )
+        : null;
+  }
+
   String get messageKey {
     return switch (this) {
       AuthErrorCode.invalidEmail => LocaleKeys.auth_errors_invalidEmail,
       AuthErrorCode.missingPassword => LocaleKeys.auth_errors_missingPassword,
+      AuthErrorCode.passwordTooShort => LocaleKeys.validation_passwordTooShort,
+      AuthErrorCode.fullNameRequired => LocaleKeys.validation_fullNameRequired,
       AuthErrorCode.weakPassword => LocaleKeys.auth_errors_weakPassword,
       AuthErrorCode.invalidCredentials =>
         LocaleKeys.auth_errors_invalidCredentials,

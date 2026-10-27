@@ -5,26 +5,18 @@ import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-/// A template for validation, request progress and failure handling.
-/// Concrete cubits supply the validation and repository operation.
+/// A template for request progress and failure handling.
+/// Concrete cubits supply the use case operation; use cases validate input.
 abstract class AuthRequestCubit extends Cubit<AuthRequestState> {
   AuthRequestCubit() : super(const AuthRequestInitial());
 
   bool get _shouldIgnoreRequest => isClosed || state is AuthRequestLoading;
 
-  /// Runs one validated request at a time and ignores completions after close.
+  /// Runs one request at a time and ignores completions after close.
   @protected
-  Future<void> executeRequest({
-    required Result Function() validate,
-    required Future<Result> Function() request,
-  }) async {
+  Future<void> executeRequest(Future<Result> Function() request) async {
     if (_shouldIgnoreRequest) return;
     try {
-      final validation = validate();
-      if (validation.isNotSuccess) {
-        _emitMessageFailure(validation.message);
-        return;
-      }
       emit(const AuthRequestLoading());
       final result = await request();
       if (isClosed) return;

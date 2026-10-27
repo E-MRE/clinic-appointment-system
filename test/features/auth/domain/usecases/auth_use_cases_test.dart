@@ -1,3 +1,5 @@
+import 'package:clinic_appointment_system/core/enums/auth_error_code.dart';
+import 'package:clinic_appointment_system/core/errors/app_exception.dart';
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
 import 'package:clinic_appointment_system/core/errors/result.dart';
 import 'package:clinic_appointment_system/core/usecases/no_params.dart';
@@ -36,6 +38,22 @@ void main() {
     expect(await SignInUseCase(repository)(credentials), same(session));
   });
 
+  test('invalid credentials fail before signing in', () async {
+    await expectLater(
+      SignInUseCase(repository)(
+        const AuthCredentials(email: 'invalid', password: 'secret'),
+      ),
+      throwsA(
+        isA<AuthException>().having(
+          (e) => e.code,
+          'code',
+          AuthErrorCode.invalidEmail,
+        ),
+      ),
+    );
+    verifyZeroInteractions(repository);
+  });
+
   test('password reset requests the email for the address', () async {
     const result = Result.success();
     when(
@@ -45,6 +63,20 @@ void main() {
       await SendPasswordResetEmailUseCase(repository)('patient@example.com'),
       same(result),
     );
+  });
+
+  test('an invalid address fails before requesting a reset', () async {
+    await expectLater(
+      SendPasswordResetEmailUseCase(repository)('invalid'),
+      throwsA(
+        isA<AuthException>().having(
+          (e) => e.code,
+          'code',
+          AuthErrorCode.invalidEmail,
+        ),
+      ),
+    );
+    verifyZeroInteractions(repository);
   });
 
   test('sign out signs out through the repository', () async {
