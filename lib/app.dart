@@ -42,6 +42,7 @@ final class App extends StatelessWidget {
             routerConfig: router,
             builder: (context, child) => AuthStartupGate(
               onGoHome: _retryFromHome,
+              router: router,
               child: child ?? const SizedBox.shrink(),
             ),
           ),

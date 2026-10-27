@@ -23,6 +23,11 @@
     "technician": "Teknisyen",
     "admin": "Yönetici"
   },
+  "home": {
+    "patient": "Hasta ana sayfası",
+    "staff": "Personel ana sayfası",
+    "admin": "Yönetici ana sayfası"
+  },
   "appointment": {
     "title": "Randevu",
     "appointments": "Randevular",
@@ -63,7 +68,10 @@
     "offlineTitle": "Bağlantı kurulamadı",
     "offlineDescription": "İnternet bağlantınızı kontrol edip tekrar deneyin. Girdiğiniz bilgiler kaybolmadı.",
     "errorTitle": "Bir şeyler ters gitti",
-    "errorDescription": "İsteğiniz tamamlanamadı. Birkaç saniye sonra tekrar deneyin; sorun sürerse klinik yönetimine bildirin."
+    "errorDescription": "İsteğiniz tamamlanamadı. Birkaç saniye sonra tekrar deneyin; sorun sürerse klinik yönetimine bildirin.",
+    "profileMissingTitle": "Profil bulunamadı",
+    "invalidProfileTitle": "Profil geçersiz",
+    "profileUnavailableTitle": "Profil yüklenemedi"
   },
   "auth": {
     "signInTitle": "Giriş yapın",
@@ -114,7 +122,11 @@
       "networkRequestFailed": "Bağlantı kurulamadı. İnternet bağlantınızı kontrol edip tekrar deneyin.",
       "operationNotAllowed": "Bu giriş yöntemi şu anda kullanılamıyor. Klinik yönetimiyle iletişime geçin.",
       "profileUpdateFailed": "Hesabınız oluşturuldu ancak adınız kaydedilemedi. Hesabınıza giriş yapabilirsiniz; yeniden kayıt olmayın.",
-      "unexpected": "İşlem tamamlanamadı. Lütfen tekrar deneyin."
+      "unexpected": "İşlem tamamlanamadı. Lütfen tekrar deneyin.",
+      "profileCreationFailed": "Hesabınız oluşturuldu ancak hasta profiliniz kaydedilemedi. Yeniden kayıt olmayın; klinik yönetimiyle iletişime geçin.",
+      "profileMissing": "Hesabınızın profili bulunamadı. Klinik yönetimiyle iletişime geçin.",
+      "invalidProfile": "Hesap profiliniz eksik veya geçersiz. Klinik yönetimiyle iletişime geçin.",
+      "profileUnavailable": "Hesap profili yüklenemedi. Bağlantınızı kontrol edip tekrar deneyin."
     }
   },
   "componentPreview": {

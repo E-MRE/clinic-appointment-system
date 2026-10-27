@@ -10,5 +10,6 @@ enum AuthErrorCode {
   networkRequestFailed,
   operationNotAllowed,
   profileUpdateFailed,
+  profileCreationFailed,
   unexpected,
 }

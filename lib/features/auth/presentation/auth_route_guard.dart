@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:clinic_appointment_system/core/router/app_routes.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_state.dart';
+import 'package:clinic_appointment_system/features/auth/presentation/extensions/user_role_home.dart';
+import 'package:clinic_appointment_system/features/users/domain/enums/user_role.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -20,7 +22,20 @@ final class AuthRouteGuard extends ChangeNotifier {
   /// A form request signed in; the form opens home after its request finishes,
   /// so a refresh here would hide a failure such as the profile-name update.
   bool _isSignedInByRequest(AuthState state) {
-    return _previous is AuthSignedOut && state is AuthSignedIn;
+    return state is AuthSignedIn && _wasAwaitingSignIn;
+  }
+
+  /// Whether the previous state still waited for a session or its profile.
+  bool get _wasAwaitingSignIn {
+    if (_previous is AuthSignedOut) {
+      return true;
+    }
+
+    if (_previous is AuthProfileFailure) {
+      return (_previous as AuthProfileFailure).isProfileMissing;
+    }
+
+    return false;
   }
 
   void _onSessionChanged(AuthState state) {
@@ -32,22 +47,49 @@ final class AuthRouteGuard extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Sends signed-out home requests to sign-in and signed-in auth requests to
-  /// home, while preserving unknown routes.
+  /// Redirects home and authentication locations according to the session.
   String? redirect(BuildContext context, GoRouterState route) {
-    final state = _authCubit.state;
     final path = route.uri.path;
-    if (state is AuthSignedOut && path == AppRoutes.home) {
-      return AppRoutes.signIn;
+    final state = _authCubit.state;
+
+    if (state is AuthSignedOut) {
+      if (_isProtectedHome(path)) {
+        return AppRoutes.signIn;
+      }
     }
-    if (state is AuthSignedIn && _isAuthLocation(path)) {
-      return AppRoutes.home;
+
+    if (state is AuthSignedIn) {
+      final user = state.user;
+
+      if (_needsHomeRedirect(path, user.role.homePath)) {
+        return user.role.homePath;
+      }
     }
+
     return null;
+  }
+
+  /// Role homes come from the role mapping, so a new role needs no edit here.
+  bool _isRoleHome(String path) {
+    return UserRole.values.any((role) => role.homePath == path);
+  }
+
+  bool _isProtectedHome(String path) {
+    return path == AppRoutes.home || _isRoleHome(path);
   }
 
   bool _isAuthLocation(String path) {
     return path == AppRoutes.signIn || path.startsWith('${AppRoutes.signIn}/');
+  }
+
+  bool _isOtherRoleHome(String path, String home) {
+    return _isRoleHome(path) && path != home;
+  }
+
+  bool _needsHomeRedirect(String path, String home) {
+    return path == AppRoutes.home ||
+        _isAuthLocation(path) ||
+        _isOtherRoleHome(path, home);
   }
 
   @override

@@ -2,6 +2,7 @@ import 'package:clinic_appointment_system/core/router/app_routes.dart';
 import 'package:clinic_appointment_system/core/router/fade_transition_page.dart';
 import 'package:clinic_appointment_system/core/router/home_page.dart';
 import 'package:clinic_appointment_system/core/router/not_found_page.dart';
+import 'package:clinic_appointment_system/features/admin/presentation/pages/admin_home_page.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/auth_route_guard.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/password_reset_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/sign_in_cubit.dart';
@@ -12,6 +13,8 @@ import 'package:clinic_appointment_system/features/auth/presentation/pages/passw
 import 'package:clinic_appointment_system/features/auth/presentation/pages/sign_in_page.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/pages/sign_up_page.dart';
 import 'package:clinic_appointment_system/features/debug/presentation/pages/component_preview/component_preview_page.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/pages/patient_home_page.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/pages/staff_home_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -39,15 +42,24 @@ GoRouter createAppRouter({
       if (kDebugMode && enableDebugRoutes)
         GoRoute(
           path: AppRoutes.componentPreview,
-          pageBuilder: (_, state) {
-            return _fadePage(state, const ComponentPreviewPage());
-          },
+          pageBuilder: (_, state) =>
+              _fadePage(state, const ComponentPreviewPage()),
         ),
       GoRoute(
         path: AppRoutes.home,
-        pageBuilder: (_, state) {
-          return _fadePage(state, const HomePage());
-        },
+        pageBuilder: (_, state) => _fadePage(state, const HomePage()),
+      ),
+      GoRoute(
+        path: AppRoutes.patientHome,
+        pageBuilder: (_, state) => _fadePage(state, const PatientHomePage()),
+      ),
+      GoRoute(
+        path: AppRoutes.staffHome,
+        pageBuilder: (_, state) => _fadePage(state, const StaffHomePage()),
+      ),
+      GoRoute(
+        path: AppRoutes.adminHome,
+        pageBuilder: (_, state) => _fadePage(state, const AdminHomePage()),
       ),
       if (signInCubitFactory != null)
         ShellRoute(

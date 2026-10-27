@@ -25,6 +25,10 @@ abstract class LocaleKeys {
   static const roles_technician = 'roles.technician';
   static const roles_admin = 'roles.admin';
   static const roles = 'roles';
+  static const home_patient = 'home.patient';
+  static const home_staff = 'home.staff';
+  static const home_admin = 'home.admin';
+  static const home = 'home';
   static const appointment_title = 'appointment.title';
   static const appointment_appointments = 'appointment.appointments';
   static const appointment_newAppointment = 'appointment.newAppointment';
@@ -59,6 +63,10 @@ abstract class LocaleKeys {
   static const startup_offlineDescription = 'startup.offlineDescription';
   static const startup_errorTitle = 'startup.errorTitle';
   static const startup_errorDescription = 'startup.errorDescription';
+  static const startup_profileMissingTitle = 'startup.profileMissingTitle';
+  static const startup_invalidProfileTitle = 'startup.invalidProfileTitle';
+  static const startup_profileUnavailableTitle =
+      'startup.profileUnavailableTitle';
   static const startup = 'startup';
   static const auth_signInTitle = 'auth.signInTitle';
   static const auth_signInAction = 'auth.signInAction';
@@ -112,6 +120,12 @@ abstract class LocaleKeys {
   static const auth_errors_profileUpdateFailed =
       'auth.errors.profileUpdateFailed';
   static const auth_errors_unexpected = 'auth.errors.unexpected';
+  static const auth_errors_profileCreationFailed =
+      'auth.errors.profileCreationFailed';
+  static const auth_errors_profileMissing = 'auth.errors.profileMissing';
+  static const auth_errors_invalidProfile = 'auth.errors.invalidProfile';
+  static const auth_errors_profileUnavailable =
+      'auth.errors.profileUnavailable';
   static const auth_errors = 'auth.errors';
   static const auth = 'auth';
   static const componentPreview_title = 'componentPreview.title';

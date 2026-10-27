@@ -14,6 +14,7 @@ import 'package:mocktail/mocktail.dart';
 
 import 'support/auth_repository_doubles.dart';
 import 'support/localization_test_app.dart';
+import 'support/user_repository_double.dart';
 
 void main() {
   late GoRouter router;
@@ -26,7 +27,7 @@ void main() {
     when(() => repository.authStateChanges()).thenAnswer(
       (_) => Stream.value(const DataResult<AuthSession>.success(data: null)),
     );
-    authCubit = AuthCubit(repository);
+    authCubit = AuthCubit(repository, TestUserRepository());
   });
   tearDown(() async {
     router.dispose();

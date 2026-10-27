@@ -5,11 +5,14 @@ import 'package:clinic_appointment_system/core/constants/widget_key.dart';
 import 'package:clinic_appointment_system/core/enums/auth_error_code.dart';
 import 'package:clinic_appointment_system/core/errors/app_exception.dart';
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
+import 'package:clinic_appointment_system/core/errors/result.dart';
+import 'package:clinic_appointment_system/core/errors/user_exception.dart';
 import 'package:clinic_appointment_system/core/router/app_router.dart';
 import 'package:clinic_appointment_system/core/states/theme_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/domain/entities/auth_session.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_state.dart';
+import 'package:clinic_appointment_system/features/users/domain/enums/user_error_code.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
@@ -17,11 +20,13 @@ import 'package:mocktail/mocktail.dart';
 
 import '../../../../support/auth_repository_doubles.dart';
 import '../../../../support/localization_test_app.dart';
+import '../../../../support/user_repository_double.dart';
 
 void main() {
   late MockAuthRepository repository;
   late StreamController<DataResult<AuthSession>> controller;
   late AuthCubit authCubit;
+  late TestUserRepository users;
   late ThemeCubit themeCubit;
   late GoRouter router;
   setUp(() {
@@ -30,7 +35,8 @@ void main() {
     when(
       () => repository.authStateChanges(),
     ).thenAnswer((_) => controller.stream);
-    authCubit = AuthCubit(repository);
+    users = TestUserRepository();
+    authCubit = AuthCubit(repository, users);
     themeCubit = ThemeCubit();
     router = createAppRouter();
   });
@@ -56,6 +62,91 @@ void main() {
     await tester.runAsync(() => Future<void>.delayed(Duration.zero));
     await tester.pumpAndSettle();
   }
+
+  testWidgets('missing profile explains the failure and offers sign out', (
+    tester,
+  ) async {
+    users.profileStream = Stream.error(
+      const UserException(UserErrorCode.profileMissing),
+    );
+    when(
+      () => repository.signOut(),
+    ).thenAnswer((_) async => const Result.success());
+    await pumpApp(tester);
+    controller.add(
+      const DataResult.success(
+        data: AuthSession(
+          userId: 'patient-1',
+          email: 'patient@example.com',
+          isEmailVerified: false,
+        ),
+      ),
+    );
+    await settle(tester);
+    expect(
+      find.text(
+        'Hesabınızın profili bulunamadı. Klinik yönetimiyle iletişime geçin.',
+      ),
+      findsOneWidget,
+    );
+    await tester.tap(find.text('Çıkış yap'));
+    await tester.pump();
+    verify(() => repository.signOut()).called(1);
+  });
+
+  for (final path in [
+    AppRoutes.signIn,
+    AppRoutes.signUp,
+    AppRoutes.passwordReset,
+  ]) {
+    testWidgets('missing profile keeps auth route $path visible', (
+      tester,
+    ) async {
+      router.dispose();
+      router = createAppRouter(initialLocation: path);
+      users.profileStream = Stream.error(
+        const UserException(UserErrorCode.profileMissing),
+      );
+      await pumpApp(tester);
+      controller.add(
+        const DataResult.success(
+          data: AuthSession(
+            userId: 'patient-1',
+            email: 'patient@example.com',
+            isEmailVerified: false,
+          ),
+        ),
+      );
+      await settle(tester);
+      expect(router.routeInformationProvider.value.uri.path, path);
+      expect(find.byKey(const WidgetKey.startupErrorPage()), findsNothing);
+      router.go(AppRoutes.home);
+      await settle(tester);
+      expect(find.byKey(const WidgetKey.startupErrorPage()), findsOneWidget);
+    });
+  }
+
+  testWidgets('invalid profile shows recovery on an auth route', (
+    tester,
+  ) async {
+    router.dispose();
+    router = createAppRouter(initialLocation: AppRoutes.signUp);
+    users.profileStream = Stream.error(
+      const UserException(UserErrorCode.invalidProfile),
+    );
+    await pumpApp(tester);
+    controller.add(
+      const DataResult.success(
+        data: AuthSession(
+          userId: 'patient-1',
+          email: 'patient@example.com',
+          isEmailVerified: false,
+        ),
+      ),
+    );
+    await settle(tester);
+    expect(find.byKey(const WidgetKey.startupErrorPage()), findsOneWidget);
+  });
 
   testWidgets('Splash remains visible until session restoration finishes', (
     tester,

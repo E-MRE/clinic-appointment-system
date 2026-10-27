@@ -1,5 +1,5 @@
-import 'package:clinic_appointment_system/core/enums/auth_error_code.dart';
 import 'package:clinic_appointment_system/core/theme/theme.dart';
+import 'package:clinic_appointment_system/features/auth/presentation/enums/startup_error_kind.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/pages/startup_error_page.dart';
 import 'package:clinic_appointment_system/generated/assets.gen.dart';
 import 'package:flutter/material.dart';
@@ -27,9 +27,9 @@ void main() {
             tester,
             theme: base.copyWith(colorScheme: colors),
             child: StartupErrorPage(
-              errorCode: offline
-                  ? AuthErrorCode.networkRequestFailed
-                  : AuthErrorCode.unexpected,
+              kind: offline
+                  ? StartupErrorKind.offline
+                  : StartupErrorKind.failure,
               onRetry: () {},
               onGoHome: () {},
             ),

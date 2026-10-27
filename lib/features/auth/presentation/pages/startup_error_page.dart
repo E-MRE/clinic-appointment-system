@@ -1,5 +1,4 @@
 import 'package:clinic_appointment_system/core/constants/widget_key.dart';
-import 'package:clinic_appointment_system/core/enums/auth_error_code.dart';
 import 'package:clinic_appointment_system/core/localization/localization.dart';
 import 'package:clinic_appointment_system/core/theme/theme.dart';
 import 'package:clinic_appointment_system/core/widgets/app_brand_header.dart';
@@ -16,21 +15,20 @@ part 'startup_error_icon.dart';
 /// Recoverable session-startup failure using the approved shared error designs.
 final class StartupErrorPage extends StatelessWidget {
   const StartupErrorPage({
-    required this.errorCode,
+    required this.kind,
     required this.onRetry,
     required this.onGoHome,
+    this.onSignOut,
     super.key,
   });
 
-  final AuthErrorCode errorCode;
+  final StartupErrorKind kind;
   final VoidCallback onRetry;
   final VoidCallback onGoHome;
-
-  StartupErrorKind get _kind => StartupErrorKind.from(errorCode);
+  final VoidCallback? onSignOut;
 
   @override
   Widget build(BuildContext context) {
-    final kind = _kind;
     final colors = context.colorScheme;
     final isMobile = context.screenSize.isMobile;
     final actions = _StartupErrorActions(
@@ -38,6 +36,7 @@ final class StartupErrorPage extends StatelessWidget {
       isMobile: isMobile,
       onRetry: onRetry,
       onGoHome: onGoHome,
+      onSignOut: onSignOut,
     );
     return AppScaffold(
       key: const WidgetKey.startupErrorPage(),
@@ -51,6 +50,7 @@ final class StartupErrorPage extends StatelessWidget {
           Expanded(
             child: ErrorState(
               title: kind.titleKey.translate(),
+              primaryAction: isMobile ? null : actions,
               message: kind.descriptionKey.translate(),
               icon: _StartupErrorIcon(kind: kind, isMobile: isMobile),
               iconBackground: kind.containerColor(colors),
@@ -59,7 +59,6 @@ final class StartupErrorPage extends StatelessWidget {
                 tablet: AppSizes.illustrationLarge,
                 desktop: AppSizes.illustrationLarge,
               ),
-              primaryAction: isMobile ? null : actions,
             ),
           ),
           if (isMobile)
