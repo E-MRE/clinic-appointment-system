@@ -4,6 +4,7 @@ import 'package:clinic_appointment_system/core/errors/data_result.dart';
 import 'package:clinic_appointment_system/core/localization/localization.dart';
 import 'package:clinic_appointment_system/features/auth/domain/entities/auth_session.dart';
 import 'package:clinic_appointment_system/features/auth/domain/models/auth_credentials.dart';
+import 'package:clinic_appointment_system/features/auth/domain/usecases/sign_in_use_case.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_request_state.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/sign_in_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -26,7 +27,7 @@ void main() {
   );
   setUp(() {
     repository = MockAuthRepository();
-    cubit = SignInCubit(repository);
+    cubit = SignInCubit(SignInUseCase(repository));
   });
   tearDown(() => cubit.close());
 

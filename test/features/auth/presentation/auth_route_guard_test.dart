@@ -1,7 +1,6 @@
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
 import 'package:clinic_appointment_system/features/auth/domain/entities/auth_session.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/auth_route_guard.dart';
-import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_state.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/admin.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/doctor.dart';
@@ -12,6 +11,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../../support/auth_cubit_factory.dart';
 import '../../../support/auth_repository_doubles.dart';
 import '../../../support/user_repository_double.dart';
 
@@ -58,7 +58,7 @@ void main() {
     when(() => repository.authStateChanges()).thenAnswer(
       (_) => Stream.value(const DataResult<AuthSession>.success(data: null)),
     );
-    final cubit = AuthCubit(repository, TestUserRepository());
+    final cubit = createAuthCubit(repository, TestUserRepository());
     await cubit.stream.firstWhere((state) => state is AuthSignedOut);
     final guard = AuthRouteGuard(cubit);
     final route = _Route();
@@ -84,7 +84,7 @@ void main() {
         );
         final users = TestUserRepository()
           ..getResult = DataResult.success(data: user);
-        final cubit = AuthCubit(repository, users);
+        final cubit = createAuthCubit(repository, users);
         await cubit.stream.firstWhere((state) => state is AuthSignedIn);
         final guard = AuthRouteGuard(cubit);
         final route = _Route();

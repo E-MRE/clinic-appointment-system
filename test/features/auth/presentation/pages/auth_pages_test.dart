@@ -12,6 +12,9 @@ import 'package:clinic_appointment_system/core/states/theme_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/domain/entities/auth_session.dart';
 import 'package:clinic_appointment_system/features/auth/domain/models/auth_credentials.dart';
 import 'package:clinic_appointment_system/features/auth/domain/models/auth_registration.dart';
+import 'package:clinic_appointment_system/features/auth/domain/usecases/register_patient_use_case.dart';
+import 'package:clinic_appointment_system/features/auth/domain/usecases/send_password_reset_email_use_case.dart';
+import 'package:clinic_appointment_system/features/auth/domain/usecases/sign_in_use_case.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/auth_route_guard.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_state.dart';
@@ -34,6 +37,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../../../support/auth_cubit_factory.dart';
 import '../../../../support/auth_repository_doubles.dart';
 import '../../../../support/localization_test_app.dart';
 import '../../../../support/user_repository_double.dart';
@@ -559,21 +563,23 @@ final class _AuthTestApp {
     when(
       () => repository.authStateChanges(),
     ).thenAnswer((_) => sessions.stream);
-    authCubit = AuthCubit(repository, users);
+    authCubit = createAuthCubit(repository, users);
     configuration = AuthRouteGuard(authCubit);
     router = createAppRouter(
       initialLocation: route,
       authGuard: configuration,
       signInCubitFactory: () {
-        final cubit = SignInCubit(repository);
+        final cubit = SignInCubit(SignInUseCase(repository));
         signInCubits.add(cubit);
         return cubit;
       },
       signUpCubitFactory: () {
-        return SignUpCubit(repository, TestUserRepository());
+        return SignUpCubit(
+          RegisterPatientUseCase(repository, TestUserRepository()),
+        );
       },
       passwordResetCubitFactory: () {
-        return PasswordResetCubit(repository);
+        return PasswordResetCubit(SendPasswordResetEmailUseCase(repository));
       },
     );
     sessions.add(DataResult.success(data: restored));

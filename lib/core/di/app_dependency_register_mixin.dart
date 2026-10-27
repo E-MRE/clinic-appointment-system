@@ -5,6 +5,12 @@ import 'package:clinic_appointment_system/features/auth/data/mappers/firebase_au
 import 'package:clinic_appointment_system/features/auth/data/repositories/firebase_auth_repository.dart';
 import 'package:clinic_appointment_system/features/auth/domain/mappers/auth_exception_mapper.dart';
 import 'package:clinic_appointment_system/features/auth/domain/repositories/auth_repository.dart';
+import 'package:clinic_appointment_system/features/auth/domain/usecases/register_patient_use_case.dart';
+import 'package:clinic_appointment_system/features/auth/domain/usecases/send_password_reset_email_use_case.dart';
+import 'package:clinic_appointment_system/features/auth/domain/usecases/sign_in_use_case.dart';
+import 'package:clinic_appointment_system/features/auth/domain/usecases/sign_out_use_case.dart';
+import 'package:clinic_appointment_system/features/auth/domain/usecases/watch_session_use_case.dart';
+import 'package:clinic_appointment_system/features/auth/domain/usecases/watch_user_profile_use_case.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/auth_route_guard.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/password_reset_cubit.dart';
@@ -41,29 +47,48 @@ mixin AppDependencyRegisterMixin {
         injector.get<AuthExceptionMapper>(),
       );
     });
+    injector.registerLazySingleton<SignInUseCase>(
+      () => SignInUseCase(injector.get<AuthRepository>()),
+    );
+    injector.registerLazySingleton<RegisterPatientUseCase>(
+      () => RegisterPatientUseCase(
+        injector.get<AuthRepository>(),
+        injector.get<UserRepository>(),
+      ),
+    );
+    injector.registerLazySingleton<SendPasswordResetEmailUseCase>(
+      () => SendPasswordResetEmailUseCase(injector.get<AuthRepository>()),
+    );
+    injector.registerLazySingleton<SignOutUseCase>(
+      () => SignOutUseCase(injector.get<AuthRepository>()),
+    );
+    injector.registerLazySingleton<WatchSessionUseCase>(
+      () => WatchSessionUseCase(injector.get<AuthRepository>()),
+    );
+    injector.registerLazySingleton<WatchUserProfileUseCase>(
+      () => WatchUserProfileUseCase(injector.get<UserRepository>()),
+    );
     injector.registerLazySingleton<ThemeCubit>(
       ThemeCubit.new,
       dispose: (cubit) => cubit.close(),
     );
     injector.registerLazySingleton<AuthCubit>(
       () => AuthCubit(
-        injector.get<AuthRepository>(),
-        injector.get<UserRepository>(),
+        injector.get<WatchSessionUseCase>(),
+        injector.get<WatchUserProfileUseCase>(),
+        injector.get<SignOutUseCase>(),
       ),
       dispose: (cubit) => cubit.close(),
     );
     // Each screen owns and closes its request cubit.
     injector.registerFactory<SignInCubit>(
-      () => SignInCubit(injector.get<AuthRepository>()),
+      () => SignInCubit(injector.get<SignInUseCase>()),
     );
     injector.registerFactory<SignUpCubit>(
-      () => SignUpCubit(
-        injector.get<AuthRepository>(),
-        injector.get<UserRepository>(),
-      ),
+      () => SignUpCubit(injector.get<RegisterPatientUseCase>()),
     );
     injector.registerFactory<PasswordResetCubit>(
-      () => PasswordResetCubit(injector.get<AuthRepository>()),
+      () => PasswordResetCubit(injector.get<SendPasswordResetEmailUseCase>()),
     );
     injector.registerLazySingleton<AuthRouteGuard>(
       () => AuthRouteGuard(injector.get<AuthCubit>()),

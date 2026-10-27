@@ -18,6 +18,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../../../support/auth_cubit_factory.dart';
 import '../../../../support/auth_repository_doubles.dart';
 import '../../../../support/localization_test_app.dart';
 import '../../../../support/user_repository_double.dart';
@@ -36,7 +37,7 @@ void main() {
       () => repository.authStateChanges(),
     ).thenAnswer((_) => controller.stream);
     users = TestUserRepository();
-    authCubit = AuthCubit(repository, users);
+    authCubit = createAuthCubit(repository, users);
     themeCubit = ThemeCubit();
     router = createAppRouter();
   });

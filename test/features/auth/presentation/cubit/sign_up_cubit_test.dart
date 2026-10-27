@@ -6,6 +6,7 @@ import 'package:clinic_appointment_system/core/errors/user_exception.dart';
 import 'package:clinic_appointment_system/core/localization/localization.dart';
 import 'package:clinic_appointment_system/features/auth/domain/entities/auth_session.dart';
 import 'package:clinic_appointment_system/features/auth/domain/models/auth_registration.dart';
+import 'package:clinic_appointment_system/features/auth/domain/usecases/register_patient_use_case.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_request_state.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/sign_up_cubit.dart';
 import 'package:clinic_appointment_system/features/users/domain/enums/user_error_code.dart';
@@ -33,7 +34,7 @@ void main() {
   setUp(() {
     repository = MockAuthRepository();
     users = TestUserRepository();
-    cubit = SignUpCubit(repository, users);
+    cubit = SignUpCubit(RegisterPatientUseCase(repository, users));
     clearInteractions(repository);
   });
   tearDown(() async {

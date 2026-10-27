@@ -2,6 +2,7 @@ import 'package:clinic_appointment_system/core/enums/auth_error_code.dart';
 import 'package:clinic_appointment_system/core/errors/app_exception.dart';
 import 'package:clinic_appointment_system/core/errors/result.dart';
 import 'package:clinic_appointment_system/core/localization/localization.dart';
+import 'package:clinic_appointment_system/features/auth/domain/usecases/send_password_reset_email_use_case.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_request_state.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/password_reset_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -16,7 +17,7 @@ void main() {
   const email = ' patient@example.com ';
   setUp(() {
     repository = MockAuthRepository();
-    cubit = PasswordResetCubit(repository);
+    cubit = PasswordResetCubit(SendPasswordResetEmailUseCase(repository));
   });
   tearDown(() => cubit.close());
 
