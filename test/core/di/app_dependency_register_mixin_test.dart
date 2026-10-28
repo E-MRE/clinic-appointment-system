@@ -89,7 +89,7 @@ void main() {
   test(
     'lazy reset awaits cleanup and recreates the service on next access',
     () async {
-      var disposals = 0;
+      int disposals = 0;
       container.registerLazySingleton<_TestService>(
         _TestService.new,
         instanceName: 'lazy',
@@ -181,7 +181,7 @@ void main() {
         container.get<WorkingHoursEditorCubit>(),
       ];
 
-      for (var index = 0; index < first.length; index++) {
+      for (int index = 0; index < first.length; index++) {
         expect(first[index], isNot(same(second[index])));
       }
       await Future.wait([

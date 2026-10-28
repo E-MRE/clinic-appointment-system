@@ -32,25 +32,21 @@ final class _TabletNavigation extends StatelessWidget {
             Expanded(
               child: ListView(
                 padding: const AppPadding.none(),
-                children: _destinationItems(),
+                children: [
+                  for (int index = 0; index < destinations.length; index++)
+                    _TabletNavigationItem(
+                      destination: destinations[index],
+                      selected: index == selectedIndex,
+                      onTap: () {
+                        onDestinationSelected(index);
+                      },
+                    ),
+                ],
               ),
             ),
           ],
         ),
       ),
     );
-  }
-
-  List<Widget> _destinationItems() {
-    return [
-      for (var index = 0; index < destinations.length; index++)
-        _TabletNavigationItem(
-          destination: destinations[index],
-          selected: index == selectedIndex,
-          onTap: () {
-            onDestinationSelected(index);
-          },
-        ),
-    ];
   }
 }

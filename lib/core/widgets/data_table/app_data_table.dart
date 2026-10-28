@@ -14,6 +14,7 @@ export 'app_table_density.dart';
 
 part 'app_table_content.dart';
 part 'app_table_cell.dart';
+part 'app_table_scroll_view.dart';
 
 /// A scrollable, content-sized table on a themed surface.
 final class AppDataTable<T> extends StatelessWidget {
@@ -61,32 +62,19 @@ final class AppDataTable<T> extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
-        children: [?header, _scrollableTable(), ?footer],
-      ),
-    );
-  }
-
-  Widget _scrollableTable() {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minWidth: math.max(minWidth, constraints.maxWidth),
-            ),
-            child: IntrinsicWidth(
-              child: _AppTableContent<T>(
-                rows: rows,
-                columns: columns,
-                density: density,
-                rowVerticalPadding: rowVerticalPadding,
-                hasHeader: header != null,
-              ),
-            ),
+        children: [
+          ?header,
+          _AppTableScrollView<T>(
+            rows: rows,
+            columns: columns,
+            minWidth: minWidth,
+            density: density,
+            rowVerticalPadding: rowVerticalPadding,
+            hasHeader: header != null,
           ),
-        );
-      },
+          ?footer,
+        ],
+      ),
     );
   }
 }

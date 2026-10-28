@@ -14,7 +14,8 @@ final class DarkTheme extends AppTheme {
 
   DarkTheme._(super.screenSize);
 
-  static final _instances = <ScreenSize, DarkTheme>{};
+  static final Map<ScreenSize, DarkTheme> _instances =
+      <ScreenSize, DarkTheme>{};
 
   @override
   ColorScheme get colorScheme {

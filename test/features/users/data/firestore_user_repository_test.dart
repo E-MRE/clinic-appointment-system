@@ -72,12 +72,13 @@ void main() {
     final result = await repository.createPatient(patient);
     expect(result.data, same(patient));
     final document = (await firestore.collection('users').doc('uid').get())
-        .data()!;
-    expect(document['role'], 'patient');
-    expect(document['fullName'], 'Elif Kaya');
-    expect(document['email'], 'elif@example.com');
-    expect(document['createdAt'], isA<Timestamp>());
-    expect(document.containsKey('id'), isFalse);
+        .data();
+    expect(document, isNotNull);
+    expect(document?['role'], 'patient');
+    expect(document?['fullName'], 'Elif Kaya');
+    expect(document?['email'], 'elif@example.com');
+    expect(document?['createdAt'], isA<Timestamp>());
+    expect(document?.containsKey('id'), isFalse);
   });
   test('write failure throws a provider-independent exception', () async {
     final db = MockFirestore();

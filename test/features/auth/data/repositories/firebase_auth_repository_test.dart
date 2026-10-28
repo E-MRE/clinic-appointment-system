@@ -61,8 +61,8 @@ void main() {
   test('sign up returns DataResult and normalizes only the email', () async {
     final result = await repository.signUp(registration);
     expect(result.isSuccess, isTrue);
-    expect(result.data!.userId, 'patient-1');
-    expect(result.data!.email, 'patient@example.com');
+    expect(result.data?.userId, 'patient-1');
+    expect(result.data?.email, 'patient@example.com');
     verify(
       () => auth.createUserWithEmailAndPassword(
         email: 'patient@example.com',
@@ -101,8 +101,8 @@ void main() {
   test('sign in returns a domain session inside DataResult', () async {
     final result = await repository.signIn(credentials);
     expect(result.isSuccess, isTrue);
-    expect(result.data!.userId, 'patient-1');
-    expect(result.data!.isEmailVerified, isFalse);
+    expect(result.data?.userId, 'patient-1');
+    expect(result.data?.isEmailVerified, isFalse);
     verify(
       () => auth.signInWithEmailAndPassword(
         email: 'patient@example.com',
@@ -142,9 +142,9 @@ void main() {
           .authStateChanges();
       final results = await stream.toList();
       expect(results.every((result) => result.isSuccess), isTrue);
-      expect(results[0].data!.userId, 'patient-1');
+      expect(results[0].data?.userId, 'patient-1');
       expect(results[1].data, isNull);
-      expect(results[2].data!.userId, 'patient-1');
+      expect(results[2].data?.userId, 'patient-1');
     },
   );
 
@@ -152,8 +152,8 @@ void main() {
     when(() => user.emailVerified).thenReturn(true);
     when(() => auth.authStateChanges()).thenAnswer((_) => Stream.value(user));
     final result = await repository.authStateChanges().first;
-    expect(result.data!.email, 'patient@example.com');
-    expect(result.data!.isEmailVerified, isTrue);
+    expect(result.data?.email, 'patient@example.com');
+    expect(result.data?.isEmailVerified, isTrue);
   });
 
   for (final email in [null, '', '   ']) {
@@ -317,7 +317,7 @@ void main() {
   );
 
   test('subscription cancellation reaches the provider', () async {
-    var cancelled = false;
+    bool cancelled = false;
     final controller = StreamController<User?>(
       onCancel: () => cancelled = true,
     );

@@ -11,7 +11,7 @@ void main() {
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(390, 844);
     final controller = TextEditingController(text: 'secret');
-    var obscured = true;
+    bool obscured = true;
     await tester.pumpWidget(
       MaterialApp(
         theme: DarkTheme(ScreenSize.mobile).themeData,

@@ -14,7 +14,8 @@ final class LightTheme extends AppTheme {
 
   LightTheme._(super.screenSize);
 
-  static final _instances = <ScreenSize, LightTheme>{};
+  static final Map<ScreenSize, LightTheme> _instances =
+      <ScreenSize, LightTheme>{};
 
   @override
   ColorScheme get colorScheme {

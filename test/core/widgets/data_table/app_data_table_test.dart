@@ -65,8 +65,8 @@ void main() {
       final renderTable = tester.widget<Table>(find.byType(Table));
       expect(renderTable.children.length, 3);
       for (final row in renderTable.children) {
-        final decoration = row.decoration! as BoxDecoration;
-        expect(decoration.border!.top.width, AppSizes.borderThin);
+        final decoration = row.decoration as BoxDecoration;
+        expect(decoration.border?.top.width, AppSizes.borderThin);
       }
       final namePadding = tester.widget<Padding>(
         find

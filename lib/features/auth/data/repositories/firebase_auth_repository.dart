@@ -55,8 +55,12 @@ final class FirebaseAuthRepository implements AuthRepository {
         password: registration.password,
       );
       final session = _sessionFromCredential(result);
+      final user = result.user;
+      if (user == null) {
+        throw const AuthException(AuthErrorCode.unexpected);
+      }
       try {
-        await result.user!.updateDisplayName(registration.fullName.trim());
+        await user.updateDisplayName(registration.fullName.trim());
       } on Exception catch (_, stackTrace) {
         Error.throwWithStackTrace(
           const AuthException(AuthErrorCode.profileUpdateFailed),

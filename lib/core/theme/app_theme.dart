@@ -30,10 +30,10 @@ abstract base class AppTheme {
   /// The [ThemeData] handed to `MaterialApp`.
   late final ThemeData themeData = _build();
 
-  static const _buttonShape = RoundedRectangleBorder(
+  static const RoundedRectangleBorder _buttonShape = RoundedRectangleBorder(
     borderRadius: AppRadius.medium(),
   );
-  static const _buttonSize = Size(0, AppSizes.s48);
+  static const Size _buttonSize = Size(0, AppSizes.s48);
 
   ThemeData _build() {
     final scheme = colorScheme;

@@ -87,7 +87,7 @@ void main() {
     final pending = Completer<Result>();
     final first = cubit.submit(request: () => pending.future);
     expect(cubit.state, isA<AuthRequestLoading>());
-    var duplicateCalls = 0;
+    int duplicateCalls = 0;
     await cubit.submit(
       request: () async {
         duplicateCalls++;
@@ -132,7 +132,7 @@ void main() {
 
   test('closed cubits ignore requests', () async {
     await cubit.close();
-    var calls = 0;
+    int calls = 0;
     await cubit.submit(
       request: () async {
         calls++;

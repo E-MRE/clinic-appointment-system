@@ -11,13 +11,22 @@ void main() {
       test('resolves every role for $screenSize', () {
         final textTheme = LightTheme(screenSize).themeData.textTheme;
         for (final role in TextRole.values) {
-          final style = role.resolve(textTheme)!;
+          final style = role.resolve(textTheme);
+          expect(style, isNotNull);
           final expected = _expectedTextStyle(role, screenSize);
 
-          expect(style.fontSize, expected.fontSize, reason: '$role size');
-          expect(style.fontWeight, expected.fontWeight, reason: '$role weight');
-          expect(style.fontFamily, expected.fontFamily, reason: '$role family');
-          expect(style.height, expected.height, reason: '$role line height');
+          expect(style?.fontSize, expected.fontSize, reason: '$role size');
+          expect(
+            style?.fontWeight,
+            expected.fontWeight,
+            reason: '$role weight',
+          );
+          expect(
+            style?.fontFamily,
+            expected.fontFamily,
+            reason: '$role family',
+          );
+          expect(style?.height, expected.height, reason: '$role line height');
         }
       });
     }
@@ -29,7 +38,9 @@ void main() {
         final theme = brightness == Brightness.light
             ? LightTheme(ScreenSize.mobile).themeData
             : DarkTheme(ScreenSize.mobile).themeData;
-        final brandColors = theme.extension<AppBrandColors>()!;
+        final extension = theme.extension<AppBrandColors>();
+        expect(extension, isNotNull);
+        final brandColors = extension ?? const AppBrandColors.light();
         for (final tone in TextTone.values) {
           expect(
             tone.resolve(

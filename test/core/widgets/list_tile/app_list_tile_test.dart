@@ -10,7 +10,7 @@ void main() {
   ) async {
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(390, 844);
-    var tapped = false;
+    bool tapped = false;
     await tester.pumpWidget(
       MaterialApp(
         theme: DarkTheme(ScreenSize.mobile).themeData,

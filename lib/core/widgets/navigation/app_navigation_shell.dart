@@ -16,6 +16,11 @@ part 'desktop_navigation_item.dart';
 part 'navigation_count_badge.dart';
 part 'navigation_item_semantics.dart';
 part 'navigation_item_style.dart';
+part 'mobile_navigation_layout.dart';
+part 'tablet_navigation_layout.dart';
+part 'desktop_navigation_layout.dart';
+part 'desktop_navigation_item_row.dart';
+part 'mobile_navigation_indicator.dart';
 
 /// Responsive navigation shell for mobile, tablet and desktop layouts.
 final class AppNavigationShell extends StatelessWidget {
@@ -51,49 +56,9 @@ final class AppNavigationShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return context.screenSize.select(
-      mobile: _mobileLayout(),
-      tablet: _tabletLayout(),
-      desktop: _desktopLayout(),
-    );
-  }
-
-  Widget _mobileLayout() {
-    return Scaffold(
-      body: child,
-      bottomNavigationBar: _MobileNavigation(
-        destinations: destinations,
-        selectedIndex: selectedIndex,
-        onDestinationSelected: onDestinationSelected,
-      ),
-    );
-  }
-
-  Widget _tabletLayout() {
-    return Row(
-      children: [
-        _TabletNavigation(
-          logo: logo,
-          destinations: destinations,
-          selectedIndex: selectedIndex,
-          onDestinationSelected: onDestinationSelected,
-        ),
-        Expanded(child: child),
-      ],
-    );
-  }
-
-  Widget _desktopLayout() {
-    return Row(
-      children: [
-        _DesktopNavigation(
-          logo: logo,
-          destinations: destinations,
-          selectedIndex: selectedIndex,
-          onDestinationSelected: onDestinationSelected,
-          primaryAction: primaryAction,
-        ),
-        Expanded(child: child),
-      ],
+      mobile: _MobileNavigationLayout(shell: this),
+      tablet: _TabletNavigationLayout(shell: this),
+      desktop: _DesktopNavigationLayout(shell: this),
     );
   }
 }

@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 
 export 'package:clinic_appointment_system/core/widgets/list_tile/app_list_tile_density.dart';
 
+part 'app_list_tile_text.dart';
+
 /// Shared list row with optional leading and trailing content.
 final class AppListTile extends StatelessWidget {
   /// Creates a row from display values and optional widgets.
@@ -48,7 +50,9 @@ final class AppListTile extends StatelessWidget {
               leadingWidget,
               const EmptySize.s12Width(),
             ],
-            Expanded(child: _text(context)),
+            Expanded(
+              child: _AppListTileText(title: title, subtitle: subtitle),
+            ),
             if (trailing case final trailingWidget?) ...[
               const EmptySize.s12Width(),
               trailingWidget,
@@ -60,26 +64,6 @@ final class AppListTile extends StatelessWidget {
     return Semantics(
       button: onTap != null,
       child: InkWell(onTap: onTap, child: content),
-    );
-  }
-
-  Widget _text(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        AppText.bodyStrong(title, maxLines: 2, overflow: TextOverflow.ellipsis),
-        if (subtitle case final subtitleText?)
-          Padding(
-            padding: const AppPadding.listTileSubtitle(),
-            child: AppText.caption(
-              subtitleText,
-              tone: TextTone.muted,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-      ],
     );
   }
 }

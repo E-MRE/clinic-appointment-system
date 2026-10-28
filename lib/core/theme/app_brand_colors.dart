@@ -34,8 +34,10 @@ final class AppBrandColors extends ThemeExtension<AppBrandColors> {
       return this;
     }
     return AppBrandColors._(
-      Color.lerp(splashBackground, other.splashBackground, t)!,
-      Color.lerp(splashForeground, other.splashForeground, t)!,
+      Color.lerp(splashBackground, other.splashBackground, t) ??
+          splashBackground,
+      Color.lerp(splashForeground, other.splashForeground, t) ??
+          splashForeground,
     );
   }
 

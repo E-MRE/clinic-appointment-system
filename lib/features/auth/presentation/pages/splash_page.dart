@@ -41,7 +41,9 @@ final class SplashPage extends StatelessWidget {
   /// Short viewports and large text scroll instead of pinning the progress.
   bool _isCompact(BuildContext context, double height) {
     return height < BreakpointsConstants.compactHeight ||
-        context.textScaleFor(context.textTheme.displaySmall!.fontSize!) >
+        context.textScaleFor(
+              context.textTheme.displaySmall?.fontSize ?? AppSizes.s32,
+            ) >
             BreakpointsConstants.largeTextScale;
   }
 }

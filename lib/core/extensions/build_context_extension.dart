@@ -15,9 +15,11 @@ extension BuildContextExtension on BuildContext {
   T? themeExtension<T>() => theme.extension<T>();
 
   AppointmentStatusColors get statusColors =>
-      themeExtension<AppointmentStatusColors>()!;
+      themeExtension<AppointmentStatusColors>() ??
+      AppointmentStatusColors.light;
 
-  AppBrandColors get brandColors => themeExtension<AppBrandColors>()!;
+  AppBrandColors get brandColors =>
+      themeExtension<AppBrandColors>() ?? const AppBrandColors.light();
 
   /// How many times the user's text scaling enlarges [fontSize].
   ///
