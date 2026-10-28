@@ -153,5 +153,60 @@
     "tablet": "Tablet",
     "desktop": "Masaüstü",
     "dataTable": "Veri tablosu"
+  },
+  "institution": {
+    "title": "Kurum ve şubeler",
+    "clinic": "Kurum",
+    "branches": "Şubeler",
+    "branch": "Şube",
+    "newBranch": "Yeni şube",
+    "branchInformation": "Şube bilgileri",
+    "branchName": "Şube adı",
+    "phone": "Telefon",
+    "address": "Adres",
+    "workingHours": "Çalışma saatleri",
+    "departments": "Bölümler",
+    "newDepartmentName": "Yeni bölüm adı",
+    "departmentHelp": "Bu şubede hizmet verecek bölümleri seçin. Hizmetler ve personel bölüme bağlanır.",
+    "workingHoursHelp": "Bir güne birden çok aralık ekleyebilirsiniz (ör. öğle arası). Kapanış açılıştan sonra olmalı, aralıklar birbiriyle çakışmamalı. Doktor uygunlukları bu saatlerin dışına taşamaz.",
+    "copyMondayToWeekdays": "Pazartesiyi hafta içine kopyala",
+    "copyToWeekdays": "Hafta içine kopyala",
+    "closed": "Kapalı",
+    "open": "Açık",
+    "addBranch": "Şube ekle",
+    "editClinic": "Kurum bilgilerini düzenle",
+    "editBranch": "Şubeyi düzenle",
+    "editWorkingHours": "Düzenle",
+    "addDepartment": "Bölüm ekle",
+    "add": "Ekle",
+    "cancel": "Vazgeç",
+    "saveBranch": "Şubeyi kaydet",
+    "continueToDepartments": "Devam: bölümler",
+    "empty": {
+      "clinicsTitle": "Henüz kurum yok",
+      "clinicsDescription": "Kurum bilgilerinizi ekleyerek başlayın.",
+      "branchesTitle": "Henüz şube yok",
+      "branchesDescription": "İlk şubenizi ekleyerek çalışma saatlerini ve bölümleri tanımlayın.",
+      "departmentsTitle": "Henüz bölüm yok",
+      "departmentsDescription": "Bu şubede hizmet verecek ilk bölümü ekleyin."
+    },
+    "weekdays": {
+      "monday": "Pazartesi",
+      "tuesday": "Salı",
+      "wednesday": "Çarşamba",
+      "thursday": "Perşembe",
+      "friday": "Cuma",
+      "saturday": "Cumartesi",
+      "sunday": "Pazar"
+    },
+    "errors": {
+      "invalidTime": "Geçerli bir saat seçin.",
+      "closeBeforeOpen": "Kapanış saati açılıştan sonra olmalı.",
+      "overlappingRanges": "Çalışma saatleri birbiriyle çakışmamalı.",
+      "nameRequired": "Bu alan boş bırakılamaz.",
+      "addressRequired": "Adres boş bırakılamaz.",
+      "invalidRecord": "Kurum kaydı geçersiz.",
+      "unavailable": "İşlem tamamlanamadı. Lütfen tekrar deneyin."
+    }
   }
 }
