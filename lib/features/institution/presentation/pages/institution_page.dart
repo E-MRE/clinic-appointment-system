@@ -11,12 +11,10 @@ import 'package:clinic_appointment_system/core/widgets/surface/app_surface.dart'
 import 'package:clinic_appointment_system/core/widgets/text_field/app_text_field.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/branch.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/clinic.dart';
-import 'package:clinic_appointment_system/features/institution/domain/entities/department.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/branch_list_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_list_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_save_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/department_list_cubit.dart';
-import 'package:clinic_appointment_system/features/institution/presentation/cubit/institution_list_state.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/institution_save_state.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/extensions/institution_error_code_localization.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/extensions/working_hours_summary.dart';
@@ -24,6 +22,7 @@ import 'package:clinic_appointment_system/features/institution/presentation/page
 import 'package:clinic_appointment_system/features/institution/presentation/pages/institution_selection_scope.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/widgets/department_section.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/widgets/institution_branch_card.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/widgets/institution_counts.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/widgets/institution_list_view.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/widgets/working_hours_section.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -31,9 +30,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-part 'clinic_name_dialog.dart';
+part 'clinic_name_dialog_content.dart';
+part 'clinic_name_dialog_actions.dart';
+part 'clinic_name_save_button.dart';
 part 'institution_branches.dart';
+part 'institution_branch_list.dart';
+part 'institution_branch_item.dart';
+part 'institution_branch_details.dart';
 part 'institution_content.dart';
+part 'institution_clinic_header.dart';
+part 'institution_clinic_picker.dart';
+part 'institution_new_clinic_button.dart';
+part 'institution_branch_header.dart';
+part 'institution_content_branches.dart';
+part 'institution_mobile_add_branch.dart';
+part 'institution_page_content.dart';
 
 /// Administrator institution overview and responsive branch selection.
 final class InstitutionPage extends StatelessWidget {
@@ -41,44 +52,64 @@ final class InstitutionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(
-      child: InstitutionListView<Clinic, ClinicListCubit>(
-        emptyTitle: LocaleKeys.institution_empty_clinicsTitle.tr(),
-        emptyMessage: LocaleKeys.institution_empty_clinicsDescription.tr(),
-        onRetry: context.read<ClinicListCubit>().retry,
-        emptyAction: FilledButton(
-          onPressed: () => _clinicDialog(context),
-          child: AppText.label(
-            LocaleKeys.institution_createClinic.tr(),
-            tone: TextTone.onPrimary,
+    return const AppScaffold(child: _InstitutionPageContent());
+  }
+}
+
+/// Creates or renames a clinic in a focused name dialog.
+final class _ClinicNameDialog extends StatefulWidget {
+  const _ClinicNameDialog({required this.selection, this.clinic});
+
+  final Clinic? clinic;
+  final InstitutionSelection selection;
+
+  @override
+  State<_ClinicNameDialog> createState() => _ClinicNameDialogState();
+}
+
+final class _ClinicNameDialogState extends State<_ClinicNameDialog> {
+  late final TextEditingController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = TextEditingController(text: widget.clinic?.name);
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider<ClinicSaveCubit>(
+      create: (_) => AppDependency.injector.get<ClinicSaveCubit>(),
+      child: BlocListener<ClinicSaveCubit, InstitutionSaveState<Clinic>>(
+        listener: _onSaveState,
+        child: AlertDialog(
+          title: AppText.sectionTitle(
+            widget.clinic == null
+                ? LocaleKeys.institution_newClinic.tr()
+                : LocaleKeys.institution_editClinic.tr(),
           ),
-        ),
-        loadedBuilder: (clinics) => _InstitutionContent(
-          clinics: clinics,
-          onClinicDialog: _clinicDialog,
+          content: _ClinicNameDialogContent(controller: controller),
+          actions: [
+            _ClinicNameDialogActions(
+              clinic: widget.clinic,
+              controller: controller,
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Future<void> _clinicDialog(BuildContext context, [Clinic? clinic]) async {
-    final controller = TextEditingController(text: clinic?.name);
-    Future<Object?>? dialogCompleted;
-    await showDialog<void>(
-      context: context,
-      builder: (dialogContext) {
-        dialogCompleted = ModalRoute.of(dialogContext)?.completed;
-        return BlocProvider<ClinicSaveCubit>(
-          create: (_) => AppDependency.injector.get<ClinicSaveCubit>(),
-          child: _ClinicNameDialog(
-            clinic: clinic,
-            controller: controller,
-            selection: InstitutionSelectionScope.of(context),
-          ),
-        );
-      },
-    );
-    await dialogCompleted;
-    controller.dispose();
+  void _onSaveState(BuildContext context, InstitutionSaveState<Clinic> state) {
+    if (state is InstitutionSaveSaved<Clinic>) {
+      widget.selection.selectClinic(state.value.id);
+      Navigator.pop(context);
+    }
   }
 }

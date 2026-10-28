@@ -2,13 +2,9 @@ part of 'institution_page.dart';
 
 /// Layout of a selected clinic and its branch lists.
 final class _InstitutionContent extends StatelessWidget {
-  const _InstitutionContent({
-    required this.clinics,
-    required this.onClinicDialog,
-  });
+  const _InstitutionContent({required this.clinics});
 
   final List<Clinic> clinics;
-  final Future<void> Function(BuildContext, [Clinic?]) onClinicDialog;
 
   @override
   Widget build(BuildContext context) {
@@ -20,93 +16,16 @@ final class _InstitutionContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        PageHeader(
-          title: clinic.name,
-          subtitle: _counts(context),
-          actions: IconButton(
-            tooltip: LocaleKeys.institution_editClinic.tr(),
-            onPressed: () => onClinicDialog(context, clinic),
-            icon: const Icon(Icons.edit_outlined),
-          ),
-        ),
-        if (clinics.length > 1) ...[
-          AppSelectField<String>(
-            label: LocaleKeys.institution_selectClinic.tr(),
-            value: clinic.id,
-            options: [
-              for (final item in clinics)
-                AppSelectOption(value: item.id, label: item.name),
-            ],
-            onChanged: (value) {
-              if (value != null) selection.selectClinic(value);
-            },
-          ),
-          const EmptySize.s12Height(),
-          OutlinedButton.icon(
-            onPressed: () => onClinicDialog(context),
-            icon: const Icon(Icons.add),
-            label: AppText.label(LocaleKeys.institution_newClinic.tr()),
-          ),
-        ],
+        _InstitutionClinicHeader(clinic: clinic),
+        if (clinics.length > 1)
+          _InstitutionClinicPicker(clinics: clinics, clinic: clinic),
         const EmptySize.s16Height(),
-        Row(
-          children: [
-            Expanded(
-              child: AppText.sectionTitle(LocaleKeys.institution_branches.tr()),
-            ),
-            if (!context.screenSize.isMobile)
-              FilledButton.icon(
-                onPressed: () => context.go(AppRoutes.branchNew(clinic.id)),
-                icon: const Icon(Icons.add),
-                label: AppText.label(
-                  LocaleKeys.institution_addBranch.tr(),
-                  tone: TextTone.onPrimary,
-                ),
-              ),
-          ],
-        ),
+        _InstitutionBranchHeader(clinic: clinic),
         const EmptySize.s12Height(),
-        Expanded(
-          child: InstitutionListView<Branch, BranchListCubit>(
-            emptyTitle: LocaleKeys.institution_empty_branchesTitle.tr(),
-            emptyMessage: LocaleKeys.institution_empty_branchesDescription.tr(),
-            onRetry: context.read<BranchListCubit>().retry,
-            emptyAction: FilledButton(
-              onPressed: () => context.go(AppRoutes.branchNew(clinic.id)),
-              child: AppText.label(
-                LocaleKeys.institution_addBranch.tr(),
-                tone: TextTone.onPrimary,
-              ),
-            ),
-            loadedBuilder: (branches) =>
-                _InstitutionBranches(branches: branches),
-          ),
-        ),
+        Expanded(child: _InstitutionContentBranches(clinic: clinic)),
         if (context.screenSize.isMobile)
-          Align(
-            alignment: Alignment.centerRight,
-            child: FloatingActionButton.extended(
-              onPressed: () => context.go(AppRoutes.branchNew(clinic.id)),
-              icon: const Icon(Icons.add),
-              label: AppText.label(
-                LocaleKeys.institution_addBranch.tr(),
-                tone: TextTone.onPrimary,
-              ),
-            ),
-          ),
+          _InstitutionMobileAddBranch(clinic: clinic),
       ],
     );
-  }
-
-  String _counts(BuildContext context) {
-    final branches = context.watch<BranchListCubit>().state;
-    final departments = context.watch<DepartmentListCubit>().state;
-    final branchCount = branches is InstitutionListLoaded<Branch>
-        ? branches.items.length
-        : 0;
-    final departmentCount = departments is InstitutionListLoaded<Department>
-        ? departments.items.length
-        : 0;
-    return '${LocaleKeys.institution_branchesCount.tr(args: ['$branchCount'])} · ${LocaleKeys.institution_departmentsCount.tr(args: ['$departmentCount'])}';
   }
 }

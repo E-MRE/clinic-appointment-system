@@ -12,7 +12,8 @@ final class InstitutionSelectionScope
 
   static InstitutionSelection of(BuildContext context) {
     return context
-        .dependOnInheritedWidgetOfExactType<InstitutionSelectionScope>()!
-        .notifier!;
+            .dependOnInheritedWidgetOfExactType<InstitutionSelectionScope>()
+            ?.notifier ??
+        (throw StateError('InstitutionSelectionScope is missing'));
   }
 }
