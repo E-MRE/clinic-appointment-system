@@ -1,3 +1,4 @@
+import 'package:clinic_appointment_system/core/constants/working_hours_constants.dart';
 import 'package:clinic_appointment_system/features/institution/domain/enums/weekday.dart';
 import 'package:clinic_appointment_system/features/institution/domain/value_objects/clock_time.dart';
 import 'package:clinic_appointment_system/features/institution/domain/value_objects/time_range.dart';
@@ -12,6 +13,11 @@ final class WorkingHoursEditorCubit extends Cubit<WorkingHoursEditorState> {
   /// Creates a new-branch draft or initializes from [initialHours] for editing.
   WorkingHoursEditorCubit({WorkingHours? initialHours})
     : super(WorkingHoursEditorState.fromWorkingHours(initialHours));
+
+  /// Replaces the initial draft with the schedule selected for editing.
+  void initialize(WorkingHours? hours) {
+    emit(WorkingHoursEditorState.fromWorkingHours(hours));
+  }
 
   /// Toggles [weekday], retaining saved ranges or adding the default range.
   void toggleDay(Weekday weekday) {
@@ -60,8 +66,10 @@ final class WorkingHoursEditorCubit extends Cubit<WorkingHoursEditorState> {
   /// Copies [from]'s open state and ranges to Monday through Friday.
   void copyToWeekdays(Weekday from) {
     final source = state.day(from);
-    var nextState = state;
-    for (final weekday in Weekday.values.take(5)) {
+    WorkingHoursEditorState nextState = state;
+    for (final weekday in Weekday.values.where(
+      (day) => day.index <= Weekday.friday.index,
+    )) {
       nextState = nextState.replacing(
         WorkingHoursDayDraft(
           weekday: weekday,
@@ -76,16 +84,18 @@ final class WorkingHoursEditorCubit extends Cubit<WorkingHoursEditorState> {
   /// Builds validated working hours, or returns null while any day has errors.
   WorkingHours? build() {
     if (state.hasErrors) return null;
-    return WorkingHours({
-      for (final weekday in Weekday.values)
-        weekday: state.day(weekday).isOpen
-            ? state
-                  .day(weekday)
-                  .ranges
-                  .map((range) => range.toTimeRange())
-                  .toList()
-            : <TimeRange>[],
-    });
+    final rangesByDay = <Weekday, List<TimeRange>>{};
+    for (final weekday in Weekday.values) {
+      final day = state.day(weekday);
+      if (day.isOpen) {
+        rangesByDay[weekday] = day.ranges
+            .map((range) => range.toTimeRange())
+            .toList();
+      } else {
+        rangesByDay[weekday] = <TimeRange>[];
+      }
+    }
+    return WorkingHours(rangesByDay);
   }
 
   bool _hasRange(WorkingHoursDayDraft day, int index) =>
@@ -93,15 +103,15 @@ final class WorkingHoursEditorCubit extends Cubit<WorkingHoursEditorState> {
 
   WorkingHoursRangeDraft _nextRange(WorkingHoursDayDraft day) {
     if (day.ranges.isEmpty) return _defaultRanges.single;
-    var latestEnd = 0;
+    int latestEnd = _firstMinute;
     for (final range in day.ranges) {
       if (range.end.minutesSinceMidnight > latestEnd) {
         latestEnd = range.end.minutesSinceMidnight;
       }
     }
-    final start = latestEnd < 23 * 60 + 59 ? latestEnd : 0;
-    final proposedEnd = start + 60;
-    final end = proposedEnd <= 23 * 60 + 59 ? proposedEnd : 23 * 60 + 59;
+    final start = latestEnd < _lastMinute ? latestEnd : _firstMinute;
+    final proposedEnd = start + WorkingHoursConstants.rangeStepMinutes;
+    final end = proposedEnd <= _lastMinute ? proposedEnd : _lastMinute;
     return WorkingHoursRangeDraft(
       start: ClockTime.fromMinutes(start),
       end: ClockTime.fromMinutes(end),
@@ -120,10 +130,22 @@ final class WorkingHoursEditorCubit extends Cubit<WorkingHoursEditorState> {
     );
   }
 
+  int get _firstMinute => 0;
+  int get _lastHour => 23;
+  int get _lastMinuteOfHour => 59;
+  int get _minutesPerHour => 60;
+  int get _lastMinute => _lastHour * _minutesPerHour + _lastMinuteOfHour;
+
   List<WorkingHoursRangeDraft> get _defaultRanges => [
     WorkingHoursRangeDraft(
-      start: ClockTime(hour: 9, minute: 0),
-      end: ClockTime(hour: 18, minute: 0),
+      start: ClockTime(
+        hour: WorkingHoursConstants.openingHour,
+        minute: WorkingHoursConstants.openingMinute,
+      ),
+      end: ClockTime(
+        hour: WorkingHoursConstants.closingHour,
+        minute: WorkingHoursConstants.closingMinute,
+      ),
     ),
   ];
 }

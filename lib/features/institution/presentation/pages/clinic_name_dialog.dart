@@ -5,13 +5,11 @@ final class _ClinicNameDialog extends StatelessWidget {
   const _ClinicNameDialog({
     required this.clinic,
     required this.controller,
-    required this.save,
     required this.selection,
   });
 
   final Clinic? clinic;
   final TextEditingController controller;
-  final ClinicSaveCubit save;
   final InstitutionSelection selection;
 
   @override
@@ -55,7 +53,7 @@ final class _ClinicNameDialog extends StatelessWidget {
             child: AppText.label(LocaleKeys.institution_cancel.tr()),
           ),
           FilledButton(
-            onPressed: _save,
+            onPressed: () => _save(context),
             child: AppText.label(
               LocaleKeys.institution_save.tr(),
               tone: TextTone.onPrimary,
@@ -66,7 +64,8 @@ final class _ClinicNameDialog extends StatelessWidget {
     );
   }
 
-  void _save() {
+  void _save(BuildContext context) {
+    final save = context.read<ClinicSaveCubit>();
     final name = controller.text.trim();
     if (clinic case final existing?) {
       save.update(existing, name);

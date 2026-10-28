@@ -1,5 +1,6 @@
 import 'package:clinic_appointment_system/core/constants/validation_constants.dart';
 import 'package:clinic_appointment_system/core/constants/widget_key.dart';
+import 'package:clinic_appointment_system/core/di/app_dependency.dart';
 import 'package:clinic_appointment_system/core/localization/localization.dart';
 import 'package:clinic_appointment_system/core/router/app_routes.dart';
 import 'package:clinic_appointment_system/core/theme/theme.dart';
@@ -55,10 +56,7 @@ part 'auth_submit_button.dart';
 /// Template for a screen-owned request Cubit and the shared form lifecycle.
 /// Subclasses provide the visual variant and invoke their concrete request.
 abstract class AuthPage<C extends AuthRequestCubit> extends StatelessWidget {
-  const AuthPage({required this.createCubit, super.key});
-
-  /// Creates a request Cubit owned and disposed by this page's provider.
-  final C Function() createCubit;
+  const AuthPage({super.key});
 
   /// Supplies the labels, fields and responsive layout for this screen.
   AuthFormKind get kind;
@@ -69,7 +67,7 @@ abstract class AuthPage<C extends AuthRequestCubit> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<C>(
-      create: (_) => createCubit(),
+      create: (_) => AppDependency.injector.get<C>(),
       child: _AuthRequestForm<C>(page: this),
     );
   }

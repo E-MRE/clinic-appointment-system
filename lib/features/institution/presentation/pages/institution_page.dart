@@ -1,3 +1,4 @@
+import 'package:clinic_appointment_system/core/di/app_dependency.dart';
 import 'package:clinic_appointment_system/core/localization/localization.dart';
 import 'package:clinic_appointment_system/core/router/app_routes.dart';
 import 'package:clinic_appointment_system/core/theme/theme.dart';
@@ -15,7 +16,6 @@ import 'package:clinic_appointment_system/features/institution/presentation/cubi
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_list_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_save_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/department_list_cubit.dart';
-import 'package:clinic_appointment_system/features/institution/presentation/cubit/department_save_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/institution_list_state.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/institution_save_state.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/extensions/institution_error_code_localization.dart';
@@ -37,64 +37,48 @@ part 'institution_content.dart';
 
 /// Administrator institution overview and responsive branch selection.
 final class InstitutionPage extends StatelessWidget {
-  const InstitutionPage({
-    required this.createClinicSaveCubit,
-    required this.createDepartmentSaveCubit,
-    super.key,
-  });
-
-  final ClinicSaveCubit Function() createClinicSaveCubit;
-  final DepartmentSaveCubit Function() createDepartmentSaveCubit;
+  const InstitutionPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      child: BlocBuilder<ClinicListCubit, InstitutionListState<Clinic>>(
-        builder: (context, state) {
-          return InstitutionListView<Clinic>(
-            state: state,
-            emptyTitle: LocaleKeys.institution_empty_clinicsTitle.tr(),
-            emptyMessage: LocaleKeys.institution_empty_clinicsDescription.tr(),
-            onRetry: context.read<ClinicListCubit>().retry,
-            emptyAction: FilledButton(
-              onPressed: () => _clinicDialog(context),
-              child: AppText.label(
-                LocaleKeys.institution_createClinic.tr(),
-                tone: TextTone.onPrimary,
-              ),
-            ),
-            loadedBuilder: (clinics) => _InstitutionContent(
-              clinics: clinics,
-              createDepartmentSaveCubit: createDepartmentSaveCubit,
-              onClinicDialog: _clinicDialog,
-            ),
-          );
-        },
+      child: InstitutionListView<Clinic, ClinicListCubit>(
+        emptyTitle: LocaleKeys.institution_empty_clinicsTitle.tr(),
+        emptyMessage: LocaleKeys.institution_empty_clinicsDescription.tr(),
+        onRetry: context.read<ClinicListCubit>().retry,
+        emptyAction: FilledButton(
+          onPressed: () => _clinicDialog(context),
+          child: AppText.label(
+            LocaleKeys.institution_createClinic.tr(),
+            tone: TextTone.onPrimary,
+          ),
+        ),
+        loadedBuilder: (clinics) => _InstitutionContent(
+          clinics: clinics,
+          onClinicDialog: _clinicDialog,
+        ),
       ),
     );
   }
 
   Future<void> _clinicDialog(BuildContext context, [Clinic? clinic]) async {
     final controller = TextEditingController(text: clinic?.name);
-    final save = createClinicSaveCubit();
     Future<Object?>? dialogCompleted;
     await showDialog<void>(
       context: context,
       builder: (dialogContext) {
         dialogCompleted = ModalRoute.of(dialogContext)?.completed;
-        return BlocProvider<ClinicSaveCubit>.value(
-          value: save,
+        return BlocProvider<ClinicSaveCubit>(
+          create: (_) => AppDependency.injector.get<ClinicSaveCubit>(),
           child: _ClinicNameDialog(
             clinic: clinic,
             controller: controller,
-            save: save,
             selection: InstitutionSelectionScope.of(context),
           ),
         );
       },
     );
     await dialogCompleted;
-    await save.close();
     controller.dispose();
   }
 }

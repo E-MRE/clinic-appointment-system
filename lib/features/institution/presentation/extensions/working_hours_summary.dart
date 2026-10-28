@@ -10,41 +10,49 @@ extension WorkingHoursSummary on WorkingHours {
   String get localizedSummary {
     final sections = <String>[];
     final closed = <Weekday>[];
-    const days = Weekday.values;
-    var index = 0;
-    while (index < days.length) {
-      final day = days[index];
+    int index = 0;
+    while (index < Weekday.values.length) {
+      final day = Weekday.values[index];
       if (isClosedOn(day)) {
         closed.add(day);
         index++;
         continue;
       }
       final ranges = rangesOn(day);
-      var end = index;
-      while (end + 1 < days.length &&
-          _sameRanges(ranges, rangesOn(days[end + 1]))) {
-        end++;
-      }
-      final daysLabel = end == index
-          ? day.shortLabel
-          : '${day.shortLabel}–${days[end].shortLabel}';
-      sections.add('$daysLabel ${_formatRanges(ranges)}');
+      final end = _lastMatchingDay(index, ranges);
+      sections.add('${_dayLabel(index, end)} ${_formatRanges(ranges)}');
       index = end + 1;
     }
-    if (closed.length == days.length) {
+    if (closed.length == Weekday.values.length) {
       return LocaleKeys.institution_allDaysClosed.tr();
     }
-    if (closed.isNotEmpty) {
-      sections.add(
-        '${closed.map((day) => day.shortLabel).join(', ')} ${LocaleKeys.institution_closed.tr().toLowerCase()}',
-      );
-    }
+    if (closed.isNotEmpty) sections.add(_closedLabel(closed));
     return sections.join(' · ');
+  }
+
+  int _lastMatchingDay(int first, List<TimeRange> ranges) {
+    int last = first;
+    while (last + 1 < Weekday.values.length &&
+        _sameRanges(ranges, rangesOn(Weekday.values[last + 1]))) {
+      last++;
+    }
+    return last;
+  }
+
+  String _dayLabel(int first, int last) {
+    final start = Weekday.values[first].shortLabel;
+    if (first == last) return start;
+    return '$start–${Weekday.values[last].shortLabel}';
+  }
+
+  String _closedLabel(List<Weekday> days) {
+    final labels = days.map((day) => day.shortLabel).join(', ');
+    return '$labels ${LocaleKeys.institution_closed.tr().toLowerCase()}';
   }
 
   bool _sameRanges(List<TimeRange> first, List<TimeRange> second) {
     if (first.length != second.length) return false;
-    for (var index = 0; index < first.length; index++) {
+    for (int index = 0; index < first.length; index++) {
       if (first[index] != second[index]) return false;
     }
     return true;

@@ -50,7 +50,6 @@ final class _BranchDetailPageState extends State<BranchDetailPage> {
                         DepartmentSection(
                           key: ValueKey(branch.id),
                           branchId: branch.id,
-                          createSaveCubit: widget.createDepartmentSaveCubit,
                         ),
                       ],
                     ),
@@ -59,8 +58,7 @@ final class _BranchDetailPageState extends State<BranchDetailPage> {
               ],
             );
           }
-          return InstitutionListView<Branch>(
-            state: state,
+          return InstitutionListView<Branch, BranchListCubit>(
             emptyTitle: LocaleKeys.institution_notFound.tr(),
             emptyMessage: LocaleKeys.institution_notFoundDescription.tr(),
             onRetry: context.read<BranchListCubit>().retry,

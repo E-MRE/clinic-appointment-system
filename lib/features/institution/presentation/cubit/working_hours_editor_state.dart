@@ -1,3 +1,4 @@
+import 'package:clinic_appointment_system/core/constants/working_hours_constants.dart';
 import 'package:clinic_appointment_system/features/institution/domain/enums/weekday.dart';
 import 'package:clinic_appointment_system/features/institution/domain/value_objects/clock_time.dart';
 import 'package:clinic_appointment_system/features/institution/domain/value_objects/working_hours.dart';
@@ -23,17 +24,14 @@ final class WorkingHoursEditorState {
   factory WorkingHoursEditorState.fromWorkingHours(WorkingHours? hours) {
     final days = <Weekday, WorkingHoursDayDraft>{};
     for (final weekday in Weekday.values) {
-      final ranges = hours == null
-          ? _defaultRangesFor(weekday)
-          : hours
-                .rangesOn(weekday)
-                .map(
-                  (range) => WorkingHoursRangeDraft(
-                    start: range.start,
-                    end: range.end,
-                  ),
-                )
-                .toList();
+      final List<WorkingHoursRangeDraft> ranges;
+      if (hours == null) {
+        ranges = _defaultRangesFor(weekday);
+      } else {
+        ranges = hours.rangesOn(weekday).map((range) {
+          return WorkingHoursRangeDraft(start: range.start, end: range.end);
+        }).toList();
+      }
       days[weekday] = WorkingHoursDayDraft(
         weekday: weekday,
         isOpen: ranges.isNotEmpty,
@@ -50,7 +48,9 @@ final class WorkingHoursEditorState {
   bool get hasErrors => days.values.any((day) => day.error != null);
 
   /// Returns the draft for [weekday].
-  WorkingHoursDayDraft day(Weekday weekday) => days[weekday]!;
+  WorkingHoursDayDraft day(Weekday weekday) =>
+      days[weekday] ??
+      WorkingHoursDayDraft(weekday: weekday, isOpen: false, ranges: const []);
 
   /// Returns a new state with [dayDraft] replacing its weekday draft.
   WorkingHoursEditorState replacing(WorkingHoursDayDraft dayDraft) {
@@ -61,8 +61,14 @@ final class WorkingHoursEditorState {
     if (weekday.index > Weekday.friday.index) return const [];
     return [
       WorkingHoursRangeDraft(
-        start: ClockTime(hour: 9, minute: 0),
-        end: ClockTime(hour: 18, minute: 0),
+        start: ClockTime(
+          hour: WorkingHoursConstants.openingHour,
+          minute: WorkingHoursConstants.openingMinute,
+        ),
+        end: ClockTime(
+          hour: WorkingHoursConstants.closingHour,
+          minute: WorkingHoursConstants.closingMinute,
+        ),
       ),
     ];
   }

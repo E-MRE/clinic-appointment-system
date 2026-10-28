@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:clinic_appointment_system/core/di/app_dependency.dart';
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
 import 'package:clinic_appointment_system/core/localization/localization.dart';
 import 'package:clinic_appointment_system/core/router/app_router.dart';
@@ -28,6 +29,7 @@ import 'package:clinic_appointment_system/features/institution/presentation/cubi
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/department_list_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/department_save_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/institution_list_state.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/cubit/working_hours_editor_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/pages/branch_detail_page.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/pages/institution_page.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/admin.dart';
@@ -49,6 +51,7 @@ import '../../domain/doubles/fake_clinic_repository.dart';
 import '../../domain/doubles/fake_department_repository.dart';
 
 void main() {
+  tearDown(() async => AppDependency.injector.reset());
   const firstClinic = Clinic(id: 'first', name: 'First Clinic');
   const secondClinic = Clinic(id: 'second', name: 'Second Clinic');
   final secondBranch = Branch(
@@ -284,26 +287,11 @@ void main() {
     final clinics = FakeClinicRepository();
     final branches = FakeBranchRepository();
     final departments = FakeDepartmentRepository();
-    final router = createAppRouter(
-      initialLocation: AppRoutes.institution,
-      clinicListCubitFactory: () =>
-          ClinicListCubit(WatchClinicsUseCase(clinics)),
-      branchListCubitFactory: () =>
-          BranchListCubit(WatchBranchesUseCase(branches)),
-      departmentListCubitFactory: () =>
-          DepartmentListCubit(WatchDepartmentsUseCase(departments)),
-      clinicSaveCubitFactory: () => ClinicSaveCubit(
-        CreateClinicUseCase(clinics),
-        UpdateClinicUseCase(clinics),
-      ),
-      branchSaveCubitFactory: () => BranchSaveCubit(
-        CreateBranchUseCase(branches),
-        UpdateBranchUseCase(branches),
-      ),
-      departmentSaveCubitFactory: () => DepartmentSaveCubit(
-        CreateDepartmentUseCase(departments),
-        UpdateDepartmentUseCase(departments),
-      ),
+    final router = _router(
+      AppRoutes.institution,
+      clinics,
+      branches,
+      departments,
     );
     addTearDown(router.dispose);
     await pumpLocalizedWidget(
@@ -339,30 +327,39 @@ GoRouter _router(
   void Function(DepartmentListCubit)? onDepartments,
   AuthRouteGuard? guard,
 }) {
-  return createAppRouter(
-    initialLocation: path,
-    authGuard: guard,
-    clinicListCubitFactory: () => ClinicListCubit(WatchClinicsUseCase(clinics)),
-    branchListCubitFactory: () =>
-        BranchListCubit(WatchBranchesUseCase(branches)),
-    departmentListCubitFactory: () {
-      final cubit = DepartmentListCubit(WatchDepartmentsUseCase(departments));
-      onDepartments?.call(cubit);
-      return cubit;
-    },
-    clinicSaveCubitFactory: () => ClinicSaveCubit(
+  AppDependency.injector.registerFactory<ClinicListCubit>(
+    () => ClinicListCubit(WatchClinicsUseCase(clinics)),
+  );
+  AppDependency.injector.registerFactory<BranchListCubit>(
+    () => BranchListCubit(WatchBranchesUseCase(branches)),
+  );
+  AppDependency.injector.registerFactory<DepartmentListCubit>(() {
+    final cubit = DepartmentListCubit(WatchDepartmentsUseCase(departments));
+    onDepartments?.call(cubit);
+    return cubit;
+  });
+  AppDependency.injector.registerFactory<ClinicSaveCubit>(
+    () => ClinicSaveCubit(
       CreateClinicUseCase(clinics),
       UpdateClinicUseCase(clinics),
     ),
-    branchSaveCubitFactory: () => BranchSaveCubit(
+  );
+  AppDependency.injector.registerFactory<BranchSaveCubit>(
+    () => BranchSaveCubit(
       CreateBranchUseCase(branches),
       UpdateBranchUseCase(branches),
     ),
-    departmentSaveCubitFactory: () => DepartmentSaveCubit(
+  );
+  AppDependency.injector.registerFactory<DepartmentSaveCubit>(
+    () => DepartmentSaveCubit(
       CreateDepartmentUseCase(departments),
       UpdateDepartmentUseCase(departments),
     ),
   );
+  AppDependency.injector.registerFactory<WorkingHoursEditorCubit>(
+    WorkingHoursEditorCubit.new,
+  );
+  return createAppRouter(initialLocation: path, authGuard: guard);
 }
 
 Future<void> _pumpRouter(WidgetTester tester, GoRouter router) async {

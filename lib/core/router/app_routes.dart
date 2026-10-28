@@ -15,10 +15,12 @@ abstract final class AppRoutes {
 
   /// Institution overview and its branch routes.
   static const institution = '/admin/institution';
-  static const branchNewPattern = '$institution/clinics/:clinicId/branches/new';
-  static const branchDetailPattern =
-      '$institution/clinics/:clinicId/branches/:branchId';
-  static const branchEditPattern = '$branchDetailPattern/edit';
+  static const branchNewSegment = 'clinics/:clinicId/branches/new';
+  static const branchDetailSegment = 'clinics/:clinicId/branches/:branchId';
+  static const branchEditSegment = 'edit';
+  static const branchNewPattern = '$institution/$branchNewSegment';
+  static const branchDetailPattern = '$institution/$branchDetailSegment';
+  static const branchEditPattern = '$branchDetailPattern/$branchEditSegment';
 
   static String branchNew(String clinicId) =>
       '$institution/clinics/$clinicId/branches/new';

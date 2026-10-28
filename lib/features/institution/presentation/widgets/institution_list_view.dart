@@ -9,11 +9,15 @@ import 'package:clinic_appointment_system/features/institution/presentation/cubi
 import 'package:clinic_appointment_system/features/institution/presentation/extensions/institution_error_code_localization.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Applies the same loading, failure and empty views to institution lists.
-final class InstitutionListView<T> extends StatelessWidget {
+final class InstitutionListView<
+  T,
+  C extends StateStreamable<InstitutionListState<T>>
+>
+    extends StatelessWidget {
   const InstitutionListView({
-    required this.state,
     required this.emptyTitle,
     required this.emptyMessage,
     required this.onRetry,
@@ -23,7 +27,6 @@ final class InstitutionListView<T> extends StatelessWidget {
     super.key,
   });
 
-  final InstitutionListState<T> state;
   final String emptyTitle;
   final String emptyMessage;
   final VoidCallback onRetry;
@@ -33,32 +36,34 @@ final class InstitutionListView<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return switch (state) {
-      InstitutionListLoading<T>() => LoadingState(
-        variant: loadingVariant,
-        label: LocaleKeys.institution_loading.tr(),
-      ),
-      InstitutionListFailure<T>(:final code) => ErrorState(
-        title: LocaleKeys.institution_errors_unavailable.tr(),
-        message: code.message,
-        icon: const Icon(Icons.error_outline),
-        iconBackground: context.colorScheme.errorContainer,
-        primaryAction: FilledButton(
-          onPressed: onRetry,
-          child: AppText.label(
-            LocaleKeys.institution_retry.tr(),
-            tone: TextTone.onPrimary,
+    return BlocBuilder<C, InstitutionListState<T>>(
+      builder: (context, state) => switch (state) {
+        InstitutionListLoading<T>() => LoadingState(
+          variant: loadingVariant,
+          label: LocaleKeys.institution_loading.tr(),
+        ),
+        InstitutionListFailure<T>(:final code) => ErrorState(
+          title: LocaleKeys.institution_errors_unavailable.tr(),
+          message: code.message,
+          icon: const Icon(Icons.error_outline),
+          iconBackground: context.colorScheme.errorContainer,
+          primaryAction: FilledButton(
+            onPressed: onRetry,
+            child: AppText.label(
+              LocaleKeys.institution_retry.tr(),
+              tone: TextTone.onPrimary,
+            ),
           ),
         ),
-      ),
-      InstitutionListLoaded<T>(:final items) when items.isEmpty => EmptyState(
-        title: emptyTitle,
-        message: emptyMessage,
-        icon: const Icon(Icons.inbox_outlined),
-        iconBackground: context.colorScheme.surfaceContainerHighest,
-        primaryAction: emptyAction,
-      ),
-      InstitutionListLoaded<T>(:final items) => loadedBuilder(items),
-    };
+        InstitutionListLoaded<T>(:final items) when items.isEmpty => EmptyState(
+          title: emptyTitle,
+          message: emptyMessage,
+          icon: const Icon(Icons.inbox_outlined),
+          iconBackground: context.colorScheme.surfaceContainerHighest,
+          primaryAction: emptyAction,
+        ),
+        InstitutionListLoaded<T>(:final items) => loadedBuilder(items),
+      },
+    );
   }
 }

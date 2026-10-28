@@ -6,7 +6,7 @@ import 'package:clinic_appointment_system/features/auth/presentation/pages/auth_
 
 /// Patient-only account registration with a persisted name and confirmation.
 final class SignUpPage extends AuthPage<SignUpCubit> {
-  const SignUpPage({required super.createCubit, super.key});
+  const SignUpPage({super.key});
 
   @override
   AuthFormKind get kind => AuthFormKind.signUp;

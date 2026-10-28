@@ -2,13 +2,9 @@ part of 'institution_page.dart';
 
 /// Responsive branch list and selected branch details.
 final class _InstitutionBranches extends StatelessWidget {
-  const _InstitutionBranches({
-    required this.branches,
-    required this.createDepartmentSaveCubit,
-  });
+  const _InstitutionBranches({required this.branches});
 
   final List<Branch> branches;
-  final DepartmentSaveCubit Function() createDepartmentSaveCubit;
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +58,6 @@ final class _InstitutionBranches extends StatelessWidget {
                 DepartmentSection(
                   key: ValueKey(selected.id),
                   branchId: selected.id,
-                  createSaveCubit: createDepartmentSaveCubit,
                 ),
               ],
             ),

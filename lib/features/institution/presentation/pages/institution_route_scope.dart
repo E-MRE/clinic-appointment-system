@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:clinic_appointment_system/core/di/app_dependency.dart';
+
 import 'package:clinic_appointment_system/core/localization/localization.dart';
 import 'package:clinic_appointment_system/core/theme/theme.dart';
 import 'package:clinic_appointment_system/core/widgets/app_scaffold.dart';
@@ -18,24 +20,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'institution_route_scope_state.dart';
+part 'institution_route_scope_content.dart';
 
 /// Owns one subscription per institution list across nested routes.
-final class InstitutionRouteScope extends StatefulWidget {
+final class InstitutionRouteScope extends StatelessWidget {
   const InstitutionRouteScope({
-    required this.createClinics,
-    required this.createBranches,
-    required this.createDepartments,
     required this.child,
     this.routeClinicId,
     super.key,
   });
 
-  final ClinicListCubit Function() createClinics;
-  final BranchListCubit Function() createBranches;
-  final DepartmentListCubit Function() createDepartments;
   final Widget child;
   final String? routeClinicId;
 
   @override
-  State<InstitutionRouteScope> createState() => _InstitutionRouteScopeState();
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ClinicListCubit>(
+          create: (_) => AppDependency.injector.get<ClinicListCubit>(),
+        ),
+        BlocProvider<BranchListCubit>(
+          create: (_) => AppDependency.injector.get<BranchListCubit>(),
+        ),
+        BlocProvider<DepartmentListCubit>(
+          create: (_) => AppDependency.injector.get<DepartmentListCubit>(),
+        ),
+      ],
+      child: _InstitutionRouteScopeContent(
+        routeClinicId: routeClinicId,
+        child: child,
+      ),
+    );
+  }
 }

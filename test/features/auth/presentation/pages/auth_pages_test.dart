@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:clinic_appointment_system/app.dart';
 import 'package:clinic_appointment_system/core/constants/widget_key.dart';
+import 'package:clinic_appointment_system/core/di/app_dependency.dart';
 import 'package:clinic_appointment_system/core/enums/auth_error_code.dart';
 import 'package:clinic_appointment_system/core/errors/app_exception.dart';
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
@@ -319,8 +320,8 @@ void main() {
       expect(
         tester
             .widget<TextFormField>(find.byKey(const WidgetKey.authEmail()))
-            .controller!
-            .text,
+            .controller
+            ?.text,
         'patient@example.com',
       );
       await tester.tap(find.byTooltip('Şifreyi göster'));
@@ -565,23 +566,20 @@ final class _AuthTestApp {
     ).thenAnswer((_) => sessions.stream);
     authCubit = createAuthCubit(repository, users);
     configuration = AuthRouteGuard(authCubit);
-    router = createAppRouter(
-      initialLocation: route,
-      authGuard: configuration,
-      signInCubitFactory: () {
-        final cubit = SignInCubit(SignInUseCase(repository));
-        signInCubits.add(cubit);
-        return cubit;
-      },
-      signUpCubitFactory: () {
-        return SignUpCubit(
-          RegisterPatientUseCase(repository, TestUserRepository()),
-        );
-      },
-      passwordResetCubitFactory: () {
-        return PasswordResetCubit(SendPasswordResetEmailUseCase(repository));
-      },
-    );
+    AppDependency.injector.registerFactory<SignInCubit>(() {
+      final cubit = SignInCubit(SignInUseCase(repository));
+      signInCubits.add(cubit);
+      return cubit;
+    });
+    AppDependency.injector.registerFactory<SignUpCubit>(() {
+      return SignUpCubit(
+        RegisterPatientUseCase(repository, TestUserRepository()),
+      );
+    });
+    AppDependency.injector.registerFactory<PasswordResetCubit>(() {
+      return PasswordResetCubit(SendPasswordResetEmailUseCase(repository));
+    });
+    router = createAppRouter(initialLocation: route, authGuard: configuration);
     sessions.add(DataResult.success(data: restored));
   }
   final users = TestUserRepository();
@@ -599,5 +597,6 @@ final class _AuthTestApp {
     await authCubit.close();
     await themeCubit.close();
     await sessions.close();
+    await AppDependency.injector.reset();
   }
 }

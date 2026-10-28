@@ -1,3 +1,4 @@
+import 'package:clinic_appointment_system/core/di/app_dependency.dart';
 import 'package:clinic_appointment_system/core/localization/localization.dart';
 import 'package:clinic_appointment_system/core/router/app_routes.dart';
 import 'package:clinic_appointment_system/core/theme/theme.dart';
@@ -10,7 +11,6 @@ import 'package:clinic_appointment_system/features/institution/domain/entities/b
 import 'package:clinic_appointment_system/features/institution/domain/models/branch_draft.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/branch_list_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/branch_save_cubit.dart';
-import 'package:clinic_appointment_system/features/institution/presentation/cubit/institution_list_state.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/institution_save_state.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/working_hours_editor_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/extensions/institution_error_code_localization.dart';
@@ -27,39 +27,38 @@ part 'branch_form_state.dart';
 
 /// Creates or edits a branch after resolving route ids from the shared list.
 final class BranchFormPage extends StatelessWidget {
-  const BranchFormPage({
-    required this.createSaveCubit,
-    this.branchId,
-    super.key,
-  });
-  final BranchSaveCubit Function() createSaveCubit;
+  const BranchFormPage({this.branchId, super.key});
   final String? branchId;
 
   @override
   Widget build(BuildContext context) {
     if (branchId == null) return _form(null);
-    return BlocBuilder<BranchListCubit, InstitutionListState<Branch>>(
-      builder: (context, state) {
-        return InstitutionListView<Branch>(
-          state: state,
-          emptyTitle: LocaleKeys.institution_notFound.tr(),
-          emptyMessage: LocaleKeys.institution_notFoundDescription.tr(),
-          onRetry: context.read<BranchListCubit>().retry,
-          loadedBuilder: (items) {
-            final matches = items.where((item) => item.id == branchId);
-            if (matches.isNotEmpty) return _form(matches.first);
-            return _missing(context);
-          },
-        );
+    return InstitutionListView<Branch, BranchListCubit>(
+      emptyTitle: LocaleKeys.institution_notFound.tr(),
+      emptyMessage: LocaleKeys.institution_notFoundDescription.tr(),
+      onRetry: context.read<BranchListCubit>().retry,
+      loadedBuilder: (items) {
+        final matches = items.where((item) => item.id == branchId);
+        if (matches.isNotEmpty) return _form(matches.first);
+        return _missing(context);
       },
     );
   }
 
   Widget _form(Branch? branch) {
-    return _BranchForm(
+    return MultiBlocProvider(
       key: ValueKey(branch?.id),
-      branch: branch,
-      createSaveCubit: createSaveCubit,
+      providers: [
+        BlocProvider<WorkingHoursEditorCubit>(
+          create: (_) =>
+              AppDependency.injector.get<WorkingHoursEditorCubit>()
+                ..initialize(branch?.workingHours),
+        ),
+        BlocProvider<BranchSaveCubit>(
+          create: (_) => AppDependency.injector.get<BranchSaveCubit>(),
+        ),
+      ],
+      child: _BranchForm(branch: branch),
     );
   }
 

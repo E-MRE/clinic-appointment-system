@@ -1,3 +1,4 @@
+import 'package:clinic_appointment_system/core/di/app_dependency.dart';
 import 'package:clinic_appointment_system/core/localization/localization.dart';
 import 'package:clinic_appointment_system/core/theme/theme.dart';
 import 'package:clinic_appointment_system/core/widgets/app_text.dart';
@@ -17,17 +18,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'department_section_state.dart';
+part 'department_section_content.dart';
 
 /// Branch departments with inline create and row edit actions.
-final class DepartmentSection extends StatefulWidget {
-  const DepartmentSection({
-    required this.branchId,
-    required this.createSaveCubit,
-    super.key,
-  });
+final class DepartmentSection extends StatelessWidget {
+  const DepartmentSection({required this.branchId, super.key});
   final String branchId;
-  final DepartmentSaveCubit Function() createSaveCubit;
 
   @override
-  State<DepartmentSection> createState() => _DepartmentSectionState();
+  Widget build(BuildContext context) {
+    return BlocProvider<DepartmentSaveCubit>(
+      create: (_) => AppDependency.injector.get<DepartmentSaveCubit>(),
+      child: _DepartmentSectionContent(branchId: branchId),
+    );
+  }
 }

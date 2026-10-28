@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:clinic_appointment_system/core/constants/working_hours_constants.dart';
+import 'package:clinic_appointment_system/core/di/app_dependency.dart';
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
 import 'package:clinic_appointment_system/core/theme/theme.dart';
 import 'package:clinic_appointment_system/core/widgets/loading/loading_state.dart';
@@ -52,6 +54,19 @@ void main() {
   late DepartmentListCubit departments;
   late InstitutionSelection selection;
 
+  ClinicSaveCubit clinicSave() => ClinicSaveCubit(
+    CreateClinicUseCase(clinicRepo),
+    UpdateClinicUseCase(clinicRepo),
+  );
+  BranchSaveCubit branchSave() => BranchSaveCubit(
+    CreateBranchUseCase(branchRepo),
+    UpdateBranchUseCase(branchRepo),
+  );
+  DepartmentSaveCubit departmentSave() => DepartmentSaveCubit(
+    CreateDepartmentUseCase(departmentRepo),
+    UpdateDepartmentUseCase(departmentRepo),
+  );
+
   setUp(() {
     clinicRepo = FakeClinicRepository();
     branchRepo = FakeBranchRepository();
@@ -66,6 +81,12 @@ void main() {
     branches = BranchListCubit(WatchBranchesUseCase(branchRepo));
     departments = DepartmentListCubit(WatchDepartmentsUseCase(departmentRepo));
     selection = InstitutionSelection();
+    AppDependency.injector.registerFactory<ClinicSaveCubit>(clinicSave);
+    AppDependency.injector.registerFactory<BranchSaveCubit>(branchSave);
+    AppDependency.injector.registerFactory<DepartmentSaveCubit>(departmentSave);
+    AppDependency.injector.registerFactory<WorkingHoursEditorCubit>(
+      WorkingHoursEditorCubit.new,
+    );
   });
 
   tearDown(() async {
@@ -76,6 +97,7 @@ void main() {
     await branchStream.close();
     await departmentStream.close();
     selection.dispose();
+    await AppDependency.injector.reset();
   });
 
   Widget wrap(Widget child) => InstitutionSelectionScope(
@@ -90,19 +112,6 @@ void main() {
     ),
   );
 
-  ClinicSaveCubit clinicSave() => ClinicSaveCubit(
-    CreateClinicUseCase(clinicRepo),
-    UpdateClinicUseCase(clinicRepo),
-  );
-  BranchSaveCubit branchSave() => BranchSaveCubit(
-    CreateBranchUseCase(branchRepo),
-    UpdateBranchUseCase(branchRepo),
-  );
-  DepartmentSaveCubit departmentSave() => DepartmentSaveCubit(
-    CreateDepartmentUseCase(departmentRepo),
-    UpdateDepartmentUseCase(departmentRepo),
-  );
-
   for (final size in [const Size(390, 844), const Size(1200, 900)]) {
     testWidgets('institution loading, error, empty and loaded at $size', (
       tester,
@@ -114,12 +123,7 @@ void main() {
       await loadTestTranslations(
         tester,
         theme: LightTheme(ScreenSize.mobile).themeData,
-        child: wrap(
-          InstitutionPage(
-            createClinicSaveCubit: clinicSave,
-            createDepartmentSaveCubit: departmentSave,
-          ),
-        ),
+        child: wrap(const InstitutionPage()),
       );
       expect(find.byType(LoadingState), findsOneWidget);
       await tester.runAsync(() async {
@@ -180,7 +184,7 @@ void main() {
     await loadTestTranslations(
       tester,
       theme: LightTheme(ScreenSize.mobile).themeData,
-      child: wrap(BranchFormPage(createSaveCubit: branchSave)),
+      child: wrap(const BranchFormPage()),
     );
     await tester.enterText(find.byType(TextFormField).at(0), 'Merkez');
     await tester.enterText(find.byType(TextFormField).at(1), 'Ana cadde');
@@ -202,7 +206,7 @@ void main() {
     await loadTestTranslations(
       tester,
       theme: LightTheme(ScreenSize.mobile).themeData,
-      child: wrap(BranchFormPage(createSaveCubit: branchSave)),
+      child: wrap(const BranchFormPage()),
     );
     final editor = tester
         .element(find.byType(WorkingHoursEditor))
@@ -210,8 +214,14 @@ void main() {
     editor.updateRange(
       Weekday.monday,
       0,
-      ClockTime(hour: 18, minute: 0),
-      ClockTime(hour: 9, minute: 0),
+      ClockTime(
+        hour: WorkingHoursConstants.closingHour,
+        minute: WorkingHoursConstants.closingMinute,
+      ),
+      ClockTime(
+        hour: WorkingHoursConstants.openingHour,
+        minute: WorkingHoursConstants.openingMinute,
+      ),
     );
     await tester.pumpAndSettle();
     expect(editor.state.day(Weekday.monday).error, isNotNull);
@@ -231,12 +241,7 @@ void main() {
       tester,
       theme: LightTheme(ScreenSize.mobile).themeData,
       child: Material(
-        child: wrap(
-          DepartmentSection(
-            branchId: 'branch-1',
-            createSaveCubit: departmentSave,
-          ),
-        ),
+        child: wrap(const DepartmentSection(branchId: 'branch-1')),
       ),
     );
     await tester.enterText(find.byType(TextFormField), 'Kardiyoloji');
@@ -270,12 +275,7 @@ void main() {
       theme: LightTheme(ScreenSize.mobile).themeData,
       settle: false,
       child: Material(
-        child: wrap(
-          DepartmentSection(
-            branchId: 'branch-1',
-            createSaveCubit: departmentSave,
-          ),
-        ),
+        child: wrap(const DepartmentSection(branchId: 'branch-1')),
       ),
     );
     await tester.runAsync(() async {
@@ -312,12 +312,7 @@ void main() {
       await loadTestTranslations(
         tester,
         theme: LightTheme(ScreenSize.mobile).themeData,
-        child: wrap(
-          InstitutionPage(
-            createClinicSaveCubit: clinicSave,
-            createDepartmentSaveCubit: departmentSave,
-          ),
-        ),
+        child: wrap(const InstitutionPage()),
       );
       await tester.runAsync(() async {
         clinicStream.add(const DataResult.success(data: <Clinic>[]));

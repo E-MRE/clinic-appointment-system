@@ -4,12 +4,10 @@ part of 'institution_page.dart';
 final class _InstitutionContent extends StatelessWidget {
   const _InstitutionContent({
     required this.clinics,
-    required this.createDepartmentSaveCubit,
     required this.onClinicDialog,
   });
 
   final List<Clinic> clinics;
-  final DepartmentSaveCubit Function() createDepartmentSaveCubit;
   final Future<void> Function(BuildContext, [Clinic?]) onClinicDialog;
 
   @override
@@ -69,27 +67,19 @@ final class _InstitutionContent extends StatelessWidget {
         ),
         const EmptySize.s12Height(),
         Expanded(
-          child: BlocBuilder<BranchListCubit, InstitutionListState<Branch>>(
-            builder: (context, state) {
-              return InstitutionListView<Branch>(
-                state: state,
-                emptyTitle: LocaleKeys.institution_empty_branchesTitle.tr(),
-                emptyMessage: LocaleKeys.institution_empty_branchesDescription
-                    .tr(),
-                onRetry: context.read<BranchListCubit>().retry,
-                emptyAction: FilledButton(
-                  onPressed: () => context.go(AppRoutes.branchNew(clinic.id)),
-                  child: AppText.label(
-                    LocaleKeys.institution_addBranch.tr(),
-                    tone: TextTone.onPrimary,
-                  ),
-                ),
-                loadedBuilder: (branches) => _InstitutionBranches(
-                  branches: branches,
-                  createDepartmentSaveCubit: createDepartmentSaveCubit,
-                ),
-              );
-            },
+          child: InstitutionListView<Branch, BranchListCubit>(
+            emptyTitle: LocaleKeys.institution_empty_branchesTitle.tr(),
+            emptyMessage: LocaleKeys.institution_empty_branchesDescription.tr(),
+            onRetry: context.read<BranchListCubit>().retry,
+            emptyAction: FilledButton(
+              onPressed: () => context.go(AppRoutes.branchNew(clinic.id)),
+              child: AppText.label(
+                LocaleKeys.institution_addBranch.tr(),
+                tone: TextTone.onPrimary,
+              ),
+            ),
+            loadedBuilder: (branches) =>
+                _InstitutionBranches(branches: branches),
           ),
         ),
         if (context.screenSize.isMobile)

@@ -45,7 +45,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 
-/// Register once per container. Only the composition root resolves services.
+/// Registers services once per container for the application and its screens.
 /// The container owns these app-lifetime objects and disposes them on reset.
 mixin AppDependencyRegisterMixin {
   void registerDependencies(DependencyInjector injector) {
@@ -184,18 +184,7 @@ mixin AppDependencyRegisterMixin {
     );
     injector.registerLazySingleton<GoRouter>(
       () {
-        return createAppRouter(
-          authGuard: injector.get<AuthRouteGuard>(),
-          signInCubitFactory: injector.get<SignInCubit>,
-          signUpCubitFactory: injector.get<SignUpCubit>,
-          passwordResetCubitFactory: injector.get<PasswordResetCubit>,
-          clinicListCubitFactory: injector.get<ClinicListCubit>,
-          branchListCubitFactory: injector.get<BranchListCubit>,
-          departmentListCubitFactory: injector.get<DepartmentListCubit>,
-          clinicSaveCubitFactory: injector.get<ClinicSaveCubit>,
-          branchSaveCubitFactory: injector.get<BranchSaveCubit>,
-          departmentSaveCubitFactory: injector.get<DepartmentSaveCubit>,
-        );
+        return createAppRouter(authGuard: injector.get<AuthRouteGuard>());
       },
       dispose: (router) {
         router.dispose();
