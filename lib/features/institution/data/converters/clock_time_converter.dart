@@ -6,23 +6,61 @@ final class ClockTimeConverter extends JsonConverter<ClockTime, String> {
   /// Creates a converter for `HH:mm` clock times.
   const ClockTimeConverter();
 
+  int get _clockTimeLength => 5;
+
+  int get _hourSeparatorIndex => 2;
+
+  int get _firstHourDigitIndex => 0;
+
+  int get _secondHourDigitIndex => 1;
+
+  int get _firstMinuteDigitIndex => 3;
+
+  int get _secondMinuteDigitIndex => 4;
+
+  int get _firstHourCharacterIndex => 0;
+
+  int get _hourCharacterEndIndex => 2;
+
+  int get _firstMinuteCharacterIndex => 3;
+
+  int get _minuteCharacterEndIndex => 5;
+
+  int get _zeroCodeUnit => '0'.codeUnitAt(_firstHourCharacterIndex);
+
+  int get _nineCodeUnit => '9'.codeUnitAt(_firstHourCharacterIndex);
+
+  int get _lastHour => 23;
+
+  int get _lastMinute => 59;
+
   @override
   ClockTime fromJson(String json) {
-    if (json.length != 5 || json[2] != ':') {
+    if (json.length != _clockTimeLength || json[_hourSeparatorIndex] != ':') {
       throw const FormatException('Clock time must use HH:mm.');
     }
 
-    final hasOnlyDigits = [0, 1, 3, 4].every((index) {
+    final digitIndexes = <int>[
+      _firstHourDigitIndex,
+      _secondHourDigitIndex,
+      _firstMinuteDigitIndex,
+      _secondMinuteDigitIndex,
+    ];
+    final hasOnlyDigits = digitIndexes.every((index) {
       final character = json.codeUnitAt(index);
-      return character >= 48 && character <= 57;
+      return character >= _zeroCodeUnit && character <= _nineCodeUnit;
     });
-    final hour = int.tryParse(json.substring(0, 2));
-    final minute = int.tryParse(json.substring(3, 5));
+    final hour = int.tryParse(
+      json.substring(_firstHourCharacterIndex, _hourCharacterEndIndex),
+    );
+    final minute = int.tryParse(
+      json.substring(_firstMinuteCharacterIndex, _minuteCharacterEndIndex),
+    );
     if (!hasOnlyDigits ||
         hour == null ||
         minute == null ||
-        hour > 23 ||
-        minute > 59) {
+        hour > _lastHour ||
+        minute > _lastMinute) {
       throw const FormatException('Clock time must use a valid HH:mm value.');
     }
 

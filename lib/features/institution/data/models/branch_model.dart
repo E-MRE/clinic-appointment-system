@@ -1,5 +1,6 @@
 import 'package:clinic_appointment_system/features/institution/data/converters/working_hours_converter.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/branch.dart';
+import 'package:clinic_appointment_system/features/institution/domain/value_objects/working_hours.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'branch_model.g.dart';
@@ -36,7 +37,7 @@ final class BranchModel extends Branch {
 
   @WorkingHoursConverter()
   @override
-  get workingHours => super.workingHours;
+  WorkingHours get workingHours => super.workingHours;
 
   Map<String, dynamic> toJson() => _$BranchModelToJson(this);
 }

@@ -39,7 +39,6 @@ final class FirestoreBranchRepository
   }
 
   @override
-  @override
   Stream<DataResult<List<Branch>>> watchBranches(String clinicId) {
     return watchWhere(FirestoreConstants.clinicId, clinicId);
   }

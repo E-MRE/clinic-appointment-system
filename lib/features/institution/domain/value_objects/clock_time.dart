@@ -3,17 +3,31 @@ import 'package:clinic_appointment_system/features/institution/domain/enums/inst
 
 /// A minute-precision time of day between 00:00 and 23:59.
 final class ClockTime implements Comparable<ClockTime> {
+  static int get _midnight => 0;
+
+  static int get _hoursPerDay => 24;
+
+  static int get _minutesPerHour => 60;
+
+  static int get _minutesPerDay => _hoursPerDay * _minutesPerHour;
+
+  static int get _clockComponentWidth => 2;
+
   /// Creates a time from a 24-hour clock hour and minute.
   factory ClockTime({required int hour, required int minute}) {
-    if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
+    if (hour < _midnight ||
+        hour >= _hoursPerDay ||
+        minute < _midnight ||
+        minute >= _minutesPerHour) {
       throw const InstitutionException(InstitutionErrorCode.invalidTime);
     }
-    return ClockTime._(hour * 60 + minute);
+    return ClockTime._(hour * _minutesPerHour + minute);
   }
 
   /// Creates a time from the number of minutes since midnight.
   factory ClockTime.fromMinutes(int minutesSinceMidnight) {
-    if (minutesSinceMidnight < 0 || minutesSinceMidnight >= 24 * 60) {
+    if (minutesSinceMidnight < _midnight ||
+        minutesSinceMidnight >= _minutesPerDay) {
       throw const InstitutionException(InstitutionErrorCode.invalidTime);
     }
     return ClockTime._(minutesSinceMidnight);
@@ -22,10 +36,10 @@ final class ClockTime implements Comparable<ClockTime> {
   const ClockTime._(this.minutesSinceMidnight);
 
   /// The hour component from 0 through 23.
-  int get hour => minutesSinceMidnight ~/ 60;
+  int get hour => minutesSinceMidnight ~/ _minutesPerHour;
 
   /// The minute component from 0 through 59.
-  int get minute => minutesSinceMidnight % 60;
+  int get minute => minutesSinceMidnight % _minutesPerHour;
 
   /// The number of minutes from midnight.
   final int minutesSinceMidnight;
@@ -51,8 +65,8 @@ final class ClockTime implements Comparable<ClockTime> {
 
   @override
   String toString() {
-    final paddedHour = hour.toString().padLeft(2, '0');
-    final paddedMinute = minute.toString().padLeft(2, '0');
+    final paddedHour = hour.toString().padLeft(_clockComponentWidth, '0');
+    final paddedMinute = minute.toString().padLeft(_clockComponentWidth, '0');
     return '$paddedHour:$paddedMinute';
   }
 }

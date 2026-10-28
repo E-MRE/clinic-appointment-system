@@ -11,6 +11,8 @@ final class WorkingHoursConverter
   /// Creates a converter that stores all seven weekdays.
   const WorkingHoursConverter();
 
+  int get _rangeFieldCount => 2;
+
   @override
   WorkingHours fromJson(Map<String, dynamic> json) {
     final weekdays = Weekday.values.map((day) => day.name).toSet();
@@ -29,31 +31,13 @@ final class WorkingHoursConverter
       }
 
       ranges[day] = rawRanges
-          .map((rawRange) {
-            if (rawRange is! Map ||
-                rawRange.length != 2 ||
-                !rawRange.keys.toSet().containsAll({
-                  FirestoreConstants.start,
-                  FirestoreConstants.end,
-                })) {
-              throw FormatException(
-                'A range for ${day.name} must contain start and end.',
-              );
-            }
-
-            final start = rawRange[FirestoreConstants.start];
-            final end = rawRange[FirestoreConstants.end];
-            if (start is! String || end is! String) {
-              throw FormatException(
-                'A range for ${day.name} must use string times.',
-              );
-            }
-
-            return TimeRange(
-              start: clockTimeConverter.fromJson(start),
-              end: clockTimeConverter.fromJson(end),
-            );
-          })
+          .map(
+            (Object? rawRange) => _rangeFromJson(
+              rawRange,
+              day: day,
+              clockTimeConverter: clockTimeConverter,
+            ),
+          )
           .toList(growable: false);
     }
 
@@ -73,5 +57,37 @@ final class WorkingHoursConverter
             },
         ],
     };
+  }
+
+  TimeRange _rangeFromJson(
+    Object? rawRange, {
+    required Weekday day,
+    required ClockTimeConverter clockTimeConverter,
+  }) {
+    if (rawRange is! Map<dynamic, dynamic> ||
+        !_hasExpectedRangeFields(rawRange)) {
+      throw FormatException(
+        'A range for ${day.name} must contain start and end.',
+      );
+    }
+
+    final start = rawRange[FirestoreConstants.start];
+    final end = rawRange[FirestoreConstants.end];
+    if (start is! String || end is! String) {
+      throw FormatException('A range for ${day.name} must use string times.');
+    }
+
+    return TimeRange(
+      start: clockTimeConverter.fromJson(start),
+      end: clockTimeConverter.fromJson(end),
+    );
+  }
+
+  bool _hasExpectedRangeFields(Map<dynamic, dynamic> rawRange) {
+    return rawRange.length == _rangeFieldCount &&
+        rawRange.keys.toSet().containsAll({
+          FirestoreConstants.start,
+          FirestoreConstants.end,
+        });
   }
 }

@@ -31,7 +31,6 @@ final class FirestoreClinicRepository
   }
 
   @override
-  @override
   Stream<DataResult<List<Clinic>>> watchClinics() => watchAll();
 
   @override

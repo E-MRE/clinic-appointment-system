@@ -6,14 +6,24 @@ import 'package:clinic_appointment_system/features/institution/domain/value_obje
 
 /// Immutable weekly working hours with validated, sorted ranges per weekday.
 final class WorkingHours {
+  static int get _firstRangeIndex => 0;
+
+  static int get _secondRangeIndex => 1;
+
   /// Creates working hours and rejects overlapping ranges on the same day.
   factory WorkingHours(Map<Weekday, List<TimeRange>> ranges) {
     final copiedRanges = <Weekday, List<TimeRange>>{};
     for (final day in Weekday.values) {
       final sortedRanges = List<TimeRange>.of(ranges[day] ?? const [])
         ..sort((first, second) => first.start.compareTo(second.start));
-      for (var index = 1; index < sortedRanges.length; index++) {
-        if (sortedRanges[index - 1].overlaps(sortedRanges[index])) {
+      for (
+        int index = _secondRangeIndex;
+        index < sortedRanges.length;
+        index++
+      ) {
+        if (sortedRanges[index - _secondRangeIndex].overlaps(
+          sortedRanges[index],
+        )) {
           throw const InstitutionException(
             InstitutionErrorCode.overlappingRanges,
           );
@@ -37,7 +47,7 @@ final class WorkingHours {
   final Map<Weekday, List<TimeRange>> _ranges;
 
   /// The sorted working ranges for [day], or an empty list when closed.
-  List<TimeRange> rangesOn(Weekday day) => _ranges[day]!;
+  List<TimeRange> rangesOn(Weekday day) => _ranges[day] ?? const <TimeRange>[];
 
   /// Whether [day] has no working ranges.
   bool isClosedOn(Weekday day) => rangesOn(day).isEmpty;
@@ -72,7 +82,7 @@ final class WorkingHours {
 
   bool _sameRanges(List<TimeRange> first, List<TimeRange> second) {
     if (first.length != second.length) return false;
-    for (var index = 0; index < first.length; index++) {
+    for (int index = _firstRangeIndex; index < first.length; index++) {
       if (first[index] != second[index]) return false;
     }
     return true;

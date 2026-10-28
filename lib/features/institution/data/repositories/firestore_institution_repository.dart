@@ -54,7 +54,10 @@ abstract base class FirestoreInstitutionRepository<
         data: entityFromJson({...fields, 'id': document.id}),
       );
     } on FirebaseException catch (_, stackTrace) {
-      _throwUnavailable(stackTrace);
+      Error.throwWithStackTrace(
+        const InstitutionException(InstitutionErrorCode.unavailable),
+        stackTrace,
+      );
     }
   }
 
@@ -67,7 +70,10 @@ abstract base class FirestoreInstitutionRepository<
           .update(fieldsFromEntity(entity));
       return DataResult.success(data: entity);
     } on FirebaseException catch (_, stackTrace) {
-      _throwUnavailable(stackTrace);
+      Error.throwWithStackTrace(
+        const InstitutionException(InstitutionErrorCode.unavailable),
+        stackTrace,
+      );
     }
   }
 
@@ -86,36 +92,40 @@ abstract base class FirestoreInstitutionRepository<
       }).toList()..sort((first, second) => first.name.compareTo(second.name));
       return DataResult.success(data: entities);
     } on CheckedFromJsonException catch (_, stackTrace) {
-      _throwInvalidRecord(stackTrace);
+      Error.throwWithStackTrace(
+        const InstitutionException(InstitutionErrorCode.invalidRecord),
+        stackTrace,
+      );
     } on TypeError catch (_, stackTrace) {
-      _throwInvalidRecord(stackTrace);
+      Error.throwWithStackTrace(
+        const InstitutionException(InstitutionErrorCode.invalidRecord),
+        stackTrace,
+      );
     } on ArgumentError catch (_, stackTrace) {
-      _throwInvalidRecord(stackTrace);
+      Error.throwWithStackTrace(
+        const InstitutionException(InstitutionErrorCode.invalidRecord),
+        stackTrace,
+      );
     } on FormatException catch (_, stackTrace) {
-      _throwInvalidRecord(stackTrace);
+      Error.throwWithStackTrace(
+        const InstitutionException(InstitutionErrorCode.invalidRecord),
+        stackTrace,
+      );
     } on InstitutionException catch (_, stackTrace) {
-      _throwInvalidRecord(stackTrace);
+      Error.throwWithStackTrace(
+        const InstitutionException(InstitutionErrorCode.invalidRecord),
+        stackTrace,
+      );
     }
   }
 
   void _handleStreamError(Object error, StackTrace stackTrace) {
     if (error is FirebaseException) {
-      _throwUnavailable(stackTrace);
+      Error.throwWithStackTrace(
+        const InstitutionException(InstitutionErrorCode.unavailable),
+        stackTrace,
+      );
     }
     Error.throwWithStackTrace(error, stackTrace);
-  }
-
-  Never _throwInvalidRecord(StackTrace stackTrace) {
-    Error.throwWithStackTrace(
-      const InstitutionException(InstitutionErrorCode.invalidRecord),
-      stackTrace,
-    );
-  }
-
-  Never _throwUnavailable(StackTrace stackTrace) {
-    Error.throwWithStackTrace(
-      const InstitutionException(InstitutionErrorCode.unavailable),
-      stackTrace,
-    );
   }
 }
