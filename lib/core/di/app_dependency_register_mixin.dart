@@ -16,6 +16,21 @@ import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/password_reset_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/sign_in_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/sign_up_cubit.dart';
+import 'package:clinic_appointment_system/features/institution/data/repositories/firestore_branch_repository.dart';
+import 'package:clinic_appointment_system/features/institution/data/repositories/firestore_clinic_repository.dart';
+import 'package:clinic_appointment_system/features/institution/data/repositories/firestore_department_repository.dart';
+import 'package:clinic_appointment_system/features/institution/domain/repositories/branch_repository.dart';
+import 'package:clinic_appointment_system/features/institution/domain/repositories/clinic_repository.dart';
+import 'package:clinic_appointment_system/features/institution/domain/repositories/department_repository.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/create_branch_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/create_clinic_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/create_department_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/update_branch_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/update_clinic_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/update_department_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_branches_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_clinics_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_departments_use_case.dart';
 import 'package:clinic_appointment_system/features/users/data/models/user_model_factory.dart';
 import 'package:clinic_appointment_system/features/users/data/repositories/firestore_user_repository.dart';
 import 'package:clinic_appointment_system/features/users/domain/repositories/user_repository.dart';
@@ -37,6 +52,42 @@ mixin AppDependencyRegisterMixin {
         injector.get<FirebaseFirestore>(),
         const UserModelFactory(),
       ),
+    );
+    injector.registerLazySingleton<ClinicRepository>(
+      () => FirestoreClinicRepository(injector.get<FirebaseFirestore>()),
+    );
+    injector.registerLazySingleton<BranchRepository>(
+      () => FirestoreBranchRepository(injector.get<FirebaseFirestore>()),
+    );
+    injector.registerLazySingleton<DepartmentRepository>(
+      () => FirestoreDepartmentRepository(injector.get<FirebaseFirestore>()),
+    );
+    injector.registerLazySingleton<WatchClinicsUseCase>(
+      () => WatchClinicsUseCase(injector.get<ClinicRepository>()),
+    );
+    injector.registerLazySingleton<CreateClinicUseCase>(
+      () => CreateClinicUseCase(injector.get<ClinicRepository>()),
+    );
+    injector.registerLazySingleton<UpdateClinicUseCase>(
+      () => UpdateClinicUseCase(injector.get<ClinicRepository>()),
+    );
+    injector.registerLazySingleton<WatchBranchesUseCase>(
+      () => WatchBranchesUseCase(injector.get<BranchRepository>()),
+    );
+    injector.registerLazySingleton<CreateBranchUseCase>(
+      () => CreateBranchUseCase(injector.get<BranchRepository>()),
+    );
+    injector.registerLazySingleton<UpdateBranchUseCase>(
+      () => UpdateBranchUseCase(injector.get<BranchRepository>()),
+    );
+    injector.registerLazySingleton<WatchDepartmentsUseCase>(
+      () => WatchDepartmentsUseCase(injector.get<DepartmentRepository>()),
+    );
+    injector.registerLazySingleton<CreateDepartmentUseCase>(
+      () => CreateDepartmentUseCase(injector.get<DepartmentRepository>()),
+    );
+    injector.registerLazySingleton<UpdateDepartmentUseCase>(
+      () => UpdateDepartmentUseCase(injector.get<DepartmentRepository>()),
     );
     injector.registerLazySingleton<AuthExceptionMapper>(
       FirebaseAuthExceptionMapper.new,

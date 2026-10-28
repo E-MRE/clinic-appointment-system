@@ -14,6 +14,21 @@ import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/password_reset_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/sign_in_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/sign_up_cubit.dart';
+import 'package:clinic_appointment_system/features/institution/data/repositories/firestore_branch_repository.dart';
+import 'package:clinic_appointment_system/features/institution/data/repositories/firestore_clinic_repository.dart';
+import 'package:clinic_appointment_system/features/institution/data/repositories/firestore_department_repository.dart';
+import 'package:clinic_appointment_system/features/institution/domain/repositories/branch_repository.dart';
+import 'package:clinic_appointment_system/features/institution/domain/repositories/clinic_repository.dart';
+import 'package:clinic_appointment_system/features/institution/domain/repositories/department_repository.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/create_branch_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/create_clinic_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/create_department_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/update_branch_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/update_clinic_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/update_department_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_branches_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_clinics_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_departments_use_case.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -104,6 +119,37 @@ void main() {
     expect(container.get<AuthCubit>(), same(authCubit));
     final registerPatient = container.get<RegisterPatientUseCase>();
     expect(container.get<RegisterPatientUseCase>(), same(registerPatient));
+  });
+
+  test('institution repositories and use cases resolve through DI', () {
+    final clinics = container.get<ClinicRepository>();
+    final branches = container.get<BranchRepository>();
+    final departments = container.get<DepartmentRepository>();
+    expect(clinics, isA<FirestoreClinicRepository>());
+    expect(branches, isA<FirestoreBranchRepository>());
+    expect(departments, isA<FirestoreDepartmentRepository>());
+    expect(container.get<ClinicRepository>(), same(clinics));
+    expect(container.get<BranchRepository>(), same(branches));
+    expect(container.get<DepartmentRepository>(), same(departments));
+
+    expect(container.get<WatchClinicsUseCase>(), isA<WatchClinicsUseCase>());
+    expect(container.get<CreateClinicUseCase>(), isA<CreateClinicUseCase>());
+    expect(container.get<UpdateClinicUseCase>(), isA<UpdateClinicUseCase>());
+    expect(container.get<WatchBranchesUseCase>(), isA<WatchBranchesUseCase>());
+    expect(container.get<CreateBranchUseCase>(), isA<CreateBranchUseCase>());
+    expect(container.get<UpdateBranchUseCase>(), isA<UpdateBranchUseCase>());
+    expect(
+      container.get<WatchDepartmentsUseCase>(),
+      isA<WatchDepartmentsUseCase>(),
+    );
+    expect(
+      container.get<CreateDepartmentUseCase>(),
+      isA<CreateDepartmentUseCase>(),
+    );
+    expect(
+      container.get<UpdateDepartmentUseCase>(),
+      isA<UpdateDepartmentUseCase>(),
+    );
   });
 
   test('auth repository uses the injected Firebase instance', () async {
