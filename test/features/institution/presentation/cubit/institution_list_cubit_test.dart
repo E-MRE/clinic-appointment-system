@@ -173,6 +173,55 @@ void main() {
       },
     );
 
+    test(
+      'latest watch wins while an earlier cancellation is pending',
+      () async {
+        final cancelGate = Completer<void>();
+        final first = StreamController<DataResult<List<Branch>>>(
+          onCancel: () => cancelGate.future,
+        );
+        final second = StreamController<DataResult<List<Branch>>>();
+        final third = StreamController<DataResult<List<Branch>>>();
+        final repository = _MockBranchRepository();
+        when(() => repository.watchBranches(any())).thenAnswer((invocation) {
+          return switch (invocation.positionalArguments.single as String) {
+            'first' => first.stream,
+            'second' => second.stream,
+            'third' => third.stream,
+            _ => const Stream.empty(),
+          };
+        });
+        final cubit = BranchListCubit(WatchBranchesUseCase(repository));
+        await cubit.watch('first');
+        final pendingSecond = cubit.watch('second');
+        final pendingThird = cubit.watch('third');
+        cancelGate.complete();
+        await Future.wait([pendingSecond, pendingThird]);
+        final latest = Branch(
+          id: 'branch-3',
+          clinicId: 'third',
+          name: 'Latest',
+          address: 'Street',
+          workingHours: _closedHours,
+        );
+        third.add(DataResult.success(data: [latest]));
+        await Future<void>.delayed(Duration.zero);
+        expect(
+          cubit.state,
+          isA<InstitutionListLoaded<Branch>>().having(
+            (state) => state.items.single,
+            'latest branch',
+            latest,
+          ),
+        );
+        verifyNever(() => repository.watchBranches('second'));
+        await cubit.close();
+        await first.close();
+        unawaited(second.close());
+        await third.close();
+      },
+    );
+
     test('close cancels a pending stream and ignores later events', () async {
       var cancelled = false;
       final controller = StreamController<DataResult<List<Clinic>>>(

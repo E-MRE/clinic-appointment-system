@@ -59,6 +59,15 @@ abstract class InstitutionListCubit<
     await _retryAction?.call();
   }
 
+  /// Discards the current selection and all results from its old stream.
+  Future<void> clear() async {
+    if (_isClosingOrClosed) return;
+    _watchGeneration++;
+    _retryAction = null;
+    emit(InstitutionListLoading<T>());
+    await _cancelSubscription();
+  }
+
   void _onResult(DataResult<List<T>> result, int generation) {
     if (_isClosingOrClosed || generation != _watchGeneration) return;
     final items = result.data;
@@ -78,11 +87,9 @@ abstract class InstitutionListCubit<
     emit(InstitutionListFailure<T>(code));
   }
 
-  InstitutionErrorCode _errorCode(Object error) {
-    return error is InstitutionException
-        ? error.code
-        : InstitutionErrorCode.unavailable;
-  }
+  InstitutionErrorCode _errorCode(Object error) => error is InstitutionException
+      ? error.code
+      : InstitutionErrorCode.unavailable;
 
   Future<void> _cancelSubscription() async {
     final subscription = _subscription;

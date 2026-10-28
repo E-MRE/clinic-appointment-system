@@ -9,7 +9,5 @@ final class DepartmentListCubit
   DepartmentListCubit(super.watchUseCase);
 
   /// Starts or replaces the department observation for [branchId].
-  Future<void> watch(String branchId) {
-    return watchWith(branchId);
-  }
+  Future<void> watch(String branchId) => watchWith(branchId);
 }

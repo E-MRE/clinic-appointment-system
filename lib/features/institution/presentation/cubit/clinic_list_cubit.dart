@@ -14,7 +14,5 @@ final class ClinicListCubit
   }
 
   /// Starts a fresh observation of all clinics.
-  Future<void> watch() {
-    return watchWith(const NoParams());
-  }
+  Future<void> watch() => watchWith(const NoParams());
 }

@@ -9,7 +9,5 @@ final class BranchListCubit
   BranchListCubit(super.watchUseCase);
 
   /// Starts or replaces the branch observation for [clinicId].
-  Future<void> watch(String clinicId) {
-    return watchWith(clinicId);
-  }
+  Future<void> watch(String clinicId) => watchWith(clinicId);
 }

@@ -88,9 +88,8 @@ final class WorkingHoursEditorCubit extends Cubit<WorkingHoursEditorState> {
     });
   }
 
-  bool _hasRange(WorkingHoursDayDraft day, int index) {
-    return index >= 0 && index < day.ranges.length;
-  }
+  bool _hasRange(WorkingHoursDayDraft day, int index) =>
+      index >= 0 && index < day.ranges.length;
 
   WorkingHoursRangeDraft _nextRange(WorkingHoursDayDraft day) {
     if (day.ranges.isEmpty) return _defaultRanges.single;

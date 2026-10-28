@@ -13,12 +13,10 @@ final class BranchSaveCubit extends InstitutionSaveCubit<Branch> {
   final UpdateBranchUseCase _updateBranch;
 
   /// Creates a branch from [draft].
-  Future<void> create(BranchDraft draft) {
-    return executeRequest(() => _createBranch(draft));
-  }
+  Future<void> create(BranchDraft draft) =>
+      executeRequest(() => _createBranch(draft));
 
   /// Updates [branch] using its current values.
-  Future<void> update(Branch branch) {
-    return executeRequest(() => _updateBranch(branch));
-  }
+  Future<void> update(Branch branch) =>
+      executeRequest(() => _updateBranch(branch));
 }

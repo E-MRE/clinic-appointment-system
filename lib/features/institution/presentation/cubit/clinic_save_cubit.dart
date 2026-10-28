@@ -13,9 +13,8 @@ final class ClinicSaveCubit extends InstitutionSaveCubit<Clinic> {
   final UpdateClinicUseCase _updateClinic;
 
   /// Creates a clinic with [name].
-  Future<void> create(String name) {
-    return executeRequest(() => _createClinic(ClinicDraft(name: name)));
-  }
+  Future<void> create(String name) =>
+      executeRequest(() => _createClinic(ClinicDraft(name: name)));
 
   /// Updates [clinic] with [name], preserving its identifier.
   Future<void> update(Clinic clinic, String name) {
