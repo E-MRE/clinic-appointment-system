@@ -207,6 +207,35 @@
       "addressRequired": "Adres boş bırakılamaz.",
       "invalidRecord": "Kurum kaydı geçersiz.",
       "unavailable": "İşlem tamamlanamadı. Lütfen tekrar deneyin."
-    }
+    },
+    "overview": "Genel bakış",
+    "newClinic": "Yeni kurum",
+    "clinicName": "Kurum adı",
+    "createClinic": "Kurum ekle",
+    "save": "Kaydet",
+    "retry": "Tekrar dene",
+    "loading": "Kurum bilgileri yükleniyor",
+    "notFound": "Kayıt bulunamadı",
+    "notFoundDescription": "Bu kayıt artık mevcut değil.",
+    "branchesCount": "{} şube",
+    "departmentsCount": "{} bölüm",
+    "hoursSummary": "Çalışma saatlerini görüntüle",
+    "rangeAdd": "Saat aralığı ekle",
+    "rangeRemove": "Saat aralığını kaldır",
+    "timeStart": "Açılış saati",
+    "timeEnd": "Kapanış saati",
+    "today": "Bugün",
+    "selectClinic": "Kurum seçin",
+    "openDaysCount": "{} gün açık",
+    "weekdaysShort": {
+      "monday": "Pzt",
+      "tuesday": "Sal",
+      "wednesday": "Çar",
+      "thursday": "Per",
+      "friday": "Cum",
+      "saturday": "Cmt",
+      "sunday": "Paz"
+    },
+    "allDaysClosed": "Tüm günler kapalı"
   }
 }

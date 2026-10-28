@@ -218,5 +218,41 @@ abstract class LocaleKeys {
   static const institution_errors_unavailable =
       'institution.errors.unavailable';
   static const institution_errors = 'institution.errors';
+  static const institution_overview = 'institution.overview';
+  static const institution_newClinic = 'institution.newClinic';
+  static const institution_clinicName = 'institution.clinicName';
+  static const institution_createClinic = 'institution.createClinic';
+  static const institution_save = 'institution.save';
+  static const institution_retry = 'institution.retry';
+  static const institution_loading = 'institution.loading';
+  static const institution_notFound = 'institution.notFound';
+  static const institution_notFoundDescription =
+      'institution.notFoundDescription';
+  static const institution_branchesCount = 'institution.branchesCount';
+  static const institution_departmentsCount = 'institution.departmentsCount';
+  static const institution_hoursSummary = 'institution.hoursSummary';
+  static const institution_rangeAdd = 'institution.rangeAdd';
+  static const institution_rangeRemove = 'institution.rangeRemove';
+  static const institution_timeStart = 'institution.timeStart';
+  static const institution_timeEnd = 'institution.timeEnd';
+  static const institution_today = 'institution.today';
+  static const institution_selectClinic = 'institution.selectClinic';
+  static const institution_openDaysCount = 'institution.openDaysCount';
+  static const institution_weekdaysShort_monday =
+      'institution.weekdaysShort.monday';
+  static const institution_weekdaysShort_tuesday =
+      'institution.weekdaysShort.tuesday';
+  static const institution_weekdaysShort_wednesday =
+      'institution.weekdaysShort.wednesday';
+  static const institution_weekdaysShort_thursday =
+      'institution.weekdaysShort.thursday';
+  static const institution_weekdaysShort_friday =
+      'institution.weekdaysShort.friday';
+  static const institution_weekdaysShort_saturday =
+      'institution.weekdaysShort.saturday';
+  static const institution_weekdaysShort_sunday =
+      'institution.weekdaysShort.sunday';
+  static const institution_weekdaysShort = 'institution.weekdaysShort';
+  static const institution_allDaysClosed = 'institution.allDaysClosed';
   static const institution = 'institution';
 }

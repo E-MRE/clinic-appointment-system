@@ -13,6 +13,20 @@ abstract final class AppRoutes {
   /// Administrator home location.
   static const adminHome = '/admin';
 
+  /// Institution overview and its branch routes.
+  static const institution = '/admin/institution';
+  static const branchNewPattern = '$institution/clinics/:clinicId/branches/new';
+  static const branchDetailPattern =
+      '$institution/clinics/:clinicId/branches/:branchId';
+  static const branchEditPattern = '$branchDetailPattern/edit';
+
+  static String branchNew(String clinicId) =>
+      '$institution/clinics/$clinicId/branches/new';
+  static String branchDetail(String clinicId, String branchId) =>
+      '$institution/clinics/$clinicId/branches/$branchId';
+  static String branchEdit(String clinicId, String branchId) =>
+      '${branchDetail(clinicId, branchId)}/edit';
+
   /// Debug component catalogue location.
   static const componentPreview = '/debug/components';
   static const signIn = '/sign-in';

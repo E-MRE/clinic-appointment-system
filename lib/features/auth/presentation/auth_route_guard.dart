@@ -70,20 +70,23 @@ final class AuthRouteGuard extends ChangeNotifier {
   }
 
   /// Role homes come from the role mapping, so a new role needs no edit here.
-  bool _isRoleHome(String path) {
-    return UserRole.values.any((role) => role.homePath == path);
+  bool _isRoleHomeOrDescendant(String path) {
+    return UserRole.values.any((role) => _isWithin(path, role.homePath));
+  }
+
+  /// Whether [path] is [root] itself or a location nested under it.
+  bool _isWithin(String path, String root) {
+    return path == root || path.startsWith('$root/');
   }
 
   bool _isProtectedHome(String path) {
-    return path == AppRoutes.home || _isRoleHome(path);
+    return path == AppRoutes.home || _isRoleHomeOrDescendant(path);
   }
 
-  bool _isAuthLocation(String path) {
-    return path == AppRoutes.signIn || path.startsWith('${AppRoutes.signIn}/');
-  }
+  bool _isAuthLocation(String path) => _isWithin(path, AppRoutes.signIn);
 
   bool _isOtherRoleHome(String path, String home) {
-    return _isRoleHome(path) && path != home;
+    return _isRoleHomeOrDescendant(path) && !_isWithin(path, home);
   }
 
   bool _needsHomeRedirect(String path, String home) {

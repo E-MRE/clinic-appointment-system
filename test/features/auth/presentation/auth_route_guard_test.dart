@@ -49,7 +49,16 @@ void main() {
     ),
     (Admin(id: 'id', fullName: 'A', email: 'a@example.com'), '/admin'),
   ];
-  const homes = ['/', '/patient', '/staff', '/admin'];
+  const homes = [
+    '/',
+    '/patient',
+    '/patient/appointments',
+    '/staff',
+    '/staff/schedule',
+    '/admin',
+    '/admin/institution',
+    '/admin/institution/clinics/clinic-2/branches/branch-2',
+  ];
   const auth = ['/sign-in', '/sign-in/register', '/sign-in/reset-password'];
   const unchanged = ['/debug/components', '/missing', '/other/path'];
 
@@ -92,7 +101,7 @@ void main() {
           when(() => route.uri).thenReturn(Uri.parse(path));
           expect(
             guard.redirect(_Context(), route),
-            path == home ? null : home,
+            path == home || path.startsWith('$home/') ? null : home,
             reason: path,
           );
         }

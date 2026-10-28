@@ -189,6 +189,12 @@ mixin AppDependencyRegisterMixin {
           signInCubitFactory: injector.get<SignInCubit>,
           signUpCubitFactory: injector.get<SignUpCubit>,
           passwordResetCubitFactory: injector.get<PasswordResetCubit>,
+          clinicListCubitFactory: injector.get<ClinicListCubit>,
+          branchListCubitFactory: injector.get<BranchListCubit>,
+          departmentListCubitFactory: injector.get<DepartmentListCubit>,
+          clinicSaveCubitFactory: injector.get<ClinicSaveCubit>,
+          branchSaveCubitFactory: injector.get<BranchSaveCubit>,
+          departmentSaveCubitFactory: injector.get<DepartmentSaveCubit>,
         );
       },
       dispose: (router) {
