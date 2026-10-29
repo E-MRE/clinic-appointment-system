@@ -25,40 +25,34 @@ final class _AppTableContent<T> extends StatelessWidget {
       defaultColumnWidth: const IntrinsicColumnWidth(flex: 1),
       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       children: [
-        TableRow(
-          decoration: hasHeader
-              ? BoxDecoration(border: Border(top: border))
-              : null,
-          children: [
-            for (int index = 0; index < columns.length; index++)
-              _AppTableCell(
-                padding: _padding(index, _headerVerticalPadding),
-                alignment: columns[index].alignment.alignment,
-                noWrap: columns[index].noWrap,
-                child: Semantics(
-                  header: true,
-                  label: columns[index].semanticsLabel ?? columns[index].label,
-                  excludeSemantics: true,
-                  child: AppText.badge(
-                    columns[index].label,
-                    tone: TextTone.muted,
-                  ),
-                ),
-              ),
-          ],
-        ),
-        for (final row in rows)
-          TableRow(
-            decoration: BoxDecoration(border: Border(top: border)),
-            children: [
-              for (int index = 0; index < columns.length; index++)
-                _AppTableCell(
-                  padding: _padding(index, rowVerticalPadding),
-                  alignment: columns[index].alignment.alignment,
-                  noWrap: columns[index].noWrap,
-                  child: columns[index].cellBuilder(context, row),
-                ),
-            ],
+        _headerRow(border),
+        for (final row in rows) _dataRow(row, border),
+      ],
+    );
+  }
+
+  TableRow _headerRow(BorderSide border) {
+    return TableRow(
+      decoration: hasHeader ? BoxDecoration(border: Border(top: border)) : null,
+      children: [
+        for (int index = 0; index < columns.length; index++)
+          _AppTableHeaderCell(
+            column: columns[index],
+            padding: _padding(index, _headerVerticalPadding),
+          ),
+      ],
+    );
+  }
+
+  TableRow _dataRow(T row, BorderSide border) {
+    return TableRow(
+      decoration: BoxDecoration(border: Border(top: border)),
+      children: [
+        for (int index = 0; index < columns.length; index++)
+          _AppTableDataCell(
+            column: columns[index],
+            padding: _padding(index, rowVerticalPadding),
+            row: row,
           ),
       ],
     );

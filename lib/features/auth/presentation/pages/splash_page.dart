@@ -9,6 +9,8 @@ import 'package:clinic_appointment_system/generated/assets.gen.dart';
 import 'package:flutter/material.dart';
 
 part 'splash_brand.dart';
+part 'splash_brand_logo.dart';
+part 'splash_brand_titles.dart';
 part 'splash_centered_layout.dart';
 part 'splash_compact_layout.dart';
 part 'splash_progress.dart';

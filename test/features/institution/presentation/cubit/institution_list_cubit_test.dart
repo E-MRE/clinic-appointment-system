@@ -125,7 +125,7 @@ void main() {
     test(
       're-watch cancels the old branch stream and observes the new clinic',
       () async {
-        var firstCancelled = false;
+        bool firstCancelled = false;
         final first = StreamController<DataResult<List<Branch>>>(
           onCancel: () => firstCancelled = true,
         );
@@ -223,7 +223,7 @@ void main() {
     );
 
     test('close cancels a pending stream and ignores later events', () async {
-      var cancelled = false;
+      bool cancelled = false;
       final controller = StreamController<DataResult<List<Clinic>>>(
         onCancel: () => cancelled = true,
       );

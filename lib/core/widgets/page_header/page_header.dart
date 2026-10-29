@@ -3,6 +3,8 @@ import 'package:clinic_appointment_system/core/widgets/app_text.dart';
 import 'package:clinic_appointment_system/core/widgets/page_header/page_header_tier.dart';
 import 'package:flutter/material.dart';
 
+part 'page_header_title.dart';
+
 /// Responsive title row for page content.
 final class PageHeader extends StatelessWidget {
   /// Creates a page header with optional subtitle and trailing actions.
@@ -33,20 +35,10 @@ final class PageHeader extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  AppText.pageTitle(title),
-                  if (subtitle case final value?) ...[
-                    const EmptySize.s2Height(),
-                    AppText(
-                      value,
-                      role: tier.subtitleRole,
-                      tone: TextTone.muted,
-                    ),
-                  ],
-                ],
+              child: _PageHeaderTitle(
+                title: title,
+                subtitle: subtitle,
+                tier: tier,
               ),
             ),
             if (actions case final value?) ...[

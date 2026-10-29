@@ -31,17 +31,27 @@ part 'auth_account_roles.dart';
 part 'auth_brand_item.dart';
 part 'auth_brand_message.dart';
 part 'auth_brand_panel.dart';
+part 'auth_brand_panel_content.dart';
+part 'auth_brand_switcher.dart';
 part 'auth_confirmation_field.dart';
 part 'auth_email_field.dart';
 part 'auth_feedback_message.dart';
 part 'auth_form_content.dart';
+part 'auth_forgot_password_button.dart';
+part 'auth_form_actions.dart';
 part 'auth_form_feedback.dart';
 part 'auth_form_fields.dart';
+part 'auth_name_group.dart';
+part 'auth_password_group.dart';
 part 'auth_form_footer.dart';
 part 'auth_form_header.dart';
 part 'auth_heading.dart';
+part 'auth_heading_logo.dart';
+part 'auth_heading_texts.dart';
 part 'auth_name_field.dart';
 part 'auth_page_layout.dart';
+part 'auth_form_host.dart';
+part 'auth_request_view.dart';
 part 'auth_mobile_form.dart';
 part 'auth_scrolling_form.dart';
 part 'auth_form_surface.dart';
@@ -100,28 +110,15 @@ final class _AuthRequestFormState<C extends AuthRequestCubit>
         BlocListener<AuthCubit, AuthState>(listener: _onSessionChanged),
         BlocListener<C, AuthRequestState>(listener: _onRequestChanged),
       ],
-      child: BlocBuilder<C, AuthRequestState>(
-        buildWhen: _busyStateChanged,
-        builder: (context, state) {
-          return _AuthPageLayout(
-            kind: _kind,
-            canNavigate: !_kind.isBusy(state),
-            child: Form(
-              key: _formKey,
-              child: AutofillGroup(
-                child: _AuthFormContent<C>(
-                  kind: _kind,
-                  fullName: _fullName,
-                  email: _email,
-                  password: _password,
-                  confirmation: _confirmation,
-                  enabled: !_kind.isBusy(state),
-                  onSubmit: _submit,
-                ),
-              ),
-            ),
-          );
-        },
+      child: _AuthRequestView<C>(
+        kind: _kind,
+        formKey: _formKey,
+        fullName: _fullName,
+        email: _email,
+        password: _password,
+        confirmation: _confirmation,
+        onSubmit: _submit,
+        busyStateChanged: _busyStateChanged,
       ),
     );
   }

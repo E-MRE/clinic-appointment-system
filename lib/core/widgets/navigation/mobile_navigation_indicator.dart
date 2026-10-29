@@ -19,14 +19,7 @@ final class _MobileNavigationIndicator extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          if (style.isSelected)
-            DecoratedBox(
-              decoration: BoxDecoration(
-                color: scheme.secondaryContainer,
-                borderRadius: const AppRadius.full(),
-              ),
-              child: const SizedBox.expand(),
-            ),
+          if (style.isSelected) const _MobileNavigationPill(),
           Icon(
             style.icon(destination),
             color: style.iconColor(scheme),

@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+part 'app_router_view.dart';
+
 /// Dependencies are owned by the caller (the DI container in production).
 final class App extends StatelessWidget {
   const App({
@@ -22,34 +24,17 @@ final class App extends StatelessWidget {
   final AuthCubit authCubit;
 
   @override
-  Widget build(BuildContext context) => MultiBlocProvider(
-    providers: [
-      BlocProvider.value(value: themeCubit),
-      BlocProvider.value(value: authCubit),
-    ],
-    child: LocalizationWrapper(
-      child: Builder(
-        builder: (context) => BlocBuilder<ThemeCubit, ThemeMode>(
-          builder: (context, mode) => MaterialApp.router(
-            debugShowCheckedModeBanner: false,
-            title: LocaleKeys.appName.tr(),
-            theme: LightTheme(context.screenSize).themeData,
-            darkTheme: DarkTheme(context.screenSize).themeData,
-            themeMode: mode,
-            locale: context.locale,
-            supportedLocales: context.supportedLocales,
-            localizationsDelegates: context.localizationDelegates,
-            routerConfig: router,
-            builder: (context, child) => AuthStartupGate(
-              onGoHome: _retryFromHome,
-              router: router,
-              child: child ?? const SizedBox.shrink(),
-            ),
-          ),
-        ),
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider.value(value: themeCubit),
+        BlocProvider.value(value: authCubit),
+      ],
+      child: LocalizationWrapper(
+        child: _AppRouterView(router: router, onGoHome: _retryFromHome),
       ),
-    ),
-  );
+    );
+  }
 
   Future<void> _retryFromHome() async {
     router.go(AppRoutes.home);

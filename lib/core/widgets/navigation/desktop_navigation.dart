@@ -32,18 +32,10 @@ final class _DesktopNavigation extends StatelessWidget {
           ],
           const EmptySize.s24Height(),
           Expanded(
-            child: ListView(
-              padding: const AppPadding.none(),
-              children: [
-                for (int index = 0; index < destinations.length; index++)
-                  _DesktopNavigationItem(
-                    destination: destinations[index],
-                    selected: index == selectedIndex,
-                    onTap: () {
-                      onDestinationSelected(index);
-                    },
-                  ),
-              ],
+            child: _DesktopNavigationItemList(
+              destinations: destinations,
+              selectedIndex: selectedIndex,
+              onDestinationSelected: onDestinationSelected,
             ),
           ),
         ],

@@ -5,33 +5,14 @@ final class _SplashBrand extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final logoSize = context.screenSize.select(
-      mobile: AppSizes.s96,
-      tablet: AppSizes.logoTablet,
-      desktop: AppSizes.logoDesktop,
-    );
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: AppSizes.messageMaxWidth),
-      child: Column(
+      child: const Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Assets.images.brand.splashLogo.svg(
-            width: logoSize,
-            height: logoSize,
-            excludeFromSemantics: true,
-          ),
-          const EmptySize.s24Height(),
-          AppText.display(
-            LocaleKeys.appName.translate(),
-            textAlign: TextAlign.center,
-            tone: TextTone.onBrand,
-          ),
-          const EmptySize.s8Height(),
-          AppText.body(
-            LocaleKeys.splash_subtitle.translate(),
-            textAlign: TextAlign.center,
-            tone: TextTone.onBrand,
-          ),
+          _SplashBrandLogo(),
+          EmptySize.s24Height(),
+          _SplashBrandTitles(),
         ],
       ),
     );

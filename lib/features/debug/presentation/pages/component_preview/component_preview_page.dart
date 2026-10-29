@@ -37,6 +37,7 @@ part 'preview_theme.dart';
 part 'preview_section.dart';
 part 'preview_section_view.dart';
 part 'text_section.dart';
+part 'text_section_sample.dart';
 part 'surface_section.dart';
 part 'status_section.dart';
 part 'header_section.dart';
@@ -45,11 +46,26 @@ part 'loading_section.dart';
 part 'list_section.dart';
 part 'data_table_section.dart';
 part 'preview_appointments_table.dart';
+part 'preview_appointments_header.dart';
+part 'preview_appointment_patient_cell.dart';
 part 'preview_services_table.dart';
+part 'preview_service_cell.dart';
 part 'avatar_section.dart';
 part 'fields_section.dart';
+part 'fields_content.dart';
+part 'fields_text_fields.dart';
+part 'fields_basic_text_fields.dart';
+part 'fields_feedback_text_fields.dart';
+part 'fields_select_fields.dart';
+part 'fields_basic_select_fields.dart';
+part 'fields_error_select_field.dart';
+part 'choices_section.dart';
+part 'choices_filter_chips.dart';
+part 'choices_segmented_control.dart';
 part 'navigation_section.dart';
+part 'navigation_preview_shell.dart';
 part 'other_section.dart';
+part 'other_section_viewport_preview.dart';
 part 'tier_preview.dart';
 
 /// Developer-facing catalogue of shared components.
@@ -122,152 +138,6 @@ final class _PreviewState extends State<ComponentPreviewPage> {
           _theme = value;
         });
       },
-    );
-  }
-}
-
-/// Owns the editable form examples.
-final class _FieldsContent extends StatefulWidget {
-  @override
-  State<_FieldsContent> createState() {
-    return _FieldsContentState();
-  }
-}
-
-/// Manages the form example controllers.
-final class _FieldsContentState extends State<_FieldsContent> {
-  late final TextEditingController _normal;
-  late final TextEditingController _disabled;
-  late final TextEditingController _error;
-  late final TextEditingController _helper;
-
-  @override
-  void initState() {
-    super.initState();
-    _normal = TextEditingController();
-    _disabled = TextEditingController();
-    _error = TextEditingController();
-    _helper = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    _normal.dispose();
-    _disabled.dispose();
-    _error.dispose();
-    _helper.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final sample = LocaleKeys.componentPreview_sample.translate();
-    final error = LocaleKeys.componentPreview_error.translate();
-    return Form(
-      autovalidateMode: AutovalidateMode.always,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        spacing: AppSizes.s16,
-        children: [
-          AppTextField(
-            label: sample,
-            controller: _normal,
-            prefixIconAsset: Assets.images.auth.email,
-          ),
-          AppTextField(
-            label: LocaleKeys.componentPreview_disabled.translate(),
-            controller: _disabled,
-            enabled: false,
-          ),
-          AppTextField(
-            label: error,
-            controller: _error,
-            validator: (_) {
-              return error;
-            },
-          ),
-          AppTextField(
-            label: LocaleKeys.componentPreview_helper.translate(),
-            controller: _helper,
-            helper: LocaleKeys.componentPreview_helper.translate(),
-          ),
-          AppSelectField<String>(
-            label: sample,
-            options: [AppSelectOption(value: sample, label: sample)],
-            onChanged: (_) {},
-          ),
-          AppSelectField<String>(
-            label: LocaleKeys.componentPreview_disabled.translate(),
-            options: [AppSelectOption(value: sample, label: sample)],
-            onChanged: (_) {},
-            enabled: false,
-          ),
-          AppSelectField<String>(
-            label: error,
-            options: [AppSelectOption(value: sample, label: sample)],
-            onChanged: (_) {},
-            validator: (_) {
-              return error;
-            },
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Displays interactive choice controls.
-final class _ChoicesSection extends StatefulWidget {
-  const _ChoicesSection();
-
-  @override
-  State<_ChoicesSection> createState() {
-    return _ChoicesSectionState();
-  }
-}
-
-/// Keeps the two example selections independent.
-final class _ChoicesSectionState extends State<_ChoicesSection> {
-  late _PreviewTheme _filter;
-  late _PreviewTheme _segment;
-
-  @override
-  void initState() {
-    super.initState();
-    _filter = _PreviewTheme.light;
-    _segment = _PreviewTheme.light;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      spacing: AppSizes.s16,
-      children: [
-        AppFilterChips(
-          choices: [
-            for (final theme in _PreviewTheme.values)
-              AppChoice(value: theme, label: theme.label.translate()),
-          ],
-          selected: _filter,
-          onSelected: (value) {
-            setState(() {
-              _filter = value;
-            });
-          },
-        ),
-        AppSegmentedControl(
-          choices: [
-            for (final theme in _PreviewTheme.values)
-              AppChoice(value: theme, label: theme.label.translate()),
-          ],
-          selected: _segment,
-          onSelected: (value) {
-            setState(() {
-              _segment = value;
-            });
-          },
-        ),
-      ],
     );
   }
 }

@@ -10,7 +10,13 @@ import 'package:clinic_appointment_system/generated/assets.gen.dart';
 import 'package:flutter/material.dart';
 
 part 'startup_error_actions.dart';
+part 'startup_error_desktop_actions.dart';
+part 'startup_error_mobile_actions.dart';
+part 'startup_error_retry_button.dart';
+part 'startup_error_secondary_button.dart';
 part 'startup_error_icon.dart';
+part 'startup_error_state.dart';
+part 'startup_error_content.dart';
 
 /// Recoverable session-startup failure using the approved shared error designs.
 final class StartupErrorPage extends StatelessWidget {
@@ -29,7 +35,6 @@ final class StartupErrorPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colorScheme;
     final isMobile = context.screenSize.isMobile;
     final actions = _StartupErrorActions(
       kind: kind,
@@ -40,30 +45,10 @@ final class StartupErrorPage extends StatelessWidget {
     );
     return AppScaffold(
       key: const WidgetKey.startupErrorPage(),
-      child: Column(
-        children: [
-          AppBrandHeader(
-            logo: Assets.images.brand.clinicLogo,
-            logoSize: AppSizes.s32,
-            minimumHeight: AppSizes.s48,
-          ),
-          Expanded(
-            child: ErrorState(
-              title: kind.titleKey.translate(),
-              primaryAction: isMobile ? null : actions,
-              message: kind.descriptionKey.translate(),
-              icon: _StartupErrorIcon(kind: kind, isMobile: isMobile),
-              iconBackground: kind.containerColor(colors),
-              iconSize: context.screenSize.select(
-                mobile: AppSizes.s96,
-                tablet: AppSizes.illustrationLarge,
-                desktop: AppSizes.illustrationLarge,
-              ),
-            ),
-          ),
-          if (isMobile)
-            Padding(padding: const AppPadding.verticalSm(), child: actions),
-        ],
+      child: _StartupErrorContent(
+        kind: kind,
+        isMobile: isMobile,
+        actions: actions,
       ),
     );
   }

@@ -9,10 +9,16 @@ export 'package:clinic_appointment_system/core/widgets/navigation/app_navigation
 
 part 'mobile_navigation.dart';
 part 'mobile_navigation_item.dart';
+part 'mobile_navigation_pill.dart';
 part 'tablet_navigation.dart';
+part 'tablet_navigation_logo.dart';
 part 'tablet_navigation_item.dart';
+part 'tablet_navigation_item_label.dart';
+part 'tablet_navigation_icon_pill.dart';
+part 'tablet_navigation_item_list.dart';
 part 'desktop_navigation.dart';
 part 'desktop_navigation_item.dart';
+part 'desktop_navigation_item_list.dart';
 part 'navigation_count_badge.dart';
 part 'navigation_item_semantics.dart';
 part 'navigation_item_style.dart';

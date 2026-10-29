@@ -4,6 +4,7 @@ import 'package:clinic_appointment_system/core/widgets/choice/app_choice.dart';
 import 'package:flutter/material.dart';
 
 part 'filter_chip_item.dart';
+part 'filter_chip_label.dart';
 part 'filter_chip_style.dart';
 
 /// Horizontally scrollable single-select filter chips.

@@ -14,6 +14,8 @@ export 'app_table_density.dart';
 
 part 'app_table_content.dart';
 part 'app_table_cell.dart';
+part 'app_table_header_cell.dart';
+part 'app_table_data_cell.dart';
 part 'app_table_scroll_view.dart';
 
 /// A scrollable, content-sized table on a themed surface.

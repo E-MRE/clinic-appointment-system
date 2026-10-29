@@ -120,7 +120,7 @@ void main() {
         final pending = Completer<DataResult<Clinic>>();
         repository.createAction = (_) => pending.future;
         final first = cubit.create('North Clinic');
-        var updateCalls = 0;
+        int updateCalls = 0;
         repository.updateAction = (_) async {
           updateCalls++;
           return const DataResult.error();

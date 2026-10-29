@@ -13,34 +13,7 @@ final class _AuthBrandPanel extends StatelessWidget {
       color: brandColors.splashBackground,
       child: Padding(
         padding: const AppPadding.allXxxl(),
-        child: ViewportScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            spacing: AppSizes.s32,
-            children: [
-              AppBrandHeader(
-                logo: Assets.images.auth.panelLogo,
-                logoSize: AppSizes.s32,
-                textColor: brandColors.splashForeground,
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: AnimatedSwitcher(
-                  duration: kThemeAnimationDuration,
-                  child: _AuthBrandMessage(
-                    key: ValueKey(kind.brandTitleKey),
-                    kind: kind,
-                  ),
-                ),
-              ),
-              AppText.caption(
-                LocaleKeys.splash_subtitle.translate(),
-                tone: TextTone.onBrand,
-              ),
-            ],
-          ),
-        ),
+        child: ViewportScrollView(child: _AuthBrandPanelContent(kind: kind)),
       ),
     );
   }

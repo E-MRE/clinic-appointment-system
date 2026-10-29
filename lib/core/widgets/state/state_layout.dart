@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 part 'state_icon.dart';
 part 'state_message.dart';
 part 'state_actions.dart';
+part 'state_action_slot.dart';
+part 'state_content.dart';
 
 /// Shared layout algorithm for empty and error presentation states.
 ///
@@ -52,42 +54,22 @@ abstract class StateLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = context.screenSize;
     return ViewportScrollView(
       child: Center(
         child: Padding(
           padding: const AppPadding.verticalXl(),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _StateIcon(
-                icon: icon,
-                background: iconBackground,
-                size: iconSize,
-                shape: variant.iconShape,
-              ),
-              const EmptySize.s24Height(),
-              _StateMessage(
-                title: title,
-                message: message,
-                maxWidth: variant.messageMaxWidth(screenSize),
-                messageRole: variant.messageRole(screenSize),
-              ),
-              if (_hasActions) ...[
-                const EmptySize.s24Height(),
-                _StateActions(
-                  primaryAction: primaryAction,
-                  secondaryAction: secondaryAction,
-                ),
-              ],
-            ],
+          child: _StateContent(
+            title: title,
+            message: message,
+            icon: icon,
+            iconBackground: iconBackground,
+            iconSize: iconSize,
+            variant: variant,
+            primaryAction: primaryAction,
+            secondaryAction: secondaryAction,
           ),
         ),
       ),
     );
-  }
-
-  bool get _hasActions {
-    return primaryAction != null || secondaryAction != null;
   }
 }

@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 
 export 'package:clinic_appointment_system/core/widgets/select_field/app_select_option.dart';
 
+part 'app_select_dropdown.dart';
+
 /// Labeled themed select field backed by display options.
 final class AppSelectField<T> extends StatelessWidget {
   /// Creates a select field with a caller supplied options list.
@@ -51,31 +53,15 @@ final class AppSelectField<T> extends StatelessWidget {
       children: [
         ExcludeSemantics(child: AppText.label(label)),
         const EmptySize.s8Height(),
-        Semantics(
+        _AppSelectDropdown<T>(
           label: label,
-          child: KeyedSubtree(
-            key: fieldKey,
-            child: DropdownButtonFormField<T>(
-              key: ValueKey<T?>(value),
-              initialValue: value,
-              isExpanded: true,
-              hint: switch (hint) {
-                final text? => AppText.body(text),
-                null => null,
-              },
-              items: options
-                  .map(
-                    (option) => DropdownMenuItem<T>(
-                      value: option.value,
-                      child: AppText.body(option.label),
-                    ),
-                  )
-                  .toList(),
-              onChanged: enabled ? onChanged : null,
-              validator: validator,
-              decoration: const InputDecoration(),
-            ),
-          ),
+          options: options,
+          onChanged: onChanged,
+          value: value,
+          hint: hint,
+          enabled: enabled,
+          validator: validator,
+          fieldKey: fieldKey,
         ),
       ],
     );
