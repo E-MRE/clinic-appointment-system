@@ -20,10 +20,6 @@ final class CreateDepartmentUseCase
   @override
   Future<DataResult<Department>> call(DepartmentDraft draft) async {
     ensureValid(nameError(draft.name));
-    final trimmedDraft = DepartmentDraft(
-      branchId: draft.branchId,
-      name: draft.name.trim(),
-    );
-    return _repository.createDepartment(trimmedDraft);
+    return _repository.createDepartment(draft.trimmed());
   }
 }

@@ -20,6 +20,6 @@ final class CreateClinicUseCase
   @override
   Future<DataResult<Clinic>> call(ClinicDraft draft) async {
     ensureValid(nameError(draft.name));
-    return _repository.createClinic(ClinicDraft(name: draft.name.trim()));
+    return _repository.createClinic(draft.trimmed());
   }
 }

@@ -20,12 +20,6 @@ final class CreateBranchUseCase
   @override
   Future<DataResult<Branch>> call(BranchDraft draft) async {
     ensureValid(nameError(draft.name) ?? addressError(draft.address));
-    final trimmedDraft = BranchDraft(
-      clinicId: draft.clinicId,
-      name: draft.name.trim(),
-      address: draft.address.trim(),
-      workingHours: draft.workingHours,
-    );
-    return _repository.createBranch(trimmedDraft);
+    return _repository.createBranch(draft.trimmed());
   }
 }
