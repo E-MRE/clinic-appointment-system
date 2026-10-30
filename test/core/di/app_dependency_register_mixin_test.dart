@@ -1,7 +1,7 @@
 import 'package:clinic_appointment_system/core/di/app_dependency_register_mixin.dart';
 import 'package:clinic_appointment_system/core/di/get_it/get_it_dependency_injection_manager.dart';
 import 'package:clinic_appointment_system/core/di/injector/dependency_injector.dart';
-import 'package:clinic_appointment_system/core/errors/app_exception.dart';
+import 'package:clinic_appointment_system/core/errors/unexpected_exception.dart';
 import 'package:clinic_appointment_system/core/states/theme_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/data/mappers/firebase_auth_exception_mapper.dart';
 import 'package:clinic_appointment_system/features/auth/data/repositories/firebase_auth_repository.dart';

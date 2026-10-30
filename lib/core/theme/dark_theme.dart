@@ -1,7 +1,7 @@
 import 'package:clinic_appointment_system/core/theme/app_brand_colors.dart';
 import 'package:clinic_appointment_system/core/theme/app_theme.dart';
 import 'package:clinic_appointment_system/core/theme/appointment_status_colors.dart';
-import 'package:clinic_appointment_system/core/theme/breakpoints.dart';
+import 'package:clinic_appointment_system/core/theme/screen_size.dart';
 import 'package:clinic_appointment_system/generated/colors.gen.dart';
 import 'package:flutter/material.dart';
 

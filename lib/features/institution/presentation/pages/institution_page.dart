@@ -45,6 +45,7 @@ part 'institution_branch_header.dart';
 part 'institution_content_branches.dart';
 part 'institution_mobile_add_branch.dart';
 part 'institution_page_content.dart';
+part 'clinic_name_dialog.dart';
 
 /// Administrator institution overview and responsive branch selection.
 final class InstitutionPage extends StatelessWidget {
@@ -53,63 +54,5 @@ final class InstitutionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const AppScaffold(child: _InstitutionPageContent());
-  }
-}
-
-/// Creates or renames a clinic in a focused name dialog.
-final class _ClinicNameDialog extends StatefulWidget {
-  const _ClinicNameDialog({required this.selection, this.clinic});
-
-  final Clinic? clinic;
-  final InstitutionSelection selection;
-
-  @override
-  State<_ClinicNameDialog> createState() => _ClinicNameDialogState();
-}
-
-final class _ClinicNameDialogState extends State<_ClinicNameDialog> {
-  late final TextEditingController controller;
-
-  @override
-  void initState() {
-    super.initState();
-    controller = TextEditingController(text: widget.clinic?.name);
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider<ClinicSaveCubit>(
-      create: (_) => AppDependency.injector.get<ClinicSaveCubit>(),
-      child: BlocListener<ClinicSaveCubit, InstitutionSaveState<Clinic>>(
-        listener: _onSaveState,
-        child: AlertDialog(
-          title: AppText.sectionTitle(
-            widget.clinic == null
-                ? LocaleKeys.institution_newClinic.tr()
-                : LocaleKeys.institution_editClinic.tr(),
-          ),
-          content: _ClinicNameDialogContent(controller: controller),
-          actions: [
-            _ClinicNameDialogActions(
-              clinic: widget.clinic,
-              controller: controller,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _onSaveState(BuildContext context, InstitutionSaveState<Clinic> state) {
-    if (state is InstitutionSaveSaved<Clinic>) {
-      widget.selection.selectClinic(state.value.id);
-      Navigator.pop(context);
-    }
   }
 }

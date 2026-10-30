@@ -1,4 +1,4 @@
-import 'package:clinic_appointment_system/core/theme/breakpoints.dart';
+import 'package:clinic_appointment_system/core/theme/screen_size.dart';
 import 'package:clinic_appointment_system/generated/fonts.gen.dart';
 import 'package:flutter/material.dart';
 

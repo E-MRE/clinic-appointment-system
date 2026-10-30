@@ -66,6 +66,8 @@ part 'auth_role_item.dart';
 part 'auth_shell.dart';
 part 'auth_step_item.dart';
 part 'auth_submit_button.dart';
+part 'auth_request_form.dart';
+part 'auth_password_field.dart';
 
 /// Template for a screen-owned request Cubit and the shared form lifecycle.
 /// Subclasses provide the visual variant and invoke their concrete request.
@@ -84,111 +86,5 @@ abstract class AuthPage<C extends AuthRequestCubit> extends StatelessWidget {
       create: (_) => AppDependency.injector.get<C>(),
       child: _AuthRequestForm<C>(page: this),
     );
-  }
-}
-
-/// Connects request/session listeners to the screen's form and layout.
-final class _AuthRequestForm<C extends AuthRequestCubit>
-    extends StatefulWidget {
-  const _AuthRequestForm({required this.page});
-
-  final AuthPage<C> page;
-
-  @override
-  State<_AuthRequestForm<C>> createState() {
-    return _AuthRequestFormState<C>();
-  }
-}
-
-final class _AuthRequestFormState<C extends AuthRequestCubit>
-    extends State<_AuthRequestForm<C>>
-    with _AuthRequestFormMixin<C> {
-  @override
-  Widget build(BuildContext context) {
-    return MultiBlocListener(
-      listeners: [
-        BlocListener<AuthCubit, AuthState>(listener: _onSessionChanged),
-        BlocListener<C, AuthRequestState>(listener: _onRequestChanged),
-      ],
-      child: _AuthRequestView<C>(
-        kind: _kind,
-        formKey: _formKey,
-        fullName: _fullName,
-        email: _email,
-        password: _password,
-        confirmation: _confirmation,
-        onSubmit: _submit,
-        busyStateChanged: _busyStateChanged,
-      ),
-    );
-  }
-}
-
-/// Owns password visibility without rebuilding or replacing its controller.
-final class _AuthPasswordField extends StatefulWidget {
-  const _AuthPasswordField({
-    required this.label,
-    required this.controller,
-    required this.enabled,
-    required this.validator,
-    required this.fieldKey,
-    required this.autofillHints,
-    required this.textInputAction,
-    required this.onSubmitted,
-    this.helper,
-    this.showPrefix = false,
-  });
-  final String label;
-  final TextEditingController controller;
-  final bool enabled;
-  final String? Function(String?) validator;
-  final Key fieldKey;
-  final Iterable<String> autofillHints;
-  final TextInputAction textInputAction;
-  final VoidCallback? onSubmitted;
-  final String? helper;
-  final bool showPrefix;
-
-  @override
-  State<_AuthPasswordField> createState() {
-    return _AuthPasswordFieldState();
-  }
-}
-
-final class _AuthPasswordFieldState extends State<_AuthPasswordField> {
-  late bool _obscured;
-
-  @override
-  void initState() {
-    super.initState();
-    _obscured = true;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AppTextField(
-      label: widget.label,
-      controller: widget.controller,
-      enabled: widget.enabled,
-      validator: widget.validator,
-      fieldKey: widget.fieldKey,
-      autofillHints: widget.autofillHints,
-      textInputAction: widget.textInputAction,
-      onSubmitted: widget.onSubmitted,
-      helper: widget.helper,
-      obscureText: _obscured,
-      prefixIconAsset: widget.showPrefix ? Assets.images.auth.lock : null,
-      suffix: _AuthPasswordSuffix(
-        obscured: _obscured,
-        enabled: widget.enabled,
-        onPressed: _toggleObscured,
-      ),
-    );
-  }
-
-  void _toggleObscured() {
-    setState(() {
-      _obscured = !_obscured;
-    });
   }
 }

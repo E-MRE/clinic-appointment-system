@@ -4,7 +4,7 @@ import 'package:clinic_appointment_system/core/theme/app_radius.dart';
 import 'package:clinic_appointment_system/core/theme/app_sizes.dart';
 import 'package:clinic_appointment_system/core/theme/app_typography.dart';
 import 'package:clinic_appointment_system/core/theme/appointment_status_colors.dart';
-import 'package:clinic_appointment_system/core/theme/breakpoints.dart';
+import 'package:clinic_appointment_system/core/theme/screen_size.dart';
 import 'package:flutter/material.dart';
 
 /// Contract for the application themes.

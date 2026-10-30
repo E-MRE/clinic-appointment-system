@@ -1,4 +1,5 @@
 import 'package:clinic_appointment_system/core/theme/breakpoints.dart';
+import 'package:clinic_appointment_system/core/theme/screen_size.dart';
 import 'package:flutter/widgets.dart';
 
 /// Convenience access: `context.screenSize`.

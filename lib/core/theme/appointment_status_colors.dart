@@ -1,16 +1,6 @@
+import 'package:clinic_appointment_system/core/theme/appointment_status.dart';
 import 'package:clinic_appointment_system/generated/colors.gen.dart';
 import 'package:flutter/material.dart';
-
-/// Appointment status shown in the UI.
-// TODO: replaced by the domain appointment status in a later issue.
-enum AppointmentStatus {
-  pending,
-  approved,
-  rejected,
-  completed,
-  noShow,
-  cancelled,
-}
 
 /// Background and foreground color of a status badge.
 typedef StatusColorPair = ({Color bg, Color fg});

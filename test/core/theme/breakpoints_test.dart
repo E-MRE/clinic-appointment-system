@@ -1,4 +1,5 @@
 import 'package:clinic_appointment_system/core/theme/breakpoints.dart';
+import 'package:clinic_appointment_system/core/theme/screen_size.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -17,7 +18,7 @@ void main() {
     expect(BreakpointsConstants.resolve(1400, 480), ScreenSize.desktop);
   });
 
-  test('ScreenSizeExtension helpers and select match active variant', () {
+  test('ScreenSize helpers and select match active variant', () {
     expect(ScreenSize.mobile.isMobile, isTrue);
     expect(ScreenSize.mobile.isTablet, isFalse);
     expect(ScreenSize.mobile.isDesktop, isFalse);

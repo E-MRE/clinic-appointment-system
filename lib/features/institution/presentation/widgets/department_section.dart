@@ -23,6 +23,8 @@ part 'department_rows.dart';
 part 'department_add_row.dart';
 part 'department_save_error.dart';
 part 'department_edit_content.dart';
+part 'department_section_content.dart';
+part 'department_edit_dialog.dart';
 
 /// Branch departments with inline create and row edit actions.
 final class DepartmentSection extends StatelessWidget {
@@ -35,94 +37,5 @@ final class DepartmentSection extends StatelessWidget {
       create: (_) => AppDependency.injector.get<DepartmentSaveCubit>(),
       child: _DepartmentSectionContent(branchId: branchId),
     );
-  }
-}
-
-/// Connects department actions to the section's request Cubit.
-final class _DepartmentSectionContent extends StatefulWidget {
-  const _DepartmentSectionContent({required this.branchId});
-
-  final String branchId;
-
-  @override
-  State<_DepartmentSectionContent> createState() => _DepartmentSectionState();
-}
-
-final class _DepartmentSectionState extends State<_DepartmentSectionContent>
-    with _DepartmentSectionStateMixin {
-  @override
-  Widget build(BuildContext context) {
-    return AppSurface(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          AppText.sectionTitle(LocaleKeys.institution_departments.tr()),
-          const EmptySize.s12Height(),
-          const _DepartmentList(),
-          const EmptySize.s12Height(),
-          _DepartmentAddRow(controller: controller, onAdd: add),
-          const _DepartmentSaveError(),
-        ],
-      ),
-    );
-  }
-}
-
-/// Edits one department name and shows request feedback.
-final class _DepartmentEditDialog extends StatefulWidget {
-  const _DepartmentEditDialog({required this.item});
-
-  final Department item;
-
-  @override
-  State<_DepartmentEditDialog> createState() => _DepartmentEditDialogState();
-}
-
-final class _DepartmentEditDialogState extends State<_DepartmentEditDialog> {
-  late final TextEditingController controller;
-
-  @override
-  void initState() {
-    super.initState();
-    controller = TextEditingController(text: widget.item.name);
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<DepartmentSaveCubit, InstitutionSaveState<Department>>(
-      builder: (context, state) => AlertDialog(
-        title: AppText.sectionTitle(LocaleKeys.institution_departments.tr()),
-        content: _DepartmentEditContent(controller: controller, state: state),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: AppText.label(LocaleKeys.institution_cancel.tr()),
-          ),
-          FilledButton(
-            onPressed: state is InstitutionSaveSaving<Department>
-                ? null
-                : _save,
-            child: AppText.label(
-              LocaleKeys.institution_save.tr(),
-              tone: TextTone.onPrimary,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _save() async {
-    final save = context.read<DepartmentSaveCubit>();
-    await save.update(widget.item, controller.text.trim());
-    if (mounted && save.state is InstitutionSaveSaved<Department>) {
-      Navigator.pop(context);
-    }
   }
 }

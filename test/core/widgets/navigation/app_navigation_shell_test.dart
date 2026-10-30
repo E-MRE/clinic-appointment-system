@@ -1,6 +1,6 @@
-import 'package:clinic_appointment_system/core/theme/breakpoints.dart';
 import 'package:clinic_appointment_system/core/theme/dark_theme.dart';
 import 'package:clinic_appointment_system/core/theme/light_theme.dart';
+import 'package:clinic_appointment_system/core/theme/screen_size.dart';
 import 'package:clinic_appointment_system/core/widgets/navigation/app_navigation_shell.dart';
 import 'package:clinic_appointment_system/generated/assets.gen.dart';
 import 'package:flutter/material.dart';
