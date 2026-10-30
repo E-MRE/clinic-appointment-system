@@ -6,7 +6,7 @@ import 'package:clinic_appointment_system/features/medical_services/domain/enums
 import 'package:clinic_appointment_system/features/medical_services/domain/enums/radiology_modality.dart';
 
 /// Diagnostic imaging medical service.
-final class RadiologyService extends MedicalService {
+base class RadiologyService extends MedicalService {
   /// Creates a radiology imaging service.
   const RadiologyService({
     required super.id,

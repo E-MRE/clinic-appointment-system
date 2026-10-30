@@ -5,7 +5,7 @@ import 'package:clinic_appointment_system/features/medical_services/domain/enums
 import 'package:clinic_appointment_system/features/medical_services/domain/value_objects/fasting_hours.dart';
 
 /// Laboratory diagnostic test service.
-final class LabTest extends MedicalService {
+base class LabTest extends MedicalService {
   /// Creates a laboratory test service.
   const LabTest({
     required super.id,

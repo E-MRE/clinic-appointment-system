@@ -38,6 +38,12 @@ import 'package:clinic_appointment_system/features/institution/presentation/cubi
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/department_list_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/department_save_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/working_hours_editor_cubit.dart';
+import 'package:clinic_appointment_system/features/medical_services/data/models/medical_service_model_factory.dart';
+import 'package:clinic_appointment_system/features/medical_services/data/repositories/firestore_medical_service_repository.dart';
+import 'package:clinic_appointment_system/features/medical_services/domain/repositories/medical_service_repository.dart';
+import 'package:clinic_appointment_system/features/medical_services/domain/usecases/create_medical_service_use_case.dart';
+import 'package:clinic_appointment_system/features/medical_services/domain/usecases/update_medical_service_use_case.dart';
+import 'package:clinic_appointment_system/features/medical_services/domain/usecases/watch_medical_services_use_case.dart';
 import 'package:clinic_appointment_system/features/users/data/models/user_model_factory.dart';
 import 'package:clinic_appointment_system/features/users/data/repositories/firestore_user_repository.dart';
 import 'package:clinic_appointment_system/features/users/domain/repositories/user_repository.dart';
@@ -69,6 +75,15 @@ mixin AppDependencyRegisterMixin {
     injector.registerLazySingleton<DepartmentRepository>(
       () => FirestoreDepartmentRepository(injector.get<FirebaseFirestore>()),
     );
+    injector.registerLazySingleton<MedicalServiceModelFactory>(
+      () => const MedicalServiceModelFactory(),
+    );
+    injector.registerLazySingleton<MedicalServiceRepository>(
+      () => FirestoreMedicalServiceRepository(
+        injector.get<FirebaseFirestore>(),
+        injector.get<MedicalServiceModelFactory>(),
+      ),
+    );
     injector.registerLazySingleton<WatchClinicsUseCase>(
       () => WatchClinicsUseCase(injector.get<ClinicRepository>()),
     );
@@ -95,6 +110,18 @@ mixin AppDependencyRegisterMixin {
     );
     injector.registerLazySingleton<UpdateDepartmentUseCase>(
       () => UpdateDepartmentUseCase(injector.get<DepartmentRepository>()),
+    );
+    injector.registerLazySingleton<WatchMedicalServicesUseCase>(
+      () =>
+          WatchMedicalServicesUseCase(injector.get<MedicalServiceRepository>()),
+    );
+    injector.registerLazySingleton<CreateMedicalServiceUseCase>(
+      () =>
+          CreateMedicalServiceUseCase(injector.get<MedicalServiceRepository>()),
+    );
+    injector.registerLazySingleton<UpdateMedicalServiceUseCase>(
+      () =>
+          UpdateMedicalServiceUseCase(injector.get<MedicalServiceRepository>()),
     );
     injector.registerLazySingleton<AuthExceptionMapper>(
       FirebaseAuthExceptionMapper.new,

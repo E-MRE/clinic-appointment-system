@@ -3,7 +3,7 @@ import 'package:clinic_appointment_system/features/medical_services/domain/entit
 import 'package:clinic_appointment_system/features/medical_services/domain/enums/medical_service_kind.dart';
 
 /// Doctor consultation or general checkup service.
-final class Examination extends MedicalService {
+base class Examination extends MedicalService {
   /// Creates an examination service.
   const Examination({
     required super.id,

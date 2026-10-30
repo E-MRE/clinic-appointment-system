@@ -9,6 +9,9 @@ abstract final class FirestoreConstants {
   /// Collection containing branch departments.
   static const String departments = 'departments';
 
+  /// Collection containing medical services.
+  static const String services = 'services';
+
   /// Collection containing user profiles.
   static const String users = 'users';
 
@@ -18,8 +21,41 @@ abstract final class FirestoreConstants {
   /// Field storing the branch that owns a department.
   static const String branchId = 'branchId';
 
+  /// Field storing the department that owns a medical service.
+  static const String departmentId = 'departmentId';
+
   /// Field storing an institution record's display name.
   static const String name = 'name';
+
+  /// Field storing the category of medical service.
+  static const String kind = 'kind';
+
+  /// Field storing service duration in minutes.
+  static const String durationMinutes = 'durationMinutes';
+
+  /// Field storing service fee in kurus.
+  static const String feeKurus = 'feeKurus';
+
+  /// Field storing imaging modality for radiology services.
+  static const String modality = 'modality';
+
+  /// Field storing preparation instructions for radiology procedures.
+  static const String preparationNote = 'preparationNote';
+
+  /// Field indicating whether fasting is required before a laboratory test.
+  static const String requiresFasting = 'requiresFasting';
+
+  /// Field storing fasting hours range for a laboratory test.
+  static const String fastingHours = 'fastingHours';
+
+  /// Field storing the minimum value in a numeric range.
+  static const String minimum = 'min';
+
+  /// Field storing the maximum value in a numeric range.
+  static const String maximum = 'max';
+
+  /// Field storing laboratory test result turnaround timeframe.
+  static const String resultTime = 'resultTime';
 
   /// Field storing a branch's physical address.
   static const String address = 'address';
