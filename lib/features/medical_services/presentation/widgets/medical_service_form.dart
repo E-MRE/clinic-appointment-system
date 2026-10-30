@@ -19,7 +19,7 @@ import 'package:clinic_appointment_system/features/medical_services/domain/enums
 import 'package:clinic_appointment_system/features/medical_services/domain/mixins/medical_service_input_validation_mixin.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_form_cubit.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_save_cubit.dart';
-import 'package:clinic_appointment_system/features/medical_services/presentation/enums/medical_service_form_kind.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/extensions/medical_service_kind_form_strategy.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/models/medical_service_form_values.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/visitors/medical_service_form_values_visitor.dart';
 import 'package:easy_localization/easy_localization.dart';

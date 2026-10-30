@@ -9,6 +9,6 @@ final class _MedicalServiceFormKindSection extends StatelessWidget {
     final kind = context.select<MedicalServiceFormCubit, MedicalServiceKind>(
       (c) => c.state.kind,
     );
-    return MedicalServiceFormKind.of(kind).section();
+    return kind.formStrategy.section();
   }
 }

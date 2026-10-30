@@ -7,25 +7,25 @@ import 'package:clinic_appointment_system/features/medical_services/domain/enums
 import 'package:clinic_appointment_system/features/medical_services/domain/enums/medical_service_kind.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/enums/radiology_modality.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/value_objects/fasting_hours.dart';
-import 'package:clinic_appointment_system/features/medical_services/presentation/enums/medical_service_form_kind.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/extensions/medical_service_kind_form_strategy.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/models/medical_service_form_values.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/strategies/examination_form_strategy.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/strategies/lab_test_form_strategy.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/strategies/radiology_form_strategy.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('MedicalServiceFormKind', () {
-    test('resolves enum from domain kind', () {
+  group('MedicalServiceFormStrategy', () {
+    test('resolves the strategy of each domain kind', () {
       expect(
-        MedicalServiceFormKind.of(MedicalServiceKind.examination),
-        MedicalServiceFormKind.examination,
+        MedicalServiceKind.examination.formStrategy,
+        isA<ExaminationFormStrategy>(),
       );
       expect(
-        MedicalServiceFormKind.of(MedicalServiceKind.radiology),
-        MedicalServiceFormKind.radiology,
+        MedicalServiceKind.radiology.formStrategy,
+        isA<RadiologyFormStrategy>(),
       );
-      expect(
-        MedicalServiceFormKind.of(MedicalServiceKind.lab),
-        MedicalServiceFormKind.lab,
-      );
+      expect(MedicalServiceKind.lab.formStrategy, isA<LabTestFormStrategy>());
     });
 
     test('builds Examination from form values', () {
@@ -37,7 +37,7 @@ void main() {
         feeText: '1200',
       );
 
-      final service = MedicalServiceFormKind.examination.build(
+      final service = const ExaminationFormStrategy().build(
         values,
         id: 's-exam',
         branchId: 'b-1',
@@ -63,7 +63,7 @@ void main() {
         preparationNote: '  Remove jewelry  ',
       );
 
-      final service = MedicalServiceFormKind.radiology.build(
+      final service = const RadiologyFormStrategy().build(
         values,
         id: 's-rad',
         branchId: 'b-1',
@@ -87,7 +87,7 @@ void main() {
         preparationNote: '   ',
       );
 
-      final service = MedicalServiceFormKind.radiology.build(
+      final service = const RadiologyFormStrategy().build(
         values,
         id: 's-rad',
         branchId: 'b-1',
@@ -108,7 +108,7 @@ void main() {
         resultTime: LabResultTime.sameDay,
       );
 
-      final service = MedicalServiceFormKind.lab.build(
+      final service = const LabTestFormStrategy().build(
         values,
         id: 's-lab',
         branchId: 'b-1',
@@ -135,7 +135,7 @@ void main() {
           resultTime: LabResultTime.oneDay,
         );
 
-        final service = MedicalServiceFormKind.lab.build(
+        final service = const LabTestFormStrategy().build(
           values,
           id: 's-lab',
           branchId: 'b-1',
@@ -158,7 +158,7 @@ void main() {
           feeText: '500',
         );
         expect(
-          () => MedicalServiceFormKind.examination.build(
+          () => const ExaminationFormStrategy().build(
             invalidDuration,
             id: 's1',
             branchId: 'b1',
@@ -180,7 +180,7 @@ void main() {
           feeText: '0',
         );
         expect(
-          () => MedicalServiceFormKind.examination.build(
+          () => const ExaminationFormStrategy().build(
             invalidFee,
             id: 's1',
             branchId: 'b1',
@@ -204,7 +204,7 @@ void main() {
           fastingText: '12-8',
         );
         expect(
-          () => MedicalServiceFormKind.lab.build(
+          () => const LabTestFormStrategy().build(
             invalidFasting,
             id: 's1',
             branchId: 'b1',
