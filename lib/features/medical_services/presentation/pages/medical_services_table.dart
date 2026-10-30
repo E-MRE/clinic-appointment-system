@@ -56,26 +56,12 @@ final class _MedicalServicesTable extends StatelessWidget {
         alignment: AppTableAlignment.end,
         cellBuilder: (cellContext, service) {
           return IconButton(
-            onPressed: () => _onEdit(cellContext, service),
+            onPressed: () => cellContext.openServiceEdit(service),
             tooltip: LocaleKeys.services_editTooltip.tr(),
             icon: const Icon(Icons.edit_outlined),
           );
         },
       ),
     ];
-  }
-
-  void _onEdit(BuildContext context, MedicalService service) {
-    if (context.screenSize.isDesktop) {
-      context.read<MedicalServiceEditorCubit>().edit(service);
-    } else if (context.screenSize.isTablet) {
-      _MedicalServiceFormDialog.show(
-        context,
-        service: service,
-        branchId: service.branchId,
-      );
-    } else {
-      context.go(AppRoutes.serviceEdit(service.id));
-    }
   }
 }

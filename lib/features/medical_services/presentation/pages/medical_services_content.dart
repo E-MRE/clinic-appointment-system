@@ -29,13 +29,6 @@ final class _MedicalServicesContent extends StatelessWidget {
 
   void _onAdd(BuildContext context) {
     final branchId = InstitutionSelectionScope.read(context).branchId;
-    if (branchId == null) return;
-    if (context.screenSize.isDesktop) {
-      context.read<MedicalServiceEditorCubit>().startCreate();
-    } else if (context.screenSize.isTablet) {
-      _MedicalServiceFormDialog.show(context, branchId: branchId);
-    } else {
-      context.go(AppRoutes.serviceNew);
-    }
+    if (branchId != null) context.openServiceCreate(branchId);
   }
 }

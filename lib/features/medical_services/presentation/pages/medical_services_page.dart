@@ -45,6 +45,7 @@ part 'medical_services_desktop_empty.dart';
 part 'medical_services_desktop_layout.dart';
 part 'medical_services_desktop_panel.dart';
 part 'medical_services_desktop_panel_body.dart';
+part 'medical_services_editor_navigation.dart';
 part 'medical_services_fab.dart';
 part 'medical_services_filter_chips_row.dart';
 part 'medical_services_filtered_empty.dart';

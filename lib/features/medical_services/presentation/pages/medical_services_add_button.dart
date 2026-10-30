@@ -9,22 +9,14 @@ final class _MedicalServicesAddButton extends StatelessWidget {
     final branchId = InstitutionSelectionScope.of(context).branchId;
 
     return FilledButton.icon(
-      onPressed: branchId == null ? null : () => _onAdd(context, branchId),
+      onPressed: branchId == null
+          ? null
+          : () => context.openServiceCreate(branchId),
       icon: const Icon(Icons.add),
       label: AppText.label(
         LocaleKeys.services_addService.tr(),
         tone: TextTone.onPrimary,
       ),
     );
-  }
-
-  void _onAdd(BuildContext context, String branchId) {
-    if (context.screenSize.isDesktop) {
-      context.read<MedicalServiceEditorCubit>().startCreate();
-    } else if (context.screenSize.isTablet) {
-      _MedicalServiceFormDialog.show(context, branchId: branchId);
-    } else {
-      context.go(AppRoutes.serviceNew);
-    }
   }
 }

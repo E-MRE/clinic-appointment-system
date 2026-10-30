@@ -71,44 +71,12 @@ final class MedicalServiceForm extends StatefulWidget {
 
 final class _MedicalServiceFormState extends State<MedicalServiceForm>
     with _MedicalServiceFormStateMixin {
-  late final GlobalKey<FormState> _formKey;
-  late final MedicalServiceFormCubit _formCubit;
-  late final MedicalServiceSaveCubit _saveCubit;
-
-  @override
-  GlobalKey<FormState> get formKey => _formKey;
-
-  @override
-  MedicalServiceFormCubit get formCubit => _formCubit;
-
-  @override
-  MedicalServiceSaveCubit get saveCubit => _saveCubit;
-
-  @override
-  void initState() {
-    super.initState();
-    _formKey = GlobalKey<FormState>();
-    final initialValues =
-        widget.service?.accept(const MedicalServiceFormValuesVisitor()) ??
-        const MedicalServiceFormValues.empty();
-    _formCubit = AppDependency.injector.get<MedicalServiceFormCubit>()
-      ..initialize(initialValues);
-    _saveCubit = AppDependency.injector.get<MedicalServiceSaveCubit>();
-  }
-
-  @override
-  void dispose() {
-    _formCubit.close();
-    _saveCubit.close();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<MedicalServiceFormCubit>.value(value: _formCubit),
-        BlocProvider<MedicalServiceSaveCubit>.value(value: _saveCubit),
+        BlocProvider<MedicalServiceFormCubit>.value(value: formCubit),
+        BlocProvider<MedicalServiceSaveCubit>.value(value: saveCubit),
       ],
       child:
           BlocListener<
@@ -117,7 +85,7 @@ final class _MedicalServiceFormState extends State<MedicalServiceForm>
           >(
             listener: onSaveState,
             child: _MedicalServiceFormBody(
-              formKey: _formKey,
+              formKey: formKey,
               isEditing: widget.isEditing,
               onSave: submit,
               onCancel: widget.onCancel,

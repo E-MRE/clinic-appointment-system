@@ -1,15 +1,29 @@
 part of 'medical_service_form.dart';
 
-/// State lifecycle and persistence dispatch helpers for [MedicalServiceForm].
+/// Owns the form key and cubits of [MedicalServiceForm] and dispatches saves.
 mixin _MedicalServiceFormStateMixin on State<MedicalServiceForm> {
-  /// Underlying form key validating input controls.
-  GlobalKey<FormState> get formKey;
+  late final GlobalKey<FormState> formKey;
+  late final MedicalServiceFormCubit formCubit;
+  late final MedicalServiceSaveCubit saveCubit;
 
-  /// Cubit holding interactive form values.
-  MedicalServiceFormCubit get formCubit;
+  @override
+  void initState() {
+    super.initState();
+    formKey = GlobalKey<FormState>();
+    final initialValues =
+        widget.service?.accept(const MedicalServiceFormValuesVisitor()) ??
+        const MedicalServiceFormValues.empty();
+    formCubit = AppDependency.injector.get<MedicalServiceFormCubit>()
+      ..initialize(initialValues);
+    saveCubit = AppDependency.injector.get<MedicalServiceSaveCubit>();
+  }
 
-  /// Cubit managing persistence requests.
-  MedicalServiceSaveCubit get saveCubit;
+  @override
+  void dispose() {
+    formCubit.close();
+    saveCubit.close();
+    super.dispose();
+  }
 
   /// Dispatches the newly saved service to the caller on success.
   void onSaveState(
