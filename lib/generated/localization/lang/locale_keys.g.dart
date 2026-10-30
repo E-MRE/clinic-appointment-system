@@ -48,6 +48,85 @@ abstract class LocaleKeys {
   static const services_examination = 'services.examination';
   static const services_radiology = 'services.radiology';
   static const services_labTest = 'services.labTest';
+  static const services_addService = 'services.addService';
+  static const services_editTooltip = 'services.editTooltip';
+  static const services_filterEmpty = 'services.filterEmpty';
+  static const services_emptyTitle = 'services.emptyTitle';
+  static const services_emptyMessage = 'services.emptyMessage';
+  static const services_noBranchTitle = 'services.noBranchTitle';
+  static const services_noBranchMessage = 'services.noBranchMessage';
+  static const services_goToInstitution = 'services.goToInstitution';
+  static const services_selectBranch = 'services.selectBranch';
+  static const services_branch = 'services.branch';
+  static const services_otherDepartment = 'services.otherDepartment';
+  static const services_unknownDepartment = 'services.unknownDepartment';
+  static const services_durationMinutes = 'services.durationMinutes';
+  static const services_fastingHoursSingle = 'services.fastingHoursSingle';
+  static const services_fastingHoursRange = 'services.fastingHoursRange';
+  static const services_desktopSubtitle = 'services.desktopSubtitle';
+  static const services_tabletSubtitle = 'services.tabletSubtitle';
+  static const services_mobileSubtitle = 'services.mobileSubtitle';
+  static const services_chipAll = 'services.chipAll';
+  static const services_chipExamination = 'services.chipExamination';
+  static const services_chipRadiology = 'services.chipRadiology';
+  static const services_chipLab = 'services.chipLab';
+  static const services_columns_service = 'services.columns.service';
+  static const services_columns_department = 'services.columns.department';
+  static const services_columns_duration = 'services.columns.duration';
+  static const services_columns_fee = 'services.columns.fee';
+  static const services_columns_actions = 'services.columns.actions';
+  static const services_columns = 'services.columns';
+  static const services_kinds_examination = 'services.kinds.examination';
+  static const services_kinds_radiology = 'services.kinds.radiology';
+  static const services_kinds_lab = 'services.kinds.lab';
+  static const services_kinds = 'services.kinds';
+  static const services_radiologyModality_xRay =
+      'services.radiologyModality.xRay';
+  static const services_radiologyModality_ultrasound =
+      'services.radiologyModality.ultrasound';
+  static const services_radiologyModality_mri =
+      'services.radiologyModality.mri';
+  static const services_radiologyModality_ct = 'services.radiologyModality.ct';
+  static const services_radiologyModality = 'services.radiologyModality';
+  static const services_labResultTime_sameDay =
+      'services.labResultTime.sameDay';
+  static const services_labResultTime_oneDay = 'services.labResultTime.oneDay';
+  static const services_labResultTime_twoDays =
+      'services.labResultTime.twoDays';
+  static const services_labResultTime_threeDays =
+      'services.labResultTime.threeDays';
+  static const services_labResultTime_oneWeek =
+      'services.labResultTime.oneWeek';
+  static const services_labResultTime = 'services.labResultTime';
+  static const services_summary_examination_tableSubtitle =
+      'services.summary.examination.tableSubtitle';
+  static const services_summary_examination_typeLine =
+      'services.summary.examination.typeLine';
+  static const services_summary_examination_detail =
+      'services.summary.examination.detail';
+  static const services_summary_examination = 'services.summary.examination';
+  static const services_summary_radiology_typeLine =
+      'services.summary.radiology.typeLine';
+  static const services_summary_radiology_tableSubtitleWithNote =
+      'services.summary.radiology.tableSubtitleWithNote';
+  static const services_summary_radiology_tableSubtitleNoNote =
+      'services.summary.radiology.tableSubtitleNoNote';
+  static const services_summary_radiology_detailWithNote =
+      'services.summary.radiology.detailWithNote';
+  static const services_summary_radiology_detailNoNote =
+      'services.summary.radiology.detailNoNote';
+  static const services_summary_radiology = 'services.summary.radiology';
+  static const services_summary_lab_typeLine = 'services.summary.lab.typeLine';
+  static const services_summary_lab_fastingWithHours =
+      'services.summary.lab.fastingWithHours';
+  static const services_summary_lab_fastingNone =
+      'services.summary.lab.fastingNone';
+  static const services_summary_lab_resultFormat =
+      'services.summary.lab.resultFormat';
+  static const services_summary_lab_resultSameDay =
+      'services.summary.lab.resultSameDay';
+  static const services_summary_lab = 'services.summary.lab';
+  static const services_summary = 'services.summary';
   static const services = 'services';
   static const navigation_notFound = 'navigation.notFound';
   static const navigation_goHome = 'navigation.goHome';

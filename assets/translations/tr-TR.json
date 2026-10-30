@@ -49,7 +49,75 @@
     "all": "Tümü",
     "examination": "Muayene",
     "radiology": "Radyoloji",
-    "labTest": "Laboratuvar Testi"
+    "labTest": "Laboratuvar Testi",
+    "addService": "Hizmet ekle",
+    "editTooltip": "Düzenle",
+    "filterEmpty": "Bu türde hizmet yok",
+    "emptyTitle": "Bu şubede henüz hizmet yok",
+    "emptyMessage": "Hizmet ekleyerek başlayabilirsiniz.",
+    "noBranchTitle": "Önce bir şube ekleyin",
+    "noBranchMessage": "Hizmetleri görüntülemek ve eklemek için önce bir şube oluşturun.",
+    "goToInstitution": "Kurum ve şubeler",
+    "selectBranch": "Şube seçin",
+    "branch": "Şube",
+    "otherDepartment": "Diğer",
+    "unknownDepartment": "—",
+    "durationMinutes": "{} dk",
+    "fastingHoursSingle": "{} saat",
+    "fastingHoursRange": "{}–{} saat",
+    "desktopSubtitle": "{} hizmet · süre ve ücret randevu ekranında hastaya gösterilir",
+    "tabletSubtitle": "{} muayene · {} radyoloji · {} laboratuvar",
+    "mobileSubtitle": "{} hizmet · {} bölüm",
+    "chipAll": "Tümü · {}",
+    "chipExamination": "Muayene · {}",
+    "chipRadiology": "Radyoloji · {}",
+    "chipLab": "Laboratuvar · {}",
+    "columns": {
+      "service": "Hizmet",
+      "department": "Bölüm",
+      "duration": "Süre",
+      "fee": "Ücret",
+      "actions": "İşlemler"
+    },
+    "kinds": {
+      "examination": "Muayene",
+      "radiology": "Radyoloji",
+      "lab": "Laboratuvar"
+    },
+    "radiologyModality": {
+      "xRay": "Röntgen",
+      "ultrasound": "Ultrason",
+      "mri": "MR",
+      "ct": "BT"
+    },
+    "labResultTime": {
+      "sameDay": "Aynı gün",
+      "oneDay": "1 gün",
+      "twoDays": "2 gün",
+      "threeDays": "3 gün",
+      "oneWeek": "1 hafta"
+    },
+    "summary": {
+      "examination": {
+        "tableSubtitle": "Muayene",
+        "typeLine": "Muayene",
+        "detail": "Doktor muayenesi"
+      },
+      "radiology": {
+        "typeLine": "Radyoloji · {}",
+        "tableSubtitleWithNote": "{} · {}",
+        "tableSubtitleNoNote": "{} · hazırlık gerekmez",
+        "detailWithNote": "Hazırlık: {}",
+        "detailNoNote": "Hazırlık gerekmez"
+      },
+      "lab": {
+        "typeLine": "Laboratuvar",
+        "fastingWithHours": "Aç: {}",
+        "fastingNone": "Açlık gerekmez",
+        "resultFormat": "Sonuç: {}",
+        "resultSameDay": "aynı gün"
+      }
+    }
   },
   "navigation": {
     "notFound": "Sayfa bulunamadı",
