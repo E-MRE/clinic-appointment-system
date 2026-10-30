@@ -25,26 +25,22 @@ final class _AuthFormFields extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (kind.isRegistration) ...[
-          _AuthNameField(controller: fullName, enabled: enabled),
-          const EmptySize.s16Height(),
-        ],
+        if (kind.isRegistration)
+          _AuthNameGroup(controller: fullName, enabled: enabled),
         _AuthEmailField(
           kind: kind,
           controller: email,
           enabled: enabled,
           onSubmit: onSubmit,
         ),
-        if (kind.hasPassword) ...[
-          const EmptySize.s16Height(),
-          _AuthPasswordFields(
+        if (kind.hasPassword)
+          _AuthPasswordGroup(
             kind: kind,
             password: password,
             confirmation: confirmation,
             enabled: enabled,
             onSubmit: onSubmit,
           ),
-        ],
       ],
     );
   }

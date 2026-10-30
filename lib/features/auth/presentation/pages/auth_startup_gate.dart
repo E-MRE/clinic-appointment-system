@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+part 'auth_startup_gate_content.dart';
+
 /// Holds the current route behind Splash until session restoration completes.
 /// Route-specific access rules are applied separately by the router.
 final class AuthStartupGate extends StatelessWidget {
@@ -29,49 +31,12 @@ final class AuthStartupGate extends StatelessWidget {
     return ListenableBuilder(
       listenable: router.routeInformationProvider,
       builder: (context, _) {
-        return BlocBuilder<AuthCubit, AuthState>(
-          builder: (context, state) {
-            if (state is AuthInitial || state is AuthLoading) {
-              return const SplashPage();
-            }
-
-            if (state is AuthFailure) {
-              return StartupErrorPage(
-                kind: StartupErrorKind.from(state.errorCode),
-                onRetry: context.read<AuthCubit>().retry,
-                onGoHome: onGoHome,
-              );
-            }
-
-            if (state is AuthProfileFailure) {
-              final isAuthRoute = _checkAuthRoute();
-
-              final isNotProfileMissing =
-                  !(state.errorCode == UserErrorCode.profileMissing &&
-                      isAuthRoute);
-
-              if (isNotProfileMissing) {
-                return StartupErrorPage(
-                  onRetry: context.read<AuthCubit>().retry,
-                  onSignOut: context.read<AuthCubit>().signOut,
-                  kind: StartupErrorKind.fromProfile(state.errorCode),
-                  onGoHome: onGoHome,
-                );
-              }
-            }
-
-            return child;
-          },
+        return _AuthStartupGateContent(
+          onGoHome: onGoHome,
+          router: router,
+          child: child,
         );
       },
     );
-  }
-
-  bool _checkAuthRoute() {
-    final path = router.routeInformationProvider.value.uri.path;
-
-    return path == AppRoutes.signIn ||
-        path == AppRoutes.signUp ||
-        path == AppRoutes.passwordReset;
   }
 }

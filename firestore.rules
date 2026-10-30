@@ -61,5 +61,82 @@ service cloud.firestore {
           && isFilledString(request.resource.data.fullName);
       }
     }
+
+    // clinics/{clinicId}: named institutions that own physical branches.
+    match /clinics/{clinicId} {
+      allow read: if isSignedIn();
+      allow create, update: if isAdmin() && isValidClinic(request.resource.data);
+      allow delete: if false;
+
+      function isValidClinic(data) {
+        return data.keys().hasOnly(['name'])
+          && data.keys().hasAll(['name'])
+          && isFilledString(data.name);
+      }
+    }
+
+    // branches/{branchId}: clinic locations with weekday working hours.
+    match /branches/{branchId} {
+      allow read: if isSignedIn();
+      allow create: if isAdmin() && isValidBranch(request.resource.data);
+      allow update: if isAdmin() && isValidBranchUpdate(request.resource.data);
+      allow delete: if false;
+
+      function isValidBranch(data) {
+        return data.keys().hasOnly([
+            'clinicId', 'name', 'address', 'workingHours'
+          ])
+          && data.keys().hasAll([
+            'clinicId', 'name', 'address', 'workingHours'
+          ])
+          && data.clinicId is string
+          && exists(/databases/$(database)/documents/clinics/$(data.clinicId))
+          && isFilledString(data.name)
+          && isFilledString(data.address)
+          && isValidWorkingHours(data.workingHours);
+      }
+
+      function isValidWorkingHours(workingHours) {
+        return workingHours is map
+          && workingHours.keys().hasOnly([
+            'monday', 'tuesday', 'wednesday', 'thursday',
+            'friday', 'saturday', 'sunday'
+          ])
+          && workingHours.keys().hasAll([
+            'monday', 'tuesday', 'wednesday', 'thursday',
+            'friday', 'saturday', 'sunday'
+          ])
+          && workingHours.monday is list
+          && workingHours.tuesday is list
+          && workingHours.wednesday is list
+          && workingHours.thursday is list
+          && workingHours.friday is list
+          && workingHours.saturday is list
+          && workingHours.sunday is list;
+      }
+
+      function isValidBranchUpdate(data) {
+        return isValidBranch(data)
+          && data.clinicId == resource.data.clinicId;
+      }
+    }
+
+    // departments/{departmentId}: medical units belonging to a branch.
+    match /departments/{departmentId} {
+      allow read: if isSignedIn();
+      allow create: if isAdmin() && isValidDepartment(request.resource.data);
+      allow update: if isAdmin()
+        && isValidDepartment(request.resource.data)
+        && request.resource.data.branchId == resource.data.branchId;
+      allow delete: if false;
+
+      function isValidDepartment(data) {
+        return data.keys().hasOnly(['branchId', 'name'])
+          && data.keys().hasAll(['branchId', 'name'])
+          && data.branchId is string
+          && exists(/databases/$(database)/documents/branches/$(data.branchId))
+          && isFilledString(data.name);
+      }
+    }
   }
 }

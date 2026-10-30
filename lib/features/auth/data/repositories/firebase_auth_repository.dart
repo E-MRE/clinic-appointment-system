@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:clinic_appointment_system/core/enums/auth_error_code.dart';
-import 'package:clinic_appointment_system/core/errors/app_exception.dart';
+import 'package:clinic_appointment_system/core/errors/auth_exception.dart';
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
 import 'package:clinic_appointment_system/core/errors/result.dart';
 import 'package:clinic_appointment_system/features/auth/domain/entities/auth_session.dart';
@@ -55,8 +55,12 @@ final class FirebaseAuthRepository implements AuthRepository {
         password: registration.password,
       );
       final session = _sessionFromCredential(result);
+      final user = result.user;
+      if (user == null) {
+        throw const AuthException(AuthErrorCode.unexpected);
+      }
       try {
-        await result.user!.updateDisplayName(registration.fullName.trim());
+        await user.updateDisplayName(registration.fullName.trim());
       } on Exception catch (_, stackTrace) {
         Error.throwWithStackTrace(
           const AuthException(AuthErrorCode.profileUpdateFailed),

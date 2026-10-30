@@ -32,11 +32,13 @@ final class _AuthPasswordField extends StatefulWidget {
 }
 
 final class _AuthPasswordFieldState extends State<_AuthPasswordField> {
-  bool _obscured = true;
+  late bool _obscured;
 
-  String get _suffixTooltip =>
-      (_obscured ? LocaleKeys.auth_showPassword : LocaleKeys.auth_hidePassword)
-          .translate();
+  @override
+  void initState() {
+    super.initState();
+    _obscured = true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,22 +54,11 @@ final class _AuthPasswordFieldState extends State<_AuthPasswordField> {
       helper: widget.helper,
       obscureText: _obscured,
       prefixIconAsset: widget.showPrefix ? Assets.images.auth.lock : null,
-      suffix: _buildSuffix(context),
-    );
-  }
-
-  IconButton _buildSuffix(BuildContext context) {
-    return IconButton(
-      iconSize: AppSizes.s20,
-      tooltip: _suffixTooltip,
-      onPressed: widget.enabled ? _toggleObscured : null,
-      icon: _obscured
-          ? SquareSvgIcon(
-              asset: Assets.images.auth.eye,
-              color: context.colorScheme.onSurfaceVariant,
-              size: AppSizes.s20,
-            )
-          : const Icon(Icons.visibility_off_outlined, size: AppSizes.s20),
+      suffix: _AuthPasswordSuffix(
+        obscured: _obscured,
+        enabled: widget.enabled,
+        onPressed: _toggleObscured,
+      ),
     );
   }
 

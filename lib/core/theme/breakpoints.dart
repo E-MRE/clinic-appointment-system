@@ -1,29 +1,4 @@
-/// Layout size class of the viewport.
-enum ScreenSize { mobile, tablet, desktop }
-
-/// Convenience helpers and value selection for [ScreenSize].
-extension ScreenSizeExtension on ScreenSize {
-  bool get isMobile {
-    return this == ScreenSize.mobile;
-  }
-
-  bool get isTablet {
-    return this == ScreenSize.tablet;
-  }
-
-  bool get isDesktop {
-    return this == ScreenSize.desktop;
-  }
-
-  /// Picks the value that belongs to this screen size.
-  T select<T>({required T mobile, required T tablet, required T desktop}) {
-    return switch (this) {
-      ScreenSize.mobile => mobile,
-      ScreenSize.tablet => tablet,
-      ScreenSize.desktop => desktop,
-    };
-  }
-}
+import 'package:clinic_appointment_system/core/theme/screen_size.dart';
 
 /// Responsive breakpoint thresholds and layout constants (logical pixels).
 final class BreakpointsConstants {

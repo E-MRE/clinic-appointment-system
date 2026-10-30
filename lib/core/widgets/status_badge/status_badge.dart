@@ -2,6 +2,8 @@ import 'package:clinic_appointment_system/core/theme/theme.dart';
 import 'package:clinic_appointment_system/core/widgets/status_badge/status_badge_variant.dart';
 import 'package:flutter/material.dart';
 
+part 'status_badge_content.dart';
+
 /// A compact pill that pairs a display label with status or theme colors.
 final class StatusBadge extends StatelessWidget {
   /// Creates a status badge with a translated display label.
@@ -20,9 +22,6 @@ final class StatusBadge extends StatelessWidget {
     final pair = status == null ? null : context.statusColors.resolve(status);
     final background = pair?.bg ?? _containerColor(colors);
     final foreground = pair?.fg ?? _contentColor(colors);
-    final badgeStyle = context.textTheme.labelSmall?.copyWith(
-      color: foreground,
-    );
     return Container(
       constraints: const BoxConstraints(minHeight: AppSizes.statusBadgeHeight),
       padding: const AppPadding.horizontalSm(),
@@ -30,15 +29,11 @@ final class StatusBadge extends StatelessWidget {
         color: background,
         borderRadius: const AppRadius.full(),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (variant.icon case final icon?) ...[
-            Icon(icon, size: AppSizes.statusIcon, color: foreground),
-            const EmptySize.s4Width(),
-          ],
-          Text(label, style: badgeStyle),
-        ],
+      child: _StatusBadgeContent(
+        label: label,
+        icon: variant.icon,
+        foreground: foreground,
+        style: context.textTheme.labelSmall?.copyWith(color: foreground),
       ),
     );
   }

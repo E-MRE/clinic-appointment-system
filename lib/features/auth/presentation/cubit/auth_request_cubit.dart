@@ -1,5 +1,5 @@
 import 'package:clinic_appointment_system/core/enums/auth_error_code.dart';
-import 'package:clinic_appointment_system/core/errors/app_exception.dart';
+import 'package:clinic_appointment_system/core/errors/auth_exception.dart';
 import 'package:clinic_appointment_system/core/errors/result.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_request_state.dart';
 import 'package:flutter/foundation.dart';

@@ -5,9 +5,9 @@ import 'package:go_router/go_router.dart';
 /// Pass the route's `pageKey` so stack changes keep the existing pages.
 final class FadeTransitionPage<T> extends CustomTransitionPage<T> {
   const FadeTransitionPage({required super.child, super.key})
-    : super(transitionsBuilder: _fade);
+    : super(transitionsBuilder: fadeTransitionBuilder);
 
-  static Widget _fade(
+  static Widget fadeTransitionBuilder(
     BuildContext context,
     Animation<double> animation,
     Animation<double> secondaryAnimation,

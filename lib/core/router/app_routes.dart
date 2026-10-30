@@ -2,22 +2,40 @@
 /// Registration and password reset sit under sign-in so back pops to it.
 abstract final class AppRoutes {
   /// Entry location redirected to the signed-in user's home.
-  static const home = '/';
+  static const String home = '/';
 
   /// Patient home location.
-  static const patientHome = '/patient';
+  static const String patientHome = '/patient';
 
   /// Shared doctor and technician home location.
-  static const staffHome = '/staff';
+  static const String staffHome = '/staff';
 
   /// Administrator home location.
-  static const adminHome = '/admin';
+  static const String adminHome = '/admin';
+
+  /// Institution overview and its branch routes.
+  static const String institution = '/admin/institution';
+  static const String branchNewSegment = 'clinics/:clinicId/branches/new';
+  static const String branchDetailSegment =
+      'clinics/:clinicId/branches/:branchId';
+  static const String branchEditSegment = 'edit';
+  static const String branchNewPattern = '$institution/$branchNewSegment';
+  static const String branchDetailPattern = '$institution/$branchDetailSegment';
+  static const String branchEditPattern =
+      '$branchDetailPattern/$branchEditSegment';
+
+  static String branchNew(String clinicId) =>
+      '$institution/clinics/$clinicId/branches/new';
+  static String branchDetail(String clinicId, String branchId) =>
+      '$institution/clinics/$clinicId/branches/$branchId';
+  static String branchEdit(String clinicId, String branchId) =>
+      '${branchDetail(clinicId, branchId)}/edit';
 
   /// Debug component catalogue location.
-  static const componentPreview = '/debug/components';
-  static const signIn = '/sign-in';
-  static const signUpSegment = 'register';
-  static const passwordResetSegment = 'reset-password';
-  static const signUp = '$signIn/$signUpSegment';
-  static const passwordReset = '$signIn/$passwordResetSegment';
+  static const String componentPreview = '/debug/components';
+  static const String signIn = '/sign-in';
+  static const String signUpSegment = 'register';
+  static const String passwordResetSegment = 'reset-password';
+  static const String signUp = '$signIn/$signUpSegment';
+  static const String passwordReset = '$signIn/$passwordResetSegment';
 }

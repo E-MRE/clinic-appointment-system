@@ -16,6 +16,28 @@ import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/password_reset_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/sign_in_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/sign_up_cubit.dart';
+import 'package:clinic_appointment_system/features/institution/data/repositories/firestore_branch_repository.dart';
+import 'package:clinic_appointment_system/features/institution/data/repositories/firestore_clinic_repository.dart';
+import 'package:clinic_appointment_system/features/institution/data/repositories/firestore_department_repository.dart';
+import 'package:clinic_appointment_system/features/institution/domain/repositories/branch_repository.dart';
+import 'package:clinic_appointment_system/features/institution/domain/repositories/clinic_repository.dart';
+import 'package:clinic_appointment_system/features/institution/domain/repositories/department_repository.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/create_branch_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/create_clinic_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/create_department_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/update_branch_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/update_clinic_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/update_department_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_branches_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_clinics_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_departments_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/cubit/branch_list_cubit.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/cubit/branch_save_cubit.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_list_cubit.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_save_cubit.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/cubit/department_list_cubit.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/cubit/department_save_cubit.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/cubit/working_hours_editor_cubit.dart';
 import 'package:clinic_appointment_system/features/users/data/models/user_model_factory.dart';
 import 'package:clinic_appointment_system/features/users/data/repositories/firestore_user_repository.dart';
 import 'package:clinic_appointment_system/features/users/domain/repositories/user_repository.dart';
@@ -23,7 +45,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 
-/// Register once per container. Only the composition root resolves services.
+/// Registers services once per container for the application and its screens.
 /// The container owns these app-lifetime objects and disposes them on reset.
 mixin AppDependencyRegisterMixin {
   void registerDependencies(DependencyInjector injector) {
@@ -37,6 +59,42 @@ mixin AppDependencyRegisterMixin {
         injector.get<FirebaseFirestore>(),
         const UserModelFactory(),
       ),
+    );
+    injector.registerLazySingleton<ClinicRepository>(
+      () => FirestoreClinicRepository(injector.get<FirebaseFirestore>()),
+    );
+    injector.registerLazySingleton<BranchRepository>(
+      () => FirestoreBranchRepository(injector.get<FirebaseFirestore>()),
+    );
+    injector.registerLazySingleton<DepartmentRepository>(
+      () => FirestoreDepartmentRepository(injector.get<FirebaseFirestore>()),
+    );
+    injector.registerLazySingleton<WatchClinicsUseCase>(
+      () => WatchClinicsUseCase(injector.get<ClinicRepository>()),
+    );
+    injector.registerLazySingleton<CreateClinicUseCase>(
+      () => CreateClinicUseCase(injector.get<ClinicRepository>()),
+    );
+    injector.registerLazySingleton<UpdateClinicUseCase>(
+      () => UpdateClinicUseCase(injector.get<ClinicRepository>()),
+    );
+    injector.registerLazySingleton<WatchBranchesUseCase>(
+      () => WatchBranchesUseCase(injector.get<BranchRepository>()),
+    );
+    injector.registerLazySingleton<CreateBranchUseCase>(
+      () => CreateBranchUseCase(injector.get<BranchRepository>()),
+    );
+    injector.registerLazySingleton<UpdateBranchUseCase>(
+      () => UpdateBranchUseCase(injector.get<BranchRepository>()),
+    );
+    injector.registerLazySingleton<WatchDepartmentsUseCase>(
+      () => WatchDepartmentsUseCase(injector.get<DepartmentRepository>()),
+    );
+    injector.registerLazySingleton<CreateDepartmentUseCase>(
+      () => CreateDepartmentUseCase(injector.get<DepartmentRepository>()),
+    );
+    injector.registerLazySingleton<UpdateDepartmentUseCase>(
+      () => UpdateDepartmentUseCase(injector.get<DepartmentRepository>()),
     );
     injector.registerLazySingleton<AuthExceptionMapper>(
       FirebaseAuthExceptionMapper.new,
@@ -90,18 +148,43 @@ mixin AppDependencyRegisterMixin {
     injector.registerFactory<PasswordResetCubit>(
       () => PasswordResetCubit(injector.get<SendPasswordResetEmailUseCase>()),
     );
+    injector.registerFactory<ClinicListCubit>(
+      () => ClinicListCubit(injector.get<WatchClinicsUseCase>()),
+    );
+    injector.registerFactory<BranchListCubit>(
+      () => BranchListCubit(injector.get<WatchBranchesUseCase>()),
+    );
+    injector.registerFactory<DepartmentListCubit>(
+      () => DepartmentListCubit(injector.get<WatchDepartmentsUseCase>()),
+    );
+    injector.registerFactory<ClinicSaveCubit>(
+      () => ClinicSaveCubit(
+        injector.get<CreateClinicUseCase>(),
+        injector.get<UpdateClinicUseCase>(),
+      ),
+    );
+    injector.registerFactory<BranchSaveCubit>(
+      () => BranchSaveCubit(
+        injector.get<CreateBranchUseCase>(),
+        injector.get<UpdateBranchUseCase>(),
+      ),
+    );
+    injector.registerFactory<DepartmentSaveCubit>(
+      () => DepartmentSaveCubit(
+        injector.get<CreateDepartmentUseCase>(),
+        injector.get<UpdateDepartmentUseCase>(),
+      ),
+    );
+    injector.registerFactory<WorkingHoursEditorCubit>(
+      WorkingHoursEditorCubit.new,
+    );
     injector.registerLazySingleton<AuthRouteGuard>(
       () => AuthRouteGuard(injector.get<AuthCubit>()),
       dispose: (guard) => guard.dispose(),
     );
     injector.registerLazySingleton<GoRouter>(
       () {
-        return createAppRouter(
-          authGuard: injector.get<AuthRouteGuard>(),
-          signInCubitFactory: injector.get<SignInCubit>,
-          signUpCubitFactory: injector.get<SignUpCubit>,
-          passwordResetCubitFactory: injector.get<PasswordResetCubit>,
-        );
+        return createAppRouter(authGuard: injector.get<AuthRouteGuard>());
       },
       dispose: (router) {
         router.dispose();

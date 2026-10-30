@@ -2,16 +2,23 @@ import 'dart:async';
 
 import 'package:clinic_appointment_system/app.dart';
 import 'package:clinic_appointment_system/core/constants/widget_key.dart';
+import 'package:clinic_appointment_system/core/di/app_dependency.dart';
 import 'package:clinic_appointment_system/core/enums/auth_error_code.dart';
-import 'package:clinic_appointment_system/core/errors/app_exception.dart';
+import 'package:clinic_appointment_system/core/errors/auth_exception.dart';
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
 import 'package:clinic_appointment_system/core/errors/result.dart';
 import 'package:clinic_appointment_system/core/errors/user_exception.dart';
 import 'package:clinic_appointment_system/core/router/app_router.dart';
 import 'package:clinic_appointment_system/core/states/theme_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/domain/entities/auth_session.dart';
+import 'package:clinic_appointment_system/features/auth/domain/usecases/register_patient_use_case.dart';
+import 'package:clinic_appointment_system/features/auth/domain/usecases/send_password_reset_email_use_case.dart';
+import 'package:clinic_appointment_system/features/auth/domain/usecases/sign_in_use_case.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_state.dart';
+import 'package:clinic_appointment_system/features/auth/presentation/cubit/password_reset_cubit.dart';
+import 'package:clinic_appointment_system/features/auth/presentation/cubit/sign_in_cubit.dart';
+import 'package:clinic_appointment_system/features/auth/presentation/cubit/sign_up_cubit.dart';
 import 'package:clinic_appointment_system/features/users/domain/enums/user_error_code.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -38,6 +45,15 @@ void main() {
     ).thenAnswer((_) => controller.stream);
     users = TestUserRepository();
     authCubit = createAuthCubit(repository, users);
+    AppDependency.injector.registerFactory<SignInCubit>(
+      () => SignInCubit(SignInUseCase(repository)),
+    );
+    AppDependency.injector.registerFactory<SignUpCubit>(
+      () => SignUpCubit(RegisterPatientUseCase(repository, users)),
+    );
+    AppDependency.injector.registerFactory<PasswordResetCubit>(
+      () => PasswordResetCubit(SendPasswordResetEmailUseCase(repository)),
+    );
     themeCubit = ThemeCubit();
     router = createAppRouter();
   });
@@ -46,6 +62,7 @@ void main() {
     await themeCubit.close();
     await controller.close();
     router.dispose();
+    await AppDependency.injector.reset();
   });
 
   Future<void> pumpApp(WidgetTester tester) async {
@@ -192,14 +209,15 @@ void main() {
       await tester.pumpAndSettle();
       final mobileTitle = tester
           .widget<Text>(find.text('Klinik Randevu Sistemi'))
-          .style!;
+          .style;
       tester.view.physicalSize = const Size(1440, 900);
       await tester.pumpAndSettle();
       final desktopTitle = tester
           .widget<Text>(find.text('Klinik Randevu Sistemi'))
-          .style!;
-      expect(desktopTitle.fontSize, greaterThan(mobileTitle.fontSize!));
-      expect(desktopTitle.fontFamily, mobileTitle.fontFamily);
+          .style;
+      expect(mobileTitle?.fontSize, isNotNull);
+      expect(desktopTitle?.fontSize, greaterThan(mobileTitle?.fontSize ?? 0));
+      expect(desktopTitle?.fontFamily, mobileTitle?.fontFamily);
       verify(() => repository.authStateChanges()).called(1);
       controller.add(const DataResult.success(data: null));
       await settle(tester);

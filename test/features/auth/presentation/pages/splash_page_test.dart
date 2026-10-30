@@ -69,7 +69,8 @@ void main() {
     testWidgets('Splash uses ${baseTheme.brightness.name} brand colors', (
       tester,
     ) async {
-      final brandColors = baseTheme.extension<AppBrandColors>()!;
+      final brandColors = baseTheme.extension<AppBrandColors>();
+      expect(brandColors, isNotNull);
       await loadTestTranslations(
         tester,
         child: const SplashPage(),
@@ -80,16 +81,16 @@ void main() {
       final scaffold = tester.widget<Scaffold>(
         find.byKey(const WidgetKey.splashPage()),
       );
-      expect(scaffold.backgroundColor, brandColors.splashBackground);
+      expect(scaffold.backgroundColor, brandColors?.splashBackground);
       final title = tester.widget<Text>(find.text('Klinik Randevu Sistemi'));
-      expect(title.style?.color, brandColors.splashForeground);
+      expect(title.style?.color, brandColors?.splashForeground);
       final progress = tester.widget<LinearProgressIndicator>(
         find.byType(LinearProgressIndicator),
       );
-      expect(progress.color, brandColors.splashForeground);
+      expect(progress.color, brandColors?.splashForeground);
       expect(
         progress.backgroundColor,
-        brandColors.splashForeground.withValues(alpha: 0.25),
+        brandColors?.splashForeground.withValues(alpha: 0.25),
       );
       expect(tester.takeException(), isNull);
     });

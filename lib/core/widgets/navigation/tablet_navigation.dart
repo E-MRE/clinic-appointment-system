@@ -22,35 +22,18 @@ final class _TabletNavigation extends StatelessWidget {
         color: context.colorScheme.surfaceContainer,
         child: Column(
           children: [
-            const EmptySize.s16Height(),
-            logo.svg(
-              width: AppSizes.s40,
-              height: AppSizes.s40,
-              excludeFromSemantics: true,
-            ),
-            const EmptySize.s24Height(),
+            _TabletNavigationLogo(logo: logo),
             Expanded(
-              child: ListView(
-                padding: const AppPadding.none(),
-                children: _destinationItems(),
+              child: _NavigationItemList(
+                destinations: destinations,
+                selectedIndex: selectedIndex,
+                onDestinationSelected: onDestinationSelected,
+                itemBuilder: _TabletNavigationItem.new,
               ),
             ),
           ],
         ),
       ),
     );
-  }
-
-  List<Widget> _destinationItems() {
-    return [
-      for (var index = 0; index < destinations.length; index++)
-        _TabletNavigationItem(
-          destination: destinations[index],
-          selected: index == selectedIndex,
-          onTap: () {
-            onDestinationSelected(index);
-          },
-        ),
-    ];
   }
 }

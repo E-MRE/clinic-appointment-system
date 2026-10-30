@@ -23,21 +23,7 @@ final class _Segment<T> extends StatelessWidget {
           onSelected(choice.value);
         },
         borderRadius: const AppRadius.full(),
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: AppSizes.s32),
-          child: Padding(
-            padding: const AppPadding.chip(),
-            child: Center(
-              child: AppText.label(
-                choice.label,
-                tone: style.tone,
-                fontWeight: style.weight,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ),
-        ),
+        child: _SegmentLabel(label: choice.label, style: style),
       ),
     );
   }

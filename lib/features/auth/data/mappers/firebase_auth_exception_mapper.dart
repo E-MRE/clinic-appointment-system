@@ -1,5 +1,6 @@
 import 'package:clinic_appointment_system/core/enums/auth_error_code.dart';
 import 'package:clinic_appointment_system/core/errors/app_exception.dart';
+import 'package:clinic_appointment_system/core/errors/auth_exception.dart';
 import 'package:clinic_appointment_system/features/auth/domain/mappers/auth_exception_mapper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 

@@ -56,7 +56,7 @@ void main() {
                 .first,
           );
           expect(
-            (container.decoration! as BoxDecoration).color,
+            (container.decoration as BoxDecoration).color,
             offline ? colors.secondaryContainer : colors.errorContainer,
           );
           final retryIcon = tester.widget<SvgPicture>(

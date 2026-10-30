@@ -13,8 +13,8 @@ class TestUserRepository implements UserRepository {
   @override
   Future<DataResult<Patient>> createPatient(Patient patient) async {
     created = patient;
-    if (pendingCreate != null) return pendingCreate!;
-    if (createError != null) throw createError!;
+    if (pendingCreate case final creation?) return creation;
+    if (createError case final error?) throw error;
     return DataResult.success(data: patient);
   }
 

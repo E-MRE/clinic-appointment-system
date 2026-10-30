@@ -1,5 +1,5 @@
-import 'package:clinic_appointment_system/core/theme/breakpoints.dart';
 import 'package:clinic_appointment_system/core/theme/dark_theme.dart';
+import 'package:clinic_appointment_system/core/theme/screen_size.dart';
 import 'package:clinic_appointment_system/core/widgets/text_field/app_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -11,7 +11,7 @@ void main() {
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(390, 844);
     final controller = TextEditingController(text: 'secret');
-    var obscured = true;
+    bool obscured = true;
     await tester.pumpWidget(
       MaterialApp(
         theme: DarkTheme(ScreenSize.mobile).themeData,

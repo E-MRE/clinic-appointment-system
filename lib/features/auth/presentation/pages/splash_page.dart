@@ -9,6 +9,8 @@ import 'package:clinic_appointment_system/generated/assets.gen.dart';
 import 'package:flutter/material.dart';
 
 part 'splash_brand.dart';
+part 'splash_brand_logo.dart';
+part 'splash_brand_titles.dart';
 part 'splash_centered_layout.dart';
 part 'splash_compact_layout.dart';
 part 'splash_progress.dart';
@@ -41,7 +43,9 @@ final class SplashPage extends StatelessWidget {
   /// Short viewports and large text scroll instead of pinning the progress.
   bool _isCompact(BuildContext context, double height) {
     return height < BreakpointsConstants.compactHeight ||
-        context.textScaleFor(context.textTheme.displaySmall!.fontSize!) >
+        context.textScaleFor(
+              context.textTheme.displaySmall?.fontSize ?? AppSizes.s32,
+            ) >
             BreakpointsConstants.largeTextScale;
   }
 }

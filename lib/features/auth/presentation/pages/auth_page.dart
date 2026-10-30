@@ -1,5 +1,6 @@
 import 'package:clinic_appointment_system/core/constants/validation_constants.dart';
 import 'package:clinic_appointment_system/core/constants/widget_key.dart';
+import 'package:clinic_appointment_system/core/di/app_dependency.dart';
 import 'package:clinic_appointment_system/core/localization/localization.dart';
 import 'package:clinic_appointment_system/core/router/app_routes.dart';
 import 'package:clinic_appointment_system/core/theme/theme.dart';
@@ -30,35 +31,48 @@ part 'auth_account_roles.dart';
 part 'auth_brand_item.dart';
 part 'auth_brand_message.dart';
 part 'auth_brand_panel.dart';
+part 'auth_brand_panel_content.dart';
+part 'auth_brand_switcher.dart';
 part 'auth_confirmation_field.dart';
 part 'auth_email_field.dart';
 part 'auth_feedback_message.dart';
 part 'auth_form_content.dart';
+part 'auth_forgot_password_button.dart';
+part 'auth_form_actions.dart';
 part 'auth_form_feedback.dart';
 part 'auth_form_fields.dart';
+part 'auth_name_group.dart';
+part 'auth_password_group.dart';
 part 'auth_form_footer.dart';
 part 'auth_form_header.dart';
 part 'auth_heading.dart';
+part 'auth_heading_logo.dart';
+part 'auth_heading_texts.dart';
 part 'auth_name_field.dart';
 part 'auth_page_layout.dart';
-part 'auth_password_field.dart';
+part 'auth_form_host.dart';
+part 'auth_request_view.dart';
+part 'auth_mobile_form.dart';
+part 'auth_scrolling_form.dart';
+part 'auth_form_surface.dart';
+part 'auth_back_button.dart';
+
+part 'auth_password_suffix.dart';
 part 'auth_password_fields.dart';
 part 'auth_password_input.dart';
 part 'auth_registration_steps.dart';
-part 'auth_request_form.dart';
 part 'auth_request_form_mixin.dart';
 part 'auth_role_item.dart';
 part 'auth_shell.dart';
 part 'auth_step_item.dart';
 part 'auth_submit_button.dart';
+part 'auth_request_form.dart';
+part 'auth_password_field.dart';
 
 /// Template for a screen-owned request Cubit and the shared form lifecycle.
 /// Subclasses provide the visual variant and invoke their concrete request.
 abstract class AuthPage<C extends AuthRequestCubit> extends StatelessWidget {
-  const AuthPage({required this.createCubit, super.key});
-
-  /// Creates a request Cubit owned and disposed by this page's provider.
-  final C Function() createCubit;
+  const AuthPage({super.key});
 
   /// Supplies the labels, fields and responsive layout for this screen.
   AuthFormKind get kind;
@@ -69,7 +83,7 @@ abstract class AuthPage<C extends AuthRequestCubit> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<C>(
-      create: (_) => createCubit(),
+      create: (_) => AppDependency.injector.get<C>(),
       child: _AuthRequestForm<C>(page: this),
     );
   }

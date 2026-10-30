@@ -1,5 +1,5 @@
-import 'package:clinic_appointment_system/core/theme/breakpoints.dart';
 import 'package:clinic_appointment_system/core/theme/dark_theme.dart';
+import 'package:clinic_appointment_system/core/theme/screen_size.dart';
 import 'package:clinic_appointment_system/core/widgets/list_tile/app_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -10,7 +10,7 @@ void main() {
   ) async {
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(390, 844);
-    var tapped = false;
+    bool tapped = false;
     await tester.pumpWidget(
       MaterialApp(
         theme: DarkTheme(ScreenSize.mobile).themeData,

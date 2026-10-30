@@ -1,4 +1,4 @@
-import 'package:clinic_appointment_system/core/errors/app_exception.dart';
+import 'package:clinic_appointment_system/core/errors/auth_exception.dart';
 import 'package:clinic_appointment_system/core/errors/result.dart';
 import 'package:clinic_appointment_system/core/usecases/no_params.dart';
 import 'package:clinic_appointment_system/core/usecases/use_case.dart';

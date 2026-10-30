@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:clinic_appointment_system/core/enums/auth_error_code.dart';
-import 'package:clinic_appointment_system/core/errors/app_exception.dart';
+import 'package:clinic_appointment_system/core/errors/auth_exception.dart';
 import 'package:clinic_appointment_system/core/errors/result.dart';
+import 'package:clinic_appointment_system/core/errors/unexpected_exception.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_request_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_request_state.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -87,7 +88,7 @@ void main() {
     final pending = Completer<Result>();
     final first = cubit.submit(request: () => pending.future);
     expect(cubit.state, isA<AuthRequestLoading>());
-    var duplicateCalls = 0;
+    int duplicateCalls = 0;
     await cubit.submit(
       request: () async {
         duplicateCalls++;
@@ -132,7 +133,7 @@ void main() {
 
   test('closed cubits ignore requests', () async {
     await cubit.close();
-    var calls = 0;
+    int calls = 0;
     await cubit.submit(
       request: () async {
         calls++;

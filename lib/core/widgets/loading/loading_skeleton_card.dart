@@ -12,38 +12,10 @@ final class _SkeletonCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            children: [
-              _SkeletonBlock(
-                width: variant.avatarSize,
-                height: variant.avatarSize,
-                radius: variant.avatarRadius,
-              ),
-              const EmptySize.s12Width(),
-              const Expanded(
-                child: Column(
-                  children: [
-                    _SkeletonLine(variant: LoadingSkeletonLineVariant.title),
-                    EmptySize.s8Height(),
-                    _SkeletonLine(variant: LoadingSkeletonLineVariant.metadata),
-                  ],
-                ),
-              ),
-            ],
-          ),
+          _SkeletonCardHeader(variant: variant),
           if (variant.hasDetails) ...[
             const EmptySize.s16Height(),
-            const _SkeletonLine(variant: LoadingSkeletonLineVariant.fullWidth),
-            const EmptySize.s8Height(),
-            const _SkeletonLine(variant: LoadingSkeletonLineVariant.body),
-            const EmptySize.s16Height(),
-            const Row(
-              children: [
-                Expanded(child: _SkeletonBlock(height: AppSizes.s40)),
-                EmptySize.s8Width(),
-                Expanded(child: _SkeletonBlock(height: AppSizes.s40)),
-              ],
-            ),
+            const _SkeletonCardDetails(),
           ],
         ],
       ),

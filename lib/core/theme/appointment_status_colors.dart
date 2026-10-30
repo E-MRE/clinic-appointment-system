@@ -1,16 +1,6 @@
+import 'package:clinic_appointment_system/core/theme/appointment_status.dart';
 import 'package:clinic_appointment_system/generated/colors.gen.dart';
 import 'package:flutter/material.dart';
-
-/// Appointment status shown in the UI.
-// TODO: replaced by the domain appointment status in a later issue.
-enum AppointmentStatus {
-  pending,
-  approved,
-  rejected,
-  completed,
-  noShow,
-  cancelled,
-}
 
 /// Background and foreground color of a status badge.
 typedef StatusColorPair = ({Color bg, Color fg});
@@ -129,18 +119,18 @@ final class AppointmentStatusColors
       return this;
     }
     return AppointmentStatusColors(
-      pendingBg: Color.lerp(pendingBg, other.pendingBg, t)!,
-      pendingFg: Color.lerp(pendingFg, other.pendingFg, t)!,
-      approvedBg: Color.lerp(approvedBg, other.approvedBg, t)!,
-      approvedFg: Color.lerp(approvedFg, other.approvedFg, t)!,
-      rejectedBg: Color.lerp(rejectedBg, other.rejectedBg, t)!,
-      rejectedFg: Color.lerp(rejectedFg, other.rejectedFg, t)!,
-      completedBg: Color.lerp(completedBg, other.completedBg, t)!,
-      completedFg: Color.lerp(completedFg, other.completedFg, t)!,
-      noShowBg: Color.lerp(noShowBg, other.noShowBg, t)!,
-      noShowFg: Color.lerp(noShowFg, other.noShowFg, t)!,
-      cancelledBg: Color.lerp(cancelledBg, other.cancelledBg, t)!,
-      cancelledFg: Color.lerp(cancelledFg, other.cancelledFg, t)!,
+      pendingBg: Color.lerp(pendingBg, other.pendingBg, t) ?? pendingBg,
+      pendingFg: Color.lerp(pendingFg, other.pendingFg, t) ?? pendingFg,
+      approvedBg: Color.lerp(approvedBg, other.approvedBg, t) ?? approvedBg,
+      approvedFg: Color.lerp(approvedFg, other.approvedFg, t) ?? approvedFg,
+      rejectedBg: Color.lerp(rejectedBg, other.rejectedBg, t) ?? rejectedBg,
+      rejectedFg: Color.lerp(rejectedFg, other.rejectedFg, t) ?? rejectedFg,
+      completedBg: Color.lerp(completedBg, other.completedBg, t) ?? completedBg,
+      completedFg: Color.lerp(completedFg, other.completedFg, t) ?? completedFg,
+      noShowBg: Color.lerp(noShowBg, other.noShowBg, t) ?? noShowBg,
+      noShowFg: Color.lerp(noShowFg, other.noShowFg, t) ?? noShowFg,
+      cancelledBg: Color.lerp(cancelledBg, other.cancelledBg, t) ?? cancelledBg,
+      cancelledFg: Color.lerp(cancelledFg, other.cancelledFg, t) ?? cancelledFg,
     );
   }
 }

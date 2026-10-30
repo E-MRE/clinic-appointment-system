@@ -19,19 +19,7 @@ final class _OtherSection extends StatelessWidget {
             size: AppSizes.s24,
           ),
         ),
-        SystemOverlayRegion(
-          background: context.colorScheme.surface,
-          child: SizedBox(
-            height: AppSizes.s96,
-            child: ViewportScrollView(
-              child: Center(
-                child: AppText.body(
-                  LocaleKeys.componentPreview_sample.translate(),
-                ),
-              ),
-            ),
-          ),
-        ),
+        const _OtherSectionViewportPreview(),
       ],
     );
   }

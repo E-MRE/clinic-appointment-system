@@ -28,14 +28,16 @@ import 'package:clinic_appointment_system/core/widgets/viewport_scroll_view.dart
 import 'package:clinic_appointment_system/generated/assets.gen.dart';
 import 'package:flutter/material.dart';
 
-part 'preview_state.dart';
 part 'preview_label.dart';
+part 'preview_viewport.dart';
+part 'preview_themed_viewport.dart';
 part 'preview_selector.dart';
 part 'preview_width.dart';
 part 'preview_theme.dart';
 part 'preview_section.dart';
 part 'preview_section_view.dart';
 part 'text_section.dart';
+part 'text_section_sample.dart';
 part 'surface_section.dart';
 part 'status_section.dart';
 part 'header_section.dart';
@@ -43,14 +45,29 @@ part 'states_section.dart';
 part 'loading_section.dart';
 part 'list_section.dart';
 part 'data_table_section.dart';
+part 'preview_appointment.dart';
+part 'preview_appointments_table.dart';
+part 'preview_appointments_header.dart';
+part 'preview_appointment_patient_cell.dart';
+part 'preview_service.dart';
+part 'preview_services_table.dart';
+part 'preview_service_cell.dart';
 part 'avatar_section.dart';
 part 'fields_section.dart';
 part 'fields_content.dart';
-part 'fields_content_state.dart';
+part 'fields_text_fields.dart';
+part 'fields_basic_text_fields.dart';
+part 'fields_feedback_text_fields.dart';
+part 'fields_select_fields.dart';
+part 'fields_basic_select_fields.dart';
+part 'fields_error_select_field.dart';
 part 'choices_section.dart';
-part 'choices_section_state.dart';
+part 'choices_filter_chips.dart';
+part 'choices_segmented_control.dart';
 part 'navigation_section.dart';
+part 'navigation_preview_shell.dart';
 part 'other_section.dart';
+part 'other_section_viewport_preview.dart';
 part 'tier_preview.dart';
 
 /// Developer-facing catalogue of shared components.
@@ -61,5 +78,68 @@ final class ComponentPreviewPage extends StatefulWidget {
   @override
   State<ComponentPreviewPage> createState() {
     return _PreviewState();
+  }
+}
+
+/// Owns the catalogue's local theme and viewport choices.
+final class _PreviewState extends State<ComponentPreviewPage> {
+  late _PreviewWidth _width;
+  late _PreviewTheme _theme;
+
+  @override
+  void initState() {
+    super.initState();
+    _width = _PreviewWidth.automatic;
+    _theme = _PreviewTheme.light;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AppScaffold(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: AppSizes.s16,
+        children: [
+          PageHeader(
+            title: LocaleKeys.componentPreview_title.translate(),
+            subtitle: LocaleKeys.componentPreview_subtitle.translate(),
+          ),
+          Wrap(
+            spacing: AppSizes.s12,
+            runSpacing: AppSizes.s8,
+            children: [_widthSelector, _themeSelector],
+          ),
+          Expanded(
+            child: _PreviewViewport(width: _width, theme: _theme),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget get _widthSelector {
+    return _PreviewSelector<_PreviewWidth>(
+      values: _PreviewWidth.values,
+      selected: _width,
+      label: (value) => value.label,
+      onChanged: (value) {
+        setState(() {
+          _width = value;
+        });
+      },
+    );
+  }
+
+  Widget get _themeSelector {
+    return _PreviewSelector<_PreviewTheme>(
+      values: _PreviewTheme.values,
+      selected: _theme,
+      label: (value) => value.label,
+      onChanged: (value) {
+        setState(() {
+          _theme = value;
+        });
+      },
+    );
   }
 }

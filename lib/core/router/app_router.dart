@@ -3,16 +3,18 @@ import 'package:clinic_appointment_system/core/router/fade_transition_page.dart'
 import 'package:clinic_appointment_system/core/router/home_page.dart';
 import 'package:clinic_appointment_system/core/router/not_found_page.dart';
 import 'package:clinic_appointment_system/features/admin/presentation/pages/admin_home_page.dart';
+import 'package:clinic_appointment_system/features/admin/presentation/widgets/admin_shell.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/auth_route_guard.dart';
-import 'package:clinic_appointment_system/features/auth/presentation/cubit/password_reset_cubit.dart';
-import 'package:clinic_appointment_system/features/auth/presentation/cubit/sign_in_cubit.dart';
-import 'package:clinic_appointment_system/features/auth/presentation/cubit/sign_up_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/enums/auth_form_kind.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/pages/auth_page.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/pages/password_reset_page.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/pages/sign_in_page.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/pages/sign_up_page.dart';
 import 'package:clinic_appointment_system/features/debug/presentation/pages/component_preview/component_preview_page.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/pages/branch_detail_page.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/pages/branch_form_page.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/pages/institution_page.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/pages/institution_route_scope.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/pages/patient_home_page.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/pages/staff_home_page.dart';
 import 'package:flutter/foundation.dart';
@@ -21,15 +23,12 @@ import 'package:go_router/go_router.dart';
 
 export 'package:clinic_appointment_system/core/router/app_routes.dart';
 
-/// Defines application routes using page-owned Cubit factories supplied by DI.
+/// Defines application routes; pages resolve their own Cubits through DI.
 /// Auth screens share one shell; registration and reset stack on sign-in.
 GoRouter createAppRouter({
   String? initialLocation,
   bool enableDebugRoutes = kDebugMode,
   AuthRouteGuard? authGuard,
-  SignInCubit Function()? signInCubitFactory,
-  SignUpCubit Function()? signUpCubitFactory,
-  PasswordResetCubit Function()? passwordResetCubitFactory,
   GoRouterRedirect? redirect,
   Listenable? refreshListenable,
 }) {
@@ -57,57 +56,89 @@ GoRouter createAppRouter({
         path: AppRoutes.staffHome,
         pageBuilder: (_, state) => _fadePage(state, const StaffHomePage()),
       ),
-      GoRoute(
-        path: AppRoutes.adminHome,
-        pageBuilder: (_, state) => _fadePage(state, const AdminHomePage()),
-      ),
-      if (signInCubitFactory != null)
-        ShellRoute(
-          pageBuilder: (_, state, child) {
-            return _fadePage(
-              state,
-              AuthShell(
-                kind: AuthFormKind.fromLocation(state.uri.path),
-                child: child,
-              ),
-            );
-          },
-          routes: [
-            GoRoute(
-              path: AppRoutes.signIn,
-              pageBuilder: (_, state) {
-                return _fadePage(
-                  state,
-                  SignInPage(createCubit: signInCubitFactory),
-                );
-              },
-              routes: [
-                if (signUpCubitFactory != null)
-                  GoRoute(
-                    path: AppRoutes.signUpSegment,
-                    pageBuilder: (_, state) {
-                      return _fadePage(
-                        state,
-                        SignUpPage(createCubit: signUpCubitFactory),
-                      );
-                    },
-                  ),
-                if (passwordResetCubitFactory != null)
-                  GoRoute(
-                    path: AppRoutes.passwordResetSegment,
-                    pageBuilder: (_, state) {
-                      return _fadePage(
-                        state,
-                        PasswordResetPage(
-                          createCubit: passwordResetCubitFactory,
-                        ),
-                      );
-                    },
-                  ),
-              ],
+      ShellRoute(
+        pageBuilder: (_, state, child) =>
+            _fadePage(state, AdminShell(child: child)),
+        routes: [
+          GoRoute(
+            path: AppRoutes.adminHome,
+            pageBuilder: (_, state) => _fadePage(state, const AdminHomePage()),
+          ),
+          ShellRoute(
+            builder: (_, state, child) => InstitutionRouteScope(
+              routeClinicId: state.pathParameters['clinicId'],
+              child: child,
             ),
-          ],
-        ),
+            routes: [
+              GoRoute(
+                path: AppRoutes.institution,
+                pageBuilder: (_, state) =>
+                    _fadePage(state, const InstitutionPage()),
+                routes: [
+                  GoRoute(
+                    path: AppRoutes.branchNewSegment,
+                    pageBuilder: (_, state) =>
+                        _fadePage(state, const BranchFormPage()),
+                  ),
+                  GoRoute(
+                    path: AppRoutes.branchDetailSegment,
+                    pageBuilder: (_, state) => _fadePage(
+                      state,
+                      BranchDetailPage(
+                        branchId: state.pathParameters['branchId'] ?? '',
+                      ),
+                    ),
+                    routes: [
+                      GoRoute(
+                        path: AppRoutes.branchEditSegment,
+                        pageBuilder: (_, state) => _fadePage(
+                          state,
+                          BranchFormPage(
+                            branchId: state.pathParameters['branchId'],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+      ShellRoute(
+        pageBuilder: (_, state, child) {
+          return _fadePage(
+            state,
+            AuthShell(
+              kind: AuthFormKind.fromLocation(state.uri.path),
+              child: child,
+            ),
+          );
+        },
+        routes: [
+          GoRoute(
+            path: AppRoutes.signIn,
+            pageBuilder: (_, state) {
+              return _fadePage(state, const SignInPage());
+            },
+            routes: [
+              GoRoute(
+                path: AppRoutes.signUpSegment,
+                pageBuilder: (_, state) {
+                  return _fadePage(state, const SignUpPage());
+                },
+              ),
+              GoRoute(
+                path: AppRoutes.passwordResetSegment,
+                pageBuilder: (_, state) {
+                  return _fadePage(state, const PasswordResetPage());
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
     ],
   );
 }

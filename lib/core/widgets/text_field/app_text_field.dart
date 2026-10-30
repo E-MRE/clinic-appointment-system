@@ -4,6 +4,8 @@ import 'package:clinic_appointment_system/core/widgets/square_svg_icon.dart';
 import 'package:clinic_appointment_system/generated/assets.gen.dart';
 import 'package:flutter/material.dart';
 
+part 'app_text_input_field.dart';
+
 /// Themed labeled text input shared by feature forms.
 final class AppTextField extends StatelessWidget {
   /// Creates a labeled text input from display values and form behavior.
@@ -90,31 +92,22 @@ final class AppTextField extends StatelessWidget {
       children: [
         ExcludeSemantics(child: AppText.label(label)),
         const EmptySize.s8Height(),
-        _field(context),
+        _AppTextInputField(
+          label: label,
+          fieldKey: fieldKey,
+          controller: controller,
+          enabled: enabled,
+          validator: validator,
+          keyboardType: keyboardType,
+          autofillHints: autofillHints,
+          textInputAction: textInputAction,
+          onSubmitted: onSubmitted,
+          obscureText: obscureText,
+          autocorrect: autocorrect,
+          enableSuggestions: enableSuggestions,
+          decoration: _decoration(context),
+        ),
       ],
-    );
-  }
-
-  Widget _field(BuildContext context) {
-    return Semantics(
-      label: label,
-      child: TextFormField(
-        key: fieldKey,
-        controller: controller,
-        enabled: enabled,
-        validator: validator,
-        keyboardType: keyboardType,
-        autofillHints: autofillHints,
-        textInputAction: textInputAction,
-        onFieldSubmitted: (_) {
-          onSubmitted?.call();
-        },
-        obscureText: obscureText,
-        autocorrect: autocorrect,
-        enableSuggestions: enableSuggestions,
-        style: context.textTheme.bodyLarge,
-        decoration: _decoration(context),
-      ),
     );
   }
 
@@ -125,7 +118,17 @@ final class AppTextField extends StatelessWidget {
       helperText: helper,
       helperMaxLines: null,
       errorMaxLines: null,
-      prefixIcon: _prefixIcon(context),
+      prefixIcon: switch (prefixIconAsset) {
+        final iconAsset? => SizedBox.square(
+          dimension: AppSizes.s48,
+          child: SquareSvgIcon(
+            asset: iconAsset,
+            size: AppSizes.retryIcon,
+            color: context.colorScheme.onSurfaceVariant,
+          ),
+        ),
+        _ => prefix,
+      },
       suffixIcon: suffix,
     );
   }
@@ -138,19 +141,5 @@ final class AppTextField extends StatelessWidget {
           tablet: context.colorScheme.surface,
           desktop: decorationTheme.fillColor,
         );
-  }
-
-  Widget? _prefixIcon(BuildContext context) {
-    return switch (prefixIconAsset) {
-      final iconAsset? => SizedBox.square(
-        dimension: AppSizes.s48,
-        child: SquareSvgIcon(
-          asset: iconAsset,
-          size: AppSizes.retryIcon,
-          color: context.colorScheme.onSurfaceVariant,
-        ),
-      ),
-      _ => prefix,
-    };
   }
 }

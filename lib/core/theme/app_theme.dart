@@ -4,7 +4,7 @@ import 'package:clinic_appointment_system/core/theme/app_radius.dart';
 import 'package:clinic_appointment_system/core/theme/app_sizes.dart';
 import 'package:clinic_appointment_system/core/theme/app_typography.dart';
 import 'package:clinic_appointment_system/core/theme/appointment_status_colors.dart';
-import 'package:clinic_appointment_system/core/theme/breakpoints.dart';
+import 'package:clinic_appointment_system/core/theme/screen_size.dart';
 import 'package:flutter/material.dart';
 
 /// Contract for the application themes.
@@ -30,10 +30,10 @@ abstract base class AppTheme {
   /// The [ThemeData] handed to `MaterialApp`.
   late final ThemeData themeData = _build();
 
-  static const _buttonShape = RoundedRectangleBorder(
+  static const RoundedRectangleBorder _buttonShape = RoundedRectangleBorder(
     borderRadius: AppRadius.medium(),
   );
-  static const _buttonSize = Size(0, AppSizes.s48);
+  static const Size _buttonSize = Size(0, AppSizes.s48);
 
   ThemeData _build() {
     final scheme = colorScheme;

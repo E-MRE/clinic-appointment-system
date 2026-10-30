@@ -1,7 +1,7 @@
 import 'package:clinic_appointment_system/core/di/app_dependency_register_mixin.dart';
 import 'package:clinic_appointment_system/core/di/get_it/get_it_dependency_injection_manager.dart';
 import 'package:clinic_appointment_system/core/di/injector/dependency_injector.dart';
-import 'package:clinic_appointment_system/core/errors/app_exception.dart';
+import 'package:clinic_appointment_system/core/errors/unexpected_exception.dart';
 import 'package:clinic_appointment_system/core/states/theme_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/data/mappers/firebase_auth_exception_mapper.dart';
 import 'package:clinic_appointment_system/features/auth/data/repositories/firebase_auth_repository.dart';
@@ -14,6 +14,28 @@ import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/password_reset_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/sign_in_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/sign_up_cubit.dart';
+import 'package:clinic_appointment_system/features/institution/data/repositories/firestore_branch_repository.dart';
+import 'package:clinic_appointment_system/features/institution/data/repositories/firestore_clinic_repository.dart';
+import 'package:clinic_appointment_system/features/institution/data/repositories/firestore_department_repository.dart';
+import 'package:clinic_appointment_system/features/institution/domain/repositories/branch_repository.dart';
+import 'package:clinic_appointment_system/features/institution/domain/repositories/clinic_repository.dart';
+import 'package:clinic_appointment_system/features/institution/domain/repositories/department_repository.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/create_branch_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/create_clinic_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/create_department_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/update_branch_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/update_clinic_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/update_department_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_branches_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_clinics_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_departments_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/cubit/branch_list_cubit.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/cubit/branch_save_cubit.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_list_cubit.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_save_cubit.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/cubit/department_list_cubit.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/cubit/department_save_cubit.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/cubit/working_hours_editor_cubit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -67,7 +89,7 @@ void main() {
   test(
     'lazy reset awaits cleanup and recreates the service on next access',
     () async {
-      var disposals = 0;
+      int disposals = 0;
       container.registerLazySingleton<_TestService>(
         _TestService.new,
         instanceName: 'lazy',
@@ -105,6 +127,81 @@ void main() {
     final registerPatient = container.get<RegisterPatientUseCase>();
     expect(container.get<RegisterPatientUseCase>(), same(registerPatient));
   });
+
+  test('institution repositories and use cases resolve through DI', () {
+    final clinics = container.get<ClinicRepository>();
+    final branches = container.get<BranchRepository>();
+    final departments = container.get<DepartmentRepository>();
+    expect(clinics, isA<FirestoreClinicRepository>());
+    expect(branches, isA<FirestoreBranchRepository>());
+    expect(departments, isA<FirestoreDepartmentRepository>());
+    expect(container.get<ClinicRepository>(), same(clinics));
+    expect(container.get<BranchRepository>(), same(branches));
+    expect(container.get<DepartmentRepository>(), same(departments));
+
+    expect(container.get<WatchClinicsUseCase>(), isA<WatchClinicsUseCase>());
+    expect(container.get<CreateClinicUseCase>(), isA<CreateClinicUseCase>());
+    expect(container.get<UpdateClinicUseCase>(), isA<UpdateClinicUseCase>());
+    expect(container.get<WatchBranchesUseCase>(), isA<WatchBranchesUseCase>());
+    expect(container.get<CreateBranchUseCase>(), isA<CreateBranchUseCase>());
+    expect(container.get<UpdateBranchUseCase>(), isA<UpdateBranchUseCase>());
+    expect(
+      container.get<WatchDepartmentsUseCase>(),
+      isA<WatchDepartmentsUseCase>(),
+    );
+    expect(
+      container.get<CreateDepartmentUseCase>(),
+      isA<CreateDepartmentUseCase>(),
+    );
+    expect(
+      container.get<UpdateDepartmentUseCase>(),
+      isA<UpdateDepartmentUseCase>(),
+    );
+  });
+
+  test(
+    'institution presentation cubits resolve as screen-owned factories',
+    () async {
+      final first = <Object>[
+        container.get<ClinicListCubit>(),
+        container.get<BranchListCubit>(),
+        container.get<DepartmentListCubit>(),
+        container.get<ClinicSaveCubit>(),
+        container.get<BranchSaveCubit>(),
+        container.get<DepartmentSaveCubit>(),
+        container.get<WorkingHoursEditorCubit>(),
+      ];
+      final second = <Object>[
+        container.get<ClinicListCubit>(),
+        container.get<BranchListCubit>(),
+        container.get<DepartmentListCubit>(),
+        container.get<ClinicSaveCubit>(),
+        container.get<BranchSaveCubit>(),
+        container.get<DepartmentSaveCubit>(),
+        container.get<WorkingHoursEditorCubit>(),
+      ];
+
+      for (int index = 0; index < first.length; index++) {
+        expect(first[index], isNot(same(second[index])));
+      }
+      await Future.wait([
+        (first[0] as ClinicListCubit).close(),
+        (first[1] as BranchListCubit).close(),
+        (first[2] as DepartmentListCubit).close(),
+        (first[3] as ClinicSaveCubit).close(),
+        (first[4] as BranchSaveCubit).close(),
+        (first[5] as DepartmentSaveCubit).close(),
+        (first[6] as WorkingHoursEditorCubit).close(),
+        (second[0] as ClinicListCubit).close(),
+        (second[1] as BranchListCubit).close(),
+        (second[2] as DepartmentListCubit).close(),
+        (second[3] as ClinicSaveCubit).close(),
+        (second[4] as BranchSaveCubit).close(),
+        (second[5] as DepartmentSaveCubit).close(),
+        (second[6] as WorkingHoursEditorCubit).close(),
+      ]);
+    },
+  );
 
   test('auth repository uses the injected Firebase instance', () async {
     when(() => auth.authStateChanges()).thenAnswer((_) => Stream.value(null));

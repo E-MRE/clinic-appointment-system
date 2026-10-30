@@ -5,7 +5,7 @@ import 'package:clinic_appointment_system/features/auth/presentation/pages/auth_
 
 /// Requests a reset email without revealing whether an account exists.
 final class PasswordResetPage extends AuthPage<PasswordResetCubit> {
-  const PasswordResetPage({required super.createCubit, super.key});
+  const PasswordResetPage({super.key});
 
   @override
   AuthFormKind get kind => AuthFormKind.passwordReset;

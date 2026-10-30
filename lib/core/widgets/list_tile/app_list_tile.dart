@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 
 export 'package:clinic_appointment_system/core/widgets/list_tile/app_list_tile_density.dart';
 
+part 'app_list_tile_text.dart';
+part 'app_list_tile_content.dart';
+
 /// Shared list row with optional leading and trailing content.
 final class AppListTile extends StatelessWidget {
   /// Creates a row from display values and optional widgets.
@@ -38,48 +41,18 @@ final class AppListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final content = Padding(
-      padding: density.padding,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(minHeight: AppSizes.s48),
-        child: Row(
-          children: [
-            if (leading case final leadingWidget?) ...[
-              leadingWidget,
-              const EmptySize.s12Width(),
-            ],
-            Expanded(child: _text(context)),
-            if (trailing case final trailingWidget?) ...[
-              const EmptySize.s12Width(),
-              trailingWidget,
-            ],
-          ],
-        ),
-      ),
-    );
     return Semantics(
       button: onTap != null,
-      child: InkWell(onTap: onTap, child: content),
-    );
-  }
-
-  Widget _text(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        AppText.bodyStrong(title, maxLines: 2, overflow: TextOverflow.ellipsis),
-        if (subtitle case final subtitleText?)
-          Padding(
-            padding: const AppPadding.listTileSubtitle(),
-            child: AppText.caption(
-              subtitleText,
-              tone: TextTone.muted,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-      ],
+      child: InkWell(
+        onTap: onTap,
+        child: _AppListTileContent(
+          title: title,
+          subtitle: subtitle,
+          leading: leading,
+          trailing: trailing,
+          density: density,
+        ),
+      ),
     );
   }
 }

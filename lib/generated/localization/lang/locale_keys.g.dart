@@ -151,5 +151,125 @@ abstract class LocaleKeys {
   static const componentPreview_tablet = 'componentPreview.tablet';
   static const componentPreview_desktop = 'componentPreview.desktop';
   static const componentPreview_dataTable = 'componentPreview.dataTable';
+  static const componentPreview_table_date = 'componentPreview.table.date';
+  static const componentPreview_table_patient =
+      'componentPreview.table.patient';
+  static const componentPreview_table_service =
+      'componentPreview.table.service';
+  static const componentPreview_table_staff = 'componentPreview.table.staff';
+  static const componentPreview_table_status = 'componentPreview.table.status';
+  static const componentPreview_table_duration =
+      'componentPreview.table.duration';
+  static const componentPreview_table_fee = 'componentPreview.table.fee';
+  static const componentPreview_table_actions =
+      'componentPreview.table.actions';
+  static const componentPreview_table_generalService =
+      'componentPreview.table.generalService';
+  static const componentPreview_table_durationMinutes =
+      'componentPreview.table.durationMinutes';
+  static const componentPreview_table = 'componentPreview.table';
   static const componentPreview = 'componentPreview';
+  static const institution_title = 'institution.title';
+  static const institution_clinic = 'institution.clinic';
+  static const institution_branches = 'institution.branches';
+  static const institution_branch = 'institution.branch';
+  static const institution_newBranch = 'institution.newBranch';
+  static const institution_branchInformation = 'institution.branchInformation';
+  static const institution_branchName = 'institution.branchName';
+  static const institution_phone = 'institution.phone';
+  static const institution_address = 'institution.address';
+  static const institution_workingHours = 'institution.workingHours';
+  static const institution_departments = 'institution.departments';
+  static const institution_newDepartmentName = 'institution.newDepartmentName';
+  static const institution_departmentHelp = 'institution.departmentHelp';
+  static const institution_workingHoursHelp = 'institution.workingHoursHelp';
+  static const institution_copyMondayToWeekdays =
+      'institution.copyMondayToWeekdays';
+  static const institution_copyToWeekdays = 'institution.copyToWeekdays';
+  static const institution_closed = 'institution.closed';
+  static const institution_open = 'institution.open';
+  static const institution_addBranch = 'institution.addBranch';
+  static const institution_editClinic = 'institution.editClinic';
+  static const institution_editBranch = 'institution.editBranch';
+  static const institution_editWorkingHours = 'institution.editWorkingHours';
+  static const institution_addDepartment = 'institution.addDepartment';
+  static const institution_add = 'institution.add';
+  static const institution_cancel = 'institution.cancel';
+  static const institution_saveBranch = 'institution.saveBranch';
+  static const institution_continueToDepartments =
+      'institution.continueToDepartments';
+  static const institution_empty_clinicsTitle =
+      'institution.empty.clinicsTitle';
+  static const institution_empty_clinicsDescription =
+      'institution.empty.clinicsDescription';
+  static const institution_empty_branchesTitle =
+      'institution.empty.branchesTitle';
+  static const institution_empty_branchesDescription =
+      'institution.empty.branchesDescription';
+  static const institution_empty_departmentsTitle =
+      'institution.empty.departmentsTitle';
+  static const institution_empty_departmentsDescription =
+      'institution.empty.departmentsDescription';
+  static const institution_empty = 'institution.empty';
+  static const institution_weekdays_monday = 'institution.weekdays.monday';
+  static const institution_weekdays_tuesday = 'institution.weekdays.tuesday';
+  static const institution_weekdays_wednesday =
+      'institution.weekdays.wednesday';
+  static const institution_weekdays_thursday = 'institution.weekdays.thursday';
+  static const institution_weekdays_friday = 'institution.weekdays.friday';
+  static const institution_weekdays_saturday = 'institution.weekdays.saturday';
+  static const institution_weekdays_sunday = 'institution.weekdays.sunday';
+  static const institution_weekdays = 'institution.weekdays';
+  static const institution_errors_invalidTime =
+      'institution.errors.invalidTime';
+  static const institution_errors_closeBeforeOpen =
+      'institution.errors.closeBeforeOpen';
+  static const institution_errors_overlappingRanges =
+      'institution.errors.overlappingRanges';
+  static const institution_errors_nameRequired =
+      'institution.errors.nameRequired';
+  static const institution_errors_addressRequired =
+      'institution.errors.addressRequired';
+  static const institution_errors_invalidRecord =
+      'institution.errors.invalidRecord';
+  static const institution_errors_unavailable =
+      'institution.errors.unavailable';
+  static const institution_errors = 'institution.errors';
+  static const institution_overview = 'institution.overview';
+  static const institution_newClinic = 'institution.newClinic';
+  static const institution_clinicName = 'institution.clinicName';
+  static const institution_createClinic = 'institution.createClinic';
+  static const institution_save = 'institution.save';
+  static const institution_retry = 'institution.retry';
+  static const institution_loading = 'institution.loading';
+  static const institution_notFound = 'institution.notFound';
+  static const institution_notFoundDescription =
+      'institution.notFoundDescription';
+  static const institution_branchesCount = 'institution.branchesCount';
+  static const institution_departmentsCount = 'institution.departmentsCount';
+  static const institution_hoursSummary = 'institution.hoursSummary';
+  static const institution_rangeAdd = 'institution.rangeAdd';
+  static const institution_rangeRemove = 'institution.rangeRemove';
+  static const institution_timeStart = 'institution.timeStart';
+  static const institution_timeEnd = 'institution.timeEnd';
+  static const institution_today = 'institution.today';
+  static const institution_selectClinic = 'institution.selectClinic';
+  static const institution_openDaysCount = 'institution.openDaysCount';
+  static const institution_weekdaysShort_monday =
+      'institution.weekdaysShort.monday';
+  static const institution_weekdaysShort_tuesday =
+      'institution.weekdaysShort.tuesday';
+  static const institution_weekdaysShort_wednesday =
+      'institution.weekdaysShort.wednesday';
+  static const institution_weekdaysShort_thursday =
+      'institution.weekdaysShort.thursday';
+  static const institution_weekdaysShort_friday =
+      'institution.weekdaysShort.friday';
+  static const institution_weekdaysShort_saturday =
+      'institution.weekdaysShort.saturday';
+  static const institution_weekdaysShort_sunday =
+      'institution.weekdaysShort.sunday';
+  static const institution_weekdaysShort = 'institution.weekdaysShort';
+  static const institution_allDaysClosed = 'institution.allDaysClosed';
+  static const institution = 'institution';
 }

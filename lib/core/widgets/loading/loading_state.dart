@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 
 part 'loading_skeleton_list.dart';
 part 'loading_skeleton_card.dart';
+part 'loading_skeleton_card_header.dart';
+part 'loading_skeleton_card_details.dart';
 part 'loading_skeleton_block.dart';
 part 'loading_skeleton_line.dart';
 part 'loading_centered_indicator.dart';

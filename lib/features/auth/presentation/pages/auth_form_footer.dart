@@ -22,16 +22,13 @@ final class _AuthFormFooter extends StatelessWidget {
           enabled: enabled,
           centered: centered,
         ),
-        if (kind.showsStaffNotice) _staffNotice(context, centered),
+        if (kind.showsStaffNotice)
+          AppText.caption(
+            LocaleKeys.auth_staffNotice.translate(),
+            textAlign: centered ? TextAlign.center : TextAlign.start,
+            tone: TextTone.muted,
+          ),
       ],
-    );
-  }
-
-  Widget _staffNotice(BuildContext context, bool centered) {
-    return AppText.caption(
-      LocaleKeys.auth_staffNotice.translate(),
-      textAlign: centered ? TextAlign.center : TextAlign.start,
-      tone: TextTone.muted,
     );
   }
 }

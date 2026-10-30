@@ -3,11 +3,21 @@ part of 'auth_page.dart';
 /// Owns form controllers and navigation effects separately from widget layout.
 mixin _AuthRequestFormMixin<C extends AuthRequestCubit>
     on State<_AuthRequestForm<C>> {
-  final _formKey = GlobalKey<FormState>();
-  final _fullName = TextEditingController();
-  final _email = TextEditingController();
-  final _password = TextEditingController();
-  final _confirmation = TextEditingController();
+  late final GlobalKey<FormState> _formKey;
+  late final TextEditingController _fullName;
+  late final TextEditingController _email;
+  late final TextEditingController _password;
+  late final TextEditingController _confirmation;
+
+  @override
+  void initState() {
+    super.initState();
+    _formKey = GlobalKey<FormState>();
+    _fullName = TextEditingController();
+    _email = TextEditingController();
+    _password = TextEditingController();
+    _confirmation = TextEditingController();
+  }
 
   AuthFormKind get _kind => widget.page.kind;
 
@@ -29,7 +39,7 @@ mixin _AuthRequestFormMixin<C extends AuthRequestCubit>
   }
 
   void _submit() {
-    if (_isBusy || !_formKey.currentState!.validate()) {
+    if (_isBusy || !(_formKey.currentState?.validate() ?? false)) {
       return;
     }
     FocusScope.of(context).unfocus();

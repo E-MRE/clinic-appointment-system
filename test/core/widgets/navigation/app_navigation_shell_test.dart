@@ -1,6 +1,6 @@
-import 'package:clinic_appointment_system/core/theme/breakpoints.dart';
 import 'package:clinic_appointment_system/core/theme/dark_theme.dart';
 import 'package:clinic_appointment_system/core/theme/light_theme.dart';
+import 'package:clinic_appointment_system/core/theme/screen_size.dart';
 import 'package:clinic_appointment_system/core/widgets/navigation/app_navigation_shell.dart';
 import 'package:clinic_appointment_system/generated/assets.gen.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +12,7 @@ void main() {
   ) async {
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(390, 844);
-    var selected = -1;
+    int selected = -1;
     await _pumpNavigation(
       tester,
       ScreenSize.mobile,
@@ -42,7 +42,7 @@ void main() {
   ) async {
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(800, 900);
-    var selected = -1;
+    int selected = -1;
     await _pumpNavigation(
       tester,
       ScreenSize.tablet,
@@ -76,8 +76,8 @@ void main() {
   ) async {
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(1200, 900);
-    var selected = -1;
-    var actionPressed = false;
+    int selected = -1;
+    bool actionPressed = false;
     await _pumpNavigation(
       tester,
       ScreenSize.desktop,

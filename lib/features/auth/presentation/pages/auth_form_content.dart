@@ -38,28 +38,13 @@ final class _AuthFormContent<C extends AuthRequestCubit>
           enabled: enabled,
           onSubmit: onSubmit,
         ),
-        if (kind.isSignIn) _forgotPassword(context),
+        if (kind.isSignIn) _AuthForgotPasswordButton(enabled: enabled),
         const EmptySize.s24Height(),
-        _AuthFormFeedback<C>(kind: kind),
-        _AuthSubmitButton<C>(kind: kind, onSubmit: onSubmit),
+        _AuthFormActions<C>(kind: kind, onSubmit: onSubmit),
         const EmptySize.s32Height(),
         if (context.screenSize.isMobile) const Spacer(),
         _AuthFormFooter(kind: kind, enabled: enabled),
       ],
-    );
-  }
-
-  Widget _forgotPassword(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerRight,
-      child: TextButton(
-        onPressed: enabled
-            ? () {
-                context.go(AppRoutes.passwordReset);
-              }
-            : null,
-        child: Text(LocaleKeys.auth_forgotPassword.translate()),
-      ),
     );
   }
 }

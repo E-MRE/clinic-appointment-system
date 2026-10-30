@@ -25,7 +25,7 @@ Future<void> loadTestTranslations(
               disableAnimations: disableAnimations,
               textScaler: textScaler,
             ),
-            child: content!,
+            child: content ?? const SizedBox.shrink(),
           ),
           home: child,
         ),

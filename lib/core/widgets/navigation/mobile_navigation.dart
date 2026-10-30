@@ -20,7 +20,7 @@ final class _MobileNavigation extends StatelessWidget {
         height: AppSizes.s80,
         child: Row(
           children: [
-            for (var index = 0; index < destinations.length; index++)
+            for (int index = 0; index < destinations.length; index++)
               Expanded(
                 child: _MobileNavigationItem(
                   destination: destinations[index],

@@ -1,6 +1,6 @@
 import 'package:clinic_appointment_system/core/constants/validation_constants.dart';
 import 'package:clinic_appointment_system/core/enums/auth_error_code.dart';
-import 'package:clinic_appointment_system/core/errors/app_exception.dart';
+import 'package:clinic_appointment_system/core/errors/auth_exception.dart';
 import 'package:clinic_appointment_system/features/auth/domain/mixins/auth_input_validation_mixin.dart';
 import 'package:clinic_appointment_system/features/auth/domain/models/auth_credentials.dart';
 import 'package:clinic_appointment_system/features/auth/domain/models/auth_registration.dart';

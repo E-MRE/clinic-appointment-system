@@ -6,7 +6,7 @@ import 'package:clinic_appointment_system/features/auth/presentation/pages/auth_
 
 /// Email/password entry point for every account role.
 final class SignInPage extends AuthPage<SignInCubit> {
-  const SignInPage({required super.createCubit, super.key});
+  const SignInPage({super.key});
 
   @override
   AuthFormKind get kind => AuthFormKind.signIn;
