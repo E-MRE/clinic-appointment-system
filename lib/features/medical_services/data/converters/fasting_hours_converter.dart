@@ -10,14 +10,10 @@ final class FastingHoursConverter
 
   @override
   FastingHours fromJson(Map<String, dynamic> json) {
-    final min = json[FirestoreConstants.minimum];
-    final max = json[FirestoreConstants.maximum];
-    if (min is! int || max is! int) {
-      throw const FormatException(
-        'Fasting hours must contain integer min and max values.',
-      );
-    }
-    return FastingHours(min: min, max: max);
+    return FastingHours(
+      min: json[FirestoreConstants.minimum] as int,
+      max: json[FirestoreConstants.maximum] as int,
+    );
   }
 
   @override

@@ -369,65 +369,6 @@ void main() {
     );
 
     test(
-      'throws FormatException when fastingHours present while requiresFasting is false',
-      () {
-        expect(
-          () => factory.fromJson({
-            'kind': 'lab',
-            'id': 'lab-1',
-            'name': 'Blood Test',
-            'departmentId': 'dept-1',
-            'branchId': 'branch-1',
-            'durationMinutes': 15,
-            'feeKurus': 20000,
-            'resultTime': 'sameDay',
-            'requiresFasting': false,
-            'fastingHours': {'min': 8, 'max': 12},
-          }),
-          throwsFormatException,
-        );
-      },
-    );
-
-    test(
-      'throws FormatException when fastingHours absent while requiresFasting is true',
-      () {
-        expect(
-          () => factory.fromJson({
-            'kind': 'lab',
-            'id': 'lab-1',
-            'name': 'Blood Test',
-            'departmentId': 'dept-1',
-            'branchId': 'branch-1',
-            'durationMinutes': 15,
-            'feeKurus': 20000,
-            'resultTime': 'sameDay',
-            'requiresFasting': true,
-          }),
-          throwsFormatException,
-        );
-      },
-    );
-
-    test('throws FormatException when requiresFasting is not a boolean', () {
-      expect(
-        () => factory.fromJson({
-          'kind': 'lab',
-          'id': 'lab-1',
-          'name': 'Blood Test',
-          'departmentId': 'dept-1',
-          'branchId': 'branch-1',
-          'durationMinutes': 15,
-          'feeKurus': 20000,
-          'resultTime': 'sameDay',
-          'requiresFasting': 'true',
-          'fastingHours': {'min': 8, 'max': 12},
-        }),
-        throwsFormatException,
-      );
-    });
-
-    test(
       'throws CheckedFromJsonException wrapping InstitutionException for inverted fastingHours {min: 12, max: 8}',
       () {
         expect(

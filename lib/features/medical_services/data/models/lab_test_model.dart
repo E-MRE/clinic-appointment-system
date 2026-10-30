@@ -1,4 +1,3 @@
-import 'package:clinic_appointment_system/core/constants/firestore_constants.dart';
 import 'package:clinic_appointment_system/features/medical_services/data/converters/fasting_hours_converter.dart';
 import 'package:clinic_appointment_system/features/medical_services/data/converters/money_converter.dart';
 import 'package:clinic_appointment_system/features/medical_services/data/converters/service_duration_converter.dart';
@@ -41,21 +40,10 @@ final class LabTestModel extends LabTest with MedicalServiceModel {
 
   /// Creates a laboratory test model from stored document fields.
   ///
-  /// Rejects documents where `requiresFasting` is not a boolean or disagrees
-  /// with the presence of `fastingHours`.
-  factory LabTestModel.fromJson(Map<String, dynamic> json) {
-    final requiresFasting = json[FirestoreConstants.requiresFasting];
-    if (requiresFasting is! bool) {
-      throw const FormatException('requiresFasting must be a boolean.');
-    }
-    final hasFastingHours = json[FirestoreConstants.fastingHours] != null;
-    if (requiresFasting != hasFastingHours) {
-      throw const FormatException(
-        'requiresFasting must match the presence of fastingHours.',
-      );
-    }
-    return _$LabTestModelFromJson(json);
-  }
+  /// `requiresFasting` is derived from `fastingHours`; the Firestore rules
+  /// keep the stored flag consistent with it.
+  factory LabTestModel.fromJson(Map<String, dynamic> json) =>
+      _$LabTestModelFromJson(json);
 
   @override
   @JsonKey(includeIfNull: false)

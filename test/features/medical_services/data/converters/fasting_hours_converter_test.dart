@@ -13,7 +13,7 @@ void main() {
     expect(converter.toJson(hours), {'min': 8, 'max': 12});
   });
 
-  test('throws FormatException when min or max is missing or not an int', () {
+  test('throws TypeError when min or max is missing or not an int', () {
     for (final invalid in [
       <String, dynamic>{'min': '8', 'max': 12},
       <String, dynamic>{'min': 8, 'max': '12'},
@@ -21,7 +21,7 @@ void main() {
       <String, dynamic>{'max': 12},
       <String, dynamic>{},
     ]) {
-      expect(() => converter.fromJson(invalid), throwsFormatException);
+      expect(() => converter.fromJson(invalid), throwsA(isA<TypeError>()));
     }
   });
 
