@@ -13,5 +13,8 @@ export 'package:clinic_appointment_system/core/theme/dark_theme.dart';
 export 'package:clinic_appointment_system/core/theme/empty_size.dart';
 export 'package:clinic_appointment_system/core/theme/light_theme.dart';
 export 'package:clinic_appointment_system/core/theme/screen_size.dart';
+export 'package:clinic_appointment_system/core/theme/screen_size_selection.dart';
 export 'package:clinic_appointment_system/core/theme/text_role.dart';
+export 'package:clinic_appointment_system/core/theme/text_role_style.dart';
 export 'package:clinic_appointment_system/core/theme/text_tone.dart';
+export 'package:clinic_appointment_system/core/theme/text_tone_color.dart';

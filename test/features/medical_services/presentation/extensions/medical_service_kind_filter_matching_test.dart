@@ -9,6 +9,7 @@ import 'package:clinic_appointment_system/features/medical_services/domain/value
 import 'package:clinic_appointment_system/features/medical_services/domain/value_objects/money.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/value_objects/service_duration.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/enums/medical_service_kind_filter.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/extensions/medical_service_kind_filter_matching.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

@@ -45,22 +45,4 @@ enum _PreviewSection {
 
   /// Localization key for the section heading.
   final String label;
-
-  Widget content() {
-    return switch (this) {
-      text => const _TextSection(),
-      surface => const _SurfaceSection(),
-      status => const _StatusSection(),
-      header => const _HeaderSection(),
-      states => const _StatesSection(),
-      loading => const _LoadingSection(),
-      list => const _ListSection(),
-      dataTable => const _DataTableSection(),
-      avatar => const _AvatarSection(),
-      fields => const _FieldsSection(),
-      choices => const _ChoicesSection(),
-      navigation => const _NavigationSection(),
-      other => const _OtherSection(),
-    };
-  }
 }

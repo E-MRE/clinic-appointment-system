@@ -14,7 +14,7 @@ final class _MobileNavigationItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = _NavItemStyle.fromSelected(selected);
+    final style = selected.navItemStyle;
     return _NavigationItemSemantics(
       label: destination.label,
       selected: selected,

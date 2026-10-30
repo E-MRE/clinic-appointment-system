@@ -21,6 +21,8 @@ part 'navigation_item_list.dart';
 part 'navigation_count_badge.dart';
 part 'navigation_item_semantics.dart';
 part 'navigation_item_style.dart';
+part 'navigation_item_style_resolution.dart';
+part 'navigation_item_style_selection.dart';
 part 'mobile_navigation_layout.dart';
 part 'tablet_navigation_layout.dart';
 part 'desktop_navigation_layout.dart';

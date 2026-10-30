@@ -2,6 +2,7 @@ import 'package:clinic_appointment_system/core/theme/theme.dart';
 import 'package:clinic_appointment_system/core/widgets/surface/app_surface_padding.dart';
 import 'package:clinic_appointment_system/core/widgets/surface/app_surface_radius.dart';
 import 'package:clinic_appointment_system/core/widgets/surface/app_surface_variant.dart';
+import 'package:clinic_appointment_system/core/widgets/surface/app_surface_variant_colors.dart';
 import 'package:flutter/material.dart';
 
 /// A themed, bordered container for shared cards and panels.

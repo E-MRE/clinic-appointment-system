@@ -1,5 +1,4 @@
 import 'package:clinic_appointment_system/core/localization/localization.dart';
-import 'package:clinic_appointment_system/features/medical_services/domain/entities/medical_service.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/enums/medical_service_kind.dart';
 
 /// Filter choices for medical service lists.
@@ -29,10 +28,4 @@ enum MedicalServiceKindFilter {
 
   /// Translation key for the filter button label.
   final String labelKey;
-
-  /// Whether [service] belongs to this filter category.
-  bool matches(MedicalService service) => kind == null || service.kind == kind;
-
-  /// Counts the services matching this filter in [services].
-  int countIn(List<MedicalService> services) => services.where(matches).length;
 }

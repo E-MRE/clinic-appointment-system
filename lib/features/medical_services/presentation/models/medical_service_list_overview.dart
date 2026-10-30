@@ -2,6 +2,7 @@ import 'package:clinic_appointment_system/core/localization/localization.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/department.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/medical_service.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/enums/medical_service_kind_filter.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/extensions/medical_service_kind_filter_matching.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/models/department_service_group.dart';
 
 /// Precomputed counts, localized header summaries and department groupings for medical services.

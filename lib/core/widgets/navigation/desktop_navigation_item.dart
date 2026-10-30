@@ -14,7 +14,7 @@ final class _DesktopNavigationItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = _NavItemStyle.fromSelected(selected);
+    final style = selected.navItemStyle;
     final scheme = context.colorScheme;
     return Padding(
       padding: const AppPadding.navigationDestination(),

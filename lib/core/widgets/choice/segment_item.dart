@@ -25,7 +25,7 @@ final class _Segment<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = _SegmentStyle.fromSelected(selected);
+    final style = selected.choiceStyle;
     final content = Material(
       color: style.background(context.colorScheme),
       borderRadius: const AppRadius.full(),

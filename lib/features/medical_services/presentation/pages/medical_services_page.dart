@@ -25,6 +25,7 @@ import 'package:clinic_appointment_system/features/medical_services/presentation
 import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_filter_cubit.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_list_cubit.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/enums/medical_service_kind_filter.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/extensions/medical_service_kind_filter_matching.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/extensions/medical_service_kind_localization.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/extensions/money_formatting.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/extensions/service_duration_formatting.dart';

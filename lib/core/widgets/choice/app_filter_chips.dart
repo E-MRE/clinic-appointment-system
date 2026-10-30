@@ -1,11 +1,13 @@
 import 'package:clinic_appointment_system/core/theme/theme.dart';
 import 'package:clinic_appointment_system/core/widgets/app_text.dart';
 import 'package:clinic_appointment_system/core/widgets/choice/app_choice.dart';
+import 'package:clinic_appointment_system/core/widgets/choice/choice_style.dart';
+import 'package:clinic_appointment_system/core/widgets/choice/choice_style_colors.dart';
+import 'package:clinic_appointment_system/core/widgets/choice/choice_style_selection.dart';
 import 'package:flutter/material.dart';
 
 part 'filter_chip_item.dart';
 part 'filter_chip_label.dart';
-part 'filter_chip_style.dart';
 
 /// Horizontally scrollable single-select filter chips.
 final class AppFilterChips<T> extends StatelessWidget {
