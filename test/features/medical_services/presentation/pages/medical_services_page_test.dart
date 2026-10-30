@@ -355,6 +355,7 @@ void main() {
 
     // 1. Loading state
     expect(find.byType(LoadingState), findsOneWidget);
+    expect(find.text('Hizmeti kaydet'), findsNothing);
 
     // 2. Failure state
     await tester.runAsync(() async {
@@ -364,6 +365,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Tekrar dene'), findsOneWidget);
+    expect(find.text('Hizmeti kaydet'), findsNothing);
 
     // 3. Empty state
     await tester.runAsync(() async {
@@ -373,6 +375,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Bu şubede henüz hizmet yok'), findsOneWidget);
+    expect(find.text('Hizmeti kaydet'), findsOneWidget);
   });
 
   testWidgets('tapping retry in failure state re-watches branch services', (
@@ -425,6 +428,40 @@ void main() {
     expect(find.byType(EmptyState), findsOneWidget);
     expect(find.text('Önce bir şube ekleyin'), findsOneWidget);
     expect(find.text('Kurum ve şubeler'), findsOneWidget);
+  });
+
+  testWidgets('desktop keeps the create panel beside an empty service list', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1440, 900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await branchListCubit.watch('c1');
+    await departmentListCubit.watch('b1');
+    await serviceListCubit.watch('b1');
+
+    await loadTestTranslations(
+      tester,
+      theme: LightTheme(ScreenSize.desktop).themeData,
+      child: wrapWithProviders(const MedicalServicesPage()),
+    );
+
+    await tester.runAsync(() async {
+      branchStream.add(DataResult.success(data: [branch]));
+      departmentStream.add(
+        const DataResult.success(data: [departmentCardiology]),
+      );
+      serviceStream.add(const DataResult.success(data: <MedicalService>[]));
+      await Future<void>.delayed(Duration.zero);
+    });
+    await tester.pumpAndSettle();
+
+    expect(find.text('Bu şubede henüz hizmet yok'), findsOneWidget);
+    expect(find.text('Hizmeti kaydet'), findsOneWidget);
+    // Header add button and panel title only; the empty state has no action.
+    expect(find.text('Hizmet ekle'), findsNWidgets(2));
   });
 
   testWidgets(

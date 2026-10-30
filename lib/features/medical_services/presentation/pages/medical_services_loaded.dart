@@ -22,7 +22,7 @@ final class _MedicalServicesLoaded extends StatelessWidget {
       );
     }
 
-    return _MedicalServicesDesktopLayout(
+    return _MedicalServicesTablePanel(
       services: filteredServices,
       overview: overview,
     );

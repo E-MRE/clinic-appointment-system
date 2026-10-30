@@ -1,31 +1,30 @@
 part of 'medical_services_page.dart';
 
-/// Desktop two-column layout presenting services table and side editor panel.
+/// Places [child] beside the persistent editor panel on desktop once the
+/// services are loaded, so the panel stays available for an empty branch too.
 final class _MedicalServicesDesktopLayout extends StatelessWidget {
-  const _MedicalServicesDesktopLayout({
-    required this.services,
-    required this.overview,
-  });
+  const _MedicalServicesDesktopLayout({required this.child});
 
-  final List<MedicalService> services;
-  final MedicalServiceListOverview overview;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
-    final tablePanel = _MedicalServicesTablePanel(
-      services: services,
-      overview: overview,
-    );
-    if (context.screenSize.isDesktop) {
+    if (_showsPanel(context)) {
       return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: AppSizes.s16,
         children: [
-          Expanded(child: tablePanel),
+          Expanded(child: child),
           const _MedicalServicesDesktopPanel(),
         ],
       );
     }
-    return tablePanel;
+    return child;
+  }
+
+  bool _showsPanel(BuildContext context) {
+    final serviceState = context.watch<MedicalServiceListCubit>().state;
+    return context.screenSize.isDesktop &&
+        serviceState is InstitutionListLoaded<MedicalService>;
   }
 }
