@@ -1,3 +1,4 @@
+import 'package:clinic_appointment_system/core/constants/clock_constants.dart';
 import 'package:clinic_appointment_system/features/institution/domain/value_objects/clock_time.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -30,10 +31,6 @@ final class ClockTimeConverter extends JsonConverter<ClockTime, String> {
 
   int get _nineCodeUnit => '9'.codeUnitAt(_firstHourCharacterIndex);
 
-  int get _lastHour => 23;
-
-  int get _lastMinute => 59;
-
   @override
   ClockTime fromJson(String json) {
     if (json.length != _clockTimeLength || json[_hourSeparatorIndex] != ':') {
@@ -59,8 +56,8 @@ final class ClockTimeConverter extends JsonConverter<ClockTime, String> {
     if (!hasOnlyDigits ||
         hour == null ||
         minute == null ||
-        hour > _lastHour ||
-        minute > _lastMinute) {
+        hour > ClockConstants.lastHour ||
+        minute > ClockConstants.lastMinute) {
       throw const FormatException('Clock time must use a valid HH:mm value.');
     }
 

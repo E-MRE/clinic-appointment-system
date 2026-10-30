@@ -1,6 +1,4 @@
-import 'package:clinic_appointment_system/core/constants/working_hours_constants.dart';
 import 'package:clinic_appointment_system/features/institution/domain/enums/weekday.dart';
-import 'package:clinic_appointment_system/features/institution/domain/value_objects/clock_time.dart';
 import 'package:clinic_appointment_system/features/institution/domain/value_objects/working_hours.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/models/working_hours_day_draft.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/models/working_hours_range_draft.dart';
@@ -59,17 +57,6 @@ final class WorkingHoursEditorState {
 
   static List<WorkingHoursRangeDraft> _defaultRangesFor(Weekday weekday) {
     if (weekday.index > Weekday.friday.index) return const [];
-    return [
-      WorkingHoursRangeDraft(
-        start: ClockTime(
-          hour: WorkingHoursConstants.openingHour,
-          minute: WorkingHoursConstants.openingMinute,
-        ),
-        end: ClockTime(
-          hour: WorkingHoursConstants.closingHour,
-          minute: WorkingHoursConstants.closingMinute,
-        ),
-      ),
-    ];
+    return [WorkingHoursRangeDraft.workday()];
   }
 }

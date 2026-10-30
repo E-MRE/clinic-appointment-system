@@ -1,3 +1,4 @@
+import 'package:clinic_appointment_system/core/constants/clock_constants.dart';
 import 'package:clinic_appointment_system/core/constants/working_hours_constants.dart';
 import 'package:clinic_appointment_system/features/institution/domain/enums/weekday.dart';
 import 'package:clinic_appointment_system/features/institution/domain/value_objects/clock_time.dart';
@@ -24,7 +25,7 @@ final class WorkingHoursEditorCubit extends Cubit<WorkingHoursEditorState> {
     final current = state.day(weekday);
     final isOpen = !current.isOpen;
     final ranges = current.ranges.isEmpty && isOpen
-        ? _defaultRanges
+        ? [WorkingHoursRangeDraft.workday()]
         : current.ranges;
     _replaceDay(weekday, isOpen: isOpen, ranges: ranges);
   }
@@ -102,16 +103,20 @@ final class WorkingHoursEditorCubit extends Cubit<WorkingHoursEditorState> {
       index >= 0 && index < day.ranges.length;
 
   WorkingHoursRangeDraft _nextRange(WorkingHoursDayDraft day) {
-    if (day.ranges.isEmpty) return _defaultRanges.single;
-    int latestEnd = _firstMinute;
+    if (day.ranges.isEmpty) return WorkingHoursRangeDraft.workday();
+    int latestEnd = ClockConstants.midnight;
     for (final range in day.ranges) {
       if (range.end.minutesSinceMidnight > latestEnd) {
         latestEnd = range.end.minutesSinceMidnight;
       }
     }
-    final start = latestEnd < _lastMinute ? latestEnd : _firstMinute;
+    final start = latestEnd < ClockConstants.lastMinuteOfDay
+        ? latestEnd
+        : ClockConstants.midnight;
     final proposedEnd = start + WorkingHoursConstants.rangeStepMinutes;
-    final end = proposedEnd <= _lastMinute ? proposedEnd : _lastMinute;
+    final end = proposedEnd <= ClockConstants.lastMinuteOfDay
+        ? proposedEnd
+        : ClockConstants.lastMinuteOfDay;
     return WorkingHoursRangeDraft(
       start: ClockTime.fromMinutes(start),
       end: ClockTime.fromMinutes(end),
@@ -129,23 +134,4 @@ final class WorkingHoursEditorCubit extends Cubit<WorkingHoursEditorState> {
       ),
     );
   }
-
-  int get _firstMinute => 0;
-  int get _lastHour => 23;
-  int get _lastMinuteOfHour => 59;
-  int get _minutesPerHour => 60;
-  int get _lastMinute => _lastHour * _minutesPerHour + _lastMinuteOfHour;
-
-  List<WorkingHoursRangeDraft> get _defaultRanges => [
-    WorkingHoursRangeDraft(
-      start: ClockTime(
-        hour: WorkingHoursConstants.openingHour,
-        minute: WorkingHoursConstants.openingMinute,
-      ),
-      end: ClockTime(
-        hour: WorkingHoursConstants.closingHour,
-        minute: WorkingHoursConstants.closingMinute,
-      ),
-    ),
-  ];
 }
