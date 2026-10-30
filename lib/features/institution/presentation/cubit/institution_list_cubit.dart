@@ -41,7 +41,9 @@ abstract class InstitutionListCubit<
     if (_subscription != null) await _cancelSubscription();
     if (_isClosingOrClosed || generation != _watchGeneration) return;
     try {
-      _subscription = _watchUseCase(params).listen(
+      // Explicit `call`: the web dev compiler cannot invoke a callable object
+      // typed by a type parameter.
+      _subscription = _watchUseCase.call(params).listen(
         (result) => _onResult(result, generation),
         onError: (Object error, StackTrace stackTrace) {
           _onError(error, generation);
