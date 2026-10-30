@@ -14,6 +14,7 @@ final class AppSegmentedControl<T> extends StatelessWidget {
     required this.choices,
     required this.selected,
     required this.onSelected,
+    this.enabled = true,
     super.key,
   });
 
@@ -25,6 +26,9 @@ final class AppSegmentedControl<T> extends StatelessWidget {
 
   /// Called with the newly selected value.
   final ValueChanged<T> onSelected;
+
+  /// Whether user interaction is allowed.
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +46,7 @@ final class AppSegmentedControl<T> extends StatelessWidget {
               child: _Segment<T>(
                 choice: choice,
                 selected: choice.value == selected,
+                enabled: enabled,
                 onSelected: onSelected,
               ),
             ),

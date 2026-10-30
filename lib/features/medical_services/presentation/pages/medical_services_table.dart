@@ -20,11 +20,11 @@ final class _MedicalServicesTable extends StatelessWidget {
         padding: const AppPadding.allLg(),
         child: _MedicalServicesFilterChipsRow(overview: overview),
       ),
-      columns: _columns,
+      columns: _columns(context),
     );
   }
 
-  List<AppTableColumn<MedicalService>> get _columns {
+  List<AppTableColumn<MedicalService>> _columns(BuildContext context) {
     return [
       AppTableColumn<MedicalService>(
         label: LocaleKeys.services_columns_service.tr(),
@@ -54,14 +54,28 @@ final class _MedicalServicesTable extends StatelessWidget {
         label: '',
         semanticsLabel: LocaleKeys.services_columns_actions.tr(),
         alignment: AppTableAlignment.end,
-        cellBuilder: (context, service) {
+        cellBuilder: (cellContext, service) {
           return IconButton(
-            onPressed: () => context.go(AppRoutes.serviceEdit(service.id)),
+            onPressed: () => _onEdit(cellContext, service),
             tooltip: LocaleKeys.services_editTooltip.tr(),
             icon: const Icon(Icons.edit_outlined),
           );
         },
       ),
     ];
+  }
+
+  void _onEdit(BuildContext context, MedicalService service) {
+    if (context.screenSize.isDesktop) {
+      context.read<MedicalServiceEditorCubit>().edit(service);
+    } else if (context.screenSize.isTablet) {
+      _MedicalServiceFormDialog.show(
+        context,
+        service: service,
+        branchId: service.branchId,
+      );
+    } else {
+      context.go(AppRoutes.serviceEdit(service.id));
+    }
   }
 }

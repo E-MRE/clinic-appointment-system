@@ -8,13 +8,9 @@ final class _MedicalServicesLoaded extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final departmentState = context.watch<DepartmentListCubit>().state;
-    final departments = departmentState is InstitutionListLoaded<Department>
-        ? departmentState.items
-        : const <Department>[];
     final overview = MedicalServiceListOverview.from(
       services: services,
-      departments: departments,
+      departments: _resolveDepartments(context),
     );
     final filter = context.watch<MedicalServiceFilterCubit>().state;
     final filteredServices = services.where(filter.matches).toList();
@@ -26,15 +22,17 @@ final class _MedicalServicesLoaded extends StatelessWidget {
       );
     }
 
-    if (filteredServices.isEmpty) {
-      return _MedicalServicesDesktopEmpty(overview: overview);
-    }
-
-    return SingleChildScrollView(
-      child: _MedicalServicesTable(
-        services: filteredServices,
-        overview: overview,
-      ),
+    return _MedicalServicesDesktopLayout(
+      services: filteredServices,
+      overview: overview,
     );
+  }
+
+  List<Department> _resolveDepartments(BuildContext context) {
+    final departmentState = context.watch<DepartmentListCubit>().state;
+    if (departmentState is InstitutionListLoaded<Department>) {
+      return departmentState.items;
+    }
+    return const <Department>[];
   }
 }

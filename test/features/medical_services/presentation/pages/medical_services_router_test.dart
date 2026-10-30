@@ -33,7 +33,9 @@ import 'package:clinic_appointment_system/features/medical_services/domain/entit
 import 'package:clinic_appointment_system/features/medical_services/domain/usecases/create_medical_service_use_case.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/usecases/update_medical_service_use_case.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/usecases/watch_medical_services_use_case.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_editor_cubit.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_filter_cubit.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_form_cubit.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_list_cubit.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_save_cubit.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/pages/medical_service_form_page.dart';
@@ -278,6 +280,12 @@ GoRouter _setupRouter(
   );
   AppDependency.injector.registerFactory<MedicalServiceFilterCubit>(
     MedicalServiceFilterCubit.new,
+  );
+  AppDependency.injector.registerFactory<MedicalServiceFormCubit>(
+    MedicalServiceFormCubit.new,
+  );
+  AppDependency.injector.registerFactory<MedicalServiceEditorCubit>(
+    MedicalServiceEditorCubit.new,
   );
   return createAppRouter(initialLocation: path, authGuard: guard);
 }

@@ -6,6 +6,13 @@ final class _AppTextInputField extends StatelessWidget {
     required this.label,
     required this.fieldKey,
     required this.controller,
+    required this.initialValue,
+    required this.onChanged,
+    required this.maxLines,
+    required this.minLines,
+    required this.maxLength,
+    required this.maxLengthEnforcement,
+    required this.buildCounter,
     required this.enabled,
     required this.validator,
     required this.keyboardType,
@@ -21,6 +28,13 @@ final class _AppTextInputField extends StatelessWidget {
   final String label;
   final Key? fieldKey;
   final TextEditingController? controller;
+  final String? initialValue;
+  final ValueChanged<String>? onChanged;
+  final int? maxLines;
+  final int? minLines;
+  final int? maxLength;
+  final MaxLengthEnforcement? maxLengthEnforcement;
+  final InputCounterWidgetBuilder? buildCounter;
   final bool enabled;
   final String? Function(String?)? validator;
   final TextInputType? keyboardType;
@@ -39,6 +53,13 @@ final class _AppTextInputField extends StatelessWidget {
       child: TextFormField(
         key: fieldKey,
         controller: controller,
+        initialValue: initialValue,
+        onChanged: onChanged,
+        maxLines: maxLines,
+        minLines: minLines,
+        maxLength: maxLength,
+        maxLengthEnforcement: maxLengthEnforcement,
+        buildCounter: buildCounter,
         enabled: enabled,
         validator: validator,
         keyboardType: keyboardType,

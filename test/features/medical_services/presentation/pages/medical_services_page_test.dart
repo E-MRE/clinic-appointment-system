@@ -20,11 +20,16 @@ import 'package:clinic_appointment_system/features/medical_services/domain/entit
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/medical_service.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/radiology_service.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/enums/radiology_modality.dart';
+import 'package:clinic_appointment_system/features/medical_services/domain/usecases/create_medical_service_use_case.dart';
+import 'package:clinic_appointment_system/features/medical_services/domain/usecases/update_medical_service_use_case.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/usecases/watch_medical_services_use_case.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/value_objects/money.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/value_objects/service_duration.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_editor_cubit.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_filter_cubit.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_form_cubit.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_list_cubit.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_save_cubit.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/enums/medical_service_kind_filter.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/pages/medical_services_page.dart';
 import 'package:flutter/material.dart';
@@ -120,6 +125,18 @@ void main() {
     AppDependency.injector.registerFactory<MedicalServiceFilterCubit>(
       MedicalServiceFilterCubit.new,
     );
+    AppDependency.injector.registerFactory<MedicalServiceEditorCubit>(
+      MedicalServiceEditorCubit.new,
+    );
+    AppDependency.injector.registerFactory<MedicalServiceFormCubit>(
+      MedicalServiceFormCubit.new,
+    );
+    AppDependency.injector.registerFactory<MedicalServiceSaveCubit>(
+      () => MedicalServiceSaveCubit(
+        CreateMedicalServiceUseCase(serviceRepo),
+        UpdateMedicalServiceUseCase(serviceRepo),
+      ),
+    );
   });
 
   tearDown(() async {
@@ -188,7 +205,7 @@ void main() {
 
       // Branch selector and add button
       expect(find.text('Ana Şube'), findsOneWidget);
-      expect(find.text('Hizmet ekle'), findsOneWidget);
+      expect(find.widgetWithText(FilledButton, 'Hizmet ekle'), findsOneWidget);
 
       // AppDataTable rows
       expect(find.byType(AppDataTable<MedicalService>), findsOneWidget);
@@ -198,7 +215,13 @@ void main() {
       expect(find.text('₺1.200'), findsOneWidget);
 
       expect(find.text('Akciğer Grafisi'), findsOneWidget);
-      expect(find.text('Radyoloji'), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byType(Table),
+          matching: find.text('Radyoloji'),
+        ),
+        findsOneWidget,
+      );
       expect(find.text('15 dk'), findsOneWidget);
       expect(find.text('₺650'), findsOneWidget);
     },
@@ -402,5 +425,138 @@ void main() {
     expect(find.byType(EmptyState), findsOneWidget);
     expect(find.text('Önce bir şube ekleyin'), findsOneWidget);
     expect(find.text('Kurum ve şubeler'), findsOneWidget);
+  });
+
+  testWidgets(
+    'desktop panel switches to edit on row click and resets to create on save',
+    (tester) async {
+      tester.view.physicalSize = const Size(1440, 900);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      await branchListCubit.watch('c1');
+      await departmentListCubit.watch('b1');
+      await serviceListCubit.watch('b1');
+
+      await loadTestTranslations(
+        tester,
+        theme: LightTheme(ScreenSize.desktop).themeData,
+        child: wrapWithProviders(const MedicalServicesPage()),
+      );
+
+      await tester.runAsync(() async {
+        branchStream.add(DataResult.success(data: [branch]));
+        departmentStream.add(
+          const DataResult.success(
+            data: [departmentCardiology, departmentRadiology],
+          ),
+        );
+        serviceStream.add(DataResult.success(data: testServices));
+        await Future<void>.delayed(Duration.zero);
+      });
+      await tester.pumpAndSettle();
+
+      // Right panel starts in create mode (no "Hizmeti düzenle" title)
+      expect(find.text('Hizmeti düzenle'), findsNothing);
+
+      // Tap edit button on the first service ('Kardiyoloji Muayenesi')
+      final editButton = find.byIcon(Icons.edit_outlined).first;
+      await tester.ensureVisible(editButton);
+      await tester.tap(editButton);
+      await tester.pumpAndSettle();
+
+      // Now in edit mode
+      expect(find.text('Hizmeti düzenle'), findsOneWidget);
+
+      // Prepare repository update result
+      serviceRepo.updateResult = DataResult.success(data: serviceExamination);
+
+      // Tap save button in the panel
+      final saveButton = find.text('Hizmeti kaydet');
+      await tester.ensureVisible(saveButton);
+      await tester.tap(saveButton);
+      await tester.pumpAndSettle();
+
+      // After successful save, panel resets to create mode
+      expect(find.text('Hizmeti düzenle'), findsNothing);
+    },
+  );
+
+  testWidgets('tablet dialog opens on add and closes on successful save', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(800, 1024);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await branchListCubit.watch('c1');
+    await departmentListCubit.watch('b1');
+    await serviceListCubit.watch('b1');
+
+    await loadTestTranslations(
+      tester,
+      theme: LightTheme(ScreenSize.tablet).themeData,
+      child: wrapWithProviders(const MedicalServicesPage()),
+    );
+
+    await tester.runAsync(() async {
+      branchStream.add(DataResult.success(data: [branch]));
+      departmentStream.add(
+        const DataResult.success(
+          data: [departmentCardiology, departmentRadiology],
+        ),
+      );
+      serviceStream.add(DataResult.success(data: testServices));
+      await Future<void>.delayed(Duration.zero);
+    });
+    await tester.pumpAndSettle();
+
+    // Right panel does not exist on tablet
+    expect(find.text('Hizmeti kaydet'), findsNothing);
+
+    // Tap header add button
+    await tester.tap(find.widgetWithText(FilledButton, 'Hizmet ekle'));
+    await tester.pumpAndSettle();
+
+    // Dialog opens
+    expect(find.byType(Dialog), findsOneWidget);
+    expect(find.text('Vazgeç'), findsOneWidget);
+    expect(find.text('Hizmeti kaydet'), findsOneWidget);
+
+    // Enter form data
+    await tester.enterText(
+      find.widgetWithText(TextFormField, '').first,
+      'New Ultrasound',
+    );
+    // Select department
+    await tester.tap(
+      find.descendant(
+        of: find.byType(Dialog),
+        matching: find.byType(DropdownButtonFormField<String>),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Kardiyoloji').last);
+    await tester.pumpAndSettle();
+
+    await tester.enterText(
+      find.widgetWithText(TextFormField, '5–240 dakika'),
+      '30',
+    );
+    await tester.enterText(
+      find.widgetWithText(TextFormField, 'KDV dahil'),
+      '500',
+    );
+
+    serviceRepo.createResult = DataResult.success(data: serviceExamination);
+
+    // Tap save in dialog
+    await tester.tap(find.text('Hizmeti kaydet'));
+    await tester.pumpAndSettle();
+
+    // Dialog closes
+    expect(find.byType(Dialog), findsNothing);
   });
 }

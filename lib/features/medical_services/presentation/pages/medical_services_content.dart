@@ -16,7 +16,7 @@ final class _MedicalServicesContent extends StatelessWidget {
         }
       },
       emptyAction: FilledButton.icon(
-        onPressed: () => context.go(AppRoutes.serviceNew),
+        onPressed: () => _onAdd(context),
         icon: const Icon(Icons.add),
         label: AppText.label(
           LocaleKeys.services_addService.tr(),
@@ -25,5 +25,17 @@ final class _MedicalServicesContent extends StatelessWidget {
       ),
       loadedBuilder: (services) => _MedicalServicesLoaded(services: services),
     );
+  }
+
+  void _onAdd(BuildContext context) {
+    final branchId = InstitutionSelectionScope.read(context).branchId;
+    if (branchId == null) return;
+    if (context.screenSize.isDesktop) {
+      context.read<MedicalServiceEditorCubit>().startCreate();
+    } else if (context.screenSize.isTablet) {
+      _MedicalServiceFormDialog.show(context, branchId: branchId);
+    } else {
+      context.go(AppRoutes.serviceNew);
+    }
   }
 }
