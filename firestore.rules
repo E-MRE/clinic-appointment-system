@@ -138,5 +138,102 @@ service cloud.firestore {
           && isFilledString(data.name);
       }
     }
+
+    // services/{serviceId}: examinations, radiology services and lab tests
+    // offered by a branch department. Kind, branch and department are fixed
+    // after creation; fees are stored in kuruş.
+    match /services/{serviceId} {
+      allow read: if isSignedIn();
+      allow create: if isAdmin() && isValidService(request.resource.data);
+      allow update: if isAdmin()
+        && isValidService(request.resource.data)
+        && request.resource.data.kind == resource.data.kind
+        && request.resource.data.branchId == resource.data.branchId
+        && request.resource.data.departmentId == resource.data.departmentId;
+      allow delete: if false;
+
+      function commonKeys() {
+        return [
+          'kind', 'branchId', 'departmentId', 'name',
+          'durationMinutes', 'feeKurus'
+        ];
+      }
+
+      function isValidService(data) {
+        return data.keys().hasAll(commonKeys())
+          && isValidCommonFields(data)
+          && isDepartmentOfBranch(data)
+          && (isValidExamination(data)
+            || isValidRadiology(data)
+            || isValidLabTest(data));
+      }
+
+      function isValidCommonFields(data) {
+        return data.kind is string
+          && data.branchId is string
+          && data.departmentId is string
+          && isFilledString(data.name)
+          && data.durationMinutes is int
+          && data.durationMinutes >= 5
+          && data.durationMinutes <= 240
+          && data.feeKurus is int
+          && data.feeKurus >= 100
+          && data.feeKurus <= 10000000;
+      }
+
+      // The department must exist and belong to the service's branch.
+      function isDepartmentOfBranch(data) {
+        let department =
+          /databases/$(database)/documents/departments/$(data.departmentId);
+        return exists(department)
+          && get(department).data.branchId == data.branchId;
+      }
+
+      function isValidExamination(data) {
+        return data.kind == 'examination'
+          && data.keys().hasOnly(commonKeys());
+      }
+
+      function isValidRadiology(data) {
+        return data.kind == 'radiology'
+          && data.keys().hasOnly(commonKeys().concat([
+            'modality', 'preparationNote'
+          ]))
+          && data.keys().hasAll(['modality'])
+          && data.modality in ['xRay', 'ultrasound', 'mri', 'ct']
+          && (!('preparationNote' in data)
+            || isValidPreparationNote(data.preparationNote));
+      }
+
+      function isValidPreparationNote(note) {
+        return isFilledString(note) && note.size() <= 200;
+      }
+
+      function isValidLabTest(data) {
+        return data.kind == 'lab'
+          && data.keys().hasOnly(commonKeys().concat([
+            'requiresFasting', 'fastingHours', 'resultTime'
+          ]))
+          && data.keys().hasAll(['requiresFasting', 'resultTime'])
+          && data.requiresFasting is bool
+          && data.requiresFasting == ('fastingHours' in data)
+          && (!('fastingHours' in data)
+            || isValidFastingHours(data.fastingHours))
+          && data.resultTime in [
+            'sameDay', 'oneDay', 'twoDays', 'threeDays', 'oneWeek'
+          ];
+      }
+
+      function isValidFastingHours(hours) {
+        return hours is map
+          && hours.keys().hasOnly(['min', 'max'])
+          && hours.keys().hasAll(['min', 'max'])
+          && hours.min is int
+          && hours.max is int
+          && hours.min >= 1
+          && hours.min <= hours.max
+          && hours.max <= 24;
+      }
+    }
   }
 }
