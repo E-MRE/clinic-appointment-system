@@ -218,7 +218,12 @@
       "nameRequired": "Bu alan boş bırakılamaz.",
       "addressRequired": "Adres boş bırakılamaz.",
       "invalidRecord": "Kurum kaydı geçersiz.",
-      "unavailable": "İşlem tamamlanamadı. Lütfen tekrar deneyin."
+      "unavailable": "İşlem tamamlanamadı. Lütfen tekrar deneyin.",
+      "departmentRequired": "Bir bölüm seçin.",
+      "invalidDuration": "Süre 5–240 dakika arasında olmalı.",
+      "invalidFee": "Ücret 1 ₺ ile 100.000 ₺ arasında olmalı (en fazla 2 ondalık).",
+      "invalidFastingHours": "Açlık süresi 1–24 saat arasında olmalı; en az değer en çoktan büyük olamaz.",
+      "preparationNoteTooLong": "Hazırlık notu en fazla 200 karakter olabilir."
     },
     "overview": "Genel bakış",
     "newClinic": "Yeni kurum",

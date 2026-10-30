@@ -234,6 +234,15 @@ abstract class LocaleKeys {
       'institution.errors.invalidRecord';
   static const institution_errors_unavailable =
       'institution.errors.unavailable';
+  static const institution_errors_departmentRequired =
+      'institution.errors.departmentRequired';
+  static const institution_errors_invalidDuration =
+      'institution.errors.invalidDuration';
+  static const institution_errors_invalidFee = 'institution.errors.invalidFee';
+  static const institution_errors_invalidFastingHours =
+      'institution.errors.invalidFastingHours';
+  static const institution_errors_preparationNoteTooLong =
+      'institution.errors.preparationNoteTooLong';
   static const institution_errors = 'institution.errors';
   static const institution_overview = 'institution.overview';
   static const institution_newClinic = 'institution.newClinic';
