@@ -23,6 +23,16 @@ extension InstitutionErrorCodeLocalization on InstitutionErrorCode {
         LocaleKeys.institution_errors_invalidRecord,
       InstitutionErrorCode.unavailable =>
         LocaleKeys.institution_errors_unavailable,
+      InstitutionErrorCode.departmentRequired =>
+        LocaleKeys.institution_errors_departmentRequired,
+      InstitutionErrorCode.invalidDuration =>
+        LocaleKeys.institution_errors_invalidDuration,
+      InstitutionErrorCode.invalidFee =>
+        LocaleKeys.institution_errors_invalidFee,
+      InstitutionErrorCode.invalidFastingHours =>
+        LocaleKeys.institution_errors_invalidFastingHours,
+      InstitutionErrorCode.preparationNoteTooLong =>
+        LocaleKeys.institution_errors_preparationNoteTooLong,
     };
   }
 }

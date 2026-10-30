@@ -1,6 +1,7 @@
 import 'package:clinic_appointment_system/core/theme/theme.dart';
 import 'package:clinic_appointment_system/core/widgets/app_text.dart';
 import 'package:clinic_appointment_system/core/widgets/page_header/page_header_tier.dart';
+import 'package:clinic_appointment_system/core/widgets/page_header/page_header_tier_selection.dart';
 import 'package:flutter/material.dart';
 
 part 'page_header_title.dart';
@@ -26,7 +27,7 @@ final class PageHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tier = PageHeaderTier.from(context.screenSize);
+    final tier = context.screenSize.pageHeaderTier;
     return ConstrainedBox(
       constraints: BoxConstraints(minHeight: tier.minimumHeight),
       child: Align(

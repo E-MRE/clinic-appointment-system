@@ -19,8 +19,5 @@ enum Weekday {
   saturday,
 
   /// The seventh day of the week.
-  sunday;
-
-  /// Returns the weekday represented by [date].
-  static Weekday fromDate(DateTime date) => Weekday.values[date.weekday - 1];
+  sunday,
 }

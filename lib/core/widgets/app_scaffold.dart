@@ -3,9 +3,14 @@ import 'package:flutter/material.dart';
 
 /// Standard page shell with safe insets and responsive content padding.
 final class AppScaffold extends StatelessWidget {
-  const AppScaffold({required this.child, super.key});
+  const AppScaffold({
+    required this.child,
+    this.floatingActionButton,
+    super.key,
+  });
 
   final Widget child;
+  final Widget? floatingActionButton;
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +25,7 @@ final class AppScaffold extends StatelessWidget {
           child: child,
         ),
       ),
+      floatingActionButton: floatingActionButton,
     );
   }
 }

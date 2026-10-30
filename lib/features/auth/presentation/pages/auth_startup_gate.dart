@@ -1,7 +1,8 @@
 import 'package:clinic_appointment_system/core/router/app_routes.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_state.dart';
-import 'package:clinic_appointment_system/features/auth/presentation/enums/startup_error_kind.dart';
+import 'package:clinic_appointment_system/features/auth/presentation/extensions/auth_error_code_startup_error.dart';
+import 'package:clinic_appointment_system/features/auth/presentation/extensions/user_error_code_startup_error.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/pages/splash_page.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/pages/startup_error_page.dart';
 import 'package:clinic_appointment_system/features/users/domain/enums/user_error_code.dart';

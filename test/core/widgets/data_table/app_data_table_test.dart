@@ -111,6 +111,13 @@ void main() {
       tester.state<ScrollableState>(scrollable).position.maxScrollExtent,
       greaterThan(0),
     );
+    final scrollbar = tester.widget<Scrollbar>(
+      find.descendant(
+        of: find.byType(AppDataTable<String>),
+        matching: find.byType(Scrollbar),
+      ),
+    );
+    expect(scrollbar.thumbVisibility, isTrue);
     await tester.drag(scrollable, const Offset(-300, 0));
     await tester.pumpAndSettle();
     expect(

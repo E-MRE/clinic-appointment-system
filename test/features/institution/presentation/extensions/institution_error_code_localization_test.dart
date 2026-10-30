@@ -14,6 +14,11 @@ void main() {
         'institution.errors.addressRequired',
         'institution.errors.invalidRecord',
         'institution.errors.unavailable',
+        'institution.errors.departmentRequired',
+        'institution.errors.invalidDuration',
+        'institution.errors.invalidFee',
+        'institution.errors.invalidFastingHours',
+        'institution.errors.preparationNoteTooLong',
       ],
     );
   });

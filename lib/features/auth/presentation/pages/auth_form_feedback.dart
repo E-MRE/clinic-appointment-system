@@ -16,7 +16,7 @@ final class _AuthFormFeedback<C extends AuthRequestCubit>
 
           return _AuthFeedbackMessage(message: message, tone: TextTone.error);
         }
-        final successKey = kind.successMessageKey;
+        final successKey = kind.config.successMessageKey;
         if (state is AuthRequestSuccess && successKey != null) {
           return _AuthFeedbackMessage(
             message: successKey.translate(),

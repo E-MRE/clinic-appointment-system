@@ -18,9 +18,4 @@ enum PageHeaderTier {
 
   /// Subtitle role for this tier.
   final TextRole subtitleRole;
-
-  /// Resolves a screen size to its page-header tier.
-  static PageHeaderTier from(ScreenSize size) {
-    return size.select(mobile: mobile, tablet: tablet, desktop: desktop);
-  }
 }

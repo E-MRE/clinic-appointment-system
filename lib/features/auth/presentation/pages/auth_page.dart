@@ -18,6 +18,7 @@ import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_state.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/enums/auth_form_kind.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/extensions/auth_error_code_localization.dart';
+import 'package:clinic_appointment_system/features/auth/presentation/extensions/auth_form_kind_config.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/models/auth_footer_config.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/models/auth_form_values.dart';
 import 'package:clinic_appointment_system/generated/assets.gen.dart';

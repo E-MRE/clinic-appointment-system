@@ -24,7 +24,7 @@ final class _AuthBackButton extends StatelessWidget {
         Expanded(
           child: Semantics(
             header: true,
-            child: AppText.sectionTitle(kind.titleKey.translate()),
+            child: AppText.sectionTitle(kind.config.titleKey.translate()),
           ),
         ),
       ],

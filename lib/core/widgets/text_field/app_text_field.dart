@@ -3,6 +3,7 @@ import 'package:clinic_appointment_system/core/widgets/app_text.dart';
 import 'package:clinic_appointment_system/core/widgets/square_svg_icon.dart';
 import 'package:clinic_appointment_system/generated/assets.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 part 'app_text_input_field.dart';
 
@@ -11,7 +12,14 @@ final class AppTextField extends StatelessWidget {
   /// Creates a labeled text input from display values and form behavior.
   const AppTextField({
     required this.label,
-    required this.controller,
+    this.controller,
+    this.initialValue,
+    this.onChanged,
+    this.maxLines = 1,
+    this.minLines,
+    this.maxLength,
+    this.maxLengthEnforcement = MaxLengthEnforcement.none,
+    this.buildCounter,
     this.enabled = true,
     this.validator,
     this.fieldKey,
@@ -29,13 +37,37 @@ final class AppTextField extends StatelessWidget {
     this.enableSuggestions = false,
     this.fillColor,
     super.key,
-  });
+  }) : assert(
+         initialValue == null || controller == null,
+         'Cannot provide both a controller and an initialValue',
+       );
 
   /// Accessible field label.
   final String label;
 
-  /// Controller owned by the containing feature.
-  final TextEditingController controller;
+  /// Optional controller owned by the containing feature.
+  final TextEditingController? controller;
+
+  /// Optional initial text when unmanaged by a controller.
+  final String? initialValue;
+
+  /// Optional callback invoked whenever the text changes.
+  final ValueChanged<String>? onChanged;
+
+  /// Maximum line count for multi-line inputs.
+  final int? maxLines;
+
+  /// Minimum line count for multi-line inputs.
+  final int? minLines;
+
+  /// Optional maximum character length.
+  final int? maxLength;
+
+  /// Strategy enforcing the maximum length.
+  final MaxLengthEnforcement? maxLengthEnforcement;
+
+  /// Optional custom counter builder.
+  final InputCounterWidgetBuilder? buildCounter;
 
   /// Whether the field accepts input.
   final bool enabled;
@@ -96,6 +128,13 @@ final class AppTextField extends StatelessWidget {
           label: label,
           fieldKey: fieldKey,
           controller: controller,
+          initialValue: initialValue,
+          onChanged: onChanged,
+          maxLines: maxLines,
+          minLines: minLines,
+          maxLength: maxLength,
+          maxLengthEnforcement: maxLengthEnforcement,
+          buildCounter: buildCounter,
           enabled: enabled,
           validator: validator,
           keyboardType: keyboardType,

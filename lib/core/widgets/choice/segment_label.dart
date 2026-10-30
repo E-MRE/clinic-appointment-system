@@ -5,7 +5,7 @@ final class _SegmentLabel extends StatelessWidget {
   const _SegmentLabel({required this.label, required this.style});
 
   final String label;
-  final _SegmentStyle style;
+  final ChoiceStyle style;
 
   @override
   Widget build(BuildContext context) {

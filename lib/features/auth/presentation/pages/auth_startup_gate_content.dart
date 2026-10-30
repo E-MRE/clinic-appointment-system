@@ -21,7 +21,7 @@ final class _AuthStartupGateContent extends StatelessWidget {
         }
         if (state is AuthFailure) {
           return StartupErrorPage(
-            kind: StartupErrorKind.from(state.errorCode),
+            kind: state.errorCode.startupErrorKind,
             onRetry: context.read<AuthCubit>().retry,
             onGoHome: onGoHome,
           );
@@ -30,7 +30,7 @@ final class _AuthStartupGateContent extends StatelessWidget {
           return StartupErrorPage(
             onRetry: context.read<AuthCubit>().retry,
             onSignOut: context.read<AuthCubit>().signOut,
-            kind: StartupErrorKind.fromProfile(state.errorCode),
+            kind: state.errorCode.startupErrorKind,
             onGoHome: onGoHome,
           );
         }

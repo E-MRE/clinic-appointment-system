@@ -31,6 +31,13 @@ abstract final class AppRoutes {
   static String branchEdit(String clinicId, String branchId) =>
       '${branchDetail(clinicId, branchId)}/edit';
 
+  /// Medical services routes under admin.
+  static const String services = '/admin/services';
+  static const String serviceNewSegment = 'new';
+  static const String serviceEditSegment = ':serviceId/edit';
+  static const String serviceNew = '$services/$serviceNewSegment';
+  static String serviceEdit(String id) => '$services/$id/edit';
+
   /// Debug component catalogue location.
   static const String componentPreview = '/debug/components';
   static const String signIn = '/sign-in';

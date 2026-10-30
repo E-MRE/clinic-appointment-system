@@ -9,8 +9,9 @@ final class _InstitutionNewClinicButton extends StatelessWidget {
     return OutlinedButton.icon(
       onPressed: () => showDialog<void>(
         context: context,
-        builder: (_) =>
-            _ClinicNameDialog(selection: InstitutionSelectionScope.of(context)),
+        builder: (_) => _ClinicNameDialog(
+          selection: InstitutionSelectionScope.read(context),
+        ),
       ),
       icon: const Icon(Icons.add),
       label: AppText.label(LocaleKeys.institution_newClinic.tr()),

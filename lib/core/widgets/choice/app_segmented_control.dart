@@ -1,11 +1,13 @@
 import 'package:clinic_appointment_system/core/theme/theme.dart';
 import 'package:clinic_appointment_system/core/widgets/app_text.dart';
 import 'package:clinic_appointment_system/core/widgets/choice/app_choice.dart';
+import 'package:clinic_appointment_system/core/widgets/choice/choice_style.dart';
+import 'package:clinic_appointment_system/core/widgets/choice/choice_style_colors.dart';
+import 'package:clinic_appointment_system/core/widgets/choice/choice_style_selection.dart';
 import 'package:flutter/material.dart';
 
 part 'segment_item.dart';
 part 'segment_label.dart';
-part 'segment_style.dart';
 
 /// Outlined pill control for selecting one value from a short list.
 final class AppSegmentedControl<T> extends StatelessWidget {
@@ -14,6 +16,7 @@ final class AppSegmentedControl<T> extends StatelessWidget {
     required this.choices,
     required this.selected,
     required this.onSelected,
+    this.enabled = true,
     super.key,
   });
 
@@ -25,6 +28,9 @@ final class AppSegmentedControl<T> extends StatelessWidget {
 
   /// Called with the newly selected value.
   final ValueChanged<T> onSelected;
+
+  /// Whether user interaction is allowed.
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +48,7 @@ final class AppSegmentedControl<T> extends StatelessWidget {
               child: _Segment<T>(
                 choice: choice,
                 selected: choice.value == selected,
+                enabled: enabled,
                 onSelected: onSelected,
               ),
             ),

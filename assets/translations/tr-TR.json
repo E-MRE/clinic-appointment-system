@@ -46,9 +46,97 @@
   },
   "services": {
     "title": "Hizmetler",
+    "all": "Tümü",
     "examination": "Muayene",
     "radiology": "Radyoloji",
-    "labTest": "Laboratuvar Testi"
+    "labTest": "Laboratuvar Testi",
+    "addService": "Hizmet ekle",
+    "editService": "Hizmeti düzenle",
+    "saveService": "Hizmeti kaydet",
+    "saving": "Kaydediliyor...",
+    "name": "Hizmet adı",
+    "department": "Bölüm",
+    "selectDepartment": "Bölüm seçin",
+    "durationLabel": "Süre (dk)",
+    "durationHelper": "5–240 dakika",
+    "feeLabel": "Ücret (₺)",
+    "feeHelper": "KDV dahil",
+    "radiologySpecial": "RADYOLOJİYE ÖZEL",
+    "preparationNote": "Hazırlık notu (hastaya gösterilir)",
+    "labSpecial": "LABORATUVAR TESTİNE ÖZEL",
+    "requiresFasting": "Aç gelmek gerekli",
+    "fastingHoursLabel": "Açlık süresi (saat)",
+    "fastingHoursHint": "8–12",
+    "resultTimeLabel": "Sonuç süresi",
+    "notFoundTitle": "Hizmet bulunamadı",
+    "notFoundMessage": "Aradığınız hizmet mevcut değil veya silinmiş.",
+    "editTooltip": "Düzenle",
+    "filterEmpty": "Bu türde hizmet yok",
+    "emptyTitle": "Bu şubede henüz hizmet yok",
+    "emptyMessage": "Hizmet ekleyerek başlayabilirsiniz.",
+    "noBranchTitle": "Önce bir şube ekleyin",
+    "noBranchMessage": "Hizmetleri görüntülemek ve eklemek için önce bir şube oluşturun.",
+    "goToInstitution": "Kurum ve şubeler",
+    "selectBranch": "Şube seçin",
+    "branch": "Şube",
+    "otherDepartment": "Diğer",
+    "unknownDepartment": "—",
+    "durationMinutes": "{} dk",
+    "fastingHoursSingle": "{} saat",
+    "fastingHoursRange": "{}–{} saat",
+    "desktopSubtitle": "{} hizmet · süre ve ücret randevu ekranında hastaya gösterilir",
+    "tabletSubtitle": "{} muayene · {} radyoloji · {} laboratuvar",
+    "mobileSubtitle": "{} hizmet · {} bölüm",
+    "chipAll": "Tümü · {}",
+    "chipExamination": "Muayene · {}",
+    "chipRadiology": "Radyoloji · {}",
+    "chipLab": "Laboratuvar · {}",
+    "columns": {
+      "service": "Hizmet",
+      "department": "Bölüm",
+      "duration": "Süre",
+      "fee": "Ücret",
+      "actions": "İşlemler"
+    },
+    "kinds": {
+      "examination": "Muayene",
+      "radiology": "Radyoloji",
+      "lab": "Laboratuvar"
+    },
+    "radiologyModality": {
+      "xRay": "Röntgen",
+      "ultrasound": "Ultrason",
+      "mri": "MR",
+      "ct": "BT"
+    },
+    "labResultTime": {
+      "sameDay": "Aynı gün",
+      "oneDay": "1 gün",
+      "twoDays": "2 gün",
+      "threeDays": "3 gün",
+      "oneWeek": "1 hafta"
+    },
+    "summary": {
+      "examination": {
+        "tableSubtitle": "Muayene",
+        "typeLine": "Muayene",
+        "detail": "Doktor muayenesi"
+      },
+      "radiology": {
+        "typeLine": "Radyoloji · {}",
+        "tableSubtitleWithNote": "{} · {}",
+        "tableSubtitleNoNote": "{} · hazırlık gerekmez",
+        "detailWithNote": "Hazırlık: {}",
+        "detailNoNote": "Hazırlık gerekmez"
+      },
+      "lab": {
+        "typeLine": "Laboratuvar",
+        "fastingWithHours": "Aç: {}",
+        "fastingNone": "Açlık gerekmez",
+        "resultFormat": "Sonuç: {}",
+        "resultSameDay": "aynı gün"
+      }
+    }
   },
   "navigation": {
     "notFound": "Sayfa bulunamadı",
@@ -218,7 +306,12 @@
       "nameRequired": "Bu alan boş bırakılamaz.",
       "addressRequired": "Adres boş bırakılamaz.",
       "invalidRecord": "Kurum kaydı geçersiz.",
-      "unavailable": "İşlem tamamlanamadı. Lütfen tekrar deneyin."
+      "unavailable": "İşlem tamamlanamadı. Lütfen tekrar deneyin.",
+      "departmentRequired": "Bir bölüm seçin.",
+      "invalidDuration": "Süre 5–240 dakika arasında olmalı.",
+      "invalidFee": "Ücret 1 ₺ ile 100.000 ₺ arasında olmalı (en fazla 2 ondalık).",
+      "invalidFastingHours": "Açlık süresi 1–24 saat arasında olmalı; en az değer en çoktan büyük olamaz.",
+      "preparationNoteTooLong": "Hazırlık notu en fazla 200 karakter olabilir."
     },
     "overview": "Genel bakış",
     "newClinic": "Yeni kurum",

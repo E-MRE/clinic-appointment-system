@@ -36,6 +36,15 @@ import 'package:clinic_appointment_system/features/institution/presentation/cubi
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/department_list_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/department_save_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/working_hours_editor_cubit.dart';
+import 'package:clinic_appointment_system/features/medical_services/data/models/medical_service_model_factory.dart';
+import 'package:clinic_appointment_system/features/medical_services/data/repositories/firestore_medical_service_repository.dart';
+import 'package:clinic_appointment_system/features/medical_services/domain/repositories/medical_service_repository.dart';
+import 'package:clinic_appointment_system/features/medical_services/domain/usecases/create_medical_service_use_case.dart';
+import 'package:clinic_appointment_system/features/medical_services/domain/usecases/update_medical_service_use_case.dart';
+import 'package:clinic_appointment_system/features/medical_services/domain/usecases/watch_medical_services_use_case.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_filter_cubit.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_list_cubit.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_save_cubit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -159,6 +168,28 @@ void main() {
     );
   });
 
+  test('medical services repository and use cases resolve through DI', () {
+    final factory = container.get<MedicalServiceModelFactory>();
+    final repository = container.get<MedicalServiceRepository>();
+    expect(factory, isA<MedicalServiceModelFactory>());
+    expect(repository, isA<FirestoreMedicalServiceRepository>());
+    expect(container.get<MedicalServiceModelFactory>(), same(factory));
+    expect(container.get<MedicalServiceRepository>(), same(repository));
+
+    expect(
+      container.get<WatchMedicalServicesUseCase>(),
+      isA<WatchMedicalServicesUseCase>(),
+    );
+    expect(
+      container.get<CreateMedicalServiceUseCase>(),
+      isA<CreateMedicalServiceUseCase>(),
+    );
+    expect(
+      container.get<UpdateMedicalServiceUseCase>(),
+      isA<UpdateMedicalServiceUseCase>(),
+    );
+  });
+
   test(
     'institution presentation cubits resolve as screen-owned factories',
     () async {
@@ -270,6 +301,20 @@ void main() {
     expect(container.get<ThemeCubit>(), isNot(same(oldCubit)));
     expect(container.get<ThemeCubit>().state, ThemeMode.light);
     expect(container.get<GoRouter>(), isNot(same(oldRouter)));
+  });
+
+  test('resolves medical service cubits as factories', () {
+    final list1 = container.get<MedicalServiceListCubit>();
+    final list2 = container.get<MedicalServiceListCubit>();
+    expect(list1, isNot(same(list2)));
+
+    final save1 = container.get<MedicalServiceSaveCubit>();
+    final save2 = container.get<MedicalServiceSaveCubit>();
+    expect(save1, isNot(same(save2)));
+
+    final filter1 = container.get<MedicalServiceFilterCubit>();
+    final filter2 = container.get<MedicalServiceFilterCubit>();
+    expect(filter1, isNot(same(filter2)));
   });
 }
 

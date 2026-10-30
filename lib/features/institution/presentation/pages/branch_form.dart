@@ -55,7 +55,7 @@ final class _BranchFormState extends State<_BranchForm> {
 
   void _onSaveState(BuildContext context, InstitutionSaveState<Branch> state) {
     if (state is InstitutionSaveSaved<Branch>) {
-      InstitutionSelectionScope.of(context).selectBranch(state.value.id);
+      InstitutionSelectionScope.read(context).selectBranch(state.value.id);
       context.go(
         context.screenSize.isMobile
             ? AppRoutes.branchDetail(state.value.clinicId, state.value.id)
@@ -69,7 +69,7 @@ final class _BranchFormState extends State<_BranchForm> {
     if (hours == null) return;
     final branch = widget.branch;
     if (branch == null) {
-      final clinicId = InstitutionSelectionScope.of(context).clinicId;
+      final clinicId = InstitutionSelectionScope.read(context).clinicId;
       if (clinicId == null) return;
       save.create(
         BranchDraft(

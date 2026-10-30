@@ -16,7 +16,7 @@ final class _AuthSubmitButton<C extends AuthRequestCubit>
         return FilledButton(
           key: const WidgetKey.authSubmit(),
           onPressed: isBusy ? null : onSubmit,
-          child: isBusy ? _progress : Text(kind.actionKey.translate()),
+          child: isBusy ? _progress : Text(kind.config.actionKey.translate()),
         );
       },
     );

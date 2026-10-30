@@ -21,8 +21,8 @@ final class _StartupErrorMobileActions extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: AppSizes.s8,
       children: [
-        if (kind.offersRetry) _StartupRetryButton(onRetry: onRetry),
-        if (onSignOut != null || kind.offersGoHome)
+        if (kind.config.offersRetry) _StartupRetryButton(onRetry: onRetry),
+        if (onSignOut != null || kind.config.offersGoHome)
           _StartupSecondaryActionButton(
             onSignOut: onSignOut,
             onGoHome: onGoHome,

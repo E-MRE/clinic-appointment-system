@@ -62,7 +62,7 @@ mixin _AuthRequestFormMixin<C extends AuthRequestCubit>
   }
 
   void _finishIfReady() {
-    if (!_kind.opensHomeOnSuccess ||
+    if (!_kind.config.opensHomeOnSuccess ||
         _cubit.state is! AuthRequestSuccess ||
         !_hasSettledSession) {
       return;

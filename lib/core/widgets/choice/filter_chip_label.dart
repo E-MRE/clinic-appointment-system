@@ -5,7 +5,7 @@ final class _FilterChipLabel extends StatelessWidget {
   const _FilterChipLabel({required this.label, required this.style});
 
   final String label;
-  final _FilterChipStyle style;
+  final ChoiceStyle style;
 
   @override
   Widget build(BuildContext context) {

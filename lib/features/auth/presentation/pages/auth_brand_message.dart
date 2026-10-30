@@ -16,7 +16,7 @@ final class _AuthBrandMessage extends StatelessWidget {
         spacing: AppSizes.s32,
         children: [
           AppText.display(
-            kind.brandTitleKey.translate(),
+            kind.config.brandTitleKey.translate(),
             tone: TextTone.onBrand,
           ),
           kind.isRegistration

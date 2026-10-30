@@ -1,4 +1,3 @@
-import 'package:clinic_appointment_system/core/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 /// Appointment and informational badge appearances.
@@ -31,17 +30,4 @@ enum StatusBadgeVariant {
 
   /// Leading icon; count badges have none.
   final IconData? icon;
-
-  /// Appointment status represented by this variant, if any.
-  AppointmentStatus? get appointmentStatus {
-    return switch (this) {
-      pending => AppointmentStatus.pending,
-      approved => AppointmentStatus.approved,
-      rejected => AppointmentStatus.rejected,
-      completed => AppointmentStatus.completed,
-      noShow => AppointmentStatus.noShow,
-      cancelled => AppointmentStatus.cancelled,
-      neutral || info => null,
-    };
-  }
 }

@@ -16,11 +16,4 @@ enum _PreviewTheme implements _PreviewLabel {
 
   /// Theme mode used to resolve the preview theme.
   final ThemeMode mode;
-
-  ThemeData resolve(ScreenSize size) {
-    return switch (mode) {
-      ThemeMode.light || ThemeMode.system => LightTheme(size).themeData,
-      ThemeMode.dark => DarkTheme(size).themeData,
-    };
-  }
 }

@@ -14,7 +14,7 @@ final class _TabletNavigationItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = _NavItemStyle.fromSelected(selected);
+    final style = selected.navItemStyle;
     return Padding(
       padding: const AppPadding.verticalSm(),
       child: _NavigationItemSemantics(

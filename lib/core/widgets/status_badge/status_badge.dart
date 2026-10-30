@@ -1,5 +1,6 @@
 import 'package:clinic_appointment_system/core/theme/theme.dart';
 import 'package:clinic_appointment_system/core/widgets/status_badge/status_badge_variant.dart';
+import 'package:clinic_appointment_system/core/widgets/status_badge/status_badge_variant_status.dart';
 import 'package:flutter/material.dart';
 
 part 'status_badge_content.dart';

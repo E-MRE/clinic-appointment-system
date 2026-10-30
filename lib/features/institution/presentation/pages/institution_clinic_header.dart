@@ -21,7 +21,7 @@ final class _InstitutionClinicHeader extends StatelessWidget {
           context: context,
           builder: (_) => _ClinicNameDialog(
             clinic: clinic,
-            selection: InstitutionSelectionScope.of(context),
+            selection: InstitutionSelectionScope.read(context),
           ),
         ),
         icon: const Icon(Icons.edit_outlined),

@@ -1,10 +1,11 @@
 import 'package:clinic_appointment_system/core/errors/institution_exception.dart';
 import 'package:clinic_appointment_system/features/institution/domain/enums/institution_error_code.dart';
 import 'package:clinic_appointment_system/features/institution/domain/value_objects/clock_time.dart';
+import 'package:equatable/equatable.dart';
 
 /// A non-empty half-open interval of a day, including its start and excluding
 /// its end.
-final class TimeRange {
+final class TimeRange extends Equatable {
   /// Creates a range whose [end] occurs after [start].
   factory TimeRange({required ClockTime start, required ClockTime end}) {
     if (!end.isAfter(start)) {
@@ -30,10 +31,5 @@ final class TimeRange {
   bool contains(ClockTime time) => !time.isBefore(start) && time.isBefore(end);
 
   @override
-  bool operator ==(Object other) {
-    return other is TimeRange && other.start == start && other.end == end;
-  }
-
-  @override
-  int get hashCode => Object.hash(start, end);
+  List<Object> get props => [start, end];
 }

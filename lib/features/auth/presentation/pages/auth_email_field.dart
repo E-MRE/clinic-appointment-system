@@ -25,7 +25,7 @@ final class _AuthEmailField extends StatelessWidget
       enabled: enabled,
       keyboardType: TextInputType.emailAddress,
       autofillHints: const [AutofillHints.email],
-      textInputAction: kind.hasPassword
+      textInputAction: kind.config.hasPassword
           ? TextInputAction.next
           : TextInputAction.done,
       onSubmitted: kind.isPasswordReset ? onSubmit : null,

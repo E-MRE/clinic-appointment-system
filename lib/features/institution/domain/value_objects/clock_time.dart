@@ -1,9 +1,10 @@
 import 'package:clinic_appointment_system/core/constants/clock_constants.dart';
 import 'package:clinic_appointment_system/core/errors/institution_exception.dart';
 import 'package:clinic_appointment_system/features/institution/domain/enums/institution_error_code.dart';
+import 'package:equatable/equatable.dart';
 
 /// A minute-precision time of day between 00:00 and 23:59.
-final class ClockTime implements Comparable<ClockTime> {
+final class ClockTime extends Equatable implements Comparable<ClockTime> {
   static int get _clockComponentWidth => 2;
 
   /// Creates a time from a 24-hour clock hour and minute.
@@ -48,13 +49,7 @@ final class ClockTime implements Comparable<ClockTime> {
       minutesSinceMidnight.compareTo(other.minutesSinceMidnight);
 
   @override
-  bool operator ==(Object other) {
-    return other is ClockTime &&
-        other.minutesSinceMidnight == minutesSinceMidnight;
-  }
-
-  @override
-  int get hashCode => minutesSinceMidnight.hashCode;
+  List<Object> get props => [minutesSinceMidnight];
 
   @override
   String toString() {

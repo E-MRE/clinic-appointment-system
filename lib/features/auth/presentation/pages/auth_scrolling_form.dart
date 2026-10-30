@@ -25,8 +25,8 @@ final class _AuthScrollingForm extends StatelessWidget {
           child: ConstrainedBox(
             constraints: BoxConstraints(
               maxWidth: context.screenSize.isTablet
-                  ? kind.cardWidth
-                  : kind.formWidth,
+                  ? kind.config.cardWidth
+                  : kind.config.formWidth,
             ),
             child: _AuthFormSurface(
               kind: kind,

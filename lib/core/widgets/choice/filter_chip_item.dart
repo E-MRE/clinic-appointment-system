@@ -14,7 +14,7 @@ final class _FilterChip<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = _FilterChipStyle.fromSelected(selected);
+    final style = selected.choiceStyle;
     return Material(
       color: style.background(context.colorScheme),
       borderRadius: const AppRadius.small(),

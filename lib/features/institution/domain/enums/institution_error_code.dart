@@ -20,4 +20,19 @@ enum InstitutionErrorCode {
 
   /// An institution operation could not complete.
   unavailable,
+
+  /// A medical service does not have an assigned department.
+  departmentRequired,
+
+  /// A medical service duration is outside the supported range or not a valid number.
+  invalidDuration,
+
+  /// A medical service fee is outside the supported range or not a valid monetary amount.
+  invalidFee,
+
+  /// Fasting duration is outside the supported range or minimum exceeds maximum.
+  invalidFastingHours,
+
+  /// A radiology preparation note exceeds the maximum allowed length.
+  preparationNoteTooLong,
 }

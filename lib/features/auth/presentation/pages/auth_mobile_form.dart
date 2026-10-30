@@ -17,7 +17,7 @@ final class _AuthMobileForm extends StatelessWidget {
     return Align(
       alignment: Alignment.topCenter,
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: kind.formWidth),
+        constraints: BoxConstraints(maxWidth: kind.config.formWidth),
         child: CustomScrollView(
           slivers: [
             SliverFillRemaining(
