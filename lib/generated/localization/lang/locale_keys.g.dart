@@ -44,6 +44,7 @@ abstract class LocaleKeys {
   static const appointment_status = 'appointment.status';
   static const appointment = 'appointment';
   static const services_title = 'services.title';
+  static const services_all = 'services.all';
   static const services_examination = 'services.examination';
   static const services_radiology = 'services.radiology';
   static const services_labTest = 'services.labTest';

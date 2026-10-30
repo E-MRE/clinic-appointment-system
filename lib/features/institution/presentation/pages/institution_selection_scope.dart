@@ -16,4 +16,12 @@ final class InstitutionSelectionScope
             ?.notifier ??
         (throw StateError('InstitutionSelectionScope is missing'));
   }
+
+  /// Reads [InstitutionSelection] without creating an inherited widget dependency.
+  static InstitutionSelection read(BuildContext context) {
+    return context
+            .getInheritedWidgetOfExactType<InstitutionSelectionScope>()
+            ?.notifier ??
+        (throw StateError('InstitutionSelectionScope is missing'));
+  }
 }

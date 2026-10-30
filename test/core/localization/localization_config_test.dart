@@ -61,6 +61,7 @@ void main() {
 
     testWidgets('translates medical service keys', (tester) async {
       await loadTestTranslations(tester);
+      expect(LocaleKeys.services_all.tr(), 'Tümü');
       expect(LocaleKeys.services_examination.tr(), 'Muayene');
       expect(LocaleKeys.services_radiology.tr(), 'Radyoloji');
       expect(LocaleKeys.services_labTest.tr(), 'Laboratuvar Testi');

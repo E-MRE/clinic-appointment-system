@@ -44,6 +44,9 @@ import 'package:clinic_appointment_system/features/medical_services/domain/repos
 import 'package:clinic_appointment_system/features/medical_services/domain/usecases/create_medical_service_use_case.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/usecases/update_medical_service_use_case.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/usecases/watch_medical_services_use_case.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_filter_cubit.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_list_cubit.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_save_cubit.dart';
 import 'package:clinic_appointment_system/features/users/data/models/user_model_factory.dart';
 import 'package:clinic_appointment_system/features/users/data/repositories/firestore_user_repository.dart';
 import 'package:clinic_appointment_system/features/users/domain/repositories/user_repository.dart';
@@ -201,6 +204,19 @@ mixin AppDependencyRegisterMixin {
         injector.get<CreateDepartmentUseCase>(),
         injector.get<UpdateDepartmentUseCase>(),
       ),
+    );
+    injector.registerFactory<MedicalServiceListCubit>(
+      () =>
+          MedicalServiceListCubit(injector.get<WatchMedicalServicesUseCase>()),
+    );
+    injector.registerFactory<MedicalServiceSaveCubit>(
+      () => MedicalServiceSaveCubit(
+        injector.get<CreateMedicalServiceUseCase>(),
+        injector.get<UpdateMedicalServiceUseCase>(),
+      ),
+    );
+    injector.registerFactory<MedicalServiceFilterCubit>(
+      MedicalServiceFilterCubit.new,
     );
     injector.registerFactory<WorkingHoursEditorCubit>(
       WorkingHoursEditorCubit.new,

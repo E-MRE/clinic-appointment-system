@@ -46,6 +46,7 @@
   },
   "services": {
     "title": "Hizmetler",
+    "all": "Tümü",
     "examination": "Muayene",
     "radiology": "Radyoloji",
     "labTest": "Laboratuvar Testi"

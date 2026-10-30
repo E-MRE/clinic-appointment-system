@@ -42,6 +42,9 @@ import 'package:clinic_appointment_system/features/medical_services/domain/repos
 import 'package:clinic_appointment_system/features/medical_services/domain/usecases/create_medical_service_use_case.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/usecases/update_medical_service_use_case.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/usecases/watch_medical_services_use_case.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_filter_cubit.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_list_cubit.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_save_cubit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -298,6 +301,20 @@ void main() {
     expect(container.get<ThemeCubit>(), isNot(same(oldCubit)));
     expect(container.get<ThemeCubit>().state, ThemeMode.light);
     expect(container.get<GoRouter>(), isNot(same(oldRouter)));
+  });
+
+  test('resolves medical service cubits as factories', () {
+    final list1 = container.get<MedicalServiceListCubit>();
+    final list2 = container.get<MedicalServiceListCubit>();
+    expect(list1, isNot(same(list2)));
+
+    final save1 = container.get<MedicalServiceSaveCubit>();
+    final save2 = container.get<MedicalServiceSaveCubit>();
+    expect(save1, isNot(same(save2)));
+
+    final filter1 = container.get<MedicalServiceFilterCubit>();
+    final filter2 = container.get<MedicalServiceFilterCubit>();
+    expect(filter1, isNot(same(filter2)));
   });
 }
 

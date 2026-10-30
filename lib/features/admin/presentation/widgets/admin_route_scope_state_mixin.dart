@@ -1,7 +1,7 @@
-part of 'institution_route_scope.dart';
+part of 'admin_route_scope.dart';
 
 /// Coordinates route selection with clinic, branch and department streams.
-mixin _InstitutionRouteScopeStateMixin on State<_InstitutionRouteScopeContent> {
+mixin _AdminRouteScopeStateMixin on State<_AdminRouteScopeContent> {
   late final InstitutionSelection selection;
   late final ClinicListCubit clinics;
   late final BranchListCubit branches;
@@ -24,10 +24,12 @@ mixin _InstitutionRouteScopeStateMixin on State<_InstitutionRouteScopeContent> {
     if (widget.routeClinicId case final routeClinicId?) {
       selection.selectClinic(routeClinicId);
     }
+    _onClinicsChanged(clinics.state);
+    _onBranchesChanged(branches.state);
   }
 
   @override
-  void didUpdateWidget(_InstitutionRouteScopeContent oldWidget) {
+  void didUpdateWidget(_AdminRouteScopeContent oldWidget) {
     super.didUpdateWidget(oldWidget);
     final routeClinicId = widget.routeClinicId;
     if (routeClinicId == null || routeClinicId == oldWidget.routeClinicId) {

@@ -50,7 +50,7 @@ final class _BranchDetailPageState extends State<BranchDetailPage> {
   void _selectBranchAfterFrame() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
-        InstitutionSelectionScope.of(context).selectBranch(widget.branchId);
+        InstitutionSelectionScope.read(context).selectBranch(widget.branchId);
       }
     });
   }

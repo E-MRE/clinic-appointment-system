@@ -26,6 +26,12 @@ import 'package:clinic_appointment_system/features/auth/presentation/pages/auth_
 import 'package:clinic_appointment_system/features/auth/presentation/pages/password_reset_page.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/pages/sign_in_page.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/pages/sign_up_page.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_branches_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_clinics_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_departments_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/cubit/branch_list_cubit.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_list_cubit.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/cubit/department_list_cubit.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/admin.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/doctor.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/patient.dart';
@@ -42,6 +48,9 @@ import '../../../../support/auth_cubit_factory.dart';
 import '../../../../support/auth_repository_doubles.dart';
 import '../../../../support/localization_test_app.dart';
 import '../../../../support/user_repository_double.dart';
+import '../../../institution/domain/doubles/fake_branch_repository.dart';
+import '../../../institution/domain/doubles/fake_clinic_repository.dart';
+import '../../../institution/domain/doubles/fake_department_repository.dart';
 
 void main() {
   setUpAll(() {
@@ -579,6 +588,17 @@ final class _AuthTestApp {
     AppDependency.injector.registerFactory<PasswordResetCubit>(() {
       return PasswordResetCubit(SendPasswordResetEmailUseCase(repository));
     });
+    AppDependency.injector.registerFactory<ClinicListCubit>(
+      () => ClinicListCubit(WatchClinicsUseCase(FakeClinicRepository())),
+    );
+    AppDependency.injector.registerFactory<BranchListCubit>(
+      () => BranchListCubit(WatchBranchesUseCase(FakeBranchRepository())),
+    );
+    AppDependency.injector.registerFactory<DepartmentListCubit>(
+      () => DepartmentListCubit(
+        WatchDepartmentsUseCase(FakeDepartmentRepository()),
+      ),
+    );
     router = createAppRouter(initialLocation: route, authGuard: configuration);
     sessions.add(DataResult.success(data: restored));
   }

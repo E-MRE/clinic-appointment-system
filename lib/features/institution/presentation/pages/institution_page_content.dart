@@ -14,7 +14,7 @@ final class _InstitutionPageContent extends StatelessWidget {
         onPressed: () => showDialog<void>(
           context: context,
           builder: (_) => _ClinicNameDialog(
-            selection: InstitutionSelectionScope.of(context),
+            selection: InstitutionSelectionScope.read(context),
           ),
         ),
         child: AppText.label(

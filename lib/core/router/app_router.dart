@@ -3,6 +3,7 @@ import 'package:clinic_appointment_system/core/router/fade_transition_page.dart'
 import 'package:clinic_appointment_system/core/router/home_page.dart';
 import 'package:clinic_appointment_system/core/router/not_found_page.dart';
 import 'package:clinic_appointment_system/features/admin/presentation/pages/admin_home_page.dart';
+import 'package:clinic_appointment_system/features/admin/presentation/widgets/admin_route_scope.dart';
 import 'package:clinic_appointment_system/features/admin/presentation/widgets/admin_shell.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/auth_route_guard.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/enums/auth_form_kind.dart';
@@ -14,7 +15,10 @@ import 'package:clinic_appointment_system/features/debug/presentation/pages/comp
 import 'package:clinic_appointment_system/features/institution/presentation/pages/branch_detail_page.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/pages/branch_form_page.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/pages/institution_page.dart';
-import 'package:clinic_appointment_system/features/institution/presentation/pages/institution_route_scope.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/pages/institution_route_guard.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/pages/medical_service_form_page.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/pages/medical_services_page.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/pages/medical_services_route_scope.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/pages/patient_home_page.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/pages/staff_home_page.dart';
 import 'package:flutter/foundation.dart';
@@ -57,15 +61,20 @@ GoRouter createAppRouter({
         pageBuilder: (_, state) => _fadePage(state, const StaffHomePage()),
       ),
       ShellRoute(
-        pageBuilder: (_, state, child) =>
-            _fadePage(state, AdminShell(child: child)),
+        pageBuilder: (_, state, child) => _fadePage(
+          state,
+          AdminRouteScope(
+            routeClinicId: state.pathParameters['clinicId'],
+            child: AdminShell(child: child),
+          ),
+        ),
         routes: [
           GoRoute(
             path: AppRoutes.adminHome,
             pageBuilder: (_, state) => _fadePage(state, const AdminHomePage()),
           ),
           ShellRoute(
-            builder: (_, state, child) => InstitutionRouteScope(
+            builder: (_, state, child) => InstitutionRouteGuard(
               routeClinicId: state.pathParameters['clinicId'],
               child: child,
             ),
@@ -99,6 +108,33 @@ GoRouter createAppRouter({
                         ),
                       ),
                     ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+          ShellRoute(
+            builder: (_, state, child) =>
+                MedicalServicesRouteScope(child: child),
+            routes: [
+              GoRoute(
+                path: AppRoutes.services,
+                pageBuilder: (_, state) =>
+                    _fadePage(state, const MedicalServicesPage()),
+                routes: [
+                  GoRoute(
+                    path: AppRoutes.serviceNewSegment,
+                    pageBuilder: (_, state) =>
+                        _fadePage(state, const MedicalServiceFormPage()),
+                  ),
+                  GoRoute(
+                    path: AppRoutes.serviceEditSegment,
+                    pageBuilder: (_, state) => _fadePage(
+                      state,
+                      MedicalServiceFormPage(
+                        serviceId: state.pathParameters['serviceId'],
+                      ),
+                    ),
                   ),
                 ],
               ),
