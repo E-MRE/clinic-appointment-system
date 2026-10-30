@@ -13,13 +13,18 @@ final class _PreviewServiceCell extends StatelessWidget {
       spacing: AppSizes.s8,
       children: [
         const Icon(Icons.medical_services_outlined),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AppText.bodyStrong(name),
-            const AppText.caption('Genel hizmet', tone: TextTone.muted),
-          ],
+        Flexible(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AppText.bodyStrong(name),
+              AppText.caption(
+                LocaleKeys.componentPreview_table_generalService.translate(),
+                tone: TextTone.muted,
+              ),
+            ],
+          ),
         ),
       ],
     );

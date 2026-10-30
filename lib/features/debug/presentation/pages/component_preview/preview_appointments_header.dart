@@ -10,7 +10,9 @@ final class _PreviewAppointmentsHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const AppPadding.allLg(),
-      child: AppText.cardTitle('Randevular · ${density.name}'),
+      child: AppText.cardTitle(
+        '${LocaleKeys.appointment_appointments.translate()} · ${density.name}',
+      ),
     );
   }
 }

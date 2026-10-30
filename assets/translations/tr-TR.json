@@ -152,7 +152,19 @@
     "mobile": "Mobil",
     "tablet": "Tablet",
     "desktop": "Masaüstü",
-    "dataTable": "Veri tablosu"
+    "dataTable": "Veri tablosu",
+    "table": {
+      "date": "Tarih",
+      "patient": "Hasta",
+      "service": "Hizmet",
+      "staff": "Personel",
+      "status": "Durum",
+      "duration": "Süre",
+      "fee": "Ücret",
+      "actions": "İşlemler",
+      "generalService": "Genel hizmet",
+      "durationMinutes": "{} dk"
+    }
   },
   "institution": {
     "title": "Kurum ve şubeler",

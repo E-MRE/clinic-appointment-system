@@ -8,8 +8,8 @@ final class _PreviewAppointmentsTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppDataTable<String>(
-      rows: const ['Ayşe Yılmaz', 'Mehmet Kaya'],
+    return AppDataTable<_PreviewAppointment>(
+      rows: _PreviewAppointment.samples,
       minWidth: AppSizes.previewTabletWidth,
       density: density,
       rowVerticalPadding: AppSizes.s8,
@@ -18,41 +18,43 @@ final class _PreviewAppointmentsTable extends StatelessWidget {
     );
   }
 
-  List<AppTableColumn<String>> get _columns {
+  List<AppTableColumn<_PreviewAppointment>> get _columns {
     return [
       AppTableColumn(
-        label: 'Tarih',
+        label: LocaleKeys.componentPreview_table_date.translate(),
         noWrap: true,
-        cellBuilder: (context, row) => const AppText.body('26.10.2026 10:30'),
+        cellBuilder: (context, row) => AppText.body(
+          AppFormatters.formatDateTime(row.dateTime, context: context),
+        ),
       ),
       AppTableColumn(
-        label: 'Hasta',
+        label: LocaleKeys.componentPreview_table_patient.translate(),
         cellBuilder: (context, row) =>
-            _PreviewAppointmentPatientCell(name: row),
+            _PreviewAppointmentPatientCell(appointment: row),
       ),
       AppTableColumn(
-        label: 'Hizmet',
-        cellBuilder: (context, row) => const AppText.body('Muayene'),
+        label: LocaleKeys.componentPreview_table_service.translate(),
+        cellBuilder: (context, row) => AppText.body(row.serviceKey.translate()),
       ),
       AppTableColumn(
-        label: 'Personel',
+        label: LocaleKeys.componentPreview_table_staff.translate(),
         cellBuilder: (context, row) =>
-            const AppText.body('Dr. Demir', tone: TextTone.muted),
+            AppText.body(row.staffName, tone: TextTone.muted),
       ),
       AppTableColumn(
-        label: 'Durum',
-        cellBuilder: (context, row) => const StatusBadge(
-          label: 'Onaylandı',
-          variant: StatusBadgeVariant.info,
+        label: LocaleKeys.componentPreview_table_status.translate(),
+        cellBuilder: (context, row) => StatusBadge(
+          label: LocaleKeys.appointment_status_approved.translate(),
+          variant: StatusBadgeVariant.approved,
         ),
       ),
       AppTableColumn(
         label: '',
-        semanticsLabel: 'İşlemler',
+        semanticsLabel: LocaleKeys.componentPreview_table_actions.translate(),
         alignment: AppTableAlignment.end,
         cellBuilder: (context, row) => IconButton(
           onPressed: () {},
-          tooltip: 'Düzenle',
+          tooltip: LocaleKeys.common_edit.translate(),
           icon: const Icon(Icons.edit_outlined),
         ),
       ),

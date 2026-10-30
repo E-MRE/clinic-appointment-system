@@ -6,37 +6,48 @@ final class _PreviewServicesTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppDataTable<String>(
-      rows: const ['Muayene', 'Kontrol'],
+    return AppDataTable<_PreviewService>(
+      rows: _PreviewService.samples,
       minWidth: AppSizes.previewDesktopWidth,
       rowVerticalPadding: AppSizes.s8,
       columns: _columns,
     );
   }
 
-  List<AppTableColumn<String>> get _columns {
+  List<AppTableColumn<_PreviewService>> get _columns {
     return [
       AppTableColumn(
-        label: 'Hizmet',
-        cellBuilder: (context, row) => _PreviewServiceCell(name: row),
+        label: LocaleKeys.componentPreview_table_service.translate(),
+        cellBuilder: (context, row) =>
+            _PreviewServiceCell(name: row.nameKey.translate()),
       ),
       AppTableColumn(
-        label: 'Süre',
+        label: LocaleKeys.componentPreview_table_duration.translate(),
         alignment: AppTableAlignment.end,
-        cellBuilder: (context, row) => const AppText.body('30 dk'),
+        cellBuilder: (context, row) => AppText.body(
+          LocaleKeys.componentPreview_table_durationMinutes.translate(
+            args: ['${row.durationMinutes}'],
+          ),
+        ),
       ),
       AppTableColumn(
-        label: 'Ücret',
+        label: LocaleKeys.componentPreview_table_fee.translate(),
         alignment: AppTableAlignment.end,
-        cellBuilder: (context, row) => const AppText.bodyStrong('₺500'),
+        cellBuilder: (context, row) => AppText.bodyStrong(
+          AppFormatters.formatCurrency(
+            row.fee,
+            decimalDigits: 0,
+            context: context,
+          ),
+        ),
       ),
       AppTableColumn(
         label: '',
-        semanticsLabel: 'İşlemler',
+        semanticsLabel: LocaleKeys.componentPreview_table_actions.translate(),
         alignment: AppTableAlignment.end,
         cellBuilder: (context, row) => IconButton(
           onPressed: () {},
-          tooltip: 'Düzenle',
+          tooltip: LocaleKeys.common_edit.translate(),
           icon: const Icon(Icons.edit_outlined),
         ),
       ),

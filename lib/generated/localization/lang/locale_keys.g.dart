@@ -151,6 +151,23 @@ abstract class LocaleKeys {
   static const componentPreview_tablet = 'componentPreview.tablet';
   static const componentPreview_desktop = 'componentPreview.desktop';
   static const componentPreview_dataTable = 'componentPreview.dataTable';
+  static const componentPreview_table_date = 'componentPreview.table.date';
+  static const componentPreview_table_patient =
+      'componentPreview.table.patient';
+  static const componentPreview_table_service =
+      'componentPreview.table.service';
+  static const componentPreview_table_staff = 'componentPreview.table.staff';
+  static const componentPreview_table_status = 'componentPreview.table.status';
+  static const componentPreview_table_duration =
+      'componentPreview.table.duration';
+  static const componentPreview_table_fee = 'componentPreview.table.fee';
+  static const componentPreview_table_actions =
+      'componentPreview.table.actions';
+  static const componentPreview_table_generalService =
+      'componentPreview.table.generalService';
+  static const componentPreview_table_durationMinutes =
+      'componentPreview.table.durationMinutes';
+  static const componentPreview_table = 'componentPreview.table';
   static const componentPreview = 'componentPreview';
   static const institution_title = 'institution.title';
   static const institution_clinic = 'institution.clinic';
