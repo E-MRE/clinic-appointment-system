@@ -43,12 +43,14 @@ abstract class InstitutionListCubit<
     try {
       // Explicit `call`: the web dev compiler cannot invoke a callable object
       // typed by a type parameter.
-      _subscription = _watchUseCase.call(params).listen(
-        (result) => _onResult(result, generation),
-        onError: (Object error, StackTrace stackTrace) {
-          _onError(error, generation);
-        },
-      );
+      _subscription = _watchUseCase
+          .call(params)
+          .listen(
+            (result) => _onResult(result, generation),
+            onError: (Object error, StackTrace stackTrace) {
+              _onError(error, generation);
+            },
+          );
     } on Exception catch (error) {
       _emitFailure(_errorCode(error), generation);
     }
