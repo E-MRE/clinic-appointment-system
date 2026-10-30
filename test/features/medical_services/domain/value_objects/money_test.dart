@@ -6,15 +6,15 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('Money', () {
     test(
-      'kurus factory accepts valid bounds and rejects out-of-range values',
+      'minorUnits constructor accepts valid bounds and rejects out-of-range values',
       () {
-        expect(Money.kurus(100).kurus, 100);
-        expect(Money.kurus(100).lira, 1.0);
-        expect(Money.kurus(10000000).kurus, 10000000);
-        expect(Money.kurus(10000000).lira, 100000.0);
+        expect(Money.minorUnits(100).minorUnits, 100);
+        expect(Money.minorUnits(100).lira, 1.0);
+        expect(Money.minorUnits(10000000).minorUnits, 10000000);
+        expect(Money.minorUnits(10000000).lira, 100000.0);
 
         expect(
-          () => Money.kurus(0),
+          () => Money.minorUnits(0),
           throwsA(
             isA<InstitutionException>().having(
               (error) => error.code,
@@ -24,7 +24,7 @@ void main() {
           ),
         );
         expect(
-          () => Money.kurus(99),
+          () => Money.minorUnits(99),
           throwsA(
             isA<InstitutionException>().having(
               (error) => error.code,
@@ -34,7 +34,7 @@ void main() {
           ),
         );
         expect(
-          () => Money.kurus(10000001),
+          () => Money.minorUnits(10000001),
           throwsA(
             isA<InstitutionException>().having(
               (error) => error.code,
@@ -47,12 +47,12 @@ void main() {
     );
 
     test('parseLira parses valid integer and decimal representations', () {
-      expect(Money.parseLira('1').kurus, 100);
-      expect(Money.parseLira('100000').kurus, 10000000);
-      expect(Money.parseLira('100000,00').kurus, 10000000);
-      expect(Money.parseLira('850,5').kurus, 85050);
-      expect(Money.parseLira('850.50').kurus, 85050);
-      expect(Money.parseLira(' 1200 ').kurus, 120000);
+      expect(Money.parseLira('1').minorUnits, 100);
+      expect(Money.parseLira('100000').minorUnits, 10000000);
+      expect(Money.parseLira('100000,00').minorUnits, 10000000);
+      expect(Money.parseLira('850,5').minorUnits, 85050);
+      expect(Money.parseLira('850.50').minorUnits, 85050);
+      expect(Money.parseLira(' 1200 ').minorUnits, 120000);
     });
 
     test('parseLira rejects invalid formats and amounts outside bounds', () {
@@ -84,10 +84,10 @@ void main() {
       }
     });
 
-    test('equality and hashCode compare kurus amounts', () {
-      final m1 = Money.kurus(85050);
+    test('equality and hashCode compare minor-unit amounts', () {
+      final m1 = Money.minorUnits(85050);
       final m2 = Money.parseLira('850,5');
-      final m3 = Money.kurus(100);
+      final m3 = Money.minorUnits(100);
 
       expect(m1, m2);
       expect(m1.hashCode, m2.hashCode);
@@ -95,7 +95,7 @@ void main() {
     });
   });
 
-  test('parseLira rejects lira that would overflow the kuruş product', () {
+  test('parseLira rejects lira that would overflow the minor-unit product', () {
     expect(
       () => Money.parseLira('92233720368547758'),
       throwsA(

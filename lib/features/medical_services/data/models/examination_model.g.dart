@@ -22,13 +22,16 @@ ExaminationModel _$ExaminationModelFromJson(Map<String, dynamic> json) =>
                 const ServiceDurationConverter().fromJson((v as num).toInt()),
           ),
           fee: $checkedConvert(
-            'feeKurus',
+            'feeMinorUnits',
             (v) => const MoneyConverter().fromJson((v as num).toInt()),
           ),
         );
         return val;
       },
-      fieldKeyMap: const {'duration': 'durationMinutes', 'fee': 'feeKurus'},
+      fieldKeyMap: const {
+        'duration': 'durationMinutes',
+        'fee': 'feeMinorUnits',
+      },
     );
 
 Map<String, dynamic> _$ExaminationModelToJson(
@@ -39,7 +42,7 @@ Map<String, dynamic> _$ExaminationModelToJson(
   'branchId': instance.branchId,
   'kind': _$MedicalServiceKindEnumMap[instance.kind]!,
   'durationMinutes': const ServiceDurationConverter().toJson(instance.duration),
-  'feeKurus': const MoneyConverter().toJson(instance.fee),
+  'feeMinorUnits': const MoneyConverter().toJson(instance.fee),
 };
 
 const _$MedicalServiceKindEnumMap = {

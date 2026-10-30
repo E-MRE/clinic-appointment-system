@@ -22,7 +22,7 @@ RadiologyServiceModel _$RadiologyServiceModelFromJson(
         (v) => const ServiceDurationConverter().fromJson((v as num).toInt()),
       ),
       fee: $checkedConvert(
-        'feeKurus',
+        'feeMinorUnits',
         (v) => const MoneyConverter().fromJson((v as num).toInt()),
       ),
       modality: $checkedConvert(
@@ -33,7 +33,7 @@ RadiologyServiceModel _$RadiologyServiceModelFromJson(
     );
     return val;
   },
-  fieldKeyMap: const {'duration': 'durationMinutes', 'fee': 'feeKurus'},
+  fieldKeyMap: const {'duration': 'durationMinutes', 'fee': 'feeMinorUnits'},
 );
 
 Map<String, dynamic> _$RadiologyServiceModelToJson(
@@ -45,7 +45,7 @@ Map<String, dynamic> _$RadiologyServiceModelToJson(
   'modality': _$RadiologyModalityEnumMap[instance.modality]!,
   'kind': _$MedicalServiceKindEnumMap[instance.kind]!,
   'durationMinutes': const ServiceDurationConverter().toJson(instance.duration),
-  'feeKurus': const MoneyConverter().toJson(instance.fee),
+  'feeMinorUnits': const MoneyConverter().toJson(instance.fee),
   'preparationNote': ?instance.preparationNote,
 };
 

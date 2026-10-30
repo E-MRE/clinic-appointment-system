@@ -271,7 +271,7 @@ MedicalService _sampleService({
     departmentId: 'dept-1',
     branchId: 'branch-1',
     duration: ServiceDuration(30),
-    fee: Money.kurus(50000),
+    fee: Money.minorUnits(50000),
   );
 }
 

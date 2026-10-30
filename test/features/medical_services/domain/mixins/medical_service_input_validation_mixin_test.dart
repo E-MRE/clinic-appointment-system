@@ -80,7 +80,7 @@ void main() {
         departmentId: '   ',
         branchId: 'b1',
         duration: ServiceDuration(30),
-        fee: Money.kurus(5000),
+        fee: Money.minorUnits(5000),
       );
       expect(
         validation.serviceError(bothInvalid),
@@ -93,7 +93,7 @@ void main() {
         departmentId: '   ',
         branchId: 'b1',
         duration: ServiceDuration(30),
-        fee: Money.kurus(5000),
+        fee: Money.minorUnits(5000),
       );
       expect(
         validation.serviceError(departmentInvalid),
@@ -106,7 +106,7 @@ void main() {
         departmentId: 'dept-1',
         branchId: 'b1',
         duration: ServiceDuration(40),
-        fee: Money.kurus(150000),
+        fee: Money.minorUnits(150000),
         modality: RadiologyModality.mri,
         preparationNote: 'x' * 201,
       );
@@ -121,7 +121,7 @@ void main() {
         departmentId: 'dept-1',
         branchId: 'b1',
         duration: ServiceDuration(20),
-        fee: Money.kurus(10000),
+        fee: Money.minorUnits(10000),
       );
       expect(validation.serviceError(validService), isNull);
     });

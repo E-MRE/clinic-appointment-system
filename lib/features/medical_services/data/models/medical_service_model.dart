@@ -29,7 +29,7 @@ base mixin MedicalServiceModel on MedicalService {
   ServiceDuration get duration => super.duration;
 
   @override
-  @JsonKey(name: FirestoreConstants.feeKurus)
+  @JsonKey(name: FirestoreConstants.feeMinorUnits)
   @MoneyConverter()
   Money get fee => super.fee;
 }

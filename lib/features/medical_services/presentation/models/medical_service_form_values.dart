@@ -1,9 +1,10 @@
 import 'package:clinic_appointment_system/features/medical_services/domain/enums/lab_result_time.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/enums/medical_service_kind.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/enums/radiology_modality.dart';
+import 'package:equatable/equatable.dart';
 
 /// Immutable form state for creating and editing medical services.
-final class MedicalServiceFormValues {
+final class MedicalServiceFormValues extends Equatable {
   /// Creates a form values model.
   const MedicalServiceFormValues({
     required this.kind,
@@ -89,33 +90,16 @@ final class MedicalServiceFormValues {
   }
 
   @override
-  bool operator ==(Object other) {
-    return other is MedicalServiceFormValues &&
-        other.kind == kind &&
-        other.name == name &&
-        other.departmentId == departmentId &&
-        other.durationText == durationText &&
-        other.feeText == feeText &&
-        other.modality == modality &&
-        other.preparationNote == preparationNote &&
-        other.requiresFasting == requiresFasting &&
-        other.fastingText == fastingText &&
-        other.resultTime == resultTime;
-  }
-
-  @override
-  int get hashCode {
-    return Object.hash(
-      kind,
-      name,
-      departmentId,
-      durationText,
-      feeText,
-      modality,
-      preparationNote,
-      requiresFasting,
-      fastingText,
-      resultTime,
-    );
-  }
+  List<Object> get props => [
+    kind,
+    name,
+    departmentId,
+    durationText,
+    feeText,
+    modality,
+    preparationNote,
+    requiresFasting,
+    fastingText,
+    resultTime,
+  ];
 }

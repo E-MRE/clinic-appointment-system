@@ -22,7 +22,7 @@ void main() {
         departmentId: '  dept-1  ',
         branchId: '  branch-1  ',
         duration: ServiceDuration(30),
-        fee: Money.kurus(50000),
+        fee: Money.minorUnits(50000),
       );
 
       expect(exam.kind, MedicalServiceKind.examination);
@@ -58,7 +58,7 @@ void main() {
           departmentId: 'dept-2',
           branchId: 'branch-1',
           duration: ServiceDuration(15),
-          fee: Money.kurus(75000),
+          fee: Money.minorUnits(75000),
           modality: RadiologyModality.xRay,
           preparationNote: '   ',
         );
@@ -81,7 +81,7 @@ void main() {
           departmentId: 'dept-2',
           branchId: 'branch-1',
           duration: ServiceDuration(45),
-          fee: Money.kurus(200000),
+          fee: Money.minorUnits(200000),
           modality: RadiologyModality.mri,
           preparationNote: '  Remove metal objects  ',
         );
@@ -101,7 +101,7 @@ void main() {
           departmentId: 'dept-2',
           branchId: 'branch-1',
           duration: ServiceDuration(20),
-          fee: Money.kurus(150000),
+          fee: Money.minorUnits(150000),
           modality: RadiologyModality.ct,
           preparationNote: note200,
         );
@@ -114,7 +114,7 @@ void main() {
           departmentId: 'dept-2',
           branchId: 'branch-1',
           duration: ServiceDuration(20),
-          fee: Money.kurus(150000),
+          fee: Money.minorUnits(150000),
           modality: RadiologyModality.ct,
           preparationNote: note201,
         );
@@ -130,7 +130,7 @@ void main() {
           departmentId: 'dept-2',
           branchId: 'branch-1',
           duration: ServiceDuration(20),
-          fee: Money.kurus(150000),
+          fee: Money.minorUnits(150000),
           modality: RadiologyModality.ct,
           preparationNote: noteWithSpaces,
         );
@@ -145,7 +145,7 @@ void main() {
         departmentId: 'dept-3',
         branchId: 'branch-1',
         duration: ServiceDuration(10),
-        fee: Money.kurus(35000),
+        fee: Money.minorUnits(35000),
         resultTime: LabResultTime.sameDay,
       );
 
@@ -170,7 +170,7 @@ void main() {
         departmentId: 'dept-3',
         branchId: 'branch-1',
         duration: ServiceDuration(10),
-        fee: Money.kurus(25000),
+        fee: Money.minorUnits(25000),
         resultTime: LabResultTime.oneDay,
         fastingHours: FastingHours(min: 8, max: 12),
       );

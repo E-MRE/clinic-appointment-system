@@ -47,7 +47,7 @@ function common(kind) {
     departmentId: 'department-1',
     name: 'Service',
     durationMinutes: 20,
-    feeKurus: 85000,
+    feeMinorUnits: 85000,
   };
 }
 
@@ -89,9 +89,9 @@ const invalidServices = {
   'a 241 minute duration': withChange(validServices.examination, { durationMinutes: 241 }),
   'a fractional duration': withChange(validServices.examination, { durationMinutes: 20.5 }),
   'a string duration': withChange(validServices.examination, { durationMinutes: '20' }),
-  'a 99 kuruş fee': withChange(validServices.examination, { feeKurus: 99 }),
-  'a fee above 100,000 ₺': withChange(validServices.examination, { feeKurus: 10000001 }),
-  'a fractional fee': withChange(validServices.examination, { feeKurus: 850.5 }),
+  'a 99 minor-unit fee': withChange(validServices.examination, { feeMinorUnits: 99 }),
+  'a fee above 100,000 ₺': withChange(validServices.examination, { feeMinorUnits: 10000001 }),
+  'a fractional fee': withChange(validServices.examination, { feeMinorUnits: 850.5 }),
   'an extra field': withChange(validServices.examination, { id: 'service-1' }),
   'an examination with a modality': withChange(validServices.examination, { modality: 'mri' }),
   'a missing department': withChange(validServices.examination, { departmentId: 'missing' }),
@@ -249,13 +249,13 @@ describe('service rules', () => {
       await assertSucceeds(setDoc(doc(db, 'services', 'low'), {
         ...validServices.fastingLab(),
         durationMinutes: 5,
-        feeKurus: 100,
+        feeMinorUnits: 100,
         fastingHours: { min: 1, max: 1 },
       }));
       await assertSucceeds(setDoc(doc(db, 'services', 'high'), {
         ...validServices.radiology(),
         durationMinutes: 240,
-        feeKurus: 10000000,
+        feeMinorUnits: 10000000,
         preparationNote: 'a'.repeat(200),
       }));
       await assertSucceeds(setDoc(doc(db, 'services', 'day'), {
@@ -271,7 +271,7 @@ describe('service rules', () => {
         updateDoc(doc(signedIn('admin'), 'services', 'service-1'), {
           name: 'Lipid Panel',
           durationMinutes: 10,
-          feeKurus: 42000,
+          feeMinorUnits: 42000,
           requiresFasting: false,
           fastingHours: deleteField(),
           resultTime: 'twoDays',

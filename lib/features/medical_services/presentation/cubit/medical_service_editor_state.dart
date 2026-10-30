@@ -1,7 +1,8 @@
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/medical_service.dart';
+import 'package:equatable/equatable.dart';
 
 /// State of the medical services page editor host.
-final class MedicalServiceEditorState {
+final class MedicalServiceEditorState extends Equatable {
   /// Creates the editor state.
   const MedicalServiceEditorState({this.service, this.revision = 0});
 
@@ -15,12 +16,5 @@ final class MedicalServiceEditorState {
   bool get isEditing => service != null;
 
   @override
-  bool operator ==(Object other) {
-    return other is MedicalServiceEditorState &&
-        other.service == service &&
-        other.revision == revision;
-  }
-
-  @override
-  int get hashCode => Object.hash(service, revision);
+  List<Object?> get props => [service, revision];
 }

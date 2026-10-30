@@ -3,11 +3,10 @@ import 'package:clinic_appointment_system/features/institution/domain/enums/inst
 import 'package:clinic_appointment_system/features/institution/domain/enums/weekday.dart';
 import 'package:clinic_appointment_system/features/institution/domain/value_objects/clock_time.dart';
 import 'package:clinic_appointment_system/features/institution/domain/value_objects/time_range.dart';
+import 'package:equatable/equatable.dart';
 
 /// Immutable weekly working hours with validated, sorted ranges per weekday.
-final class WorkingHours {
-  static int get _firstRangeIndex => 0;
-
+final class WorkingHours extends Equatable {
   static int get _secondRangeIndex => 1;
 
   /// Creates working hours and rejects overlapping ranges on the same day.
@@ -63,28 +62,5 @@ final class WorkingHours {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other is! WorkingHours) return false;
-    return Weekday.values.every(
-      (day) => _sameRanges(rangesOn(day), other.rangesOn(day)),
-    );
-  }
-
-  @override
-  int get hashCode {
-    return Object.hashAll(
-      Weekday.values.map(
-        (day) => Object.hash(day, Object.hashAll(rangesOn(day))),
-      ),
-    );
-  }
-
-  bool _sameRanges(List<TimeRange> first, List<TimeRange> second) {
-    if (first.length != second.length) return false;
-    for (int index = _firstRangeIndex; index < first.length; index++) {
-      if (first[index] != second[index]) return false;
-    }
-    return true;
-  }
+  List<Object> get props => [_ranges];
 }

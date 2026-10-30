@@ -22,7 +22,7 @@ LabTestModel _$LabTestModelFromJson(Map<String, dynamic> json) =>
                 const ServiceDurationConverter().fromJson((v as num).toInt()),
           ),
           fee: $checkedConvert(
-            'feeKurus',
+            'feeMinorUnits',
             (v) => const MoneyConverter().fromJson((v as num).toInt()),
           ),
           resultTime: $checkedConvert(
@@ -39,7 +39,10 @@ LabTestModel _$LabTestModelFromJson(Map<String, dynamic> json) =>
         );
         return val;
       },
-      fieldKeyMap: const {'duration': 'durationMinutes', 'fee': 'feeKurus'},
+      fieldKeyMap: const {
+        'duration': 'durationMinutes',
+        'fee': 'feeMinorUnits',
+      },
     );
 
 Map<String, dynamic> _$LabTestModelToJson(
@@ -51,7 +54,7 @@ Map<String, dynamic> _$LabTestModelToJson(
   'resultTime': _$LabResultTimeEnumMap[instance.resultTime]!,
   'kind': _$MedicalServiceKindEnumMap[instance.kind]!,
   'durationMinutes': const ServiceDurationConverter().toJson(instance.duration),
-  'feeKurus': const MoneyConverter().toJson(instance.fee),
+  'feeMinorUnits': const MoneyConverter().toJson(instance.fee),
   'fastingHours': ?_$JsonConverterToJson<Map<String, dynamic>, FastingHours>(
     instance.fastingHours,
     const FastingHoursConverter().toJson,

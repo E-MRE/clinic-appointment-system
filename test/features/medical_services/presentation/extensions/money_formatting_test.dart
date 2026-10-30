@@ -10,27 +10,27 @@ void main() {
 
   group('MoneyFormatting', () {
     test('formats whole lira without decimals (₺1.200)', () {
-      final money = Money.kurus(120000);
+      final money = Money.minorUnits(120000);
       expect(money.formatted(), '₺1.200');
     });
 
     test('formats fractional lira with two decimals (₺850,50)', () {
-      final money = Money.kurus(85050);
+      final money = Money.minorUnits(85050);
       expect(money.formatted(), '₺850,50');
     });
 
     test('formats zero decimals for whole lira (₺850)', () {
-      final money = Money.kurus(85000);
+      final money = Money.minorUnits(85000);
       expect(money.formatted(), '₺850');
     });
 
     test('inputText returns whole number for whole lira (850)', () {
-      final money = Money.kurus(85000);
+      final money = Money.minorUnits(85000);
       expect(money.inputText, '850');
     });
 
     test('inputText returns comma decimal for fractional lira (850,50)', () {
-      final money = Money.kurus(85050);
+      final money = Money.minorUnits(85050);
       expect(money.inputText, '850,50');
     });
   });

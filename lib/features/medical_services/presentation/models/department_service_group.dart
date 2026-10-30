@@ -1,7 +1,8 @@
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/medical_service.dart';
+import 'package:equatable/equatable.dart';
 
 /// Group of medical services belonging to a department on mobile views.
-final class DepartmentServiceGroup {
+final class DepartmentServiceGroup extends Equatable {
   /// Creates a department-service group.
   const DepartmentServiceGroup({
     required this.departmentName,
@@ -14,16 +15,9 @@ final class DepartmentServiceGroup {
   /// Ordered medical services within this department group.
   final List<MedicalService> services;
 
+  /// Groups are identified by their department name alone.
   @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is DepartmentServiceGroup &&
-            runtimeType == other.runtimeType &&
-            departmentName == other.departmentName;
-  }
-
-  @override
-  int get hashCode => departmentName.hashCode;
+  List<Object> get props => [departmentName];
 
   @override
   String toString() =>

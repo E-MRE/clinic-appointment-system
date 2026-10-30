@@ -27,7 +27,7 @@ void main() {
         departmentId: 'dept-1',
         branchId: 'branch-1',
         duration: ServiceDuration(30),
-        fee: Money.kurus(75000),
+        fee: Money.minorUnits(75000),
       );
 
       final model = factory.toModel(entity);
@@ -39,7 +39,7 @@ void main() {
         'branchId': 'branch-1',
         'kind': 'examination',
         'durationMinutes': 30,
-        'feeKurus': 75000,
+        'feeMinorUnits': 75000,
       });
       expect(json.containsKey('id'), isFalse);
 
@@ -61,7 +61,7 @@ void main() {
         departmentId: 'dept-1',
         branchId: 'branch-1',
         duration: ServiceDuration(20),
-        fee: Money.kurus(120000),
+        fee: Money.minorUnits(120000),
         modality: RadiologyModality.ultrasound,
         preparationNote: 'Drink 1 liter of water beforehand.',
       );
@@ -75,7 +75,7 @@ void main() {
         'branchId': 'branch-1',
         'kind': 'radiology',
         'durationMinutes': 20,
-        'feeKurus': 120000,
+        'feeMinorUnits': 120000,
         'modality': 'ultrasound',
         'preparationNote': 'Drink 1 liter of water beforehand.',
       });
@@ -104,7 +104,7 @@ void main() {
         departmentId: 'dept-1',
         branchId: 'branch-1',
         duration: ServiceDuration(45),
-        fee: Money.kurus(350000),
+        fee: Money.minorUnits(350000),
         modality: RadiologyModality.mri,
         preparationNote: null,
       );
@@ -118,7 +118,7 @@ void main() {
         'branchId': 'branch-1',
         'kind': 'radiology',
         'durationMinutes': 45,
-        'feeKurus': 350000,
+        'feeMinorUnits': 350000,
         'modality': 'mri',
       });
       expect(json.containsKey('id'), isFalse);
@@ -136,7 +136,7 @@ void main() {
         departmentId: 'dept-1',
         branchId: 'branch-1',
         duration: ServiceDuration(15),
-        fee: Money.kurus(45000),
+        fee: Money.minorUnits(45000),
         resultTime: LabResultTime.oneDay,
         fastingHours: FastingHours(min: 10, max: 12),
       );
@@ -150,7 +150,7 @@ void main() {
         'branchId': 'branch-1',
         'kind': 'lab',
         'durationMinutes': 15,
-        'feeKurus': 45000,
+        'feeMinorUnits': 45000,
         'resultTime': 'oneDay',
         'fastingHours': {'min': 10, 'max': 12},
         'requiresFasting': true,
@@ -180,7 +180,7 @@ void main() {
           departmentId: 'dept-1',
           branchId: 'branch-1',
           duration: ServiceDuration(10),
-          fee: Money.kurus(20000),
+          fee: Money.minorUnits(20000),
           resultTime: LabResultTime.sameDay,
           fastingHours: null,
         );
@@ -194,7 +194,7 @@ void main() {
           'branchId': 'branch-1',
           'kind': 'lab',
           'durationMinutes': 10,
-          'feeKurus': 20000,
+          'feeMinorUnits': 20000,
           'resultTime': 'sameDay',
           'requiresFasting': false,
         });
@@ -236,7 +236,7 @@ void main() {
           'id': 'exam-1',
           'branchId': 'branch-1',
           'durationMinutes': 20,
-          'feeKurus': 50000,
+          'feeMinorUnits': 50000,
         }),
         throwsA(isA<CheckedFromJsonException>()),
       );
@@ -251,7 +251,7 @@ void main() {
           'departmentId': 'dept-1',
           'branchId': 'branch-1',
           'durationMinutes': '20',
-          'feeKurus': 50000,
+          'feeMinorUnits': 50000,
         }),
         throwsA(isA<CheckedFromJsonException>()),
       );
@@ -269,7 +269,7 @@ void main() {
               'departmentId': 'dept-1',
               'branchId': 'branch-1',
               'durationMinutes': duration,
-              'feeKurus': 50000,
+              'feeMinorUnits': 50000,
             }),
             throwsA(
               isA<CheckedFromJsonException>().having(
@@ -299,7 +299,7 @@ void main() {
               'departmentId': 'dept-1',
               'branchId': 'branch-1',
               'durationMinutes': 30,
-              'feeKurus': fee,
+              'feeMinorUnits': fee,
             }),
             throwsA(
               isA<CheckedFromJsonException>().having(
@@ -328,7 +328,7 @@ void main() {
             'departmentId': 'dept-1',
             'branchId': 'branch-1',
             'durationMinutes': 30,
-            'feeKurus': 50000,
+            'feeMinorUnits': 50000,
             'modality': 'pet',
           }),
           throwsA(
@@ -353,7 +353,7 @@ void main() {
             'departmentId': 'dept-1',
             'branchId': 'branch-1',
             'durationMinutes': 15,
-            'feeKurus': 20000,
+            'feeMinorUnits': 20000,
             'resultTime': 'inTwoWeeks',
             'requiresFasting': false,
           }),
@@ -379,7 +379,7 @@ void main() {
             'departmentId': 'dept-1',
             'branchId': 'branch-1',
             'durationMinutes': 15,
-            'feeKurus': 20000,
+            'feeMinorUnits': 20000,
             'resultTime': 'sameDay',
             'requiresFasting': true,
             'fastingHours': {'min': 12, 'max': 8},

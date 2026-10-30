@@ -33,8 +33,8 @@ abstract final class FirestoreConstants {
   /// Field storing service duration in minutes.
   static const String durationMinutes = 'durationMinutes';
 
-  /// Field storing service fee in kurus.
-  static const String feeKurus = 'feeKurus';
+  /// Field storing service fee in minor units.
+  static const String feeMinorUnits = 'feeMinorUnits';
 
   /// Field storing imaging modality for radiology services.
   static const String modality = 'modality';

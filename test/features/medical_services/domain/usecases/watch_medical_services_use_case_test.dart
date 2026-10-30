@@ -30,7 +30,7 @@ void main() {
         departmentId: 'dept-1',
         branchId: 'b-123',
         duration: ServiceDuration(25),
-        fee: Money.kurus(60000),
+        fee: Money.minorUnits(60000),
       );
       final dataResult = DataResult<List<MedicalService>>.success(
         data: <MedicalService>[service],

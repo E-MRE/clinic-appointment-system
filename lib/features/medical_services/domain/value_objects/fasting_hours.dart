@@ -1,23 +1,15 @@
 import 'package:clinic_appointment_system/core/constants/medical_service_constants.dart';
 import 'package:clinic_appointment_system/core/errors/institution_exception.dart';
 import 'package:clinic_appointment_system/features/institution/domain/enums/institution_error_code.dart';
+import 'package:equatable/equatable.dart';
 
 /// Pre-procedure fasting requirements in hours.
-final class FastingHours {
-  /// One number of hours, or two joined by `-` or an en dash.
-  static final RegExp _hoursPattern = RegExp(
-    r'^(\d+)(?:\s*[-\u2013]\s*(\d+))?$',
-  );
-
+final class FastingHours extends Equatable {
   /// Creates a fasting range with [min] and [max] hours.
   /// Throws [InstitutionException] with [InstitutionErrorCode.invalidFastingHours] if
   /// values are out of bounds or [min] exceeds [max].
   factory FastingHours({required int min, required int max}) {
-    if (min < MedicalServiceConstants.minFastingHours ||
-        min > MedicalServiceConstants.maxFastingHours ||
-        max < MedicalServiceConstants.minFastingHours ||
-        max > MedicalServiceConstants.maxFastingHours ||
-        min > max) {
+    if (!_isWithinLimits(min) || !_isWithinLimits(max) || min > max) {
       throw const InstitutionException(
         InstitutionErrorCode.invalidFastingHours,
       );
@@ -29,7 +21,9 @@ final class FastingHours {
   /// Throws [InstitutionException] with
   /// [InstitutionErrorCode.invalidFastingHours] on malformed input.
   factory FastingHours.parse(String input) {
-    final match = _hoursPattern.firstMatch(input.trim());
+    final match = MedicalServiceConstants.fastingHoursPattern.firstMatch(
+      input.trim(),
+    );
     final min = int.tryParse(match?.group(1) ?? '');
     if (match == null || min == null) {
       throw const InstitutionException(
@@ -42,6 +36,12 @@ final class FastingHours {
 
   const FastingHours._({required this.min, required this.max});
 
+  /// Whether [hours] lies within the allowed fasting limits.
+  static bool _isWithinLimits(int hours) {
+    return hours >= MedicalServiceConstants.minFastingHours &&
+        hours <= MedicalServiceConstants.maxFastingHours;
+  }
+
   /// Minimum required fasting duration in hours.
   final int min;
 
@@ -52,12 +52,7 @@ final class FastingHours {
   bool get isSingle => min == max;
 
   @override
-  bool operator ==(Object other) {
-    return other is FastingHours && other.min == min && other.max == max;
-  }
-
-  @override
-  int get hashCode => Object.hash(min, max);
+  List<Object> get props => [min, max];
 
   @override
   String toString() => isSingle ? '$min h' : '$min–$max h';

@@ -141,7 +141,7 @@ service cloud.firestore {
 
     // services/{serviceId}: examinations, radiology services and lab tests
     // offered by a branch department. Kind, branch and department are fixed
-    // after creation; fees are stored in kuruş.
+    // after creation; fees are stored in minor units (1 ₺ = 100).
     match /services/{serviceId} {
       allow read: if isSignedIn();
       allow create: if isAdmin() && isValidService(request.resource.data);
@@ -155,7 +155,7 @@ service cloud.firestore {
       function commonKeys() {
         return [
           'kind', 'branchId', 'departmentId', 'name',
-          'durationMinutes', 'feeKurus'
+          'durationMinutes', 'feeMinorUnits'
         ];
       }
 
@@ -176,9 +176,9 @@ service cloud.firestore {
           && data.durationMinutes is int
           && data.durationMinutes >= 5
           && data.durationMinutes <= 240
-          && data.feeKurus is int
-          && data.feeKurus >= 100
-          && data.feeKurus <= 10000000;
+          && data.feeMinorUnits is int
+          && data.feeMinorUnits >= 100
+          && data.feeMinorUnits <= 10000000;
       }
 
       // The department must exist and belong to the service's branch.

@@ -19,7 +19,7 @@ void main() {
       departmentId: 'd-1',
       branchId: 'b-1',
       duration: ServiceDuration(20),
-      fee: Money.kurus(40000),
+      fee: Money.minorUnits(40000),
     );
 
     final radiology = RadiologyService(
@@ -28,7 +28,7 @@ void main() {
       departmentId: 'd-2',
       branchId: 'b-1',
       duration: ServiceDuration(15),
-      fee: Money.kurus(60000),
+      fee: Money.minorUnits(60000),
       modality: RadiologyModality.xRay,
     );
 
@@ -38,7 +38,7 @@ void main() {
       departmentId: 'd-3',
       branchId: 'b-1',
       duration: ServiceDuration(10),
-      fee: Money.kurus(20000),
+      fee: Money.minorUnits(20000),
       fastingHours: FastingHours(min: 8, max: 12),
       resultTime: LabResultTime.sameDay,
     );

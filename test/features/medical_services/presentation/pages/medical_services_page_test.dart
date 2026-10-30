@@ -79,7 +79,7 @@ void main() {
     departmentId: 'd-cardio',
     branchId: 'b1',
     duration: ServiceDuration(20),
-    fee: Money.kurus(120000),
+    fee: Money.minorUnits(120000),
   );
 
   final serviceRadiology = RadiologyService(
@@ -88,7 +88,7 @@ void main() {
     departmentId: 'd-radio',
     branchId: 'b1',
     duration: ServiceDuration(15),
-    fee: Money.kurus(65000),
+    fee: Money.minorUnits(65000),
     modality: RadiologyModality.xRay,
     preparationNote: 'metal takıları çıkarın',
   );

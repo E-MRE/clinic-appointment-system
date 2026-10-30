@@ -47,7 +47,7 @@ void main() {
     departmentId: 'd-cardio',
     branchId: 'b1',
     duration: ServiceDuration(20),
-    fee: Money.kurus(120000),
+    fee: Money.minorUnits(120000),
   );
   final examination2 = Examination(
     id: 's2',
@@ -55,7 +55,7 @@ void main() {
     departmentId: 'd-cardio',
     branchId: 'b1',
     duration: ServiceDuration(10),
-    fee: Money.kurus(40000),
+    fee: Money.minorUnits(40000),
   );
   final examination3 = Examination(
     id: 's3',
@@ -63,7 +63,7 @@ void main() {
     departmentId: 'd-internal',
     branchId: 'b1',
     duration: ServiceDuration(20),
-    fee: Money.kurus(95000),
+    fee: Money.minorUnits(95000),
   );
 
   final radiology1 = RadiologyService(
@@ -72,7 +72,7 @@ void main() {
     departmentId: 'd-radio',
     branchId: 'b1',
     duration: ServiceDuration(15),
-    fee: Money.kurus(65000),
+    fee: Money.minorUnits(65000),
     modality: RadiologyModality.xRay,
   );
   final radiology2 = RadiologyService(
@@ -81,7 +81,7 @@ void main() {
     departmentId: 'd-radio',
     branchId: 'b1',
     duration: ServiceDuration(15),
-    fee: Money.kurus(60000),
+    fee: Money.minorUnits(60000),
     modality: RadiologyModality.xRay,
   );
   final radiology3 = RadiologyService(
@@ -90,7 +90,7 @@ void main() {
     departmentId: 'd-radio',
     branchId: 'b1',
     duration: ServiceDuration(20),
-    fee: Money.kurus(90000),
+    fee: Money.minorUnits(90000),
     modality: RadiologyModality.ultrasound,
   );
   final radiology4 = RadiologyService(
@@ -99,7 +99,7 @@ void main() {
     departmentId: 'd-radio',
     branchId: 'b1',
     duration: ServiceDuration(20),
-    fee: Money.kurus(80000),
+    fee: Money.minorUnits(80000),
     modality: RadiologyModality.ultrasound,
   );
 
@@ -109,7 +109,7 @@ void main() {
     departmentId: 'd-lab',
     branchId: 'b1',
     duration: ServiceDuration(10),
-    fee: Money.kurus(42000),
+    fee: Money.minorUnits(42000),
     resultTime: LabResultTime.oneDay,
   );
   final lab2 = LabTest(
@@ -118,7 +118,7 @@ void main() {
     departmentId: 'd-lab',
     branchId: 'b1',
     duration: ServiceDuration(10),
-    fee: Money.kurus(25000),
+    fee: Money.minorUnits(25000),
     resultTime: LabResultTime.sameDay,
   );
   final lab3 = LabTest(
@@ -127,7 +127,7 @@ void main() {
     departmentId: 'd-lab',
     branchId: 'b1',
     duration: ServiceDuration(10),
-    fee: Money.kurus(15000),
+    fee: Money.minorUnits(15000),
     resultTime: LabResultTime.sameDay,
   );
   final lab4 = LabTest(
@@ -136,7 +136,7 @@ void main() {
     departmentId: 'd-lab',
     branchId: 'b1',
     duration: ServiceDuration(10),
-    fee: Money.kurus(30000),
+    fee: Money.minorUnits(30000),
     resultTime: LabResultTime.oneDay,
   );
   final lab5 = LabTest(
@@ -145,7 +145,7 @@ void main() {
     departmentId: 'd-lab',
     branchId: 'b1',
     duration: ServiceDuration(10),
-    fee: Money.kurus(32000),
+    fee: Money.minorUnits(32000),
     resultTime: LabResultTime.twoDays,
   );
   final lab6 = LabTest(
@@ -154,7 +154,7 @@ void main() {
     departmentId: 'd-lab',
     branchId: 'b1',
     duration: ServiceDuration(10),
-    fee: Money.kurus(28000),
+    fee: Money.minorUnits(28000),
     resultTime: LabResultTime.oneDay,
   );
 
@@ -218,7 +218,7 @@ void main() {
         departmentId: 'd-nonexistent',
         branchId: 'b1',
         duration: ServiceDuration(15),
-        fee: Money.kurus(50000),
+        fee: Money.minorUnits(50000),
       );
 
       final mixedServices = [

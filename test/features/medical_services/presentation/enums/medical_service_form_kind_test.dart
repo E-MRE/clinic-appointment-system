@@ -49,7 +49,7 @@ void main() {
       expect(service.departmentId, 'dept-1');
       expect(service.branchId, 'b-1');
       expect(service.duration.minutes, 20);
-      expect(service.fee.kurus, 120000);
+      expect(service.fee.minorUnits, 120000);
     });
 
     test('builds RadiologyService with modality and note', () {
@@ -73,7 +73,7 @@ void main() {
       final radiology = service as RadiologyService;
       expect(radiology.modality, RadiologyModality.mri);
       expect(radiology.preparationNote, 'Remove jewelry');
-      expect(radiology.fee.kurus, 150050);
+      expect(radiology.fee.minorUnits, 150050);
     });
 
     test('builds RadiologyService with empty note normalizing to null', () {

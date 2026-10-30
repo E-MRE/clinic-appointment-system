@@ -22,7 +22,7 @@ void main() {
         departmentId: 'dept-1',
         branchId: 'b-1',
         duration: ServiceDuration(30),
-        fee: Money.kurus(5000),
+        fee: Money.minorUnits(5000),
       );
       final result = DataResult<MedicalService>.success(data: created);
       repository.createResult = result;
@@ -35,7 +35,7 @@ void main() {
           departmentId: '  dept-1  ',
           branchId: '  b-1  ',
           duration: ServiceDuration(30),
-          fee: Money.kurus(5000),
+          fee: Money.minorUnits(5000),
         ),
       );
 
@@ -58,7 +58,7 @@ void main() {
             departmentId: 'dept-1',
             branchId: 'b-1',
             duration: ServiceDuration(30),
-            fee: Money.kurus(5000),
+            fee: Money.minorUnits(5000),
           ),
         ),
         throwsA(
@@ -84,7 +84,7 @@ void main() {
             departmentId: '   ',
             branchId: 'b-1',
             duration: ServiceDuration(30),
-            fee: Money.kurus(5000),
+            fee: Money.minorUnits(5000),
           ),
         ),
         throwsA(
@@ -112,7 +112,7 @@ void main() {
               departmentId: 'dept-1',
               branchId: 'b-1',
               duration: ServiceDuration(30),
-              fee: Money.kurus(100000),
+              fee: Money.minorUnits(100000),
               modality: RadiologyModality.mri,
               preparationNote: 'x' * 201,
             ),
@@ -143,7 +143,7 @@ void main() {
             departmentId: 'dept-1',
             branchId: 'b-1',
             duration: ServiceDuration(30),
-            fee: Money.kurus(5000),
+            fee: Money.minorUnits(5000),
           ),
         ),
         throwsA(same(exception)),

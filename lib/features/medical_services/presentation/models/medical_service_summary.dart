@@ -1,5 +1,7 @@
+import 'package:equatable/equatable.dart';
+
 /// Immutable display summary for a medical service row or card.
-final class MedicalServiceSummary {
+final class MedicalServiceSummary extends Equatable {
   /// Creates a display summary with table subtitle, type line and detail.
   const MedicalServiceSummary({
     required this.tableSubtitle,
@@ -18,19 +20,8 @@ final class MedicalServiceSummary {
   final String detail;
 
   @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is MedicalServiceSummary &&
-            runtimeType == other.runtimeType &&
-            tableSubtitle == other.tableSubtitle &&
-            typeLine == other.typeLine &&
-            detail == other.detail;
-  }
+  List<Object> get props => [tableSubtitle, typeLine, detail];
 
   @override
-  int get hashCode => Object.hash(tableSubtitle, typeLine, detail);
-
-  @override
-  String toString() =>
-      'MedicalServiceSummary(tableSubtitle: $tableSubtitle, typeLine: $typeLine, detail: $detail)';
+  bool get stringify => true;
 }

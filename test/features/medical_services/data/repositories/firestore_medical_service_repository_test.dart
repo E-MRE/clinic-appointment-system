@@ -49,7 +49,7 @@ void main() {
           departmentId: 'dept-1',
           branchId: 'branch-1',
           duration: ServiceDuration(30),
-          fee: Money.kurus(60000),
+          fee: Money.minorUnits(60000),
         );
 
         final result = await repository.createService(draft);
@@ -71,7 +71,7 @@ void main() {
           'branchId': 'branch-1',
           'kind': 'examination',
           'durationMinutes': 30,
-          'feeKurus': 60000,
+          'feeMinorUnits': 60000,
         });
         expect(data?.containsKey('id'), isFalse);
       },
@@ -86,7 +86,7 @@ void main() {
           departmentId: 'dept-2',
           branchId: 'branch-1',
           duration: ServiceDuration(15),
-          fee: Money.kurus(80000),
+          fee: Money.minorUnits(80000),
           modality: RadiologyModality.xRay,
           preparationNote: 'Remove metallic items.',
         );
@@ -102,7 +102,7 @@ void main() {
           'branchId': 'branch-1',
           'kind': 'radiology',
           'durationMinutes': 15,
-          'feeKurus': 80000,
+          'feeMinorUnits': 80000,
           'modality': 'xRay',
           'preparationNote': 'Remove metallic items.',
         });
@@ -114,7 +114,7 @@ void main() {
           departmentId: 'dept-2',
           branchId: 'branch-1',
           duration: ServiceDuration(25),
-          fee: Money.kurus(150000),
+          fee: Money.minorUnits(150000),
           modality: RadiologyModality.ct,
           preparationNote: null,
         );
@@ -130,7 +130,7 @@ void main() {
           'branchId': 'branch-1',
           'kind': 'radiology',
           'durationMinutes': 25,
-          'feeKurus': 150000,
+          'feeMinorUnits': 150000,
           'modality': 'ct',
         });
         expect(snapshotNoNote.data()?.containsKey('preparationNote'), isFalse);
@@ -145,7 +145,7 @@ void main() {
         departmentId: 'dept-3',
         branchId: 'branch-1',
         duration: ServiceDuration(10),
-        fee: Money.kurus(25000),
+        fee: Money.minorUnits(25000),
         resultTime: LabResultTime.sameDay,
         fastingHours: FastingHours(min: 8, max: 12),
       );
@@ -161,7 +161,7 @@ void main() {
         'branchId': 'branch-1',
         'kind': 'lab',
         'durationMinutes': 10,
-        'feeKurus': 25000,
+        'feeMinorUnits': 25000,
         'resultTime': 'sameDay',
         'fastingHours': {'min': 8, 'max': 12},
         'requiresFasting': true,
@@ -174,7 +174,7 @@ void main() {
         departmentId: 'dept-3',
         branchId: 'branch-1',
         duration: ServiceDuration(10),
-        fee: Money.kurus(20000),
+        fee: Money.minorUnits(20000),
         resultTime: LabResultTime.oneDay,
         fastingHours: null,
       );
@@ -190,7 +190,7 @@ void main() {
         'branchId': 'branch-1',
         'kind': 'lab',
         'durationMinutes': 10,
-        'feeKurus': 20000,
+        'feeMinorUnits': 20000,
         'resultTime': 'oneDay',
         'requiresFasting': false,
       });
@@ -210,7 +210,7 @@ void main() {
           'branchId': 'branch-a',
           'kind': 'radiology',
           'durationMinutes': 20,
-          'feeKurus': 85000,
+          'feeMinorUnits': 85000,
           'modality': 'xRay',
         });
         await firestore.collection('services').doc('svc-2').set({
@@ -219,7 +219,7 @@ void main() {
           'branchId': 'branch-a',
           'kind': 'examination',
           'durationMinutes': 30,
-          'feeKurus': 50000,
+          'feeMinorUnits': 50000,
         });
         await firestore.collection('services').doc('svc-3').set({
           'name': 'Beta Blood Test',
@@ -227,7 +227,7 @@ void main() {
           'branchId': 'branch-a',
           'kind': 'lab',
           'durationMinutes': 10,
-          'feeKurus': 30000,
+          'feeMinorUnits': 30000,
           'resultTime': 'sameDay',
           'requiresFasting': false,
         });
@@ -237,7 +237,7 @@ void main() {
           'branchId': 'branch-b',
           'kind': 'examination',
           'durationMinutes': 20,
-          'feeKurus': 50000,
+          'feeMinorUnits': 50000,
         });
 
         final streamResult = await repository.watchServices('branch-a').first;
@@ -278,7 +278,7 @@ void main() {
           'branchId': 'branch-a',
           'kind': 'examination',
           'durationMinutes': 3,
-          'feeKurus': 50000,
+          'feeMinorUnits': 50000,
         });
 
         await expectLater(
@@ -303,7 +303,7 @@ void main() {
         departmentId: 'dept-1',
         branchId: 'branch-1',
         duration: ServiceDuration(20),
-        fee: Money.kurus(40000),
+        fee: Money.minorUnits(40000),
       );
 
       final createResult = await repository.createService(initial);
@@ -315,13 +315,13 @@ void main() {
         departmentId: 'dept-1',
         branchId: 'branch-1',
         duration: ServiceDuration(45),
-        fee: Money.kurus(70000),
+        fee: Money.minorUnits(70000),
       );
 
       final updateResult = await repository.updateService(updated);
       expect(updateResult.data?.name, 'Updated Checkup');
       expect(updateResult.data?.duration.minutes, 45);
-      expect(updateResult.data?.fee.kurus, 70000);
+      expect(updateResult.data?.fee.minorUnits, 70000);
 
       final snapshot = await firestore
           .collection('services')
@@ -331,7 +331,7 @@ void main() {
 
       expect(data?['name'], 'Updated Checkup');
       expect(data?['durationMinutes'], 45);
-      expect(data?['feeKurus'], 70000);
+      expect(data?['feeMinorUnits'], 70000);
       expect(data?.containsKey('id'), isFalse);
     });
 
@@ -342,7 +342,7 @@ void main() {
         'departmentId': 'dept-1',
         'name': 'Lipid Panel',
         'durationMinutes': 10,
-        'feeKurus': 42000,
+        'feeMinorUnits': 42000,
         'requiresFasting': true,
         'fastingHours': {'min': 8, 'max': 12},
         'resultTime': 'oneDay',
@@ -355,7 +355,7 @@ void main() {
           departmentId: 'dept-1',
           branchId: 'branch-1',
           duration: ServiceDuration(10),
-          fee: Money.kurus(42000),
+          fee: Money.minorUnits(42000),
           resultTime: LabResultTime.oneDay,
         ),
       );
@@ -374,7 +374,7 @@ void main() {
         'departmentId': 'dept-1',
         'name': 'Chest X-ray',
         'durationMinutes': 15,
-        'feeKurus': 65000,
+        'feeMinorUnits': 65000,
         'modality': 'xRay',
         'preparationNote': 'Remove metal items.',
       });
@@ -386,7 +386,7 @@ void main() {
           departmentId: 'dept-1',
           branchId: 'branch-1',
           duration: ServiceDuration(15),
-          fee: Money.kurus(65000),
+          fee: Money.minorUnits(65000),
           modality: RadiologyModality.xRay,
         ),
       );
@@ -423,7 +423,7 @@ void main() {
           departmentId: 'dept-1',
           branchId: 'branch-1',
           duration: ServiceDuration(20),
-          fee: Money.kurus(50000),
+          fee: Money.minorUnits(50000),
         );
 
         await expectLater(
@@ -464,7 +464,7 @@ void main() {
           departmentId: 'dept-1',
           branchId: 'branch-1',
           duration: ServiceDuration(20),
-          fee: Money.kurus(50000),
+          fee: Money.minorUnits(50000),
         );
 
         await expectLater(

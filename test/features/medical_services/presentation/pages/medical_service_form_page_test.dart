@@ -53,7 +53,7 @@ void main() {
     departmentId: 'dept-1',
     branchId: 'b-1',
     duration: ServiceDuration(20),
-    fee: Money.kurus(80000),
+    fee: Money.minorUnits(80000),
   );
 
   setUp(() {

@@ -21,7 +21,7 @@ void main() {
         departmentId: 'dept-1',
         branchId: 'branch-1',
         duration: ServiceDuration(20),
-        fee: Money.kurus(120000),
+        fee: Money.minorUnits(120000),
       );
 
       final values = service.accept(visitor);
@@ -43,7 +43,7 @@ void main() {
         departmentId: 'dept-radio',
         branchId: 'branch-1',
         duration: ServiceDuration(15),
-        fee: Money.kurus(85050),
+        fee: Money.minorUnits(85050),
         modality: RadiologyModality.mri,
         preparationNote: 'Remove all metallic jewelry',
       );
@@ -66,7 +66,7 @@ void main() {
         departmentId: 'dept-radio',
         branchId: 'branch-1',
         duration: ServiceDuration(10),
-        fee: Money.kurus(50000),
+        fee: Money.minorUnits(50000),
         modality: RadiologyModality.xRay,
         preparationNote: null,
       );
@@ -83,7 +83,7 @@ void main() {
         departmentId: 'dept-lab',
         branchId: 'branch-1',
         duration: ServiceDuration(10),
-        fee: Money.kurus(42000),
+        fee: Money.minorUnits(42000),
         resultTime: LabResultTime.sameDay,
         fastingHours: FastingHours(min: 8, max: 12),
       );
@@ -104,7 +104,7 @@ void main() {
         departmentId: 'dept-lab',
         branchId: 'branch-1',
         duration: ServiceDuration(10),
-        fee: Money.kurus(25000),
+        fee: Money.minorUnits(25000),
         resultTime: LabResultTime.twoDays,
         fastingHours: null,
       );

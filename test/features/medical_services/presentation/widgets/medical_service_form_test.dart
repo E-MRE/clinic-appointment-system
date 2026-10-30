@@ -277,7 +277,7 @@ void main() {
           departmentId: 'dept-radio',
           branchId: 'branch-1',
           duration: ServiceDuration(30),
-          fee: Money.kurus(150000),
+          fee: Money.minorUnits(150000),
           modality: RadiologyModality.mri,
           preparationNote: 'Metal nesneleri çıkarın',
         );
