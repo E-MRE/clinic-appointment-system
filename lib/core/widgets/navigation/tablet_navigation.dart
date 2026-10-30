@@ -24,10 +24,11 @@ final class _TabletNavigation extends StatelessWidget {
           children: [
             _TabletNavigationLogo(logo: logo),
             Expanded(
-              child: _TabletNavigationItemList(
+              child: _NavigationItemList(
                 destinations: destinations,
                 selectedIndex: selectedIndex,
                 onDestinationSelected: onDestinationSelected,
+                itemBuilder: _TabletNavigationItem.new,
               ),
             ),
           ],

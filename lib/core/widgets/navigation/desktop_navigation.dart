@@ -32,10 +32,11 @@ final class _DesktopNavigation extends StatelessWidget {
           ],
           const EmptySize.s24Height(),
           Expanded(
-            child: _DesktopNavigationItemList(
+            child: _NavigationItemList(
               destinations: destinations,
               selectedIndex: selectedIndex,
               onDestinationSelected: onDestinationSelected,
+              itemBuilder: _DesktopNavigationItem.new,
             ),
           ),
         ],
