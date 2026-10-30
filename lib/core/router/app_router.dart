@@ -6,7 +6,7 @@ import 'package:clinic_appointment_system/features/admin/presentation/pages/admi
 import 'package:clinic_appointment_system/features/admin/presentation/widgets/admin_route_scope.dart';
 import 'package:clinic_appointment_system/features/admin/presentation/widgets/admin_shell.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/auth_route_guard.dart';
-import 'package:clinic_appointment_system/features/auth/presentation/enums/auth_form_kind.dart';
+import 'package:clinic_appointment_system/features/auth/presentation/extensions/auth_location_form_kind.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/pages/auth_page.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/pages/password_reset_page.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/pages/sign_in_page.dart';
@@ -146,10 +146,7 @@ GoRouter createAppRouter({
         pageBuilder: (_, state, child) {
           return _fadePage(
             state,
-            AuthShell(
-              kind: AuthFormKind.fromLocation(state.uri.path),
-              child: child,
-            ),
+            AuthShell(kind: state.uri.path.authFormKind, child: child),
           );
         },
         routes: [

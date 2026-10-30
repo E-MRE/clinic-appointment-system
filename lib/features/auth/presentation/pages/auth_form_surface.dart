@@ -18,7 +18,7 @@ final class _AuthFormSurface extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (context.screenSize.isMobile && kind.offersBack)
+        if (context.screenSize.isMobile && kind.config.offersBack)
           _AuthBackButton(kind: kind, canNavigate: canNavigate),
         if (context.screenSize.isMobile) Expanded(child: child) else child,
       ],

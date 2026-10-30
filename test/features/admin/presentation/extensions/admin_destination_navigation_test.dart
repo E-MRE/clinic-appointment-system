@@ -1,5 +1,7 @@
 import 'package:clinic_appointment_system/core/router/app_routes.dart';
 import 'package:clinic_appointment_system/features/admin/presentation/enums/admin_destination.dart';
+import 'package:clinic_appointment_system/features/admin/presentation/extensions/admin_destination_navigation.dart';
+import 'package:clinic_appointment_system/features/admin/presentation/extensions/admin_location_destination.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -34,32 +36,18 @@ void main() {
         isFalse,
       );
 
+      expect('/admin'.adminDestination, AdminDestination.overview);
       expect(
-        AdminDestination.fromLocation('/admin'),
-        AdminDestination.overview,
-      );
-      expect(
-        AdminDestination.fromLocation('/admin/institution'),
+        '/admin/institution'.adminDestination,
         AdminDestination.institution,
       );
       expect(
-        AdminDestination.fromLocation(
-          '/admin/institution/clinics/c/branches/b',
-        ),
+        '/admin/institution/clinics/c/branches/b'.adminDestination,
         AdminDestination.institution,
       );
-      expect(
-        AdminDestination.fromLocation('/admin/services'),
-        AdminDestination.services,
-      );
-      expect(
-        AdminDestination.fromLocation('/admin/services/new'),
-        AdminDestination.services,
-      );
-      expect(
-        AdminDestination.fromLocation('/admin/servicesx'),
-        AdminDestination.overview,
-      );
+      expect('/admin/services'.adminDestination, AdminDestination.services);
+      expect('/admin/services/new'.adminDestination, AdminDestination.services);
+      expect('/admin/servicesx'.adminDestination, AdminDestination.overview);
     });
   });
 }

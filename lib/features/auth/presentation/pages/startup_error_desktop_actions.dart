@@ -21,12 +21,12 @@ final class _StartupErrorDesktopActions extends StatelessWidget {
       spacing: AppSizes.s12,
       runSpacing: AppSizes.s8,
       children: [
-        if (onSignOut != null || kind.offersGoHome)
+        if (onSignOut != null || kind.config.offersGoHome)
           _StartupSecondaryActionButton(
             onSignOut: onSignOut,
             onGoHome: onGoHome,
           ),
-        if (kind.offersRetry) _StartupRetryButton(onRetry: onRetry),
+        if (kind.config.offersRetry) _StartupRetryButton(onRetry: onRetry),
       ],
     );
   }

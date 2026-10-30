@@ -33,7 +33,7 @@ final class _AuthFormFields extends StatelessWidget {
           enabled: enabled,
           onSubmit: onSubmit,
         ),
-        if (kind.hasPassword)
+        if (kind.config.hasPassword)
           _AuthPasswordGroup(
             kind: kind,
             password: password,

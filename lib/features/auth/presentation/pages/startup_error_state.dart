@@ -16,9 +16,9 @@ final class _StartupErrorState extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colorScheme;
     return ErrorState(
-      title: kind.titleKey.translate(),
+      title: kind.config.titleKey.translate(),
       primaryAction: isMobile ? null : actions,
-      message: kind.descriptionKey.translate(),
+      message: kind.config.descriptionKey.translate(),
       icon: _StartupErrorIcon(kind: kind, isMobile: isMobile),
       iconBackground: kind.containerColor(colors),
       iconSize: context.screenSize.select(

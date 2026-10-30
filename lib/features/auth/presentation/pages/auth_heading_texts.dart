@@ -15,10 +15,10 @@ final class _AuthHeadingTexts extends StatelessWidget {
           ? CrossAxisAlignment.center
           : CrossAxisAlignment.start,
       children: [
-        if (!size.isMobile || !kind.offersBack)
+        if (!size.isMobile || !kind.config.offersBack)
           Semantics(
             header: true,
-            child: AppText.headline(kind.titleKey.translate()),
+            child: AppText.headline(kind.config.titleKey.translate()),
           ),
         const EmptySize.s8Height(),
         AppText.body(

@@ -6,6 +6,7 @@ import 'package:clinic_appointment_system/core/widgets/app_scaffold.dart';
 import 'package:clinic_appointment_system/core/widgets/square_svg_icon.dart';
 import 'package:clinic_appointment_system/core/widgets/state/error_state.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/enums/startup_error_kind.dart';
+import 'package:clinic_appointment_system/features/auth/presentation/extensions/startup_error_kind_presentation.dart';
 import 'package:clinic_appointment_system/generated/assets.gen.dart';
 import 'package:flutter/material.dart';
 

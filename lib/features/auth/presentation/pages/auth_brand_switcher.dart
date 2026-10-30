@@ -12,7 +12,10 @@ final class _AuthBrandSwitcher extends StatelessWidget {
       alignment: Alignment.centerLeft,
       child: AnimatedSwitcher(
         duration: kThemeAnimationDuration,
-        child: _AuthBrandMessage(key: ValueKey(kind.brandTitleKey), kind: kind),
+        child: _AuthBrandMessage(
+          key: ValueKey(kind.config.brandTitleKey),
+          kind: kind,
+        ),
       ),
     );
   }

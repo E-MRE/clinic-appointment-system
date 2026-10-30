@@ -18,11 +18,11 @@ final class _AuthFormFooter extends StatelessWidget {
           const EmptySize.s24Height(),
         ],
         _AuthAccountLink(
-          footer: kind.footer,
+          footer: kind.config.footer,
           enabled: enabled,
           centered: centered,
         ),
-        if (kind.showsStaffNotice)
+        if (kind.config.showsStaffNotice)
           AppText.caption(
             LocaleKeys.auth_staffNotice.translate(),
             textAlign: centered ? TextAlign.center : TextAlign.start,
