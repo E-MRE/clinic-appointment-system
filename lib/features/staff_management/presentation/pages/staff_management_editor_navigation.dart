@@ -24,6 +24,11 @@ extension _StaffManagementEditorNavigation on BuildContext {
     }
   }
 
+  /// Opens the availability page for an existing profile.
+  void openStaffAvailability(Staff staff) {
+    go(AppRoutes.adminStaffAvailability(staff.id));
+  }
+
   /// The dialog route needs the branch list provided above the page.
   Future<void> _showStaffDialog({Staff? staff}) {
     final branches = read<BranchListCubit>();

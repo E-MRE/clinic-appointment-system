@@ -435,6 +435,7 @@ abstract class LocaleKeys {
   static const staff_notFoundMessage = 'staff.notFoundMessage';
   static const staff_loading = 'staff.loading';
   static const staff_editTooltip = 'staff.editTooltip';
+  static const staff_availabilityTooltip = 'staff.availabilityTooltip';
   static const staff_columns_name = 'staff.columns.name';
   static const staff_columns_role = 'staff.columns.role';
   static const staff_columns_placement = 'staff.columns.placement';

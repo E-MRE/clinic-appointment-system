@@ -22,6 +22,7 @@ import 'package:clinic_appointment_system/features/medical_services/presentation
 import 'package:clinic_appointment_system/features/medical_services/presentation/pages/medical_services_route_scope.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/pages/patient_home_page.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/widgets/staff_shell.dart';
+import 'package:clinic_appointment_system/features/staff_management/presentation/pages/staff_availability_page.dart';
 import 'package:clinic_appointment_system/features/staff_management/presentation/pages/staff_form_page.dart';
 import 'package:clinic_appointment_system/features/staff_management/presentation/pages/staff_management_page.dart';
 import 'package:clinic_appointment_system/features/staff_management/presentation/pages/staff_management_route_scope.dart';
@@ -175,6 +176,15 @@ GoRouter createAppRouter({
                     path: AppRoutes.adminStaffNewSegment,
                     pageBuilder: (_, state) =>
                         _fadePage(state, const StaffFormPage()),
+                  ),
+                  GoRoute(
+                    path: AppRoutes.adminStaffAvailabilitySegment,
+                    pageBuilder: (_, state) => _fadePage(
+                      state,
+                      StaffAvailabilityPage(
+                        staffId: state.pathParameters['staffId'] ?? '',
+                      ),
+                    ),
                   ),
                   GoRoute(
                     path: AppRoutes.adminStaffEditSegment,

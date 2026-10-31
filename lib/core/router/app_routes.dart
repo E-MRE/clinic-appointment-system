@@ -54,6 +54,13 @@ abstract final class AppRoutes {
   /// Relative path of the mobile staff editing page.
   static const String adminStaffEditSegment = ':staffId/edit';
 
+  /// Relative path of a staff member's availability page.
+  static const String adminStaffAvailabilitySegment = ':staffId/availability';
+
+  /// Full location of the availability page for the profile identified by [id].
+  static String adminStaffAvailability(String id) =>
+      '$adminStaff/$id/availability';
+
   /// Full location of the mobile staff creation page.
   static const String adminStaffNew = '$adminStaff/$adminStaffNewSegment';
 

@@ -405,6 +405,7 @@
     "notFoundMessage": "Aradığınız personel mevcut değil veya silinmiş.",
     "loading": "Personel bilgileri yükleniyor",
     "editTooltip": "Düzenle",
+    "availabilityTooltip": "Uygunluk",
     "columns": {
       "name": "Ad",
       "role": "Rol",
