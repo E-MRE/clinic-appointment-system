@@ -39,6 +39,13 @@ final class FirestoreDepartmentRepository
   }
 
   @override
+  Stream<DataResult<List<Department>>> watchDepartmentsOfBranches(
+    List<String> branchIds,
+  ) {
+    return watchWhereIn(FirestoreConstants.branchId, branchIds);
+  }
+
+  @override
   Future<DataResult<Department>> createDepartment(DepartmentDraft draft) {
     return createRecord(draft);
   }

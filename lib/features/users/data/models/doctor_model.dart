@@ -19,6 +19,18 @@ final class DoctorModel extends Doctor with UserModel {
     required super.specialty,
   });
 
+  /// Creates the model that stores [doctor].
+  DoctorModel.fromEntity(Doctor doctor)
+    : this(
+        id: doctor.id,
+        fullName: doctor.fullName,
+        email: doctor.email,
+        branchId: doctor.branchId,
+        departmentId: doctor.departmentId,
+        serviceIds: doctor.serviceIds,
+        specialty: doctor.specialty,
+      );
+
   /// Creates a profile model from stored document fields.
   factory DoctorModel.fromJson(Map<String, dynamic> json) =>
       _$DoctorModelFromJson(json);

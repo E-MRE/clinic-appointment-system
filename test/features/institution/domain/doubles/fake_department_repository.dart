@@ -10,12 +10,21 @@ final class FakeDepartmentRepository implements DepartmentRepository {
   DepartmentDraft? createdDraft;
   Department? updatedDepartment;
   String? watchedBranchId;
+  List<String>? watchedBranchIds;
   int createCalls = 0;
   int updateCalls = 0;
 
   @override
   Stream<DataResult<List<Department>>> watchDepartments(String branchId) {
     watchedBranchId = branchId;
+    return departmentsStream;
+  }
+
+  @override
+  Stream<DataResult<List<Department>>> watchDepartmentsOfBranches(
+    List<String> branchIds,
+  ) {
+    watchedBranchIds = branchIds;
     return departmentsStream;
   }
 

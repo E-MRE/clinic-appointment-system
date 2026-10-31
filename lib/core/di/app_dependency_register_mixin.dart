@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:clinic_appointment_system/core/di/injector/dependency_injector.dart';
 import 'package:clinic_appointment_system/core/router/app_router.dart';
 import 'package:clinic_appointment_system/core/states/theme_cubit.dart';
@@ -30,6 +32,7 @@ import 'package:clinic_appointment_system/features/institution/domain/usecases/u
 import 'package:clinic_appointment_system/features/institution/domain/usecases/update_department_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_branches_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_clinics_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_departments_of_branches_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_departments_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/branch_list_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/branch_save_cubit.dart';
@@ -44,11 +47,24 @@ import 'package:clinic_appointment_system/features/medical_services/domain/repos
 import 'package:clinic_appointment_system/features/medical_services/domain/usecases/create_medical_service_use_case.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/usecases/update_medical_service_use_case.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/usecases/watch_medical_services_use_case.dart';
+import 'package:clinic_appointment_system/features/medical_services/domain/usecases/watch_services_of_branches_use_case.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_editor_cubit.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_filter_cubit.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_form_cubit.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_list_cubit.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_save_cubit.dart';
+import 'package:clinic_appointment_system/features/staff_management/data/models/staff_model_factory.dart';
+import 'package:clinic_appointment_system/features/staff_management/data/repositories/firestore_staff_repository.dart';
+import 'package:clinic_appointment_system/features/staff_management/data/services/firebase_secondary_auth_provider.dart';
+import 'package:clinic_appointment_system/features/staff_management/data/services/firebase_staff_account_provisioner.dart';
+import 'package:clinic_appointment_system/features/staff_management/data/services/secondary_auth_provider.dart';
+import 'package:clinic_appointment_system/features/staff_management/data/services/secure_temporary_password_generator.dart';
+import 'package:clinic_appointment_system/features/staff_management/domain/repositories/staff_repository.dart';
+import 'package:clinic_appointment_system/features/staff_management/domain/services/staff_account_provisioner.dart';
+import 'package:clinic_appointment_system/features/staff_management/domain/services/temporary_password_generator.dart';
+import 'package:clinic_appointment_system/features/staff_management/domain/usecases/create_staff_use_case.dart';
+import 'package:clinic_appointment_system/features/staff_management/domain/usecases/update_staff_use_case.dart';
+import 'package:clinic_appointment_system/features/staff_management/domain/usecases/watch_staff_use_case.dart';
 import 'package:clinic_appointment_system/features/users/data/models/user_model_factory.dart';
 import 'package:clinic_appointment_system/features/users/data/repositories/firestore_user_repository.dart';
 import 'package:clinic_appointment_system/features/users/domain/repositories/user_repository.dart';
@@ -89,6 +105,27 @@ mixin AppDependencyRegisterMixin {
         injector.get<MedicalServiceModelFactory>(),
       ),
     );
+    injector.registerLazySingleton<StaffModelFactory>(
+      () => const StaffModelFactory(),
+    );
+    injector.registerLazySingleton<StaffRepository>(
+      () => FirestoreStaffRepository(
+        injector.get<FirebaseFirestore>(),
+        injector.get<StaffModelFactory>(),
+      ),
+    );
+    injector.registerLazySingleton<SecondaryAuthProvider>(
+      FirebaseSecondaryAuthProvider.new,
+    );
+    injector.registerLazySingleton<StaffAccountProvisioner>(
+      () => FirebaseStaffAccountProvisioner(
+        injector.get<SecondaryAuthProvider>(),
+        injector.get<AuthExceptionMapper>(),
+      ),
+    );
+    injector.registerLazySingleton<TemporaryPasswordGenerator>(
+      () => SecureTemporaryPasswordGenerator(Random.secure()),
+    );
     injector.registerLazySingleton<WatchClinicsUseCase>(
       () => WatchClinicsUseCase(injector.get<ClinicRepository>()),
     );
@@ -110,6 +147,11 @@ mixin AppDependencyRegisterMixin {
     injector.registerLazySingleton<WatchDepartmentsUseCase>(
       () => WatchDepartmentsUseCase(injector.get<DepartmentRepository>()),
     );
+    injector.registerLazySingleton<WatchDepartmentsOfBranchesUseCase>(
+      () => WatchDepartmentsOfBranchesUseCase(
+        injector.get<DepartmentRepository>(),
+      ),
+    );
     injector.registerLazySingleton<CreateDepartmentUseCase>(
       () => CreateDepartmentUseCase(injector.get<DepartmentRepository>()),
     );
@@ -120,6 +162,11 @@ mixin AppDependencyRegisterMixin {
       () =>
           WatchMedicalServicesUseCase(injector.get<MedicalServiceRepository>()),
     );
+    injector.registerLazySingleton<WatchServicesOfBranchesUseCase>(
+      () => WatchServicesOfBranchesUseCase(
+        injector.get<MedicalServiceRepository>(),
+      ),
+    );
     injector.registerLazySingleton<CreateMedicalServiceUseCase>(
       () =>
           CreateMedicalServiceUseCase(injector.get<MedicalServiceRepository>()),
@@ -127,6 +174,18 @@ mixin AppDependencyRegisterMixin {
     injector.registerLazySingleton<UpdateMedicalServiceUseCase>(
       () =>
           UpdateMedicalServiceUseCase(injector.get<MedicalServiceRepository>()),
+    );
+    injector.registerLazySingleton<WatchStaffUseCase>(
+      () => WatchStaffUseCase(injector.get<StaffRepository>()),
+    );
+    injector.registerLazySingleton<CreateStaffUseCase>(
+      () => CreateStaffUseCase(
+        injector.get<StaffAccountProvisioner>(),
+        injector.get<StaffRepository>(),
+      ),
+    );
+    injector.registerLazySingleton<UpdateStaffUseCase>(
+      () => UpdateStaffUseCase(injector.get<StaffRepository>()),
     );
     injector.registerLazySingleton<AuthExceptionMapper>(
       FirebaseAuthExceptionMapper.new,
