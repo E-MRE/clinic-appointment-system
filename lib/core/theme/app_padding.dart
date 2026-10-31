@@ -26,6 +26,7 @@ import 'package:flutter/material.dart';
 /// * segmentedControl → all 2
 /// * listTileSubtitle → top 2
 /// * navigationDestination → bottom 8
+/// * tableScrollbar → bottom 12
 /// * pageMobile → all 16
 /// * pageTablet → all 24
 /// * pageDesktop → all 32
@@ -105,6 +106,9 @@ final class AppPadding extends EdgeInsets {
 
   /// value = bottom 8
   const AppPadding.navigationDestination() : super.only(bottom: AppSizes.s8);
+
+  /// value = bottom 12
+  const AppPadding.tableScrollbar() : super.only(bottom: AppSizes.s12);
 
   /// value = all 16
   const AppPadding.pageMobile() : super.all(AppSizes.s16);

@@ -125,4 +125,24 @@ void main() {
       greaterThan(0),
     );
   });
+
+  testWidgets('reserves space below the rows for the scrollbar', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      widgetTestHost(
+        Align(
+          alignment: Alignment.topLeft,
+          child: SizedBox(width: 300, child: table()),
+        ),
+      ),
+    );
+    final scrollView = tester.widget<SingleChildScrollView>(
+      find.descendant(
+        of: find.byType(AppDataTable<String>),
+        matching: find.byType(SingleChildScrollView),
+      ),
+    );
+    expect(scrollView.padding, const AppPadding.tableScrollbar());
+  });
 }
