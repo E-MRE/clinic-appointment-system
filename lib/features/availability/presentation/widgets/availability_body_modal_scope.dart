@@ -1,8 +1,8 @@
 part of 'availability_body.dart';
 
 /// Reattaches the page-owned cubits and subjects to the modal route by value.
-final class _AvailabilitySheetScope extends StatelessWidget {
-  const _AvailabilitySheetScope({
+final class _AvailabilityModalScope extends StatelessWidget {
+  const _AvailabilityModalScope({
     required this.availability,
     required this.branch,
     required this.durations,
@@ -10,16 +10,16 @@ final class _AvailabilitySheetScope extends StatelessWidget {
     required this.save,
     required this.subject,
     required this.staff,
-    required this.showsWeekdaySelect,
+    required this.child,
   });
   final StaffAvailabilityCubit availability;
   final AvailabilityBranchCubit branch;
   final StaffServiceDurationsCubit durations;
   final AvailabilityWindowDraftCubit draft;
-  final AvailabilityWindowSaveCubit save;
+  final AvailabilityWindowAddCubit save;
   final AvailabilitySubject subject;
   final Staff staff;
-  final bool showsWeekdaySelect;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +34,9 @@ final class _AvailabilitySheetScope extends StatelessWidget {
           BlocProvider<AvailabilityBranchCubit>.value(value: branch),
           BlocProvider<StaffServiceDurationsCubit>.value(value: durations),
           BlocProvider<AvailabilityWindowDraftCubit>.value(value: draft),
-          BlocProvider<AvailabilityWindowSaveCubit>.value(value: save),
+          BlocProvider<AvailabilityWindowAddCubit>.value(value: save),
         ],
-        child: _AvailabilityWindowSheet(showsWeekdaySelect: showsWeekdaySelect),
+        child: child,
       ),
     );
   }

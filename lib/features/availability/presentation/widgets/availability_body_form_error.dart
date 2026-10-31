@@ -7,7 +7,7 @@ final class _AvailabilityFormError extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final draft = context.watch<AvailabilityWindowDraftCubit>().state;
-    final save = context.watch<AvailabilityWindowSaveCubit>().state;
+    final save = context.watch<AvailabilityWindowAddCubit>().state;
     if (draft.timeError case final error?) {
       return AppMessageBanner(
         message: error.availabilityMessage,

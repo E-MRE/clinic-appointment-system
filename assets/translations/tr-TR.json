@@ -468,6 +468,12 @@
       "invalidTime": "Geçerli bir saat seçin.",
       "invalidDate": "Geçerli bir tarih seçin."
     },
-    "flaggedRange": "{} · Şube saatleri dışında"
+    "flaggedRange": "{} · Şube saatleri dışında",
+    "addWindow": "Aralık ekle",
+    "saveWindow": "Aralığı kaydet",
+    "weeklyTitle": "Haftalık aralıklar",
+    "branchAxis": "{} · {}",
+    "editDay": "{} aralıklarını düzenle",
+    "timelineFootnote": "Açık zemin şubenin çalışma saatlerini ({}) gösterir. Aralıklar bu saatlerin dışına taşamaz ve aynı gün içinde çakışamaz."
   }
 }

@@ -1,5 +1,8 @@
-/// Storage limits shared by availability validation and persistence rules.
+/// Limits and presentation intervals shared by availability.
 abstract final class AvailabilityConstants {
+  /// Timeline tick interval in minutes: 120.
+  static const int timelineTickStepMinutes = 120;
+
   /// Furthest selectable one-off date, in days from today: 365.
   static const int oneOffHorizonDays = 365;
 

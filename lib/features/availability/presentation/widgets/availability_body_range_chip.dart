@@ -9,7 +9,7 @@ final class _AvailabilityRangeChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final branch = context.watch<AvailabilityBranchCubit>().state;
     final saving =
-        context.watch<AvailabilityWindowSaveCubit>().state
+        context.watch<AvailabilityWindowRemoveCubit>().state
             is AvailabilityWindowSaving;
     if (branch case WatchLoaded(:final data)) {
       final fits = window.fitsWithin(data.workingHours);
@@ -28,8 +28,8 @@ final class _AvailabilityRangeChip extends StatelessWidget {
           onRemove: saving
               ? null
               : () {
-                  context.read<_AvailabilityBodyActions>().remove(
-                    context,
+                  context.read<AvailabilityWindowRemoveCubit>().submit(
+                    context.read<AvailabilitySubject>(),
                     window,
                   );
                 },

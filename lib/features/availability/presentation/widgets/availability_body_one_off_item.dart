@@ -8,7 +8,7 @@ final class _AvailabilityOneOffItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final saving =
-        context.watch<AvailabilityWindowSaveCubit>().state
+        context.watch<AvailabilityWindowRemoveCubit>().state
             is AvailabilityWindowSaving;
     return Container(
       padding: const AppPadding.control(),
@@ -32,8 +32,8 @@ final class _AvailabilityOneOffItem extends StatelessWidget {
               onPressed: saving
                   ? null
                   : () {
-                      context.read<_AvailabilityBodyActions>().remove(
-                        context,
+                      context.read<AvailabilityWindowRemoveCubit>().submit(
+                        context.read<AvailabilitySubject>(),
                         window,
                       );
                     },

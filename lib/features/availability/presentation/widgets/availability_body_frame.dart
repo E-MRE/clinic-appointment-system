@@ -7,18 +7,12 @@ final class _AvailabilityBodyFrame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final actions = context.read<_AvailabilityBodyActions>();
     return BlocListener<
-      AvailabilityWindowSaveCubit,
+      AvailabilityWindowRemoveCubit,
       AvailabilityWindowSaveState
     >(
-      // Only a remove request may publish page-level feedback. A dismissed add
-      // sheet can finish later, so modal visibility alone cannot identify it.
       listenWhen: (previous, current) =>
-          previous is AvailabilityWindowSaving &&
-          current is AvailabilityWindowSaveFailure &&
-          actions.isRemoveRequest &&
-          !actions.isSheetOpen,
+          current is AvailabilityWindowSaveFailure,
       listener: (context, state) {
         if (state case AvailabilityWindowSaveFailure(
           :final code,
@@ -38,7 +32,7 @@ final class _AvailabilityBodyFrame extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            header,
+            _AvailabilityHeader(header: header),
             const EmptySize.s16Height(),
             const Expanded(child: _AvailabilityBodyContent()),
           ],

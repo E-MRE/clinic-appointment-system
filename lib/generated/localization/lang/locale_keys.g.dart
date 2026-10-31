@@ -508,5 +508,11 @@ abstract class LocaleKeys {
       'availability.errors.invalidDate';
   static const availability_errors = 'availability.errors';
   static const availability_flaggedRange = 'availability.flaggedRange';
+  static const availability_addWindow = 'availability.addWindow';
+  static const availability_saveWindow = 'availability.saveWindow';
+  static const availability_weeklyTitle = 'availability.weeklyTitle';
+  static const availability_branchAxis = 'availability.branchAxis';
+  static const availability_editDay = 'availability.editDay';
+  static const availability_timelineFootnote = 'availability.timelineFootnote';
   static const availability = 'availability';
 }

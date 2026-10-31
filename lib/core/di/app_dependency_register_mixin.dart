@@ -29,8 +29,9 @@ import 'package:clinic_appointment_system/features/availability/domain/usecases/
 import 'package:clinic_appointment_system/features/availability/domain/usecases/watch_staff_availability_use_case.dart';
 import 'package:clinic_appointment_system/features/availability/domain/usecases/watch_staff_service_durations_use_case.dart';
 import 'package:clinic_appointment_system/features/availability/presentation/cubit/availability_branch_cubit.dart';
+import 'package:clinic_appointment_system/features/availability/presentation/cubit/availability_window_add_cubit.dart';
 import 'package:clinic_appointment_system/features/availability/presentation/cubit/availability_window_draft_cubit.dart';
-import 'package:clinic_appointment_system/features/availability/presentation/cubit/availability_window_save_cubit.dart';
+import 'package:clinic_appointment_system/features/availability/presentation/cubit/availability_window_remove_cubit.dart';
 import 'package:clinic_appointment_system/features/availability/presentation/cubit/staff_availability_cubit.dart';
 import 'package:clinic_appointment_system/features/availability/presentation/cubit/staff_service_durations_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/data/repositories/firestore_branch_repository.dart';
@@ -383,9 +384,13 @@ mixin AppDependencyRegisterMixin {
     injector.registerFactory<AvailabilityWindowDraftCubit>(
       () => AvailabilityWindowDraftCubit(injector.get<Clock>()),
     );
-    injector.registerFactory<AvailabilityWindowSaveCubit>(
-      () => AvailabilityWindowSaveCubit(
+    injector.registerFactory<AvailabilityWindowAddCubit>(
+      () => AvailabilityWindowAddCubit(
         injector.get<AddAvailabilityWindowUseCase>(),
+      ),
+    );
+    injector.registerFactory<AvailabilityWindowRemoveCubit>(
+      () => AvailabilityWindowRemoveCubit(
         injector.get<RemoveAvailabilityWindowUseCase>(),
       ),
     );

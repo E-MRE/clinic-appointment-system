@@ -9,7 +9,7 @@ final class _AvailabilityDayAddButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final branch = context.watch<AvailabilityBranchCubit>().state;
     final saving =
-        context.watch<AvailabilityWindowSaveCubit>().state
+        context.watch<AvailabilityWindowAddCubit>().state
             is AvailabilityWindowSaving;
     if (branch case WatchLoaded(:final data)) {
       if (data.workingHours.isClosedOn(day)) return const SizedBox.shrink();
@@ -29,10 +29,7 @@ final class _AvailabilityDayAddButton extends StatelessWidget {
               ? null
               : () {
                   context.read<AvailabilityWindowDraftCubit>().startWeekly(day);
-                  context.read<_AvailabilityBodyActions>().openSheet(
-                    context,
-                    showsWeekdaySelect: false,
-                  );
+                  context.openAvailabilityEditor(showsWeekdaySelect: false);
                 },
           icon: const Icon(Icons.add, size: AppSizes.s20),
         ),

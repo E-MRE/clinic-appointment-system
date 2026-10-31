@@ -8,17 +8,7 @@ final class _AvailabilityWindowSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final draft = context.watch<AvailabilityWindowDraftCubit>().state;
-    return BlocListener<
-      AvailabilityWindowSaveCubit,
-      AvailabilityWindowSaveState
-    >(
-      listener: (context, state) {
-        if (state is AvailabilityWindowSaved) {
-          Navigator.of(context).pop();
-          context.read<AvailabilityWindowDraftCubit>().reset();
-          context.read<AvailabilityWindowSaveCubit>().reset();
-        }
-      },
+    return _AvailabilityWindowSaveScope(
       child: AppBottomSheet(
         title: draft.sheetTitle,
         child: Column(

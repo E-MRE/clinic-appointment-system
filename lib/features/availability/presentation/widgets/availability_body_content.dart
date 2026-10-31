@@ -1,6 +1,6 @@
 part of 'availability_body.dart';
 
-/// Resolves loading, typed failures and the temporary mobile-only layouts.
+/// Resolves observation states before selecting the device-specific layout.
 final class _AvailabilityBodyContent extends StatelessWidget {
   const _AvailabilityBodyContent();
 
@@ -20,11 +20,10 @@ final class _AvailabilityBodyContent extends StatelessWidget {
     if (branch case WatchFailure(:final code)) {
       return _AvailabilityFailure(message: code.message);
     }
-    // Stage 6b replaces the tablet and desktop fallbacks with their layouts.
     return context.screenSize.select(
       mobile: const _AvailabilityMobileLayout(),
-      tablet: const _AvailabilityMobileLayout(),
-      desktop: const _AvailabilityMobileLayout(),
+      tablet: const _AvailabilityTabletLayout(),
+      desktop: const _AvailabilityDesktopViewport(),
     );
   }
 }

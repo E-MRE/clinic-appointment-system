@@ -5,43 +5,28 @@ import 'package:clinic_appointment_system/features/availability/domain/enums/ava
 import 'package:clinic_appointment_system/features/availability/domain/errors/availability_exception.dart';
 import 'package:clinic_appointment_system/features/availability/domain/models/availability_subject.dart';
 import 'package:clinic_appointment_system/features/availability/domain/models/availability_window_request.dart';
-import 'package:clinic_appointment_system/features/availability/domain/usecases/add_availability_window_use_case.dart';
-import 'package:clinic_appointment_system/features/availability/domain/usecases/remove_availability_window_use_case.dart';
 import 'package:clinic_appointment_system/features/availability/presentation/cubit/availability_window_save_state.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-/// Adds or removes availability windows with single-flight request handling.
-/// The injected use cases own validation and atomic schedule changes.
-final class AvailabilityWindowSaveCubit
+/// Runs a single availability request with close-safe progress and error mapping.
+/// Subclasses supply the domain operation through [request].
+abstract class AvailabilityWindowRequestCubit
     extends Cubit<AvailabilityWindowSaveState> {
-  /// Injects the window addition and removal operations.
-  AvailabilityWindowSaveCubit(this._addWindow, this._removeWindow)
+  /// Creates an idle request cubit.
+  AvailabilityWindowRequestCubit()
     : super(const AvailabilityWindowSaveInitial());
 
-  final AddAvailabilityWindowUseCase _addWindow;
-  final RemoveAvailabilityWindowUseCase _removeWindow;
+  /// Executes the subclass's domain operation for the supplied request.
+  @protected
+  Future<DataResult<StaffAvailability>> request(
+    AvailabilityWindowRequest request,
+  );
+
   bool _isRequestInFlight = false;
   bool _isClosing = false;
 
   bool get _isClosingOrClosed => _isClosing || isClosed;
-
-  /// Adds [window] to [subject]'s schedule through the domain policy.
-  Future<void> add(AvailabilitySubject subject, AvailabilityWindow window) {
-    return _executeRequest(() {
-      return _addWindow(
-        AvailabilityWindowRequest(subject: subject, window: window),
-      );
-    });
-  }
-
-  /// Removes [window] from [subject]'s schedule by value.
-  Future<void> remove(AvailabilitySubject subject, AvailabilityWindow window) {
-    return _executeRequest(() {
-      return _removeWindow(
-        AvailabilityWindowRequest(subject: subject, window: window),
-      );
-    });
-  }
 
   /// Restores the initial state when no request is in flight.
   void reset() {
@@ -49,14 +34,18 @@ final class AvailabilityWindowSaveCubit
     emit(const AvailabilityWindowSaveInitial());
   }
 
-  Future<void> _executeRequest(
-    Future<DataResult<StaffAvailability>> Function() request,
+  /// Submits [window] for [subject], ignoring concurrent or closed requests.
+  Future<void> submit(
+    AvailabilitySubject subject,
+    AvailabilityWindow window,
   ) async {
     if (_isClosingOrClosed || _isRequestInFlight) return;
     _isRequestInFlight = true;
     emit(const AvailabilityWindowSaving());
     try {
-      final result = await request();
+      final result = await request(
+        AvailabilityWindowRequest(subject: subject, window: window),
+      );
       if (_isClosingOrClosed) return;
       final availability = result.data;
       if (result.isNotSuccess || availability == null) {

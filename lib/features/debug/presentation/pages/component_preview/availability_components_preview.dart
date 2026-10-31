@@ -28,6 +28,15 @@ final class _AvailabilityComponentsPreviewState
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: AppSizes.s16,
       children: [
+        AppDashedBorder(
+          color: context.colorScheme.primary,
+          strokeWidth: AppSizes.borderThick,
+          radius: const AppRadius.small(),
+          child: Padding(
+            padding: const AppPadding.allLg(),
+            child: AppText.body(sample),
+          ),
+        ),
         AppTimeField(
           label: sample,
           value: _time,

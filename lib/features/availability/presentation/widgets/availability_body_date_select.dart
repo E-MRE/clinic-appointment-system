@@ -8,7 +8,7 @@ final class _AvailabilityDateSelect extends StatelessWidget {
   Widget build(BuildContext context) {
     final draft = context.watch<AvailabilityWindowDraftCubit>();
     final saving =
-        context.watch<AvailabilityWindowSaveCubit>().state
+        context.watch<AvailabilityWindowAddCubit>().state
             is AvailabilityWindowSaving;
     final today = AppDependency.injector.get<Clock>().today;
     final end = DateTime.utc(

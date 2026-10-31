@@ -20,6 +20,11 @@
 /// * s144 → 144
 ///
 /// Widget-specific sizes that do not fit the scale:
+/// * availabilityDesktopMinWidth → 960
+/// * availabilityTimelineLabelTablet → 88
+/// * availabilityTimelineBar → 30
+/// * dashedBorderDash → 6
+/// * dashedBorderGap → 4
 /// * availabilityDayRow → 60
 /// * availabilityCalendarTile → 36
 /// * availabilityCalendarIcon → 18
@@ -106,6 +111,26 @@ abstract final class AppSizes {
   static const double s144 = 144;
 
   // Widget-specific
+
+  /// Minimum width of the two-column availability editor before horizontal scrolling.
+  /// value = 960
+  static const double availabilityDesktopMinWidth = 960;
+
+  /// Timeline weekday label column width on tablet.
+  /// value = 88
+  static const double availabilityTimelineLabelTablet = 88;
+
+  /// Timeline range bar height.
+  /// value = 30
+  static const double availabilityTimelineBar = 30;
+
+  /// Length of a painted outline dash.
+  /// value = 6
+  static const double dashedBorderDash = 6;
+
+  /// Gap between consecutive outline dashes.
+  /// value = 4
+  static const double dashedBorderGap = s4;
 
   /// Availability mobile weekday row minimum height.
   /// value = 60

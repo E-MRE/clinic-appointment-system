@@ -8,7 +8,7 @@ final class _AvailabilityRepeatControl extends StatelessWidget {
   Widget build(BuildContext context) {
     final draft = context.watch<AvailabilityWindowDraftCubit>();
     final saving =
-        context.watch<AvailabilityWindowSaveCubit>().state
+        context.watch<AvailabilityWindowAddCubit>().state
             is AvailabilityWindowSaving;
     return AppSegmentedControl<AvailabilityRepeat>(
       selected: draft.state.repeat,

@@ -44,7 +44,12 @@ void main() {
       );
       expect(find.byType(StaffShell), findsOneWidget);
       expect(find.byType(AvailabilityPage), findsOneWidget);
-      expect(find.byType(AppTimeRangeChip), findsNWidgets(2));
+      if (size == AvailabilityPageHarness.mobile) {
+        expect(find.byType(AppTimeRangeChip), findsNWidgets(2));
+      } else {
+        expect(find.text('09:00–10:00'), findsOneWidget);
+        expect(find.text('13:00–14:00'), findsOneWidget);
+      }
       if (size == AvailabilityPageHarness.desktop) {
         expect(find.byType(AppNavigationUserCard), findsOneWidget);
         expect(find.text('Ada Kaya'), findsOneWidget);

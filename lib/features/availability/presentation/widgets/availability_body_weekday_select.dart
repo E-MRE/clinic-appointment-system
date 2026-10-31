@@ -9,7 +9,7 @@ final class _AvailabilityWeekdaySelect extends StatelessWidget {
     final draft = context.watch<AvailabilityWindowDraftCubit>();
     final branch = context.watch<AvailabilityBranchCubit>().state;
     final saving =
-        context.watch<AvailabilityWindowSaveCubit>().state
+        context.watch<AvailabilityWindowAddCubit>().state
             is AvailabilityWindowSaving;
     if (branch case WatchLoaded(:final data)) {
       final days = data.workingHours.openDays;

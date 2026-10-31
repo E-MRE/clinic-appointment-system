@@ -7,17 +7,15 @@ final class _AvailabilityOneOffAddButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final saving =
-        context.watch<AvailabilityWindowSaveCubit>().state
+        context.watch<AvailabilityWindowAddCubit>().state
             is AvailabilityWindowSaving;
     return OutlinedButton.icon(
       onPressed: saving
           ? null
           : () {
+              context.read<AvailabilityWindowAddCubit>().reset();
               context.read<AvailabilityWindowDraftCubit>().startOneOff();
-              context.read<_AvailabilityBodyActions>().openSheet(
-                context,
-                showsWeekdaySelect: true,
-              );
+              context.openAvailabilityEditor(showsWeekdaySelect: true);
             },
       icon: const Icon(Icons.add),
       label: AppText.label(

@@ -7,7 +7,7 @@ final class _AvailabilityTimeFields extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final draft = context.watch<AvailabilityWindowDraftCubit>();
-    final save = context.watch<AvailabilityWindowSaveCubit>().state;
+    final save = context.watch<AvailabilityWindowAddCubit>().state;
     final hasError =
         draft.state.timeError != null ||
         (save is AvailabilityWindowSaveFailure && save.code.marksTimeFields);

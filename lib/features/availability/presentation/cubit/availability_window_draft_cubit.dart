@@ -58,8 +58,13 @@ final class AvailabilityWindowDraftCubit
     emit(state.copyWith(end: end));
   }
 
-  /// Restores a recurring Monday draft for today with both times unset.
-  void reset() {
-    emit(AvailabilityWindowDraft(date: _clock.today));
+  /// Clears endpoints and restores today, optionally retaining the repeat mode.
+  void reset({bool keepsRepeat = false}) {
+    emit(
+      AvailabilityWindowDraft(
+        date: _clock.today,
+        repeat: keepsRepeat ? state.repeat : AvailabilityRepeat.weekly,
+      ),
+    );
   }
 }

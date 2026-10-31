@@ -12,17 +12,23 @@ import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_state.dart';
 import 'package:clinic_appointment_system/features/availability/domain/entities/staff_availability.dart';
 import 'package:clinic_appointment_system/features/availability/domain/rules/availability_policy.dart';
+import 'package:clinic_appointment_system/features/availability/domain/services/slot_generator.dart';
 import 'package:clinic_appointment_system/features/availability/domain/usecases/add_availability_window_use_case.dart';
 import 'package:clinic_appointment_system/features/availability/domain/usecases/remove_availability_window_use_case.dart';
 import 'package:clinic_appointment_system/features/availability/domain/usecases/watch_staff_availability_use_case.dart';
 import 'package:clinic_appointment_system/features/availability/domain/usecases/watch_staff_service_durations_use_case.dart';
 import 'package:clinic_appointment_system/features/availability/presentation/cubit/availability_branch_cubit.dart';
+import 'package:clinic_appointment_system/features/availability/presentation/cubit/availability_window_add_cubit.dart';
 import 'package:clinic_appointment_system/features/availability/presentation/cubit/availability_window_draft_cubit.dart';
-import 'package:clinic_appointment_system/features/availability/presentation/cubit/availability_window_save_cubit.dart';
+import 'package:clinic_appointment_system/features/availability/presentation/cubit/availability_window_remove_cubit.dart';
 import 'package:clinic_appointment_system/features/availability/presentation/cubit/staff_availability_cubit.dart';
 import 'package:clinic_appointment_system/features/availability/presentation/cubit/staff_service_durations_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/branch.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_branch_use_case.dart';
+import 'package:clinic_appointment_system/features/medical_services/domain/entities/examination.dart';
+import 'package:clinic_appointment_system/features/medical_services/domain/entities/medical_service.dart';
+import 'package:clinic_appointment_system/features/medical_services/domain/value_objects/money.dart';
+import 'package:clinic_appointment_system/features/medical_services/domain/value_objects/service_duration.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/staff.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/user.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -47,12 +53,13 @@ import 'availability_page_repository.dart';
 final class AvailabilityPageHarness {
   static const Size mobile = Size(390, 844);
   static const Size tablet = Size(834, 1194);
-  static const Size desktop = Size(1200, 960);
+  static const Size desktop = Size(1440, 960);
   static const AvailabilityFixture fixture = AvailabilityFixture();
   static const StaffFixtures staffFixtures = StaffFixtures();
   final Staff staff = staffFixtures.doctor(
     id: 'staff',
     specialty: 'Kardiyoloji',
+    serviceIds: const ['exam'],
   );
   final AvailabilityPageRepository repository = AvailabilityPageRepository(
     fixture.empty,
@@ -65,8 +72,11 @@ final class AvailabilityPageHarness {
   late final AuthCubit auth;
   late StaffAvailabilityCubit availability;
   late AvailabilityBranchCubit branchCubit;
-  late AvailabilityWindowSaveCubit save;
+  late AvailabilityWindowAddCubit save;
   late AvailabilityWindowDraftCubit draft;
+  final StreamController<DataResult<List<MedicalService>>> serviceEvents =
+      StreamController.broadcast();
+  late AvailabilityWindowRemoveCubit remove;
   bool branchLoaded = false;
   int branchWatchCalls = 0;
 
@@ -120,9 +130,10 @@ final class AvailabilityPageHarness {
       });
     });
     final services = FakeMedicalServiceRepository()
-      ..servicesStream = Stream.value(const DataResult.success(data: []));
+      ..servicesStream = serviceEvents.stream;
     final injector = AppDependency.injector;
     injector.registerSingleton<Clock>(clock);
+    injector.registerSingleton<SlotGenerator>(const SlotGenerator());
     injector.registerFactory<StaffAvailabilityCubit>(() {
       availability = StaffAvailabilityCubit(
         WatchStaffAvailabilityUseCase(repository),
@@ -142,17 +153,22 @@ final class AvailabilityPageHarness {
       draft = AvailabilityWindowDraftCubit(clock);
       return draft;
     });
-    injector.registerFactory<AvailabilityWindowSaveCubit>(() {
-      save = AvailabilityWindowSaveCubit(
+    injector.registerFactory<AvailabilityWindowAddCubit>(() {
+      save = AvailabilityWindowAddCubit(
         AddAvailabilityWindowUseCase(
           repository,
           branches,
           clock,
           const AvailabilityPolicy.standard(),
         ),
-        RemoveAvailabilityWindowUseCase(repository, clock),
       );
       return save;
+    });
+    injector.registerFactory<AvailabilityWindowRemoveCubit>(() {
+      remove = AvailabilityWindowRemoveCubit(
+        RemoveAvailabilityWindowUseCase(repository, clock),
+      );
+      return remove;
     });
   }
 
@@ -187,6 +203,7 @@ final class AvailabilityPageHarness {
     WidgetTester tester,
     GoRouter router, {
     Size size = mobile,
+    bool dark = false,
   }) async {
     setSize(tester, size);
     final screenSize = BreakpointsConstants.resolve(size.width, size.height);
@@ -201,7 +218,9 @@ final class AvailabilityPageHarness {
                 locale: context.locale,
                 supportedLocales: context.supportedLocales,
                 localizationsDelegates: context.localizationDelegates,
-                theme: LightTheme(screenSize).themeData,
+                theme: dark
+                    ? DarkTheme(screenSize).themeData
+                    : LightTheme(screenSize).themeData,
                 routerConfig: router,
               ),
             );
@@ -215,6 +234,20 @@ final class AvailabilityPageHarness {
   Future<void> load(WidgetTester tester, {StaffAvailability? value}) async {
     repository.current = value ?? loaded;
     await tester.runAsync(() async {
+      serviceEvents.add(
+        DataResult.success(
+          data: [
+            Examination(
+              id: 'exam',
+              name: 'Examination',
+              branchId: 'branch',
+              departmentId: 'department',
+              duration: ServiceDuration(20),
+              fee: Money.minorUnits(50000),
+            ),
+          ],
+        ),
+      );
       branchLoaded = true;
       branchEvents.add(DataResult.success(data: branch));
       repository.events.add(DataResult.success(data: repository.current));
@@ -232,6 +265,7 @@ final class AvailabilityPageHarness {
 
   /// Closes repository streams when another harness owns authentication and DI.
   Future<void> disposeRepositories() async {
+    await serviceEvents.close();
     await repository.events.close();
     await branchEvents.close();
   }
