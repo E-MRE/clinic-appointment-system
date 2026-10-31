@@ -19,7 +19,7 @@ final class _MedicalServicesMobileView extends StatelessWidget {
         const EmptySize.s16Height(),
         Expanded(
           child: services.isEmpty
-              ? const _MedicalServicesFilteredEmpty()
+              ? AppMutedMessage(message: LocaleKeys.services_filterEmpty.tr())
               : _MedicalServicesMobileList(
                   services: services,
                   overview: overview,

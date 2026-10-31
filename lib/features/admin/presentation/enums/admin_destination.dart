@@ -9,7 +9,10 @@ enum AdminDestination {
   institution(AppRoutes.institution),
 
   /// Clinical, imaging and laboratory medical services.
-  services(AppRoutes.services);
+  services(AppRoutes.services),
+
+  /// Doctor and technician profiles and service assignments.
+  staff(AppRoutes.adminStaff);
 
   const AdminDestination(this.route);
 

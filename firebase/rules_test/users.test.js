@@ -31,6 +31,18 @@ const profiles = {
     email: 'doctor@example.com',
     branchId: 'branch-1',
     departmentId: 'department-1',
+    specialty: 'Cardiology',
+    serviceIds: ['service-1'],
+    createdAt: new Date(0),
+  },
+  technician: {
+    role: 'technician',
+    fullName: 'Technician',
+    email: 'technician@example.com',
+    branchId: 'branch-1',
+    departmentId: 'department-1',
+    serviceIds: ['service-1'],
+    createdAt: new Date(0),
   },
   admin: { role: 'admin', fullName: 'Admin', email: 'admin@example.com' },
 };
@@ -54,6 +66,18 @@ function newPatient(overrides = {}) {
   };
 }
 
+function newStaff(role = 'doctor', overrides = {}) {
+  return { ...profiles[role], createdAt: serverTimestamp(), ...overrides };
+}
+
+function withChange(base, change) {
+  const data = { ...base, ...change };
+  for (const [key, value] of Object.entries(change)) {
+    if (value === undefined) delete data[key];
+  }
+  return data;
+}
+
 before(async () => {
   env = await initializeTestEnvironment({
     projectId: 'demo-clinic',
@@ -68,6 +92,9 @@ beforeEach(async () => {
     for (const [uid, profile] of Object.entries(profiles)) {
       await setDoc(doc(db, 'users', uid), profile);
     }
+    await setDoc(doc(db, 'branches', 'branch-1'), { name: 'Branch' });
+    await setDoc(doc(db, 'departments', 'department-1'), { branchId: 'branch-1' });
+    await setDoc(doc(db, 'departments', 'department-2'), { branchId: 'branch-2' });
   });
 });
 
@@ -179,13 +206,57 @@ describe('users create', () => {
     await assertFails(setDoc(doc(db, 'users', 'new'), newPatient()));
   });
 
-  it('lets an admin create a staff profile', async () => {
-    await assertSucceeds(
-      setDoc(doc(signedIn('admin'), 'users', 'doctor-2'), {
-        ...profiles.doctor,
-        email: 'doctor2@example.com',
-      }),
-    );
+  for (const role of ['doctor', 'technician']) {
+    it(`lets an admin create a valid ${role} profile`, async () => {
+      await assertSucceeds(setDoc(doc(signedIn('admin'), 'users', 'staff-new'), newStaff(role)));
+    });
+  }
+
+  for (const count of [0, 20]) {
+    it(`lets an admin create staff with ${count} services`, async () => {
+      await assertSucceeds(setDoc(doc(signedIn('admin'), 'users', 'staff-new'),
+        newStaff('doctor', { serviceIds: Array(count).fill('service-1') })));
+    });
+  }
+
+  for (const role of ['patient', 'doctor']) {
+    it(`denies ${role} creating staff`, async () => {
+      await assertFails(setDoc(doc(signedIn(role), 'users', 'staff-new'), newStaff()));
+    });
+  }
+
+  it('denies signed-out staff creation', async () => {
+    await assertFails(setDoc(doc(env.unauthenticatedContext().firestore(), 'users', 'staff-new'), newStaff()));
+  });
+
+  const invalidStaff = {
+    'an admin role': { role: 'admin' },
+    'a patient role': { role: 'patient' },
+    'a missing key': { email: undefined },
+    'an extra key': { unknown: true },
+    'a missing specialty': { specialty: undefined },
+    'a blank specialty': { specialty: '  ' },
+    'a blank name': { fullName: '  ' },
+    'a malformed email': { email: 'bad@example' },
+    'a non-string email': { email: 42 },
+    'a blank branch': { branchId: ' ' },
+    'a blank department': { departmentId: ' ' },
+    'a department from another branch': { departmentId: 'department-2' },
+    'a non-existent department': { departmentId: 'missing' },
+    'services that are not a list': { serviceIds: 'service-1' },
+    '21 services': { serviceIds: Array(21).fill('service-1') },
+    'a client-chosen creation time': { createdAt: new Date(0) },
+  };
+  for (const [label, change] of Object.entries(invalidStaff)) {
+    it(`denies an admin creating staff with ${label}`, async () => {
+      await assertFails(setDoc(doc(signedIn('admin'), 'users', 'staff-new'),
+        withChange(newStaff(), change)));
+    });
+  }
+
+  it('denies creating a technician with a specialty', async () => {
+    await assertFails(setDoc(doc(signedIn('admin'), 'users', 'staff-new'),
+      newStaff('technician', { specialty: 'Radiology' })));
   });
 });
 
@@ -230,10 +301,69 @@ describe('users update', () => {
     );
   });
 
-  it('lets an admin change a role', async () => {
-    await assertSucceeds(
-      updateDoc(doc(signedIn('admin'), 'users', 'patient'), { role: 'doctor' }),
-    );
+  it('lets an admin update doctor assignments', async () => {
+    await assertSucceeds(updateDoc(doc(signedIn('admin'), 'users', 'doctor'), {
+      fullName: 'New Name', specialty: 'Neurology', serviceIds: ['service-2'],
+    }));
+  });
+
+  it('lets an admin update technician services', async () => {
+    await assertSucceeds(updateDoc(doc(signedIn('admin'), 'users', 'technician'), {
+      serviceIds: [],
+    }));
+  });
+
+  const invalidUpdates = {
+    role: { role: 'technician' },
+    email: { email: 'changed@example.com' },
+    branchId: { branchId: 'branch-2' },
+    departmentId: { departmentId: 'department-2' },
+    createdAt: { createdAt: new Date(1) },
+    'an unknown key': { unknown: true },
+    'a blank specialty': { specialty: '  ' },
+    'a blank name': { fullName: ' ' },
+    'services that are not a list': { serviceIds: 'service-1' },
+    '21 services': { serviceIds: Array(21).fill('service-1') },
+  };
+  for (const [label, change] of Object.entries(invalidUpdates)) {
+    it(`denies an admin changing doctor ${label}`, async () => {
+      await assertFails(updateDoc(doc(signedIn('admin'), 'users', 'doctor'), change));
+    });
+  }
+
+  it('denies an admin adding a specialty to a technician', async () => {
+    await assertFails(updateDoc(doc(signedIn('admin'), 'users', 'technician'), {
+      specialty: 'Radiology',
+    }));
+  });
+
+  for (const field of ['serviceIds', 'specialty']) {
+    it(`denies a doctor changing their own ${field}`, async () => {
+      const value = field === 'serviceIds' ? ['service-2'] : 'Neurology';
+      await assertFails(updateDoc(doc(signedIn('doctor'), 'users', 'doctor'), {
+        [field]: value,
+      }));
+    });
+  }
+
+  for (const role of ['doctor', 'patient']) {
+    it(`denies ${role} editing another staff profile`, async () => {
+      await assertFails(updateDoc(doc(signedIn(role), 'users', 'technician'), {
+        serviceIds: ['service-2'],
+      }));
+    });
+  }
+
+  it('denies an admin editing a patient name', async () => {
+    await assertFails(updateDoc(doc(signedIn('admin'), 'users', 'patient'), {
+      fullName: 'Changed',
+    }));
+  });
+
+  it('lets an admin change their own name', async () => {
+    await assertSucceeds(updateDoc(doc(signedIn('admin'), 'users', 'admin'), {
+      fullName: 'Changed',
+    }));
   });
 });
 

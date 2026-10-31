@@ -273,4 +273,8 @@ final class _DepartmentRepository implements DepartmentRepository {
   @override
   Stream<DataResult<List<Department>>> watchDepartments(String branchId) =>
       const Stream.empty();
+  @override
+  Stream<DataResult<List<Department>>> watchDepartmentsOfBranches(
+    List<String> branchIds,
+  ) => const Stream.empty();
 }

@@ -36,6 +36,18 @@ void main() {
         isFalse,
       );
 
+      expect(AdminDestination.staff.matches(AppRoutes.adminStaff), isTrue);
+      expect(AdminDestination.staff.matches(AppRoutes.adminStaffNew), isTrue);
+      expect(
+        AdminDestination.staff.matches(AppRoutes.adminStaffEdit('ada')),
+        isTrue,
+      );
+      expect(AdminDestination.staff.matches('/admin/staffing'), isFalse);
+      expect('/admin/staff'.adminDestination, AdminDestination.staff);
+      expect('/admin/staff/new'.adminDestination, AdminDestination.staff);
+      expect('/admin/staff/ada/edit'.adminDestination, AdminDestination.staff);
+      expect('/staff'.adminDestination, AdminDestination.overview);
+
       expect('/admin'.adminDestination, AdminDestination.overview);
       expect(
         '/admin/institution'.adminDestination,

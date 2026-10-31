@@ -10,6 +10,7 @@ final class FakeMedicalServiceRepository implements MedicalServiceRepository {
   MedicalService? createdService;
   MedicalService? updatedService;
   String? watchedBranchId;
+  List<String>? watchedBranchIds;
   int createCalls = 0;
   int updateCalls = 0;
   Object? createException;
@@ -18,6 +19,14 @@ final class FakeMedicalServiceRepository implements MedicalServiceRepository {
   @override
   Stream<DataResult<List<MedicalService>>> watchServices(String branchId) {
     watchedBranchId = branchId;
+    return servicesStream;
+  }
+
+  @override
+  Stream<DataResult<List<MedicalService>>> watchServicesOfBranches(
+    List<String> branchIds,
+  ) {
+    watchedBranchIds = branchIds;
     return servicesStream;
   }
 

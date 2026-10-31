@@ -19,7 +19,7 @@ final class _MedicalServicesDesktopPanelBody extends StatelessWidget {
         const EmptySize.s16Height(),
         MedicalServiceForm(
           key: ValueKey<int>(editorState.revision),
-          service: editorState.service,
+          service: editorState.record,
           branchId: branchId,
           onSaved: (_) {
             context.read<MedicalServiceEditorCubit>().startCreate();

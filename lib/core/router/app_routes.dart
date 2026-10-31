@@ -38,6 +38,21 @@ abstract final class AppRoutes {
   static const String serviceNew = '$services/$serviceNewSegment';
   static String serviceEdit(String id) => '$services/$id/edit';
 
+  /// Staff management destination inside the administrator shell.
+  static const String adminStaff = '/admin/staff';
+
+  /// Relative path of the mobile staff creation page.
+  static const String adminStaffNewSegment = 'new';
+
+  /// Relative path of the mobile staff editing page.
+  static const String adminStaffEditSegment = ':staffId/edit';
+
+  /// Full location of the mobile staff creation page.
+  static const String adminStaffNew = '$adminStaff/$adminStaffNewSegment';
+
+  /// Full location of the mobile editor for the profile identified by [id].
+  static String adminStaffEdit(String id) => '$adminStaff/$id/edit';
+
   /// Debug component catalogue location.
   static const String componentPreview = '/debug/components';
   static const String signIn = '/sign-in';

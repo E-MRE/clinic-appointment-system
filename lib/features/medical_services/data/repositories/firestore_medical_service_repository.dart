@@ -50,6 +50,13 @@ final class FirestoreMedicalServiceRepository
   }
 
   @override
+  Stream<DataResult<List<MedicalService>>> watchServicesOfBranches(
+    List<String> branchIds,
+  ) {
+    return watchWhereIn(FirestoreConstants.branchId, branchIds);
+  }
+
+  @override
   Future<DataResult<MedicalService>> createService(MedicalService service) {
     return createRecord(service);
   }

@@ -78,6 +78,8 @@ void main() {
         email: 'doctor@test.com',
         branchId: 'b',
         departmentId: 'd',
+        serviceIds: [],
+        specialty: 'Cardiology',
       ),
       AppRoutes.staffHome,
     ),

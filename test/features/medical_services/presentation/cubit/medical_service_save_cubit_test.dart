@@ -296,4 +296,8 @@ final class _SlowMedicalServiceRepository implements MedicalServiceRepository {
   @override
   Future<DataResult<MedicalService>> updateService(MedicalService service) =>
       _delayedResult;
+  @override
+  Stream<DataResult<List<MedicalService>>> watchServicesOfBranches(
+    List<String> branchIds,
+  ) => const Stream.empty();
 }

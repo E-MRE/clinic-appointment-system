@@ -1,3 +1,4 @@
+import 'package:clinic_appointment_system/core/constants/firestore_constants.dart';
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
 import 'package:clinic_appointment_system/core/errors/institution_exception.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/institution_record.dart';
@@ -42,6 +43,28 @@ abstract base class FirestoreInstitutionRepository<
     final query = firestore
         .collection(collectionName)
         .where(field, isEqualTo: value);
+    return _watchQuery(query);
+  }
+
+  /// Watches records whose [field] is in [values], sorted by display name.
+  /// An empty list emits one successful empty result without querying.
+  /// Lists over [FirestoreConstants.maxWhereInValues] emit unavailable;
+  /// provider and parsing errors follow the same rules as [watchWhere].
+  Stream<DataResult<List<Entity>>> watchWhereIn(
+    String field,
+    List<String> values,
+  ) {
+    if (values.isEmpty) {
+      return Stream.value(const DataResult.success(data: []));
+    }
+    if (values.length > FirestoreConstants.maxWhereInValues) {
+      return Stream.error(
+        const InstitutionException(InstitutionErrorCode.unavailable),
+      );
+    }
+    final Query<Map<String, dynamic>> query = firestore
+        .collection(collectionName)
+        .where(field, whereIn: values);
     return _watchQuery(query);
   }
 
