@@ -20,6 +20,8 @@
 /// * s144 → 144
 ///
 /// Widget-specific sizes that do not fit the scale:
+/// * timeRangeRemoveButton → 28
+/// * timeRangeRemoveIcon → 14
 /// * previewMobileWidth → 390
 /// * previewTabletWidth → 720
 /// * previewDesktopWidth → 1024
@@ -101,6 +103,14 @@ abstract final class AppSizes {
   static const double s144 = 144;
 
   // Widget-specific
+
+  /// Time range chip remove button diameter.
+  /// value = 28
+  static const double timeRangeRemoveButton = 28;
+
+  /// Time range chip remove icon size.
+  /// value = 14
+  static const double timeRangeRemoveIcon = 14;
 
   /// Form dialog maximum width.
   /// value = 560

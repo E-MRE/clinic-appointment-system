@@ -21,6 +21,7 @@ final class _OtherSection extends StatelessWidget {
         ),
         const _OtherSectionViewportPreview(),
         const _SharedActionsPreview(),
+        const _AvailabilityComponentsPreview(),
       ],
     );
   }

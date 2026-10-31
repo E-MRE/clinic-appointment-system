@@ -21,6 +21,7 @@ import 'package:flutter/material.dart';
 /// * verticalXl → vertical 24
 /// * control → horizontal 16, vertical 12
 /// * chip → horizontal 12, vertical 4
+/// * removableChip → left 12, right 4
 /// * horizontalXs → horizontal 4
 /// * listTileDense → horizontal 16, vertical 8
 /// * segmentedControl → all 2
@@ -90,6 +91,12 @@ final class AppPadding extends EdgeInsets {
   /// value = horizontal 12, vertical 4
   const AppPadding.chip()
     : super.symmetric(horizontal: AppSizes.s12, vertical: AppSizes.s4);
+
+  /// Chip content padding that leaves room for a trailing remove button.
+  ///
+  /// value = left 12, right 4
+  const AppPadding.removableChip()
+    : super.only(left: AppSizes.s12, right: AppSizes.s4);
 
   /// value = horizontal 4
   const AppPadding.horizontalXs() : super.symmetric(horizontal: AppSizes.s4);

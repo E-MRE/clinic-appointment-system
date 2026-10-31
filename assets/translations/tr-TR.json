@@ -32,7 +32,10 @@
       "friday": "Cum",
       "saturday": "Cmt",
       "sunday": "Paz"
-    }
+    },
+    "removeRange": "Aralığı kaldır",
+    "selectTime": "Saat seçin",
+    "rangeOutsideHours": "Aralık şube çalışma saatleri dışında"
   },
   "roles": {
     "patient": "Hasta",

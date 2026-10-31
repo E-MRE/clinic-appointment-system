@@ -35,6 +35,9 @@ abstract class LocaleKeys {
   static const common_weekdaysShort_saturday = 'common.weekdaysShort.saturday';
   static const common_weekdaysShort_sunday = 'common.weekdaysShort.sunday';
   static const common_weekdaysShort = 'common.weekdaysShort';
+  static const common_removeRange = 'common.removeRange';
+  static const common_selectTime = 'common.selectTime';
+  static const common_rangeOutsideHours = 'common.rangeOutsideHours';
   static const common = 'common';
   static const roles_patient = 'roles.patient';
   static const roles_doctor = 'roles.doctor';
