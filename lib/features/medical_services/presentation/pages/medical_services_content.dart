@@ -26,13 +26,9 @@ final class _MedicalServicesContent extends StatelessWidget {
   /// offers an add action only on smaller screens.
   Widget? _emptyAction(BuildContext context) {
     if (context.screenSize.isDesktop) return null;
-    return FilledButton.icon(
+    return AppAddButton(
+      label: LocaleKeys.services_addService.tr(),
       onPressed: () => _onAdd(context),
-      icon: const Icon(Icons.add),
-      label: AppText.label(
-        LocaleKeys.services_addService.tr(),
-        tone: TextTone.onPrimary,
-      ),
     );
   }
 

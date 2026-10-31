@@ -102,6 +102,14 @@ abstract final class AppSizes {
 
   // Widget-specific
 
+  /// Form dialog maximum width.
+  /// value = 560
+  static const double formDialogMaxWidth = 560;
+
+  /// Side panel width.
+  /// value = 400
+  static const double sidePanelWidth = 400;
+
   /// Component preview mobile viewport width.
   /// value = 390
   static const double previewMobileWidth = 390;

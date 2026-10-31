@@ -9,17 +9,11 @@ final class _MedicalServicesDesktopLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (_showsPanel(context)) {
-      return Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: AppSizes.s16,
-        children: [
-          Expanded(child: child),
-          const _MedicalServicesDesktopPanel(),
-        ],
-      );
-    }
-    return child;
+    return AppSidePanelLayout(
+      showsPanel: _showsPanel(context),
+      panel: const AppSidePanel(child: _MedicalServicesDesktopPanelBody()),
+      child: child,
+    );
   }
 
   bool _showsPanel(BuildContext context) {

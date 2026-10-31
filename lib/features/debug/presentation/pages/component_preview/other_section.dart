@@ -20,6 +20,7 @@ final class _OtherSection extends StatelessWidget {
           ),
         ),
         const _OtherSectionViewportPreview(),
+        const _SharedActionsPreview(),
       ],
     );
   }

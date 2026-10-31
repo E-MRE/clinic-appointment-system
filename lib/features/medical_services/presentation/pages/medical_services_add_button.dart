@@ -8,15 +8,11 @@ final class _MedicalServicesAddButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final branchId = InstitutionSelectionScope.of(context).branchId;
 
-    return FilledButton.icon(
+    return AppAddButton(
+      label: LocaleKeys.services_addService.tr(),
       onPressed: branchId == null
           ? null
           : () => context.openServiceCreate(branchId),
-      icon: const Icon(Icons.add),
-      label: AppText.label(
-        LocaleKeys.services_addService.tr(),
-        tone: TextTone.onPrimary,
-      ),
     );
   }
 }

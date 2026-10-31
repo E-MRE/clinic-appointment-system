@@ -16,7 +16,7 @@ final class _MedicalServicesDesktopEmpty extends StatelessWidget {
           children: [
             _MedicalServicesFilterChipsRow(overview: overview),
             const EmptySize.s32Height(),
-            const _MedicalServicesFilteredEmpty(),
+            AppMutedMessage(message: LocaleKeys.services_filterEmpty.tr()),
             const EmptySize.s16Height(),
           ],
         ),
