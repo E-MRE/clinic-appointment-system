@@ -15,6 +15,8 @@ void main() {
       email: 'grace@test.com',
       branchId: 'b1',
       departmentId: 'dep1',
+      serviceIds: [],
+      specialty: 'Cardiology',
     );
     const technician = Technician(
       id: 't1',
@@ -22,6 +24,7 @@ void main() {
       email: 'linus@test.com',
       branchId: 'b1',
       departmentId: 'dep2',
+      serviceIds: [],
     );
 
     expect(patient.role, UserRole.patient);

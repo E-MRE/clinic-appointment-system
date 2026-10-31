@@ -15,11 +15,21 @@ final class DoctorModel extends Doctor with UserModel {
     required super.email,
     required super.branchId,
     required super.departmentId,
+    required super.serviceIds,
+    required super.specialty,
   });
 
   /// Creates a profile model from stored document fields.
   factory DoctorModel.fromJson(Map<String, dynamic> json) =>
       _$DoctorModelFromJson(json);
+
+  @override
+  @JsonKey(defaultValue: <String>[])
+  List<String> get serviceIds => super.serviceIds;
+
+  @override
+  @JsonKey(defaultValue: '')
+  String get specialty => super.specialty;
 
   @override
   Map<String, dynamic> toJson() => _$DoctorModelToJson(this);

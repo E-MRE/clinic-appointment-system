@@ -15,11 +15,16 @@ final class TechnicianModel extends Technician with UserModel {
     required super.email,
     required super.branchId,
     required super.departmentId,
+    required super.serviceIds,
   });
 
   /// Creates a profile model from stored document fields.
   factory TechnicianModel.fromJson(Map<String, dynamic> json) =>
       _$TechnicianModelFromJson(json);
+
+  @override
+  @JsonKey(defaultValue: <String>[])
+  List<String> get serviceIds => super.serviceIds;
 
   @override
   Map<String, dynamic> toJson() => _$TechnicianModelToJson(this);

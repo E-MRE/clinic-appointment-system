@@ -28,11 +28,15 @@ void main() {
         email: 'e@x.com',
         branchId: 'b',
         departmentId: 'd',
+        serviceIds: [],
+        specialty: 'Cardiology',
       ),
       {
         'role': 'doctor',
+        'specialty': 'Cardiology',
         'fullName': 'Elif',
         'email': 'e@x.com',
+        'serviceIds': <String>[],
         ...staffFields,
       },
     ),
@@ -43,11 +47,13 @@ void main() {
         email: 'e@x.com',
         branchId: 'b',
         departmentId: 'd',
+        serviceIds: [],
       ),
       {
         'role': 'technician',
         'fullName': 'Elif',
         'email': 'e@x.com',
+        'serviceIds': <String>[],
         ...staffFields,
       },
     ),
@@ -106,5 +112,83 @@ void main() {
         );
       }
     }
+  });
+
+  test('legacy staff documents default missing and null assignment fields', () {
+    for (final Map<String, dynamic> extras in [
+      <String, dynamic>{},
+      <String, dynamic>{'serviceIds': null, 'specialty': null},
+    ]) {
+      final Map<String, dynamic> json = {
+        'id': 'uid',
+        'fullName': 'Ada',
+        'email': 'a@example.com',
+        ...staffFields,
+        ...extras,
+      };
+      final DoctorModel doctor = DoctorModel.fromJson(json);
+      final TechnicianModel technician = TechnicianModel.fromJson(json);
+      expect(doctor.serviceIds, isEmpty);
+      expect(doctor.specialty, '');
+      expect(technician.serviceIds, isEmpty);
+    }
+  });
+
+  test('staff model fields survive serialization and deserialization', () {
+    final Map<String, dynamic> json = {
+      'id': 'uid',
+      'fullName': 'Ada',
+      'email': 'a@example.com',
+      ...staffFields,
+      'serviceIds': ['service-1', 'service-2'],
+      'specialty': 'Cardiology',
+    };
+    final DoctorModel doctor = DoctorModel.fromJson(json);
+    final TechnicianModel technician = TechnicianModel.fromJson(json);
+    expect(doctor.serviceIds, ['service-1', 'service-2']);
+    expect(doctor.specialty, 'Cardiology');
+    expect(technician.serviceIds, ['service-1', 'service-2']);
+    expect(
+      DoctorModel.fromJson({...doctor.toJson(), 'id': 'uid'}).serviceIds,
+      doctor.serviceIds,
+    );
+    expect(
+      DoctorModel.fromJson({...doctor.toJson(), 'id': 'uid'}).specialty,
+      doctor.specialty,
+    );
+    expect(
+      TechnicianModel.fromJson({
+        ...technician.toJson(),
+        'id': 'uid',
+      }).serviceIds,
+      technician.serviceIds,
+    );
+  });
+
+  test('lenient defaults still reject malformed staff fields', () {
+    final Map<String, dynamic> json = {
+      'id': 'uid',
+      'fullName': 'Ada',
+      'email': 'a@example.com',
+      ...staffFields,
+    };
+    for (final Object value in [
+      42,
+      'exam',
+      [42],
+    ]) {
+      expect(
+        () => DoctorModel.fromJson({...json, 'serviceIds': value}),
+        throwsA(isA<CheckedFromJsonException>()),
+      );
+      expect(
+        () => TechnicianModel.fromJson({...json, 'serviceIds': value}),
+        throwsA(isA<CheckedFromJsonException>()),
+      );
+    }
+    expect(
+      () => DoctorModel.fromJson({...json, 'specialty': 42}),
+      throwsA(isA<CheckedFromJsonException>()),
+    );
   });
 }
