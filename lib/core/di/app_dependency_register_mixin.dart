@@ -65,6 +65,13 @@ import 'package:clinic_appointment_system/features/staff_management/domain/servi
 import 'package:clinic_appointment_system/features/staff_management/domain/usecases/create_staff_use_case.dart';
 import 'package:clinic_appointment_system/features/staff_management/domain/usecases/update_staff_use_case.dart';
 import 'package:clinic_appointment_system/features/staff_management/domain/usecases/watch_staff_use_case.dart';
+import 'package:clinic_appointment_system/features/staff_management/presentation/cubit/staff_department_list_cubit.dart';
+import 'package:clinic_appointment_system/features/staff_management/presentation/cubit/staff_editor_cubit.dart';
+import 'package:clinic_appointment_system/features/staff_management/presentation/cubit/staff_filter_cubit.dart';
+import 'package:clinic_appointment_system/features/staff_management/presentation/cubit/staff_form_cubit.dart';
+import 'package:clinic_appointment_system/features/staff_management/presentation/cubit/staff_list_cubit.dart';
+import 'package:clinic_appointment_system/features/staff_management/presentation/cubit/staff_save_cubit.dart';
+import 'package:clinic_appointment_system/features/staff_management/presentation/cubit/staff_service_list_cubit.dart';
 import 'package:clinic_appointment_system/features/users/data/models/user_model_factory.dart';
 import 'package:clinic_appointment_system/features/users/data/repositories/firestore_user_repository.dart';
 import 'package:clinic_appointment_system/features/users/domain/repositories/user_repository.dart';
@@ -285,6 +292,29 @@ mixin AppDependencyRegisterMixin {
     injector.registerFactory<MedicalServiceEditorCubit>(
       MedicalServiceEditorCubit.new,
     );
+    injector.registerFactory<StaffListCubit>(
+      () => StaffListCubit(injector.get<WatchStaffUseCase>()),
+    );
+    injector.registerFactory<StaffDepartmentListCubit>(
+      () => StaffDepartmentListCubit(
+        injector.get<WatchDepartmentsOfBranchesUseCase>(),
+      ),
+    );
+    injector.registerFactory<StaffServiceListCubit>(
+      () =>
+          StaffServiceListCubit(injector.get<WatchServicesOfBranchesUseCase>()),
+    );
+    injector.registerFactory<StaffFilterCubit>(StaffFilterCubit.new);
+    injector.registerFactory<StaffFormCubit>(
+      () => StaffFormCubit(injector.get<TemporaryPasswordGenerator>()),
+    );
+    injector.registerFactory<StaffSaveCubit>(
+      () => StaffSaveCubit(
+        injector.get<CreateStaffUseCase>(),
+        injector.get<UpdateStaffUseCase>(),
+      ),
+    );
+    injector.registerFactory<StaffEditorCubit>(StaffEditorCubit.new);
     injector.registerFactory<WorkingHoursEditorCubit>(
       WorkingHoursEditorCubit.new,
     );
