@@ -18,6 +18,23 @@ abstract class LocaleKeys {
   static const common_loading = 'common.loading';
   static const common_search = 'common.search';
   static const common_confirm = 'common.confirm';
+  static const common_weekdays_monday = 'common.weekdays.monday';
+  static const common_weekdays_tuesday = 'common.weekdays.tuesday';
+  static const common_weekdays_wednesday = 'common.weekdays.wednesday';
+  static const common_weekdays_thursday = 'common.weekdays.thursday';
+  static const common_weekdays_friday = 'common.weekdays.friday';
+  static const common_weekdays_saturday = 'common.weekdays.saturday';
+  static const common_weekdays_sunday = 'common.weekdays.sunday';
+  static const common_weekdays = 'common.weekdays';
+  static const common_weekdaysShort_monday = 'common.weekdaysShort.monday';
+  static const common_weekdaysShort_tuesday = 'common.weekdaysShort.tuesday';
+  static const common_weekdaysShort_wednesday =
+      'common.weekdaysShort.wednesday';
+  static const common_weekdaysShort_thursday = 'common.weekdaysShort.thursday';
+  static const common_weekdaysShort_friday = 'common.weekdaysShort.friday';
+  static const common_weekdaysShort_saturday = 'common.weekdaysShort.saturday';
+  static const common_weekdaysShort_sunday = 'common.weekdaysShort.sunday';
+  static const common_weekdaysShort = 'common.weekdaysShort';
   static const common = 'common';
   static const roles_patient = 'roles.patient';
   static const roles_doctor = 'roles.doctor';
@@ -310,15 +327,6 @@ abstract class LocaleKeys {
   static const institution_empty_departmentsDescription =
       'institution.empty.departmentsDescription';
   static const institution_empty = 'institution.empty';
-  static const institution_weekdays_monday = 'institution.weekdays.monday';
-  static const institution_weekdays_tuesday = 'institution.weekdays.tuesday';
-  static const institution_weekdays_wednesday =
-      'institution.weekdays.wednesday';
-  static const institution_weekdays_thursday = 'institution.weekdays.thursday';
-  static const institution_weekdays_friday = 'institution.weekdays.friday';
-  static const institution_weekdays_saturday = 'institution.weekdays.saturday';
-  static const institution_weekdays_sunday = 'institution.weekdays.sunday';
-  static const institution_weekdays = 'institution.weekdays';
   static const institution_errors_invalidTime =
       'institution.errors.invalidTime';
   static const institution_errors_closeBeforeOpen =
@@ -363,21 +371,6 @@ abstract class LocaleKeys {
   static const institution_today = 'institution.today';
   static const institution_selectClinic = 'institution.selectClinic';
   static const institution_openDaysCount = 'institution.openDaysCount';
-  static const institution_weekdaysShort_monday =
-      'institution.weekdaysShort.monday';
-  static const institution_weekdaysShort_tuesday =
-      'institution.weekdaysShort.tuesday';
-  static const institution_weekdaysShort_wednesday =
-      'institution.weekdaysShort.wednesday';
-  static const institution_weekdaysShort_thursday =
-      'institution.weekdaysShort.thursday';
-  static const institution_weekdaysShort_friday =
-      'institution.weekdaysShort.friday';
-  static const institution_weekdaysShort_saturday =
-      'institution.weekdaysShort.saturday';
-  static const institution_weekdaysShort_sunday =
-      'institution.weekdaysShort.sunday';
-  static const institution_weekdaysShort = 'institution.weekdaysShort';
   static const institution_allDaysClosed = 'institution.allDaysClosed';
   static const institution = 'institution';
   static const staff_addTitle = 'staff.addTitle';

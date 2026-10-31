@@ -1,5 +1,5 @@
-import 'package:clinic_appointment_system/features/institution/data/converters/clock_time_converter.dart';
-import 'package:clinic_appointment_system/features/institution/domain/value_objects/clock_time.dart';
+import 'package:clinic_appointment_system/core/data/converters/clock_time_converter.dart';
+import 'package:clinic_appointment_system/core/time/clock_time.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

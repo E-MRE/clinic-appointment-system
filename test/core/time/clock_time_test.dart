@@ -1,6 +1,6 @@
-import 'package:clinic_appointment_system/core/errors/institution_exception.dart';
-import 'package:clinic_appointment_system/features/institution/domain/enums/institution_error_code.dart';
-import 'package:clinic_appointment_system/features/institution/domain/value_objects/clock_time.dart';
+import 'package:clinic_appointment_system/core/enums/time_error_code.dart';
+import 'package:clinic_appointment_system/core/errors/time_exception.dart';
+import 'package:clinic_appointment_system/core/time/clock_time.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -14,37 +14,31 @@ void main() {
       expect(
         () => ClockTime(hour: 24, minute: 0),
         throwsA(
-          isA<InstitutionException>().having(
+          isA<TimeException>().having(
             (error) => error.code,
             'code',
-            InstitutionErrorCode.invalidTime,
+            TimeErrorCode.invalidTime,
           ),
         ),
       );
       expect(
         () => ClockTime(hour: -1, minute: 0),
-        throwsA(isA<InstitutionException>()),
+        throwsA(isA<TimeException>()),
       );
     });
 
     test('rejects minute 60', () {
       expect(
         () => ClockTime(hour: 12, minute: 60),
-        throwsA(isA<InstitutionException>()),
+        throwsA(isA<TimeException>()),
       );
     });
 
     test('fromMinutes accepts bounds and rejects values outside them', () {
       expect(ClockTime.fromMinutes(0).toString(), '00:00');
       expect(ClockTime.fromMinutes(1439).toString(), '23:59');
-      expect(
-        () => ClockTime.fromMinutes(-1),
-        throwsA(isA<InstitutionException>()),
-      );
-      expect(
-        () => ClockTime.fromMinutes(1440),
-        throwsA(isA<InstitutionException>()),
-      );
+      expect(() => ClockTime.fromMinutes(-1), throwsA(isA<TimeException>()));
+      expect(() => ClockTime.fromMinutes(1440), throwsA(isA<TimeException>()));
     });
 
     test('formats with zero padding and compares by value', () {

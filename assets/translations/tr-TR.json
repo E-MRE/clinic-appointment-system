@@ -14,7 +14,25 @@
     "retry": "Tekrar Dene",
     "loading": "Yükleniyor...",
     "search": "Ara",
-    "confirm": "Onayla"
+    "confirm": "Onayla",
+    "weekdays": {
+      "monday": "Pazartesi",
+      "tuesday": "Salı",
+      "wednesday": "Çarşamba",
+      "thursday": "Perşembe",
+      "friday": "Cuma",
+      "saturday": "Cumartesi",
+      "sunday": "Pazar"
+    },
+    "weekdaysShort": {
+      "monday": "Pzt",
+      "tuesday": "Sal",
+      "wednesday": "Çar",
+      "thursday": "Per",
+      "friday": "Cum",
+      "saturday": "Cmt",
+      "sunday": "Paz"
+    }
   },
   "roles": {
     "patient": "Hasta",
@@ -290,15 +308,6 @@
       "departmentsTitle": "Henüz bölüm yok",
       "departmentsDescription": "Bu şubede hizmet verecek ilk bölümü ekleyin."
     },
-    "weekdays": {
-      "monday": "Pazartesi",
-      "tuesday": "Salı",
-      "wednesday": "Çarşamba",
-      "thursday": "Perşembe",
-      "friday": "Cuma",
-      "saturday": "Cumartesi",
-      "sunday": "Pazar"
-    },
     "errors": {
       "invalidTime": "Geçerli bir saat seçin.",
       "closeBeforeOpen": "Kapanış saati açılıştan sonra olmalı.",
@@ -332,15 +341,6 @@
     "today": "Bugün",
     "selectClinic": "Kurum seçin",
     "openDaysCount": "{} gün açık",
-    "weekdaysShort": {
-      "monday": "Pzt",
-      "tuesday": "Sal",
-      "wednesday": "Çar",
-      "thursday": "Per",
-      "friday": "Cum",
-      "saturday": "Cmt",
-      "sunday": "Paz"
-    },
     "allDaysClosed": "Tüm günler kapalı"
   },
   "staff": {

@@ -1,5 +1,5 @@
 import 'package:clinic_appointment_system/core/constants/clock_constants.dart';
-import 'package:clinic_appointment_system/features/institution/domain/value_objects/clock_time.dart';
+import 'package:clinic_appointment_system/core/time/clock_time.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 /// Converts a domain clock time to and from its zero-padded Firestore form.

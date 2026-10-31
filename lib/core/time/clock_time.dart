@@ -1,6 +1,6 @@
 import 'package:clinic_appointment_system/core/constants/clock_constants.dart';
-import 'package:clinic_appointment_system/core/errors/institution_exception.dart';
-import 'package:clinic_appointment_system/features/institution/domain/enums/institution_error_code.dart';
+import 'package:clinic_appointment_system/core/enums/time_error_code.dart';
+import 'package:clinic_appointment_system/core/errors/time_exception.dart';
 import 'package:equatable/equatable.dart';
 
 /// A minute-precision time of day between 00:00 and 23:59.
@@ -13,7 +13,7 @@ final class ClockTime extends Equatable implements Comparable<ClockTime> {
         hour >= ClockConstants.hoursPerDay ||
         minute < ClockConstants.midnight ||
         minute >= ClockConstants.minutesPerHour) {
-      throw const InstitutionException(InstitutionErrorCode.invalidTime);
+      throw const TimeException(TimeErrorCode.invalidTime);
     }
     return ClockTime._(hour * ClockConstants.minutesPerHour + minute);
   }
@@ -22,7 +22,7 @@ final class ClockTime extends Equatable implements Comparable<ClockTime> {
   factory ClockTime.fromMinutes(int minutesSinceMidnight) {
     if (minutesSinceMidnight < ClockConstants.midnight ||
         minutesSinceMidnight >= ClockConstants.minutesPerDay) {
-      throw const InstitutionException(InstitutionErrorCode.invalidTime);
+      throw const TimeException(TimeErrorCode.invalidTime);
     }
     return ClockTime._(minutesSinceMidnight);
   }

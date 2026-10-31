@@ -1,4 +1,4 @@
-import 'package:clinic_appointment_system/features/institution/domain/enums/weekday.dart';
+import 'package:clinic_appointment_system/core/enums/weekday.dart';
 
 /// Converts a [DateTime] to the domain [Weekday].
 extension DateTimeWeekday on DateTime {

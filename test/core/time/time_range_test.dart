@@ -1,7 +1,7 @@
-import 'package:clinic_appointment_system/core/errors/institution_exception.dart';
-import 'package:clinic_appointment_system/features/institution/domain/enums/institution_error_code.dart';
-import 'package:clinic_appointment_system/features/institution/domain/value_objects/clock_time.dart';
-import 'package:clinic_appointment_system/features/institution/domain/value_objects/time_range.dart';
+import 'package:clinic_appointment_system/core/enums/time_error_code.dart';
+import 'package:clinic_appointment_system/core/errors/time_exception.dart';
+import 'package:clinic_appointment_system/core/time/clock_time.dart';
+import 'package:clinic_appointment_system/core/time/time_range.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -12,16 +12,16 @@ void main() {
       expect(
         () => TimeRange(start: time, end: time),
         throwsA(
-          isA<InstitutionException>().having(
+          isA<TimeException>().having(
             (error) => error.code,
             'code',
-            InstitutionErrorCode.closeBeforeOpen,
+            TimeErrorCode.endBeforeStart,
           ),
         ),
       );
       expect(
         () => TimeRange(start: time, end: ClockTime(hour: 8, minute: 59)),
-        throwsA(isA<InstitutionException>()),
+        throwsA(isA<TimeException>()),
       );
     });
 
@@ -73,5 +73,36 @@ void main() {
       expect(range, equalRange);
       expect(range.hashCode, equalRange.hashCode);
     });
+
+    test('encloses ranges only when both boundaries fit', () {
+      final outer = _range(510, 720);
+      expect(outer.encloses(_range(510, 720)), isTrue);
+      expect(outer.encloses(_range(540, 720)), isTrue);
+      expect(outer.encloses(_range(720, 780)), isFalse);
+      expect(outer.encloses(_range(450, 510)), isFalse);
+      expect(outer.encloses(_range(509, 720)), isFalse);
+      expect(outer.encloses(_range(510, 721)), isFalse);
+      expect(outer.encloses(_range(660, 840)), isFalse);
+    });
+
+    test('a range spanning a gap is enclosed by neither segment', () {
+      final morning = _range(480, 600);
+      final afternoon = _range(660, 780);
+      final spanning = _range(540, 720);
+      expect(morning.encloses(spanning), isFalse);
+      expect(afternoon.encloses(spanning), isFalse);
+    });
+
+    test('duration is measured in minutes', () {
+      expect(_range(510, 720).durationMinutes, 210);
+      expect(_range(0, 1).durationMinutes, 1);
+    });
   });
+}
+
+TimeRange _range(int start, int end) {
+  return TimeRange(
+    start: ClockTime.fromMinutes(start),
+    end: ClockTime.fromMinutes(end),
+  );
 }

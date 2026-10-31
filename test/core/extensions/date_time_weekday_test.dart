@@ -1,5 +1,5 @@
-import 'package:clinic_appointment_system/features/institution/domain/enums/weekday.dart';
-import 'package:clinic_appointment_system/features/institution/domain/extensions/date_time_weekday.dart';
+import 'package:clinic_appointment_system/core/enums/weekday.dart';
+import 'package:clinic_appointment_system/core/extensions/date_time_weekday.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

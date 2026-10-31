@@ -1,6 +1,7 @@
 import 'package:clinic_appointment_system/core/constants/firestore_constants.dart';
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
 import 'package:clinic_appointment_system/core/errors/institution_exception.dart';
+import 'package:clinic_appointment_system/core/errors/time_exception.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/institution_record.dart';
 import 'package:clinic_appointment_system/features/institution/domain/enums/institution_error_code.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -130,6 +131,11 @@ abstract base class FirestoreInstitutionRepository<
         stackTrace,
       );
     } on FormatException catch (_, stackTrace) {
+      Error.throwWithStackTrace(
+        const InstitutionException(InstitutionErrorCode.invalidRecord),
+        stackTrace,
+      );
+    } on TimeException catch (_, stackTrace) {
       Error.throwWithStackTrace(
         const InstitutionException(InstitutionErrorCode.invalidRecord),
         stackTrace,

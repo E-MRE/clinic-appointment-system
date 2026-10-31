@@ -1,4 +1,4 @@
-import 'package:clinic_appointment_system/features/institution/domain/enums/weekday.dart';
+import 'package:clinic_appointment_system/core/enums/weekday.dart';
 import 'package:clinic_appointment_system/features/institution/domain/value_objects/working_hours.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/models/working_hours_day_draft.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/models/working_hours_range_draft.dart';

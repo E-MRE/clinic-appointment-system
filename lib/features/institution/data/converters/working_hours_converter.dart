@@ -1,7 +1,6 @@
-import 'package:clinic_appointment_system/core/constants/firestore_constants.dart';
-import 'package:clinic_appointment_system/features/institution/data/converters/clock_time_converter.dart';
-import 'package:clinic_appointment_system/features/institution/domain/enums/weekday.dart';
-import 'package:clinic_appointment_system/features/institution/domain/value_objects/time_range.dart';
+import 'package:clinic_appointment_system/core/data/converters/time_range_converter.dart';
+import 'package:clinic_appointment_system/core/enums/weekday.dart';
+import 'package:clinic_appointment_system/core/time/time_range.dart';
 import 'package:clinic_appointment_system/features/institution/domain/value_objects/working_hours.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -10,8 +9,6 @@ final class WorkingHoursConverter
     extends JsonConverter<WorkingHours, Map<String, dynamic>> {
   /// Creates a converter that stores all seven weekdays.
   const WorkingHoursConverter();
-
-  int get _rangeFieldCount => 2;
 
   @override
   WorkingHours fromJson(Map<String, dynamic> json) {
@@ -22,72 +19,34 @@ final class WorkingHoursConverter
       );
     }
 
-    const clockTimeConverter = ClockTimeConverter();
+    const converter = TimeRangeConverter();
     final ranges = <Weekday, List<TimeRange>>{};
     for (final day in Weekday.values) {
       final rawRanges = json[day.name];
       if (rawRanges is! List) {
         throw FormatException('Working hours for ${day.name} must be a list.');
       }
-
       ranges[day] = rawRanges
-          .map(
-            (Object? rawRange) => _rangeFromJson(
-              rawRange,
-              day: day,
-              clockTimeConverter: clockTimeConverter,
-            ),
-          )
+          .map((Object? rawRange) {
+            if (rawRange is! Map ||
+                rawRange.keys.any((key) => key is! String)) {
+              throw FormatException('A range for ${day.name} must be a map.');
+            }
+            return converter.fromJson(Map<String, dynamic>.from(rawRange));
+          })
           .toList(growable: false);
     }
-
     return WorkingHours(ranges);
   }
 
   @override
   Map<String, dynamic> toJson(WorkingHours object) {
-    const clockTimeConverter = ClockTimeConverter();
+    const converter = TimeRangeConverter();
     return {
       for (final day in Weekday.values)
         day.name: [
-          for (final range in object.rangesOn(day))
-            {
-              FirestoreConstants.start: clockTimeConverter.toJson(range.start),
-              FirestoreConstants.end: clockTimeConverter.toJson(range.end),
-            },
+          for (final range in object.rangesOn(day)) converter.toJson(range),
         ],
     };
-  }
-
-  TimeRange _rangeFromJson(
-    Object? rawRange, {
-    required Weekday day,
-    required ClockTimeConverter clockTimeConverter,
-  }) {
-    if (rawRange is! Map<dynamic, dynamic> ||
-        !_hasExpectedRangeFields(rawRange)) {
-      throw FormatException(
-        'A range for ${day.name} must contain start and end.',
-      );
-    }
-
-    final start = rawRange[FirestoreConstants.start];
-    final end = rawRange[FirestoreConstants.end];
-    if (start is! String || end is! String) {
-      throw FormatException('A range for ${day.name} must use string times.');
-    }
-
-    return TimeRange(
-      start: clockTimeConverter.fromJson(start),
-      end: clockTimeConverter.fromJson(end),
-    );
-  }
-
-  bool _hasExpectedRangeFields(Map<dynamic, dynamic> rawRange) {
-    return rawRange.length == _rangeFieldCount &&
-        rawRange.keys.toSet().containsAll({
-          FirestoreConstants.start,
-          FirestoreConstants.end,
-        });
   }
 }

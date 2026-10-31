@@ -1,9 +1,11 @@
+import 'package:clinic_appointment_system/core/enums/time_error_code.dart';
+import 'package:clinic_appointment_system/core/enums/weekday.dart';
 import 'package:clinic_appointment_system/core/errors/institution_exception.dart';
+import 'package:clinic_appointment_system/core/errors/time_exception.dart';
+import 'package:clinic_appointment_system/core/time/clock_time.dart';
+import 'package:clinic_appointment_system/core/time/time_range.dart';
 import 'package:clinic_appointment_system/features/institution/data/converters/working_hours_converter.dart';
 import 'package:clinic_appointment_system/features/institution/domain/enums/institution_error_code.dart';
-import 'package:clinic_appointment_system/features/institution/domain/enums/weekday.dart';
-import 'package:clinic_appointment_system/features/institution/domain/value_objects/clock_time.dart';
-import 'package:clinic_appointment_system/features/institution/domain/value_objects/time_range.dart';
 import 'package:clinic_appointment_system/features/institution/domain/value_objects/working_hours.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -71,10 +73,10 @@ void main() {
     expect(
       () => converter.fromJson(json),
       throwsA(
-        isA<InstitutionException>().having(
+        isA<TimeException>().having(
           (error) => error.code,
           'code',
-          InstitutionErrorCode.closeBeforeOpen,
+          TimeErrorCode.endBeforeStart,
         ),
       ),
     );
