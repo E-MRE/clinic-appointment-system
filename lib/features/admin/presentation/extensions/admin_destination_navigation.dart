@@ -24,6 +24,11 @@ extension AdminDestinationNavigation on AdminDestination {
         icon: Icons.medical_services_outlined,
         selectedIcon: Icons.medical_services,
       ),
+      AdminDestination.staff => AppNavigationDestination(
+        label: LocaleKeys.staff_title.tr(),
+        icon: Icons.group_outlined,
+        selectedIcon: Icons.group,
+      ),
     };
   }
 

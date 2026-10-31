@@ -2,6 +2,7 @@ part of 'app_data_table.dart';
 
 /// Scrolls the table horizontally when its intrinsic width exceeds the
 /// viewport, keeping the scrollbar visible so the overflow is discoverable.
+/// Bottom padding reserves the scrollbar's track so it never covers a row.
 final class _AppTableScrollView<T> extends StatefulWidget {
   const _AppTableScrollView({
     required this.rows,
@@ -42,6 +43,7 @@ final class _AppTableScrollViewState<T> extends State<_AppTableScrollView<T>> {
           child: SingleChildScrollView(
             controller: _controller,
             scrollDirection: Axis.horizontal,
+            padding: const AppPadding.tableScrollbar(),
             child: ConstrainedBox(
               constraints: BoxConstraints(
                 minWidth: math.max(widget.minWidth, constraints.maxWidth),

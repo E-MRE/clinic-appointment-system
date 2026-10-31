@@ -8,7 +8,17 @@ extension UserErrorCodeStartupError on UserErrorCode {
     return switch (this) {
       UserErrorCode.profileMissing => StartupErrorKind.profileMissing,
       UserErrorCode.invalidProfile => StartupErrorKind.invalidProfile,
-      UserErrorCode.unavailable => StartupErrorKind.profileUnavailable,
+      // Staff input codes are never emitted while a profile is watched.
+      UserErrorCode.unavailable ||
+      UserErrorCode.fullNameRequired ||
+      UserErrorCode.invalidEmail ||
+      UserErrorCode.branchRequired ||
+      UserErrorCode.departmentRequired ||
+      UserErrorCode.specialtyRequired ||
+      UserErrorCode.duplicateService ||
+      UserErrorCode.tooManyServices ||
+      UserErrorCode.ineligibleService ||
+      UserErrorCode.orphanAccount => StartupErrorKind.profileUnavailable,
     };
   }
 }

@@ -10,6 +10,13 @@ abstract interface class DepartmentRepository {
   /// Stream errors are emitted as [InstitutionException].
   Stream<DataResult<List<Department>>> watchDepartments(String branchId);
 
+  /// Watches records belonging to any of [branchIds], sorted by name.
+  /// Empty lists emit an empty success; unsupported query sizes and provider
+  /// failures are emitted as [InstitutionException] stream errors.
+  Stream<DataResult<List<Department>>> watchDepartmentsOfBranches(
+    List<String> branchIds,
+  );
+
   /// Creates a department from [draft].
   /// Throws [InstitutionException] if creation fails.
   Future<DataResult<Department>> createDepartment(DepartmentDraft draft);

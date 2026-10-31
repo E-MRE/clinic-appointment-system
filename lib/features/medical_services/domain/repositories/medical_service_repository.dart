@@ -9,6 +9,13 @@ abstract interface class MedicalServiceRepository {
   /// Stream errors are emitted as [InstitutionException].
   Stream<DataResult<List<MedicalService>>> watchServices(String branchId);
 
+  /// Watches records belonging to any of [branchIds], sorted by name.
+  /// Empty lists emit an empty success; unsupported query sizes and provider
+  /// failures are emitted as [InstitutionException] stream errors.
+  Stream<DataResult<List<MedicalService>>> watchServicesOfBranches(
+    List<String> branchIds,
+  );
+
   /// Creates a medical service from [service]. Ignores [service.id] and returns
   /// the created record with its assigned identifier.
   /// Throws [InstitutionException] if creation fails.

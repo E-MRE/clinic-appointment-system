@@ -11,7 +11,10 @@ final class _MedicalServicesPageShell extends StatelessWidget {
 
     return AppScaffold(
       floatingActionButton: isMobile && branchId != null
-          ? const _MedicalServicesFab()
+          ? AppAddFab(
+              label: LocaleKeys.services_addService.tr(),
+              onPressed: () => context.go(AppRoutes.serviceNew),
+            )
           : null,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

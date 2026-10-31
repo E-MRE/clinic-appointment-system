@@ -27,6 +27,14 @@ service cloud.firestore {
       return value is string && value.trim().size() > 0;
     }
 
+    // The department must exist and belong to the branch.
+    function isDepartmentOfBranch(data) {
+      let department =
+        /databases/$(database)/documents/departments/$(data.departmentId);
+      return exists(department)
+        && get(department).data.branchId == data.branchId;
+    }
+
     // users/{uid}: profiles keyed by the authentication uid.
     match /users/{uid} {
       // Owners and admins read any profile; signed-in users read staff
@@ -35,13 +43,54 @@ service cloud.firestore {
         || isAdmin()
         || (isSignedIn() && resource.data.role in ['doctor', 'technician']);
 
-      // Registration creates only the caller's own patient profile.
-      allow create: if isAdmin() || isOwnPatientProfile();
+      // Registration creates an own patient profile or an admin-managed staff profile.
+      allow create: if isOwnPatientProfile()
+        || (isAdmin() && isValidStaffProfile(request.resource.data));
 
-      // Owners change only their name; role, email and createdAt are fixed.
-      allow update: if isAdmin() || isOwnNameChange();
+      // Owners change their name; admins manage staff assignments.
+      allow update: if isOwnNameChange()
+        || (isAdmin() && isStaffAssignmentChange());
 
       allow delete: if isAdmin();
+
+      function staffKeys() {
+        return [
+          'role', 'fullName', 'email', 'branchId', 'departmentId',
+          'serviceIds', 'createdAt'
+        ];
+      }
+
+      function isValidStaffProfile(data) {
+        let keys = data.role == 'doctor'
+          ? staffKeys().concat(['specialty']) : staffKeys();
+        return data.role in ['doctor', 'technician']
+          && data.keys().hasOnly(keys)
+          && data.keys().hasAll(keys)
+          && isFilledString(data.fullName)
+          && data.email is string
+          && data.email.matches('^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$')
+          && isFilledString(data.branchId)
+          && isFilledString(data.departmentId)
+          && isDepartmentOfBranch(data)
+          && isValidStaffAssignment(data)
+          && data.createdAt == request.time;
+      }
+
+      function isValidStaffAssignment(data) {
+        return isFilledString(data.fullName)
+          && data.serviceIds is list
+          && data.serviceIds.size() <= 20
+          && (data.role == 'doctor'
+            ? isFilledString(data.specialty)
+            : !('specialty' in data));
+      }
+
+      function isStaffAssignmentChange() {
+        return resource.data.role in ['doctor', 'technician']
+          && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['fullName', 'specialty', 'serviceIds'])
+          && isValidStaffAssignment(request.resource.data);
+      }
 
       function isOwnPatientProfile() {
         let profile = request.resource.data;
@@ -179,14 +228,6 @@ service cloud.firestore {
           && data.feeMinorUnits is int
           && data.feeMinorUnits >= 100
           && data.feeMinorUnits <= 10000000;
-      }
-
-      // The department must exist and belong to the service's branch.
-      function isDepartmentOfBranch(data) {
-        let department =
-          /databases/$(database)/documents/departments/$(data.departmentId);
-        return exists(department)
-          && get(department).data.branchId == data.branchId;
       }
 
       function isValidExamination(data) {

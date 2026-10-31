@@ -74,4 +74,19 @@ abstract final class FirestoreConstants {
 
   /// Server timestamp recorded when a profile is created.
   static const String createdAt = 'createdAt';
+
+  /// Field storing a user profile's full name.
+  static const String fullName = 'fullName';
+
+  /// Field storing a user profile's email address.
+  static const String email = 'email';
+
+  /// Field storing a doctor's clinical specialty.
+  static const String specialty = 'specialty';
+
+  /// Field storing the medical services assigned to a staff profile.
+  static const String serviceIds = 'serviceIds';
+
+  /// Maximum number of values accepted by a Firestore whereIn query.
+  static const int maxWhereInValues = 30;
 }

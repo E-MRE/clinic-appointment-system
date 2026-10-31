@@ -14,6 +14,10 @@ TechnicianModel _$TechnicianModelFromJson(Map<String, dynamic> json) =>
         email: $checkedConvert('email', (v) => v as String),
         branchId: $checkedConvert('branchId', (v) => v as String),
         departmentId: $checkedConvert('departmentId', (v) => v as String),
+        serviceIds: $checkedConvert(
+          'serviceIds',
+          (v) => (v as List<dynamic>?)?.map((e) => e as String).toList() ?? [],
+        ),
       );
       return val;
     });
@@ -22,9 +26,10 @@ Map<String, dynamic> _$TechnicianModelToJson(TechnicianModel instance) =>
     <String, dynamic>{
       'fullName': instance.fullName,
       'email': instance.email,
+      'role': _$UserRoleEnumMap[instance.role]!,
       'branchId': instance.branchId,
       'departmentId': instance.departmentId,
-      'role': _$UserRoleEnumMap[instance.role]!,
+      'serviceIds': instance.serviceIds,
     };
 
 const _$UserRoleEnumMap = {

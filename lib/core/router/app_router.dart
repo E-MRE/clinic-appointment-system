@@ -21,6 +21,9 @@ import 'package:clinic_appointment_system/features/medical_services/presentation
 import 'package:clinic_appointment_system/features/medical_services/presentation/pages/medical_services_route_scope.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/pages/patient_home_page.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/pages/staff_home_page.dart';
+import 'package:clinic_appointment_system/features/staff_management/presentation/pages/staff_form_page.dart';
+import 'package:clinic_appointment_system/features/staff_management/presentation/pages/staff_management_page.dart';
+import 'package:clinic_appointment_system/features/staff_management/presentation/pages/staff_management_route_scope.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -134,6 +137,31 @@ GoRouter createAppRouter({
                       MedicalServiceFormPage(
                         serviceId: state.pathParameters['serviceId'],
                       ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          ShellRoute(
+            builder: (_, state, child) =>
+                StaffManagementRouteScope(child: child),
+            routes: [
+              GoRoute(
+                path: AppRoutes.adminStaff,
+                pageBuilder: (_, state) =>
+                    _fadePage(state, const StaffManagementPage()),
+                routes: [
+                  GoRoute(
+                    path: AppRoutes.adminStaffNewSegment,
+                    pageBuilder: (_, state) =>
+                        _fadePage(state, const StaffFormPage()),
+                  ),
+                  GoRoute(
+                    path: AppRoutes.adminStaffEditSegment,
+                    pageBuilder: (_, state) => _fadePage(
+                      state,
+                      StaffFormPage(staffId: state.pathParameters['staffId']),
                     ),
                   ),
                 ],
