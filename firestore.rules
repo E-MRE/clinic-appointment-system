@@ -111,6 +111,53 @@ service cloud.firestore {
       }
     }
 
+    // staffAvailability/{staffId}: one availability document per doctor or technician.
+    match /staffAvailability/{staffId} {
+      // Patients read availability to request appointments (#17).
+      allow read: if isSignedIn();
+      // Staff write their own document; admins write any staff member's.
+      allow create, update: if (isUser(staffId) || isAdmin())
+        && isValidAvailability(staffId, request.resource.data);
+      allow delete: if false;
+
+      function isValidAvailability(staffId, data) {
+        let profile = /databases/$(database)/documents/users/$(staffId);
+        return exists(profile)
+          && get(profile).data.role in ['doctor', 'technician']
+          && data.keys().hasOnly(['branchId', 'weekly', 'oneOff', 'updatedAt'])
+          && data.keys().hasAll(['branchId', 'weekly', 'oneOff', 'updatedAt'])
+          && data.branchId == get(profile).data.branchId
+          && isValidWeekly(data.weekly)
+          && data.oneOff is list && data.oneOff.size() <= 60
+          && data.updatedAt == request.time;
+      }
+
+      // Rules cannot loop over elements; the domain validates their contents.
+      // Limits 12 and 60 must match AvailabilityConstants.
+      function isValidWeekly(weekly) {
+        return weekly is map
+          && weekly.keys().hasOnly([
+            'monday', 'tuesday', 'wednesday', 'thursday',
+            'friday', 'saturday', 'sunday'
+          ])
+          && weekly.keys().hasAll([
+            'monday', 'tuesday', 'wednesday', 'thursday',
+            'friday', 'saturday', 'sunday'
+          ])
+          && isValidDay(weekly.monday)
+          && isValidDay(weekly.tuesday)
+          && isValidDay(weekly.wednesday)
+          && isValidDay(weekly.thursday)
+          && isValidDay(weekly.friday)
+          && isValidDay(weekly.saturday)
+          && isValidDay(weekly.sunday);
+      }
+
+      function isValidDay(day) {
+        return day is list && day.size() <= 12;
+      }
+    }
+
     // clinics/{clinicId}: named institutions that own physical branches.
     match /clinics/{clinicId} {
       allow read: if isSignedIn();

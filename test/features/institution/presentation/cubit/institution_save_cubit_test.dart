@@ -226,6 +226,10 @@ final class _ClinicRepository implements ClinicRepository {
 }
 
 final class _BranchRepository implements BranchRepository {
+  @override
+  Stream<DataResult<Branch>> watchBranch(String branchId) =>
+      const Stream.empty();
+
   Future<DataResult<Branch>> Function(BranchDraft draft) createAction =
       (_) async => const DataResult.error();
   Future<DataResult<Branch>> Function(Branch branch) updateAction = (_) async =>

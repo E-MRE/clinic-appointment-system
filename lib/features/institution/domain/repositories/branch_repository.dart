@@ -6,6 +6,10 @@ import 'package:clinic_appointment_system/features/institution/domain/models/bra
 /// Branch persistence boundary. Success uses results; failures throw
 /// [InstitutionException].
 abstract interface class BranchRepository {
+  /// Watches the branch identified by [branchId].
+  /// Missing records and provider failures are [InstitutionException] stream errors.
+  Stream<DataResult<Branch>> watchBranch(String branchId);
+
   /// Watches the branches owned by [clinicId].
   /// Stream errors are emitted as [InstitutionException].
   Stream<DataResult<List<Branch>>> watchBranches(String clinicId);

@@ -24,6 +24,10 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../../institution/domain/doubles/fake_department_repository.dart';
 
 final class _ReplayableBranchRepository implements BranchRepository {
+  @override
+  Stream<DataResult<Branch>> watchBranch(String branchId) =>
+      const Stream.empty();
+
   _ReplayableBranchRepository(this._branches);
 
   final List<Branch> _branches;

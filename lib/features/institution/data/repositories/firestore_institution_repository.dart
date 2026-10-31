@@ -38,6 +38,58 @@ abstract base class FirestoreInstitutionRepository<
     return _watchQuery(firestore.collection(collectionName));
   }
 
+  /// Watches one record by [id]; a missing or malformed record is invalid.
+  Stream<DataResult<Entity>> watchById(String id) {
+    return firestore
+        .collection(collectionName)
+        .doc(id)
+        .snapshots()
+        .handleError(_handleStreamError)
+        .map((document) {
+          final data = document.data();
+          if (data == null) {
+            throw const InstitutionException(
+              InstitutionErrorCode.invalidRecord,
+            );
+          }
+          try {
+            return DataResult.success(
+              data: entityFromJson({...data, 'id': document.id}),
+            );
+          } on CheckedFromJsonException catch (_, stackTrace) {
+            Error.throwWithStackTrace(
+              const InstitutionException(InstitutionErrorCode.invalidRecord),
+              stackTrace,
+            );
+          } on TypeError catch (_, stackTrace) {
+            Error.throwWithStackTrace(
+              const InstitutionException(InstitutionErrorCode.invalidRecord),
+              stackTrace,
+            );
+          } on ArgumentError catch (_, stackTrace) {
+            Error.throwWithStackTrace(
+              const InstitutionException(InstitutionErrorCode.invalidRecord),
+              stackTrace,
+            );
+          } on FormatException catch (_, stackTrace) {
+            Error.throwWithStackTrace(
+              const InstitutionException(InstitutionErrorCode.invalidRecord),
+              stackTrace,
+            );
+          } on TimeException catch (_, stackTrace) {
+            Error.throwWithStackTrace(
+              const InstitutionException(InstitutionErrorCode.invalidRecord),
+              stackTrace,
+            );
+          } on InstitutionException catch (_, stackTrace) {
+            Error.throwWithStackTrace(
+              const InstitutionException(InstitutionErrorCode.invalidRecord),
+              stackTrace,
+            );
+          }
+        });
+  }
+
   /// Watches records whose [field] equals [value], sorted by display name.
   /// Firestore errors are emitted as [InstitutionException].
   Stream<DataResult<List<Entity>>> watchWhere(String field, String value) {

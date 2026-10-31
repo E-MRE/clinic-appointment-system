@@ -18,6 +18,8 @@ import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/password_reset_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/sign_in_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/sign_up_cubit.dart';
+import 'package:clinic_appointment_system/features/availability/data/repositories/firestore_staff_availability_repository.dart';
+import 'package:clinic_appointment_system/features/availability/domain/repositories/staff_availability_repository.dart';
 import 'package:clinic_appointment_system/features/institution/data/repositories/firestore_branch_repository.dart';
 import 'package:clinic_appointment_system/features/institution/data/repositories/firestore_clinic_repository.dart';
 import 'package:clinic_appointment_system/features/institution/data/repositories/firestore_department_repository.dart';
@@ -30,6 +32,7 @@ import 'package:clinic_appointment_system/features/institution/domain/usecases/c
 import 'package:clinic_appointment_system/features/institution/domain/usecases/update_branch_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/update_clinic_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/update_department_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_branch_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_branches_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_clinics_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_departments_of_branches_use_case.dart';
@@ -121,6 +124,11 @@ mixin AppDependencyRegisterMixin {
         injector.get<StaffModelFactory>(),
       ),
     );
+    injector.registerLazySingleton<StaffAvailabilityRepository>(
+      () => FirestoreStaffAvailabilityRepository(
+        injector.get<FirebaseFirestore>(),
+      ),
+    );
     injector.registerLazySingleton<SecondaryAuthProvider>(
       FirebaseSecondaryAuthProvider.new,
     );
@@ -141,6 +149,9 @@ mixin AppDependencyRegisterMixin {
     );
     injector.registerLazySingleton<UpdateClinicUseCase>(
       () => UpdateClinicUseCase(injector.get<ClinicRepository>()),
+    );
+    injector.registerLazySingleton<WatchBranchUseCase>(
+      () => WatchBranchUseCase(injector.get<BranchRepository>()),
     );
     injector.registerLazySingleton<WatchBranchesUseCase>(
       () => WatchBranchesUseCase(injector.get<BranchRepository>()),
