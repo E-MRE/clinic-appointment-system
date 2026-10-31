@@ -2,9 +2,11 @@ import 'package:clinic_appointment_system/features/staff_management/presentation
 import 'package:clinic_appointment_system/features/staff_management/presentation/models/staff_form_values.dart';
 import 'package:clinic_appointment_system/features/staff_management/presentation/strategies/doctor_form_strategy.dart';
 import 'package:clinic_appointment_system/features/staff_management/presentation/strategies/technician_form_strategy.dart';
+import 'package:clinic_appointment_system/features/staff_management/presentation/widgets/staff_specialty_field.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/doctor.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/technician.dart';
 import 'package:clinic_appointment_system/features/users/domain/enums/user_role.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -16,6 +18,14 @@ void main() {
     departmentId: '  department  ',
     serviceIds: ['  exam  ', ' lab '],
   );
+
+  test('specialty sections belong to their role strategies', () {
+    expect(
+      const DoctorFormStrategy().specialtySection(),
+      isA<StaffSpecialtyField>(),
+    );
+    expect(const TechnicianFormStrategy().specialtySection(), isA<SizedBox>());
+  });
 
   test('resolves staff strategies and rejects non-staff roles', () {
     expect(UserRole.doctor.staffFormStrategy, isA<DoctorFormStrategy>());

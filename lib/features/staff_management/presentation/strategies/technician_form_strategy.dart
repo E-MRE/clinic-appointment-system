@@ -2,11 +2,17 @@ import 'package:clinic_appointment_system/features/staff_management/presentation
 import 'package:clinic_appointment_system/features/staff_management/presentation/strategies/staff_form_strategy.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/staff.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/technician.dart';
+import 'package:flutter/widgets.dart';
 
 /// Builds technician profiles from staff draft values.
 final class TechnicianFormStrategy extends StaffFormStrategy {
   /// Creates the technician form strategy.
   const TechnicianFormStrategy();
+
+  @override
+  Widget specialtySection() {
+    return const SizedBox.shrink();
+  }
 
   @override
   Staff create(StaffFormValues values, {required String id}) {

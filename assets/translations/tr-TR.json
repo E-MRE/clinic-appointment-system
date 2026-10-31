@@ -342,5 +342,48 @@
       "sunday": "Paz"
     },
     "allDaysClosed": "Tüm günler kapalı"
+  },
+  "staff": {
+    "addTitle": "Personel ekle",
+    "editTitle": "Personeli düzenle",
+    "fullName": "Ad soyad",
+    "fullNameHint": "Personelin adı ve soyadı",
+    "specialty": "Uzmanlık",
+    "specialtyHint": "Uzmanlık alanı",
+    "email": "E-posta",
+    "emailHint": "personel@klinik.com",
+    "temporaryPassword": "Geçici şifre",
+    "passwordHint": "Geçici şifre girin",
+    "regeneratePassword": "Yeni şifre üret",
+    "branch": "Şube",
+    "selectBranch": "Şube seçin",
+    "department": "Bölüm",
+    "selectDepartment": "Bölüm seçin",
+    "servicesHeading": "Verdiği hizmetler · {}",
+    "serviceLabel": "{} · {}",
+    "noEligibleServices": "Bu bölümde verilebilecek hizmet yok",
+    "passwordHelp": "Geçici şifreyi personelle paylaşın. Hesap açıldıktan sonra kendi oturumunuz açık kalır.",
+    "cancel": "Vazgeç",
+    "createAccount": "Hesabı oluştur",
+    "save": "Kaydet",
+    "saving": "Kaydediliyor...",
+    "roles": {
+      "doctor": "Doktor",
+      "technician": "Teknisyen"
+    },
+    "errors": {
+      "profileMissing": "Personel profili bulunamadı. Klinik yönetimiyle iletişime geçin.",
+      "invalidProfile": "Personel profili eksik veya geçersiz. Bilgileri kontrol edin.",
+      "unavailable": "Personel kaydedilemedi. Bağlantınızı kontrol edip tekrar deneyin.",
+      "fullNameRequired": "Personelin adını ve soyadını girin.",
+      "invalidEmail": "Geçerli bir e-posta adresi girin.",
+      "branchRequired": "Bir şube seçin.",
+      "departmentRequired": "Bir bölüm seçin.",
+      "specialtyRequired": "Doktorun uzmanlık alanını girin.",
+      "duplicateService": "Aynı hizmet birden fazla kez atanamaz.",
+      "tooManyServices": "En fazla 20 hizmet seçebilirsiniz.",
+      "ineligibleService": "Seçilen hizmetlerden biri bu personel için uygun değil. Hizmetleri kontrol edin.",
+      "orphanAccount": "Hesap oluşturuldu ancak personel profili kaydedilemedi ve hesap silinemedi. Yeniden hesap oluşturmayın; destek ekibiyle iletişime geçin."
+    }
   }
 }

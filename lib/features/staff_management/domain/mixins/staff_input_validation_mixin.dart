@@ -9,13 +9,18 @@ import 'package:clinic_appointment_system/features/users/domain/enums/user_error
 /// Staff input rules shared by use cases and form fields.
 /// Each check returns the first failing code, or null when valid.
 mixin StaffInputValidationMixin {
+  /// Requires a staff name without imposing culturally specific name formats.
+  UserErrorCode? staffFullNameError(String fullName) {
+    if (fullName.trim().isEmpty) return UserErrorCode.fullNameRequired;
+    return null;
+  }
+
   /// Checks identity, placement, role details, then service assignment limits,
   /// duplicates and eligibility, in that order. Empty assignments are valid.
   UserErrorCode? staffError(StaffAssignment assignment) {
     final Staff staff = assignment.staff;
-    if (staff.fullName.trim().isEmpty) {
-      return UserErrorCode.fullNameRequired;
-    }
+    final UserErrorCode? nameError = staffFullNameError(staff.fullName);
+    if (nameError != null) return nameError;
     if (!ValidationConstants.emailPattern.hasMatch(staff.email.trim())) {
       return UserErrorCode.invalidEmail;
     }

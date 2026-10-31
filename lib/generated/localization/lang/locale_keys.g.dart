@@ -380,4 +380,47 @@ abstract class LocaleKeys {
   static const institution_weekdaysShort = 'institution.weekdaysShort';
   static const institution_allDaysClosed = 'institution.allDaysClosed';
   static const institution = 'institution';
+  static const staff_addTitle = 'staff.addTitle';
+  static const staff_editTitle = 'staff.editTitle';
+  static const staff_fullName = 'staff.fullName';
+  static const staff_fullNameHint = 'staff.fullNameHint';
+  static const staff_specialty = 'staff.specialty';
+  static const staff_specialtyHint = 'staff.specialtyHint';
+  static const staff_email = 'staff.email';
+  static const staff_emailHint = 'staff.emailHint';
+  static const staff_temporaryPassword = 'staff.temporaryPassword';
+  static const staff_passwordHint = 'staff.passwordHint';
+  static const staff_regeneratePassword = 'staff.regeneratePassword';
+  static const staff_branch = 'staff.branch';
+  static const staff_selectBranch = 'staff.selectBranch';
+  static const staff_department = 'staff.department';
+  static const staff_selectDepartment = 'staff.selectDepartment';
+  static const staff_servicesHeading = 'staff.servicesHeading';
+  static const staff_serviceLabel = 'staff.serviceLabel';
+  static const staff_noEligibleServices = 'staff.noEligibleServices';
+  static const staff_passwordHelp = 'staff.passwordHelp';
+  static const staff_cancel = 'staff.cancel';
+  static const staff_createAccount = 'staff.createAccount';
+  static const staff_save = 'staff.save';
+  static const staff_saving = 'staff.saving';
+  static const staff_roles_doctor = 'staff.roles.doctor';
+  static const staff_roles_technician = 'staff.roles.technician';
+  static const staff_roles = 'staff.roles';
+  static const staff_errors_profileMissing = 'staff.errors.profileMissing';
+  static const staff_errors_invalidProfile = 'staff.errors.invalidProfile';
+  static const staff_errors_unavailable = 'staff.errors.unavailable';
+  static const staff_errors_fullNameRequired = 'staff.errors.fullNameRequired';
+  static const staff_errors_invalidEmail = 'staff.errors.invalidEmail';
+  static const staff_errors_branchRequired = 'staff.errors.branchRequired';
+  static const staff_errors_departmentRequired =
+      'staff.errors.departmentRequired';
+  static const staff_errors_specialtyRequired =
+      'staff.errors.specialtyRequired';
+  static const staff_errors_duplicateService = 'staff.errors.duplicateService';
+  static const staff_errors_tooManyServices = 'staff.errors.tooManyServices';
+  static const staff_errors_ineligibleService =
+      'staff.errors.ineligibleService';
+  static const staff_errors_orphanAccount = 'staff.errors.orphanAccount';
+  static const staff_errors = 'staff.errors';
+  static const staff = 'staff';
 }

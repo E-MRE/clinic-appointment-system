@@ -12,6 +12,14 @@ void main() {
   const StaffFixtures fixtures = StaffFixtures();
   final StaffValidationProbe validation = StaffValidationProbe();
 
+  test('full name field uses the same required rule as staff validation', () {
+    expect(
+      validation.staffFullNameError(' \t'),
+      UserErrorCode.fullNameRequired,
+    );
+    expect(validation.staffFullNameError(' Ada Kaya '), isNull);
+  });
+
   test('reports the first failure in the specified validation order', () {
     final List<String> excessive = List<String>.filled(21, 'unknown');
     final List<(Staff, UserErrorCode)> cases = [
