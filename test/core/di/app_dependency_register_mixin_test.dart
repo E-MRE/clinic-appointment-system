@@ -3,6 +3,7 @@ import 'package:clinic_appointment_system/core/di/get_it/get_it_dependency_injec
 import 'package:clinic_appointment_system/core/di/injector/dependency_injector.dart';
 import 'package:clinic_appointment_system/core/errors/unexpected_exception.dart';
 import 'package:clinic_appointment_system/core/states/theme_cubit.dart';
+import 'package:clinic_appointment_system/core/time/clock.dart';
 import 'package:clinic_appointment_system/features/auth/data/mappers/firebase_auth_exception_mapper.dart';
 import 'package:clinic_appointment_system/features/auth/data/repositories/firebase_auth_repository.dart';
 import 'package:clinic_appointment_system/features/auth/domain/mappers/auth_exception_mapper.dart';
@@ -14,6 +15,17 @@ import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/password_reset_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/sign_in_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/sign_up_cubit.dart';
+import 'package:clinic_appointment_system/features/availability/domain/rules/availability_policy.dart';
+import 'package:clinic_appointment_system/features/availability/domain/services/slot_generator.dart';
+import 'package:clinic_appointment_system/features/availability/domain/usecases/add_availability_window_use_case.dart';
+import 'package:clinic_appointment_system/features/availability/domain/usecases/remove_availability_window_use_case.dart';
+import 'package:clinic_appointment_system/features/availability/domain/usecases/watch_staff_availability_use_case.dart';
+import 'package:clinic_appointment_system/features/availability/domain/usecases/watch_staff_service_durations_use_case.dart';
+import 'package:clinic_appointment_system/features/availability/presentation/cubit/availability_branch_cubit.dart';
+import 'package:clinic_appointment_system/features/availability/presentation/cubit/availability_window_draft_cubit.dart';
+import 'package:clinic_appointment_system/features/availability/presentation/cubit/availability_window_save_cubit.dart';
+import 'package:clinic_appointment_system/features/availability/presentation/cubit/staff_availability_cubit.dart';
+import 'package:clinic_appointment_system/features/availability/presentation/cubit/staff_service_durations_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/data/repositories/firestore_branch_repository.dart';
 import 'package:clinic_appointment_system/features/institution/data/repositories/firestore_clinic_repository.dart';
 import 'package:clinic_appointment_system/features/institution/data/repositories/firestore_department_repository.dart';
@@ -49,6 +61,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
@@ -75,6 +88,53 @@ void main() {
     container.registerSingleton<FirebaseAuth>(auth);
   });
   tearDown(() => container.reset());
+
+  test('availability services and use cases resolve as lazy singletons', () {
+    final clock = container.get<Clock>();
+    final policy = container.get<AvailabilityPolicy>();
+    final generator = container.get<SlotGenerator>();
+    final watch = container.get<WatchStaffAvailabilityUseCase>();
+    final add = container.get<AddAvailabilityWindowUseCase>();
+    final remove = container.get<RemoveAvailabilityWindowUseCase>();
+    final durations = container.get<WatchStaffServiceDurationsUseCase>();
+    expect(container.get<Clock>(), same(clock));
+    expect(container.get<AvailabilityPolicy>(), same(policy));
+    expect(container.get<SlotGenerator>(), same(generator));
+    expect(container.get<WatchStaffAvailabilityUseCase>(), same(watch));
+    expect(container.get<AddAvailabilityWindowUseCase>(), same(add));
+    expect(container.get<RemoveAvailabilityWindowUseCase>(), same(remove));
+    expect(container.get<WatchStaffServiceDurationsUseCase>(), same(durations));
+  });
+
+  test('availability cubits resolve as independent screen-owned factories', () {
+    final pairs = <(Cubit<Object?>, Cubit<Object?>)>[
+      (
+        container.get<StaffAvailabilityCubit>(),
+        container.get<StaffAvailabilityCubit>(),
+      ),
+      (
+        container.get<AvailabilityBranchCubit>(),
+        container.get<AvailabilityBranchCubit>(),
+      ),
+      (
+        container.get<StaffServiceDurationsCubit>(),
+        container.get<StaffServiceDurationsCubit>(),
+      ),
+      (
+        container.get<AvailabilityWindowDraftCubit>(),
+        container.get<AvailabilityWindowDraftCubit>(),
+      ),
+      (
+        container.get<AvailabilityWindowSaveCubit>(),
+        container.get<AvailabilityWindowSaveCubit>(),
+      ),
+    ];
+    for (final (first, second) in pairs) {
+      addTearDown(first.close);
+      addTearDown(second.close);
+      expect(first, isNot(same(second)));
+    }
+  });
 
   test(
     'factory registrations create separate instances and can be removed',
