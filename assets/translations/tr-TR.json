@@ -384,6 +384,30 @@
       "tooManyServices": "En fazla 20 hizmet seçebilirsiniz.",
       "ineligibleService": "Seçilen hizmetlerden biri bu personel için uygun değil. Hizmetleri kontrol edin.",
       "orphanAccount": "Hesap oluşturuldu ancak personel profili kaydedilemedi ve hesap silinemedi. Yeniden hesap oluşturmayın; destek ekibiyle iletişime geçin."
+    },
+    "title": "Personel",
+    "mobileSubtitle": "{} kişi · {} şube",
+    "wideSubtitle": "{} doktor · {} teknisyen · {} şube",
+    "chipAll": "Tümü · {}",
+    "chipDoctor": "Doktor · {}",
+    "chipTechnician": "Teknisyen · {}",
+    "allDepartments": "Tüm bölümler",
+    "emptyTitle": "Henüz personel yok",
+    "emptyMessage": "Personel ekleyerek başlayabilirsiniz.",
+    "filterEmpty": "Bu filtreye uyan personel yok",
+    "noBranchTitle": "Önce bir şube ekleyin",
+    "noBranchMessage": "Personeli görüntülemek ve eklemek için önce bir şube oluşturun.",
+    "goToInstitution": "Kurum ve şubeler",
+    "notFoundTitle": "Personel bulunamadı",
+    "notFoundMessage": "Aradığınız personel mevcut değil veya silinmiş.",
+    "loading": "Personel bilgileri yükleniyor",
+    "editTooltip": "Düzenle",
+    "columns": {
+      "name": "Ad",
+      "role": "Rol",
+      "placement": "Bölüm · Şube",
+      "services": "Verdiği hizmetler",
+      "actions": "İşlemler"
     }
   }
 }

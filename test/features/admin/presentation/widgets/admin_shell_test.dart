@@ -27,6 +27,10 @@ void main() {
               path: AppRoutes.services,
               builder: (context, state) => const Text('Services Page'),
             ),
+            GoRoute(
+              path: AppRoutes.adminStaff,
+              builder: (context, state) => const Text('Staff Page'),
+            ),
           ],
         ),
       ],
@@ -45,5 +49,13 @@ void main() {
 
     expect(router.routeInformationProvider.value.uri.path, AppRoutes.services);
     expect(find.text('Services Page'), findsOneWidget);
+    expect(find.text('Personel'), findsOneWidget);
+    await tester.tap(find.text('Personel'));
+    await tester.pumpAndSettle();
+    expect(
+      router.routeInformationProvider.value.uri.path,
+      AppRoutes.adminStaff,
+    );
+    expect(find.text('Staff Page'), findsOneWidget);
   });
 }

@@ -422,5 +422,28 @@ abstract class LocaleKeys {
       'staff.errors.ineligibleService';
   static const staff_errors_orphanAccount = 'staff.errors.orphanAccount';
   static const staff_errors = 'staff.errors';
+  static const staff_title = 'staff.title';
+  static const staff_mobileSubtitle = 'staff.mobileSubtitle';
+  static const staff_wideSubtitle = 'staff.wideSubtitle';
+  static const staff_chipAll = 'staff.chipAll';
+  static const staff_chipDoctor = 'staff.chipDoctor';
+  static const staff_chipTechnician = 'staff.chipTechnician';
+  static const staff_allDepartments = 'staff.allDepartments';
+  static const staff_emptyTitle = 'staff.emptyTitle';
+  static const staff_emptyMessage = 'staff.emptyMessage';
+  static const staff_filterEmpty = 'staff.filterEmpty';
+  static const staff_noBranchTitle = 'staff.noBranchTitle';
+  static const staff_noBranchMessage = 'staff.noBranchMessage';
+  static const staff_goToInstitution = 'staff.goToInstitution';
+  static const staff_notFoundTitle = 'staff.notFoundTitle';
+  static const staff_notFoundMessage = 'staff.notFoundMessage';
+  static const staff_loading = 'staff.loading';
+  static const staff_editTooltip = 'staff.editTooltip';
+  static const staff_columns_name = 'staff.columns.name';
+  static const staff_columns_role = 'staff.columns.role';
+  static const staff_columns_placement = 'staff.columns.placement';
+  static const staff_columns_services = 'staff.columns.services';
+  static const staff_columns_actions = 'staff.columns.actions';
+  static const staff_columns = 'staff.columns';
   static const staff = 'staff';
 }
