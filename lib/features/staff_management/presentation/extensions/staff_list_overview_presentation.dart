@@ -1,8 +1,8 @@
 import 'package:clinic_appointment_system/core/localization/localization.dart';
 import 'package:clinic_appointment_system/features/staff_management/presentation/enums/staff_role_filter.dart';
-import 'package:clinic_appointment_system/features/staff_management/presentation/extensions/user_role_staff_label.dart';
 import 'package:clinic_appointment_system/features/staff_management/presentation/models/staff_list_overview.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/staff.dart';
+import 'package:clinic_appointment_system/features/users/presentation/extensions/user_role_staff_label.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 /// Localized display copy assembled from the clinic-scoped overview.

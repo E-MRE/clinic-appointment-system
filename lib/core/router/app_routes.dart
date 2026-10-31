@@ -10,6 +10,13 @@ abstract final class AppRoutes {
   /// Shared doctor and technician home location.
   static const String staffHome = '/staff';
 
+  /// Relative staff availability path.
+  static const String staffAvailabilitySegment = 'availability';
+
+  /// Weekly and dated availability location.
+  static const String staffAvailability =
+      '$staffHome/$staffAvailabilitySegment';
+
   /// Administrator home location.
   static const String adminHome = '/admin';
 

@@ -11,6 +11,7 @@ import 'package:clinic_appointment_system/features/auth/presentation/pages/auth_
 import 'package:clinic_appointment_system/features/auth/presentation/pages/password_reset_page.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/pages/sign_in_page.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/pages/sign_up_page.dart';
+import 'package:clinic_appointment_system/features/availability/presentation/pages/availability_page.dart';
 import 'package:clinic_appointment_system/features/debug/presentation/pages/component_preview/component_preview_page.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/pages/branch_detail_page.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/pages/branch_form_page.dart';
@@ -20,7 +21,7 @@ import 'package:clinic_appointment_system/features/medical_services/presentation
 import 'package:clinic_appointment_system/features/medical_services/presentation/pages/medical_services_page.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/pages/medical_services_route_scope.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/pages/patient_home_page.dart';
-import 'package:clinic_appointment_system/features/staff/presentation/pages/staff_home_page.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/widgets/staff_shell.dart';
 import 'package:clinic_appointment_system/features/staff_management/presentation/pages/staff_form_page.dart';
 import 'package:clinic_appointment_system/features/staff_management/presentation/pages/staff_management_page.dart';
 import 'package:clinic_appointment_system/features/staff_management/presentation/pages/staff_management_route_scope.dart';
@@ -59,9 +60,27 @@ GoRouter createAppRouter({
         path: AppRoutes.patientHome,
         pageBuilder: (_, state) => _fadePage(state, const PatientHomePage()),
       ),
-      GoRoute(
-        path: AppRoutes.staffHome,
-        pageBuilder: (_, state) => _fadePage(state, const StaffHomePage()),
+      ShellRoute(
+        pageBuilder: (_, state, child) =>
+            _fadePage(state, StaffShell(child: child)),
+        routes: [
+          GoRoute(
+            path: AppRoutes.staffHome,
+            redirect: (_, state) {
+              if (state.uri.path == AppRoutes.staffHome) {
+                return AppRoutes.staffAvailability;
+              }
+              return null;
+            },
+            routes: [
+              GoRoute(
+                path: AppRoutes.staffAvailabilitySegment,
+                pageBuilder: (_, state) =>
+                    _fadePage(state, const AvailabilityPage()),
+              ),
+            ],
+          ),
+        ],
       ),
       ShellRoute(
         pageBuilder: (_, state, child) => _fadePage(

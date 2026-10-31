@@ -20,6 +20,9 @@
 /// * s144 → 144
 ///
 /// Widget-specific sizes that do not fit the scale:
+/// * availabilityDayRow → 60
+/// * availabilityCalendarTile → 36
+/// * availabilityCalendarIcon → 18
 /// * timeRangeRemoveButton → 28
 /// * timeRangeRemoveIcon → 14
 /// * previewMobileWidth → 390
@@ -103,6 +106,18 @@ abstract final class AppSizes {
   static const double s144 = 144;
 
   // Widget-specific
+
+  /// Availability mobile weekday row minimum height.
+  /// value = 60
+  static const double availabilityDayRow = 60;
+
+  /// Availability one-off calendar tile diameter.
+  /// value = 36
+  static const double availabilityCalendarTile = 36;
+
+  /// Availability one-off calendar icon size.
+  /// value = 18
+  static const double availabilityCalendarIcon = 18;
 
   /// Time range chip remove button diameter.
   /// value = 28

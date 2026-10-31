@@ -29,6 +29,10 @@ abstract base class Staff extends User {
   /// Identifiers of the medical services assigned to this staff member.
   final List<String> serviceIds;
 
+  /// This staff profile, preserving its concrete role and identity.
+  @override
+  Staff get staffProfile => this;
+
   /// Subclasses must supply a visitor deciding which service kinds they allow.
   MedicalServiceVisitor<bool> get serviceEligibility;
 

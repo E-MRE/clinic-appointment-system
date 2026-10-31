@@ -442,4 +442,71 @@ abstract class LocaleKeys {
   static const staff_columns_actions = 'staff.columns.actions';
   static const staff_columns = 'staff.columns';
   static const staff = 'staff';
+  static const availability_title = 'availability.title';
+  static const availability_mobileSubtitle = 'availability.mobileSubtitle';
+  static const availability_tabletSubtitle = 'availability.tabletSubtitle';
+  static const availability_desktopSubtitle = 'availability.desktopSubtitle';
+  static const availability_weeklyTotal = 'availability.weeklyTotal';
+  static const availability_branchHours = 'availability.branchHours';
+  static const availability_closed = 'availability.closed';
+  static const availability_addForDay = 'availability.addForDay';
+  static const availability_outsideHours = 'availability.outsideHours';
+  static const availability_remove = 'availability.remove';
+  static const availability_oneOffTitle = 'availability.oneOffTitle';
+  static const availability_oneOffEmpty = 'availability.oneOffEmpty';
+  static const availability_addForDate = 'availability.addForDate';
+  static const availability_oneOffSubtitle = 'availability.oneOffSubtitle';
+  static const availability_removeOneOff = 'availability.removeOneOff';
+  static const availability_sheetTitle = 'availability.sheetTitle';
+  static const availability_weekly = 'availability.weekly';
+  static const availability_oneOff = 'availability.oneOff';
+  static const availability_weekday = 'availability.weekday';
+  static const availability_date = 'availability.date';
+  static const availability_start = 'availability.start';
+  static const availability_end = 'availability.end';
+  static const availability_helper = 'availability.helper';
+  static const availability_cancel = 'availability.cancel';
+  static const availability_save = 'availability.save';
+  static const availability_signOut = 'availability.signOut';
+  static const availability_doctorSubtitle = 'availability.doctorSubtitle';
+  static const availability_technicianSubtitle =
+      'availability.technicianSubtitle';
+  static const availability_loading = 'availability.loading';
+  static const availability_failureTitle = 'availability.failureTitle';
+  static const availability_retry = 'availability.retry';
+  static const availability_notFoundTitle = 'availability.notFoundTitle';
+  static const availability_notFoundMessage = 'availability.notFoundMessage';
+  static const availability_hours = 'availability.hours';
+  static const availability_hoursMinutes = 'availability.hoursMinutes';
+  static const availability_noMinutes = 'availability.noMinutes';
+  static const availability_windowAdded = 'availability.windowAdded';
+  static const availability_previewSingle = 'availability.previewSingle';
+  static const availability_previewMultiple = 'availability.previewMultiple';
+  static const availability_previewDuration = 'availability.previewDuration';
+  static const availability_errors_overlappingWindow =
+      'availability.errors.overlappingWindow';
+  static const availability_errors_overlapConflict =
+      'availability.errors.overlapConflict';
+  static const availability_errors_outsideBranchHours =
+      'availability.errors.outsideBranchHours';
+  static const availability_errors_branchClosed =
+      'availability.errors.branchClosed';
+  static const availability_errors_pastDate = 'availability.errors.pastDate';
+  static const availability_errors_tooManyWindows =
+      'availability.errors.tooManyWindows';
+  static const availability_errors_windowNotFound =
+      'availability.errors.windowNotFound';
+  static const availability_errors_invalidRecord =
+      'availability.errors.invalidRecord';
+  static const availability_errors_unavailable =
+      'availability.errors.unavailable';
+  static const availability_errors_endBeforeStart =
+      'availability.errors.endBeforeStart';
+  static const availability_errors_invalidTime =
+      'availability.errors.invalidTime';
+  static const availability_errors_invalidDate =
+      'availability.errors.invalidDate';
+  static const availability_errors = 'availability.errors';
+  static const availability_flaggedRange = 'availability.flaggedRange';
+  static const availability = 'availability';
 }

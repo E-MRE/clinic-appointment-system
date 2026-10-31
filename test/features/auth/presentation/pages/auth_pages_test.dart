@@ -48,6 +48,7 @@ import '../../../../support/auth_cubit_factory.dart';
 import '../../../../support/auth_repository_doubles.dart';
 import '../../../../support/localization_test_app.dart';
 import '../../../../support/user_repository_double.dart';
+import '../../../availability/presentation/pages/doubles/availability_page_harness.dart';
 import '../../../institution/domain/doubles/fake_branch_repository.dart';
 import '../../../institution/domain/doubles/fake_clinic_repository.dart';
 import '../../../institution/domain/doubles/fake_department_repository.dart';
@@ -79,8 +80,8 @@ void main() {
         serviceIds: [],
         specialty: 'Cardiology',
       ),
-      '/staff',
-      'Personel ana sayfası',
+      AppRoutes.staffAvailability,
+      'Haftalık tekrar eden aralıklar',
     ),
     (
       Technician(
@@ -91,8 +92,8 @@ void main() {
         departmentId: 'd',
         serviceIds: [],
       ),
-      '/staff',
-      'Personel ana sayfası',
+      AppRoutes.staffAvailability,
+      'Haftalık tekrar eden aralıklar',
     ),
     (
       Admin(id: 'patient-1', fullName: 'A', email: 'patient@example.com'),
@@ -602,9 +603,11 @@ final class _AuthTestApp {
         WatchDepartmentsUseCase(FakeDepartmentRepository()),
       ),
     );
+    availability.registerCubits();
     router = createAppRouter(initialLocation: route, authGuard: configuration);
     sessions.add(DataResult.success(data: restored));
   }
+  final availability = AvailabilityPageHarness();
   final users = TestUserRepository();
   final repository = MockAuthRepository();
   final sessions = StreamController<DataResult<AuthSession>>();
@@ -620,6 +623,7 @@ final class _AuthTestApp {
     await authCubit.close();
     await themeCubit.close();
     await sessions.close();
+    await availability.disposeRepositories();
     await AppDependency.injector.reset();
   }
 }
