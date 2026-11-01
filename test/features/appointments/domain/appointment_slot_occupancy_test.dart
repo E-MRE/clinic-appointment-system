@@ -1,4 +1,5 @@
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/value_objects/booked_slot.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'support/appointment_fixture.dart';
@@ -17,7 +18,20 @@ void main() {
     };
     for (final entry in expectations.entries) {
       test('${entry.key.name} occupies slot: ${entry.value}', () {
-        expect(fixture.restore(entry.key).occupiesSlot, entry.value);
+        final appointment = fixture.restore(entry.key);
+        expect(appointment.occupiesSlot, entry.value);
+        if (entry.value) {
+          expect(
+            appointment.bookedSlot,
+            BookedSlot(
+              appointmentId: 'appointment',
+              date: fixture.date,
+              range: fixture.range,
+            ),
+          );
+        } else {
+          expect(appointment.bookedSlot, isNull);
+        }
       });
     }
   });

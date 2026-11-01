@@ -1,4 +1,4 @@
-import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/value_objects/booked_slot.dart';
 import 'package:clinic_appointment_system/features/availability/domain/entities/staff_availability.dart';
 import 'package:clinic_appointment_system/features/institution/domain/value_objects/working_hours.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/medical_service.dart';
@@ -6,19 +6,17 @@ import 'package:clinic_appointment_system/features/users/domain/entities/staff.d
 
 /// All data needed to check a booking, supplied by the caller.
 final class AppointmentBookingContext {
-  /// Copies appointment lists so later caller mutations cannot change checks.
+  /// Copies slot lists so later caller mutations cannot change checks.
   AppointmentBookingContext({
     required this.staff,
     required this.service,
     required this.availability,
     required this.branchHours,
-    required List<Appointment> staffAppointments,
-    required List<Appointment> patientAppointments,
+    required List<BookedSlot> staffSlots,
+    required List<BookedSlot> patientSlots,
     required this.now,
-  }) : staffAppointments = List<Appointment>.unmodifiable(staffAppointments),
-       patientAppointments = List<Appointment>.unmodifiable(
-         patientAppointments,
-       );
+  }) : staffSlots = List<BookedSlot>.unmodifiable(staffSlots),
+       patientSlots = List<BookedSlot>.unmodifiable(patientSlots);
 
   /// The assigned staff member.
   final Staff staff;
@@ -32,11 +30,11 @@ final class AppointmentBookingContext {
   /// The branch's current working hours.
   final WorkingHours branchHours;
 
-  /// Existing appointments of the staff member.
-  final List<Appointment> staffAppointments;
+  /// Occupied slots of the staff member.
+  final List<BookedSlot> staffSlots;
 
-  /// Existing appointments of the patient.
-  final List<Appointment> patientAppointments;
+  /// Occupied slots of the patient.
+  final List<BookedSlot> patientSlots;
 
   /// The instant at which the booking is checked.
   final DateTime now;

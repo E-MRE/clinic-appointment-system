@@ -1,7 +1,7 @@
-import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_error_code.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/rules/appointment_validator.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/rules/not_in_past_rule.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/value_objects/booked_slot.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../support/booking_fixture.dart';
@@ -21,7 +21,7 @@ void main() {
         f.context(
           now: f.at('2026-11-01', '11:00'),
           staff: f.doctor(serviceIds: []),
-          staffAppointments: [f.appointment(id: 'other')],
+          staffSlots: [f.slot(id: 'other')],
         ),
       );
       expect(violations.map((v) => v.code), [
@@ -30,19 +30,16 @@ void main() {
         AppointmentErrorCode.staffOverlap,
       ]);
     });
-    test('context copies and protects both appointment lists', () {
-      final staff = <Appointment>[f.appointment()];
-      final patient = <Appointment>[f.appointment()];
-      final context = f.context(
-        staffAppointments: staff,
-        patientAppointments: patient,
-      );
+    test('context copies and protects both slot lists', () {
+      final staff = <BookedSlot>[f.slot()];
+      final patient = <BookedSlot>[f.slot()];
+      final context = f.context(staffSlots: staff, patientSlots: patient);
       staff.clear();
       patient.clear();
-      expect(context.staffAppointments, hasLength(1));
-      expect(context.patientAppointments, hasLength(1));
-      expect(() => context.staffAppointments.clear(), throwsUnsupportedError);
-      expect(() => context.patientAppointments.clear(), throwsUnsupportedError);
+      expect(context.staffSlots, hasLength(1));
+      expect(context.patientSlots, hasLength(1));
+      expect(() => context.staffSlots.clear(), throwsUnsupportedError);
+      expect(() => context.patientSlots.clear(), throwsUnsupportedError);
     });
     test('custom rule list controls validation', () {
       const validator = AppointmentValidator([NotInPastRule()]);

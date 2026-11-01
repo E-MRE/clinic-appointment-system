@@ -4,6 +4,7 @@ import 'package:clinic_appointment_system/core/time/time_range.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/rules/appointment_booking_context.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/value_objects/booked_slot.dart';
 import 'package:clinic_appointment_system/features/availability/domain/entities/one_off_window.dart';
 import 'package:clinic_appointment_system/features/availability/domain/entities/staff_availability.dart';
 import 'package:clinic_appointment_system/features/availability/domain/entities/weekly_window.dart';
@@ -75,6 +76,14 @@ final class BookingFixture {
     history: [lifecycle.change(status)],
   );
 
+  /// An occupied patient-free range.
+  BookedSlot slot({String id = '', CalendarDate? date, TimeRange? range}) =>
+      BookedSlot(
+        appointmentId: id,
+        date: date ?? this.date,
+        range: range ?? this.range('10:00', '10:30'),
+      );
+
   /// A compatible doctor.
   Staff doctor({
     String id = 'staff',
@@ -127,16 +136,16 @@ final class BookingFixture {
     MedicalService? service,
     StaffAvailability? availability,
     WorkingHours? hours,
-    List<Appointment> staffAppointments = const [],
-    List<Appointment> patientAppointments = const [],
+    List<BookedSlot> staffSlots = const [],
+    List<BookedSlot> patientSlots = const [],
     DateTime? now,
   }) => AppointmentBookingContext(
     staff: staff ?? doctor(),
     service: service ?? this.service(),
     availability: availability ?? this.availability(),
     branchHours: hours ?? this.hours,
-    staffAppointments: staffAppointments,
-    patientAppointments: patientAppointments,
+    staffSlots: staffSlots,
+    patientSlots: patientSlots,
     now: now ?? lifecycle.requestedAt,
   );
 }

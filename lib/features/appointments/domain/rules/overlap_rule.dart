@@ -4,17 +4,16 @@ import 'package:clinic_appointment_system/features/appointments/domain/enums/app
 import 'package:clinic_appointment_system/features/appointments/domain/rules/appointment_booking_context.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/rules/appointment_rule.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/rules/appointment_violation.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/value_objects/booked_slot.dart';
 
-/// Scans appointments for an occupied overlap belonging to the same owner.
+/// Scans owner-scoped slots using a shared half-open overlap algorithm.
+/// Subclasses supply the projection and violation code.
 abstract base class OverlapRule implements AppointmentRule {
   /// Creates an overlap check.
   const OverlapRule();
 
-  /// Provides the appointments the subclass checks for conflicts.
-  List<Appointment> appointmentsToScan(AppointmentBookingContext context);
-
-  /// Identifies whether the appointments share the owner being checked.
-  bool sharesOwner(Appointment existing, Appointment candidate);
+  /// Provides the owner-scoped occupied slots the subclass checks for conflicts.
+  List<BookedSlot> slotsToScan(AppointmentBookingContext context);
 
   /// Provides the error code for a conflicting appointment.
   AppointmentErrorCode get violationCode;
@@ -24,14 +23,12 @@ abstract base class OverlapRule implements AppointmentRule {
     Appointment candidate,
     AppointmentBookingContext context,
   ) {
-    for (final existing in appointmentsToScan(context)) {
+    for (final existing in slotsToScan(context)) {
       if (candidate.id != EntityConstants.unsavedId &&
-          existing.id == candidate.id) {
+          existing.appointmentId == candidate.id) {
         continue;
       }
-      if (sharesOwner(existing, candidate) &&
-          existing.date == candidate.date &&
-          existing.occupiesSlot &&
+      if (existing.date == candidate.date &&
           existing.range.overlaps(candidate.range)) {
         return AppointmentViolation(violationCode, conflict: existing);
       }
