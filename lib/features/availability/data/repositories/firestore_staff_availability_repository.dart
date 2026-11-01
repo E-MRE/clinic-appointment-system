@@ -1,4 +1,5 @@
 import 'package:clinic_appointment_system/core/constants/firestore_constants.dart';
+import 'package:clinic_appointment_system/core/data/extensions/firestore_guarded_transaction.dart';
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
 import 'package:clinic_appointment_system/core/errors/time_exception.dart';
 import 'package:clinic_appointment_system/features/availability/data/models/staff_availability_model.dart';
@@ -38,6 +39,7 @@ final class FirestoreStaffAvailabilityRepository
   }
 
   /// Applies [change] to the current schedule in a Firestore transaction.
+  /// Rejections thrown by [change] keep their [AvailabilityException] type.
   @override
   Future<DataResult<StaffAvailability>> update(
     AvailabilitySubject subject,
@@ -45,7 +47,7 @@ final class FirestoreStaffAvailabilityRepository
   ) async {
     try {
       final reference = _reference(subject);
-      final next = await _firestore.runTransaction((transaction) async {
+      final next = await _firestore.runGuardedTransaction((transaction) async {
         final snapshot = await transaction.get(reference);
         final current = _fromSnapshot(snapshot, subject);
         final next = change(current);

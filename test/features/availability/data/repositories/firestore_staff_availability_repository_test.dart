@@ -1,7 +1,6 @@
 import 'package:clinic_appointment_system/core/data/converters/time_range_converter.dart';
 import 'package:clinic_appointment_system/core/enums/weekday.dart';
 import 'package:clinic_appointment_system/features/availability/data/repositories/firestore_staff_availability_repository.dart';
-import 'package:clinic_appointment_system/features/availability/domain/entities/staff_availability.dart';
 import 'package:clinic_appointment_system/features/availability/domain/entities/weekly_window.dart';
 import 'package:clinic_appointment_system/features/availability/domain/enums/availability_error_code.dart';
 import 'package:clinic_appointment_system/features/availability/domain/errors/availability_exception.dart';
@@ -170,7 +169,7 @@ void main() {
     when(() => db.collection('staffAvailability')).thenReturn(collection);
     when(() => collection.doc('doctor')).thenReturn(document);
     when(
-      () => db.runTransaction<StaffAvailability>(any()),
+      () => db.runTransaction<void>(any()),
     ).thenThrow(FirebaseException(plugin: 'firestore', code: 'unavailable'));
     await expectLater(
       FirestoreStaffAvailabilityRepository(
