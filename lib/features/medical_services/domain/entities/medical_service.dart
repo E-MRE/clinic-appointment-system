@@ -8,9 +8,6 @@ import 'package:clinic_appointment_system/features/medical_services/domain/value
 /// Base class for all clinical and diagnostic medical services.
 /// Subclasses provide kind-specific attributes, visitor dispatch and validation.
 abstract base class MedicalService extends InstitutionRecord {
-  /// Unpersisted service record identifier.
-  static const String unsavedId = '';
-
   /// Creates a medical service record.
   const MedicalService({
     required super.id,

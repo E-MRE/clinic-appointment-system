@@ -111,6 +111,84 @@ service cloud.firestore {
       }
     }
 
+    // appointments/{appointmentId}: lifecycle changes append an audit entry.
+    match /appointments/{appointmentId} {
+      allow read: if resource != null && (isAdmin()
+        || isUser(resource.data.patientId) || isUser(resource.data.staffId));
+      allow create: if isSignedIn() && callerRole() == 'patient'
+        && isValidAppointment(request.resource.data);
+      allow update: if isSignedIn() && isValidUpdate();
+      allow delete: if false;
+
+      function callerRole() {
+        return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+      }
+
+      function isNearRequestTime(time) {
+        return time is timestamp
+          && time >= request.time - duration.value(5, 'm')
+          && time <= request.time + duration.value(5, 'm');
+      }
+
+      function validEntry(entry, status, role) {
+        return entry is map
+          && entry.keys().hasOnly(['status', 'byUserId', 'byRole', 'at'])
+          && entry.keys().hasAll(['status', 'byUserId', 'byRole', 'at'])
+          && entry.status == status && entry.byUserId == request.auth.uid
+          && entry.byRole == role && isNearRequestTime(entry.at);
+      }
+
+      function isValidAppointment(data) {
+        let keys = ['patientId', 'staffId', 'branchId', 'departmentId',
+          'serviceId', 'serviceName', 'feeMinorUnits', 'date', 'start', 'end',
+          'status', 'history', 'createdAt', 'updatedAt'];
+        return data.keys().hasOnly(keys) && data.keys().hasAll(keys)
+          && isUser(data.patientId) && isFilledString(data.staffId)
+          && isFilledString(data.branchId) && isFilledString(data.departmentId)
+          && isFilledString(data.serviceId) && isFilledString(data.serviceName)
+          && data.feeMinorUnits is int && data.feeMinorUnits > 0
+          && data.date is string && data.date.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+          && data.start is string && data.start.matches('^[0-9]{2}:[0-9]{2}$')
+          && data.end is string && data.end.matches('^[0-9]{2}:[0-9]{2}$')
+          && data.status == 'pending' && data.history is list
+          && data.history.size() == 1 && validEntry(data.history[0], 'pending', 'patient')
+          && data.createdAt == request.time && data.updatedAt == request.time
+          && validStaff(data);
+      }
+
+      function validStaff(data) {
+        let profile = /databases/$(database)/documents/users/$(data.staffId);
+        return exists(profile) && get(profile).data.role in ['doctor', 'technician']
+          && get(profile).data.branchId == data.branchId
+          && get(profile).data.departmentId == data.departmentId;
+      }
+
+      // Time-based appointment limits are validated in the domain layer.
+      function isValidUpdate() {
+        let old = resource.data;
+        let next = request.resource.data;
+        return next.diff(old).affectedKeys().hasOnly(['status', 'history', 'updatedAt'])
+          && next.updatedAt == request.time
+          && old.history is list && old.history.size() > 0
+          && next.history is list && next.history.size() == old.history.size() + 1
+          && next.history[0:old.history.size()] == old.history
+          && validEntry(next.history[old.history.size()], next.status, callerRole())
+          && next.history[old.history.size()].at >= old.history[old.history.size() - 1].at
+          && allowedTransition(old, next.status, callerRole());
+      }
+
+      function allowedTransition(old, status, role) {
+        return (isUser(old.patientId) && role == 'patient'
+            && old.status in ['pending', 'approved'] && status == 'cancelledByPatient')
+          || (isUser(old.staffId) && role in ['doctor', 'technician']
+            && ((old.status == 'pending' && status in ['approved', 'rejected'])
+              || (old.status == 'approved' && status in ['cancelledByStaff', 'completed', 'noShow'])))
+          || (role == 'admin'
+            && ((old.status == 'pending' && status in ['approved', 'rejected'])
+              || (old.status == 'approved' && status in ['cancelledByStaff', 'completed'])));
+      }
+    }
+
     // staffAvailability/{staffId}: one availability document per doctor or technician.
     match /staffAvailability/{staffId} {
       // Patients read availability to request appointments (#17).

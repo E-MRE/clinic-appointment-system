@@ -1,3 +1,4 @@
+import 'package:clinic_appointment_system/core/constants/entity_constants.dart';
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
 import 'package:clinic_appointment_system/core/errors/institution_exception.dart';
 import 'package:clinic_appointment_system/features/institution/domain/enums/institution_error_code.dart';
@@ -30,7 +31,7 @@ void main() {
       final useCase = CreateMedicalServiceUseCase(repository);
       final response = await useCase(
         Examination(
-          id: MedicalService.unsavedId,
+          id: EntityConstants.unsavedId,
           name: '  Checkup  ',
           departmentId: '  dept-1  ',
           branchId: '  b-1  ',
@@ -53,7 +54,7 @@ void main() {
       await expectLater(
         useCase(
           Examination(
-            id: MedicalService.unsavedId,
+            id: EntityConstants.unsavedId,
             name: '   ',
             departmentId: 'dept-1',
             branchId: 'b-1',
@@ -79,7 +80,7 @@ void main() {
       await expectLater(
         useCase(
           Examination(
-            id: MedicalService.unsavedId,
+            id: EntityConstants.unsavedId,
             name: 'Checkup',
             departmentId: '   ',
             branchId: 'b-1',
@@ -107,7 +108,7 @@ void main() {
         await expectLater(
           useCase(
             RadiologyService(
-              id: MedicalService.unsavedId,
+              id: EntityConstants.unsavedId,
               name: 'MRI',
               departmentId: 'dept-1',
               branchId: 'b-1',
@@ -138,7 +139,7 @@ void main() {
       await expectLater(
         useCase(
           Examination(
-            id: MedicalService.unsavedId,
+            id: EntityConstants.unsavedId,
             name: 'Checkup',
             departmentId: 'dept-1',
             branchId: 'b-1',

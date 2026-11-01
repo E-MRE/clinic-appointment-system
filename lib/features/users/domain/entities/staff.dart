@@ -7,9 +7,6 @@ import 'package:clinic_appointment_system/features/users/domain/enums/user_error
 /// A clinic staff profile assigned to a branch and department.
 /// Subclasses provide role eligibility, details, visitor dispatch and copies.
 abstract base class Staff extends User {
-  /// Unpersisted staff profile identifier.
-  static const String unsavedId = '';
-
   /// Creates a staff profile assigned to a branch and department.
   const Staff({
     required super.id,
