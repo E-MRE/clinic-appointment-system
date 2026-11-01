@@ -18,6 +18,54 @@ abstract final class FirestoreConstants {
   /// Collection containing staff availability schedules.
   static const String staffAvailability = 'staffAvailability';
 
+  /// Appointment documents.
+  static const String appointments = 'appointments';
+
+  /// Patient-free occupied ranges grouped by staff.
+  static const String staffBookings = 'staffBookings';
+
+  /// Occupied ranges grouped by patient.
+  static const String patientBookings = 'patientBookings';
+
+  /// Date-keyed booking projection documents.
+  static const String days = 'days';
+
+  /// Occupied entries in a day projection.
+  static const String slots = 'slots';
+
+  /// Appointment whose write most recently changed the projection.
+  static const String lastAppointmentId = 'lastAppointmentId';
+
+  /// Appointment owning an occupied range.
+  static const String appointmentId = 'appointmentId';
+
+  /// Patient owning an appointment.
+  static const String patientId = 'patientId';
+
+  /// Assigned staff member.
+  static const String staffId = 'staffId';
+
+  /// Booked service identifier.
+  static const String serviceId = 'serviceId';
+
+  /// Service name captured at booking.
+  static const String serviceName = 'serviceName';
+
+  /// Current or historical lifecycle status.
+  static const String status = 'status';
+
+  /// Oldest-first lifecycle audit entries.
+  static const String history = 'history';
+
+  /// Actor recorded in an audit entry.
+  static const String byUserId = 'byUserId';
+
+  /// Role recorded in an audit entry.
+  static const String byRole = 'byRole';
+
+  /// Client timestamp of an audit entry.
+  static const String at = 'at';
+
   /// Field storing recurring availability windows.
   static const String weekly = 'weekly';
 
