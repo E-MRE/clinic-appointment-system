@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:clinic_appointment_system/core/constants/entity_constants.dart';
 import 'package:clinic_appointment_system/core/constants/firestore_constants.dart';
 import 'package:clinic_appointment_system/core/data/converters/calendar_date_converter.dart';
@@ -13,9 +15,7 @@ import 'package:clinic_appointment_system/features/appointments/domain/enums/app
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/errors/appointment_exception.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/repositories/appointment_repository.dart';
-import 'package:clinic_appointment_system/features/appointments/domain/results/appointment_booking_result.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/results/appointment_result.dart';
-import 'package:clinic_appointment_system/features/appointments/domain/rules/appointment_violation.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/value_objects/booked_slot.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -31,16 +31,15 @@ final class FirestoreAppointmentRepository implements AppointmentRepository {
       _firestore.collection(FirestoreConstants.appointments);
 
   @override
-  Future<AppointmentBookingResult> book(
+  Future<DataResult<Appointment>> book(
     Appointment candidate,
-    List<AppointmentViolation> Function(List<BookedSlot>, List<BookedSlot>)
-    check,
+    AppointmentBookingCheck check,
   ) async {
     if (candidate.id != EntityConstants.unsavedId ||
         candidate.status != AppointmentStatus.pending ||
         candidate.history.length != _initialHistoryLength) {
-      return const AppointmentBookingResult.error(
-        AppointmentErrorCode.invalidTransition,
+      return const DataResult.error(
+        errorCode: AppointmentErrorCode.invalidTransition,
       );
     }
     try {
@@ -49,8 +48,8 @@ final class FirestoreAppointmentRepository implements AppointmentRepository {
       final saved = candidate.withId(reference.id);
       final slot = saved.bookedSlot;
       if (slot == null) {
-        return const AppointmentBookingResult.error(
-          AppointmentErrorCode.invalidTransition,
+        return const DataResult.error(
+          errorCode: AppointmentErrorCode.invalidTransition,
         );
       }
       final staffDay = _staffDay(saved.staffId, saved.date);
@@ -70,19 +69,21 @@ final class FirestoreAppointmentRepository implements AppointmentRepository {
         );
         final violations = check(staff.slots, patient.slots);
         if (violations.isNotEmpty) {
-          return AppointmentBookingResult.violations(violations);
+          return DataResult<Appointment>.error(
+            errorCode: violations.first.code,
+          );
         }
         transaction.set(reference, AppointmentModel.fromEntity(saved).toJson());
         transaction.set(staffDay, staff.appending(slot));
         transaction.set(patientDay, patient.appending(slot));
-        return AppointmentBookingResult.success(saved);
+        return DataResult.success(data: saved);
       });
     } on FirebaseException {
-      return const AppointmentBookingResult.error(
-        AppointmentErrorCode.unavailable,
+      return const DataResult.error(
+        errorCode: AppointmentErrorCode.unavailable,
       );
     } on AppointmentException catch (error) {
-      return AppointmentBookingResult.error(error.code);
+      return DataResult.error(errorCode: error.code);
     }
   }
 
@@ -92,7 +93,7 @@ final class FirestoreAppointmentRepository implements AppointmentRepository {
   @override
   Future<AppointmentResult> changeStatus(
     String id,
-    AppointmentResult Function(Appointment current) change,
+    AppointmentStatusChange change,
   ) async {
     try {
       final reference = _appointments.doc(id);
@@ -150,14 +151,13 @@ final class FirestoreAppointmentRepository implements AppointmentRepository {
   @override
   Stream<DataResult<List<Appointment>>> watchPatientAppointments(
     String patientId,
-  ) async* {
-    try {
-      yield* _watchAppointments(
-        _appointments.where(FirestoreConstants.patientId, isEqualTo: patientId),
-      );
-    } on FirebaseException {
-      yield DataResult.error(message: AppointmentErrorCode.unavailable.name);
-    }
+  ) {
+    return _watchAppointments(
+      () => _appointments.where(
+        FirestoreConstants.patientId,
+        isEqualTo: patientId,
+      ),
+    );
   }
 
   @override
@@ -165,75 +165,88 @@ final class FirestoreAppointmentRepository implements AppointmentRepository {
     String staffId,
     CalendarDate from,
     CalendarDate through,
-  ) async* {
-    try {
-      yield* _watchAppointments(
-        _appointments
-            .where(FirestoreConstants.staffId, isEqualTo: staffId)
-            .where(
-              FirestoreConstants.date,
-              isGreaterThanOrEqualTo: const CalendarDateConverter().toJson(
-                from,
-              ),
-            )
-            .where(
-              FirestoreConstants.date,
-              isLessThanOrEqualTo: const CalendarDateConverter().toJson(
-                through,
-              ),
-            ),
-      );
-    } on FirebaseException {
-      yield DataResult.error(message: AppointmentErrorCode.unavailable.name);
-    }
-  }
-
-  Stream<DataResult<List<Appointment>>> _watchAppointments(
-    Query<Map<String, dynamic>> query,
-  ) async* {
-    try {
-      await for (final snapshot
-          in query
-              .orderBy(FirestoreConstants.date)
-              .orderBy(FirestoreConstants.start)
-              .snapshots()) {
-        try {
-          final appointments = _decode(
-            () => snapshot.docs
-                .map(
-                  (doc) =>
-                      AppointmentModel.fromJson(doc.id, doc.data()).appointment,
-                )
-                .toList(),
-          );
-          yield DataResult.success(data: List.unmodifiable(appointments));
-        } on AppointmentException catch (error) {
-          yield DataResult.error(message: error.code.name);
-        }
-      }
-    } on FirebaseException {
-      yield DataResult.error(message: AppointmentErrorCode.unavailable.name);
-    }
+  ) {
+    return _watchAppointments(
+      () => _appointments
+          .where(FirestoreConstants.staffId, isEqualTo: staffId)
+          .where(
+            FirestoreConstants.date,
+            isGreaterThanOrEqualTo: const CalendarDateConverter().toJson(from),
+          )
+          .where(
+            FirestoreConstants.date,
+            isLessThanOrEqualTo: const CalendarDateConverter().toJson(through),
+          ),
+    );
   }
 
   @override
   Stream<DataResult<List<BookedSlot>>> watchStaffBookedSlots(
     String staffId,
     CalendarDate date,
-  ) async* {
+  ) {
+    return _results(
+      () => _staffDay(staffId, date).snapshots(),
+      (snapshot) =>
+          BookingDayModel.fromJson(snapshot.id, snapshot.data()).slots,
+    );
+  }
+
+  Stream<DataResult<List<Appointment>>> _watchAppointments(
+    Query<Map<String, dynamic>> Function() query,
+  ) {
+    return _results(
+      () => query()
+          .orderBy(FirestoreConstants.date)
+          .orderBy(FirestoreConstants.start)
+          .snapshots(),
+      (snapshot) => List<Appointment>.unmodifiable(
+        snapshot.docs.map(
+          (doc) => AppointmentModel.fromJson(doc.id, doc.data()).appointment,
+        ),
+      ),
+    );
+  }
+
+  /// Maps each snapshot to a result; a malformed snapshot and a provider
+  /// failure (also while building the query) become error results instead of
+  /// stream errors.
+  Stream<DataResult<R>> _results<S, R>(
+    Stream<S> Function() snapshots,
+    R Function(S snapshot) read,
+  ) {
+    final Stream<S> source;
     try {
-      await for (final snapshot in _staffDay(staffId, date).snapshots()) {
-        try {
-          final day = _decode(
-            () => BookingDayModel.fromJson(snapshot.id, snapshot.data()),
-          );
-          yield DataResult.success(data: day.slots);
-        } on AppointmentException catch (error) {
-          yield DataResult.error(message: error.code.name);
-        }
-      }
+      source = snapshots();
     } on FirebaseException {
-      yield DataResult.error(message: AppointmentErrorCode.unavailable.name);
+      return Stream.value(
+        const DataResult.error(errorCode: AppointmentErrorCode.unavailable),
+      );
+    }
+    return source
+        .map((snapshot) => _decodeResult(() => read(snapshot)))
+        .transform(
+          StreamTransformer<DataResult<R>, DataResult<R>>.fromHandlers(
+            handleError: (error, stackTrace, sink) {
+              if (error is FirebaseException) {
+                sink.add(
+                  const DataResult.error(
+                    errorCode: AppointmentErrorCode.unavailable,
+                  ),
+                );
+                return;
+              }
+              sink.addError(error, stackTrace);
+            },
+          ),
+        );
+  }
+
+  DataResult<R> _decodeResult<R>(R Function() read) {
+    try {
+      return DataResult.success(data: _decode(read));
+    } on AppointmentException catch (error) {
+      return DataResult.error(errorCode: error.code);
     }
   }
 

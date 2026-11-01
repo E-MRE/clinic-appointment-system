@@ -66,7 +66,7 @@ void main() {
         (staff, patient) => check(candidate, staff, patient),
       );
       expect(result.isSuccess, isTrue);
-      final saved = result.appointment;
+      final saved = result.data;
       if (saved == null) fail('Booking must return its saved appointment.');
       expect(saved.id, isNotEmpty);
       final data = (await firestore.doc('appointments/${saved.id}').get())
@@ -114,12 +114,8 @@ void main() {
       candidate,
       (staff, patient) => check(candidate, staff, patient),
     );
-    final saved = result.appointment;
-    if (saved == null) {
-      fail(
-        'Expected booking success: ${result.errorCode} ${result.violations}',
-      );
-    }
+    final saved = result.data;
+    if (saved == null) fail('Expected booking success: ${result.errorCode}');
     return saved;
   }
 
@@ -166,12 +162,8 @@ void main() {
           (_, _) => violations,
         );
         expect(result.isNotSuccess, isTrue);
-        expect(result.appointment, isNull);
-        expect(result.errorCode, isNull);
-        expect(result.violations, violations);
-        violations.clear();
-        expect(result.violations, hasLength(1));
-        expect(() => result.violations.clear(), throwsUnsupportedError);
+        expect(result.data, isNull);
+        expect(result.errorCode, AppointmentErrorCode.outsideAvailability);
         expect(await storedDocuments(), before);
       },
     );
@@ -196,9 +188,7 @@ void main() {
       ]);
       expect(results.where((result) => result.isSuccess), hasLength(1));
       final failure = results.singleWhere((result) => result.isNotSuccess);
-      expect(failure.violations.map((v) => v.code), [
-        AppointmentErrorCode.staffOverlap,
-      ]);
+      expect(failure.errorCode, AppointmentErrorCode.staffOverlap);
       expect(
         (await firestore.collection('appointments').get()).docs,
         hasLength(1),
@@ -213,16 +203,13 @@ void main() {
   test(
     'patient overlap across different staff prevents the second booking',
     () async {
-      final first = await book(f.lifecycle.request());
+      await book(f.lifecycle.request());
       final candidate = f.appointment(staffId: 'another');
       final result = await repository.book(
         candidate,
         (staff, patient) => check(candidate, staff, patient),
       );
-      expect(result.violations.map((v) => v.code), [
-        AppointmentErrorCode.patientOverlap,
-      ]);
-      expect(result.violations.single.conflict?.appointmentId, first.id);
+      expect(result.errorCode, AppointmentErrorCode.patientOverlap);
       expect(
         (await firestore.doc('staffBookings/another/days/2026-11-01').get())
             .exists,
@@ -393,7 +380,7 @@ void main() {
         tomorrowCandidate,
         (_, _) => [],
       );
-      final tomorrow = tomorrowResult.appointment;
+      final tomorrow = tomorrowResult.data;
       if (tomorrow == null) fail('Expected query fixture appointment.');
       final otherPatient = await book(
         f.appointment(
@@ -501,7 +488,7 @@ void main() {
           .first;
       for (final result in [patient, staff]) {
         expect(result.isNotSuccess, isTrue);
-        expect(result.message, AppointmentErrorCode.invalidRecord.name);
+        expect(result.errorCode, AppointmentErrorCode.invalidRecord);
       }
     },
   );
@@ -520,7 +507,7 @@ void main() {
           .watchStaffBookedSlots('staff', f.date)
           .first;
       expect(result.isNotSuccess, isTrue);
-      expect(result.message, AppointmentErrorCode.invalidRecord.name);
+      expect(result.errorCode, AppointmentErrorCode.invalidRecord);
     },
   );
 
@@ -570,7 +557,7 @@ void main() {
       ];
       for (final result in results) {
         expect(result.isNotSuccess, isTrue);
-        expect(result.message, AppointmentErrorCode.unavailable.name);
+        expect(result.errorCode, AppointmentErrorCode.unavailable);
       }
     },
   );
@@ -620,7 +607,7 @@ void main() {
       ];
       for (final result in results) {
         expect(result.isNotSuccess, isTrue);
-        expect(result.message, AppointmentErrorCode.unavailable.name);
+        expect(result.errorCode, AppointmentErrorCode.unavailable);
       }
     },
   );
@@ -645,8 +632,9 @@ void main() {
         );
         expect(transition.errorCode, AppointmentErrorCode.invalidRecord);
         expect(
-          (await repository.watchPatientAppointments('patient').first).message,
-          AppointmentErrorCode.invalidRecord.name,
+          (await repository.watchPatientAppointments('patient').first)
+              .errorCode,
+          AppointmentErrorCode.invalidRecord,
         );
         expect(await storedDocuments(), before);
       },
@@ -661,7 +649,7 @@ void main() {
     );
     try {
       expect(await iterator.moveNext(), isTrue);
-      expect(iterator.current.message, AppointmentErrorCode.invalidRecord.name);
+      expect(iterator.current.errorCode, AppointmentErrorCode.invalidRecord);
       await seedDays();
       expect(await iterator.moveNext(), isTrue);
       expect(iterator.current.isSuccess, isTrue);

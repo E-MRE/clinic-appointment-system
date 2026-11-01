@@ -2,9 +2,7 @@ import 'package:clinic_appointment_system/core/errors/data_result.dart';
 import 'package:clinic_appointment_system/core/time/calendar_date.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/repositories/appointment_repository.dart';
-import 'package:clinic_appointment_system/features/appointments/domain/results/appointment_booking_result.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/results/appointment_result.dart';
-import 'package:clinic_appointment_system/features/appointments/domain/rules/appointment_violation.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/value_objects/booked_slot.dart';
 
 /// Executes callbacks against supplied transaction facts without a provider.
@@ -12,8 +10,7 @@ final class FakeAppointmentRepository implements AppointmentRepository {
   List<BookedSlot> staffSlots = [];
   List<BookedSlot> patientSlots = [];
   Appointment? current;
-  List<AppointmentViolation> Function(List<BookedSlot>, List<BookedSlot>)?
-  check;
+  AppointmentBookingCheck? check;
   Stream<DataResult<List<Appointment>>> appointments = const Stream.empty();
   Stream<DataResult<List<BookedSlot>>> slots = const Stream.empty();
   String? watchedOwner;
@@ -21,24 +18,23 @@ final class FakeAppointmentRepository implements AppointmentRepository {
   CalendarDate? watchedThrough;
 
   @override
-  Future<AppointmentBookingResult> book(
+  Future<DataResult<Appointment>> book(
     Appointment candidate,
-    List<AppointmentViolation> Function(List<BookedSlot>, List<BookedSlot>)
-    check,
+    AppointmentBookingCheck check,
   ) async {
     this.check = check;
     final violations = check(staffSlots, patientSlots);
     if (violations.isNotEmpty) {
-      return AppointmentBookingResult.violations(violations);
+      return DataResult.error(errorCode: violations.first.code);
     }
     current = candidate;
-    return AppointmentBookingResult.success(candidate);
+    return DataResult.success(data: candidate);
   }
 
   @override
   Future<AppointmentResult> changeStatus(
     String id,
-    AppointmentResult Function(Appointment) change,
+    AppointmentStatusChange change,
   ) async {
     final appointment = current;
     if (appointment == null) throw StateError('Supply a current appointment.');

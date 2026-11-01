@@ -31,19 +31,16 @@ void main() {
   test('valid request returns the repository appointment', () async {
     final result = await useCase(request());
     expect(result.isSuccess, isTrue);
-    expect(result.appointment, f.lifecycle.request());
+    expect(result.data, f.lifecycle.request());
   });
 
   test(
-    'transaction slots produce all overlap violations in rule order',
+    'transaction slots return the first overlap violation in rule order',
     () async {
       repository.staffSlots = [f.slot(id: 'staff-conflict')];
       repository.patientSlots = [f.slot(id: 'patient-conflict')];
       final result = await useCase(request());
-      expect(result.violations.map((v) => v.code), [
-        AppointmentErrorCode.staffOverlap,
-        AppointmentErrorCode.patientOverlap,
-      ]);
+      expect(result.errorCode, AppointmentErrorCode.staffOverlap);
       expect(repository.current, isNull);
     },
   );
