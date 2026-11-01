@@ -53,14 +53,9 @@ void main() {
           '${status.name}.$method denies ${actor.role.name}/${actor.id}',
           () {
             final original = fixture.restore(status);
-            expect(
-              () => fixture.transition(
-                method,
-                original,
-                actor,
-                fixture.atTolerance,
-              ),
-              notPermitted,
+            fixture.expectError(
+              fixture.transition(method, original, actor, fixture.atTolerance),
+              AppointmentErrorCode.notPermitted,
             );
             expect(original.status, status);
             expect(original.history, [fixture.change(status)]);
@@ -82,11 +77,11 @@ void main() {
         test(
           '${status.name}.cancelByPatient denies ${actor.role.name}/${actor.id}',
           () {
-            expect(
-              () => fixture
+            fixture.expectError(
+              fixture
                   .restore(status)
                   .cancelByPatient(by: actor, at: fixture.beforeStart),
-              notPermitted,
+              AppointmentErrorCode.notPermitted,
             );
           },
         );
@@ -95,14 +90,14 @@ void main() {
 
     for (final id in ['admin', 'staff']) {
       test('admin $id cannot mark no-show even at the tolerance boundary', () {
-        expect(
-          () => fixture
+        fixture.expectError(
+          fixture
               .restore(AppointmentStatus.approved)
               .markNoShow(
                 by: fixture.actor(UserRole.admin, id),
                 at: fixture.atTolerance,
               ),
-          notPermitted,
+          AppointmentErrorCode.notPermitted,
         );
       });
     }

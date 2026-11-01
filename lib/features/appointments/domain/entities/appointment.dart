@@ -1,3 +1,4 @@
+import 'package:clinic_appointment_system/core/constants/entity_constants.dart';
 import 'package:clinic_appointment_system/core/time/calendar_date.dart';
 import 'package:clinic_appointment_system/core/time/time_range.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/actors/appointment_actor.dart';
@@ -5,20 +6,19 @@ import 'package:clinic_appointment_system/features/appointments/domain/enums/app
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status_state.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/errors/appointment_exception.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/results/appointment_result.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/states/appointment_state.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/states/transitions/transition_decision.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/value_objects/appointment_status_change.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/value_objects/money.dart';
 import 'package:equatable/equatable.dart';
 
 /// An immutable appointment with an audited, state-controlled lifecycle.
 final class Appointment extends Equatable {
-  /// Unpersisted appointment identifier.
-  static const String unsavedId = '';
-
   /// Requests a pending appointment on behalf of its own patient.
   /// Throws notPermitted for other identities or roles.
   factory Appointment.request({
-    String id = unsavedId,
+    String id = EntityConstants.unsavedId,
     required String patientId,
     required String staffId,
     required String branchId,
@@ -78,7 +78,7 @@ final class Appointment extends Equatable {
     }
   }
 
-  /// The stored identifier, or unsavedId before persistence.
+  /// The stored identifier, or [EntityConstants.unsavedId] before persistence.
   final String id;
 
   /// The patient who requested this appointment.
@@ -129,80 +129,112 @@ final class Appointment extends Equatable {
   }
 
   /// Approves a pending request as its assigned staff member or any admin.
-  /// Returns a new appointment with one audit entry; throws on a lifecycle
-  /// violation.
-  Appointment approve({required AppointmentActor by, required DateTime at}) =>
-      _changed(_state.approve(this, by: by, at: at), by, at);
+  /// Returns a result with a new appointment and one audit entry, or an error.
+  AppointmentResult approve({
+    required AppointmentActor by,
+    required DateTime at,
+  }) {
+    return _changed(_state.approvable?.approve(this, by: by, at: at), by, at);
+  }
 
   /// Rejects a pending request as its assigned staff member or any admin.
-  /// Returns a new appointment with one audit entry; throws on a lifecycle
-  /// violation.
-  Appointment reject({required AppointmentActor by, required DateTime at}) =>
-      _changed(_state.reject(this, by: by, at: at), by, at);
+  /// Returns a result with a new appointment and one audit entry, or an error.
+  AppointmentResult reject({
+    required AppointmentActor by,
+    required DateTime at,
+  }) {
+    return _changed(_state.rejectable?.reject(this, by: by, at: at), by, at);
+  }
 
   /// Cancels a pending or approved appointment as its own patient before start.
-  /// Returns a new appointment with one audit entry; throws on a lifecycle
-  /// violation.
-  Appointment cancelByPatient({
+  /// Returns a result with a new appointment and one audit entry, or an error.
+  AppointmentResult cancelByPatient({
     required AppointmentActor by,
     required DateTime at,
-  }) => _changed(_state.cancelByPatient(this, by: by, at: at), by, at);
+  }) {
+    return _changed(
+      _state.patientCancellable?.cancelByPatient(this, by: by, at: at),
+      by,
+      at,
+    );
+  }
 
   /// Cancels an approved appointment as its assigned staff member or any admin.
-  /// Returns a new appointment with one audit entry; throws on a lifecycle
-  /// violation.
-  Appointment cancelByStaff({
+  /// Returns a result with a new appointment and one audit entry, or an error.
+  AppointmentResult cancelByStaff({
     required AppointmentActor by,
     required DateTime at,
-  }) => _changed(_state.cancelByStaff(this, by: by, at: at), by, at);
+  }) {
+    return _changed(
+      _state.staffCancellable?.cancelByStaff(this, by: by, at: at),
+      by,
+      at,
+    );
+  }
 
   /// Completes an approved appointment as assigned staff or any admin,
   /// at or after its start.
-  /// Returns a new appointment with one audit entry; throws on a lifecycle
-  /// violation.
-  Appointment complete({required AppointmentActor by, required DateTime at}) =>
-      _changed(_state.complete(this, by: by, at: at), by, at);
+  /// Returns a result with a new appointment and one audit entry, or an error.
+  AppointmentResult complete({
+    required AppointmentActor by,
+    required DateTime at,
+  }) {
+    return _changed(_state.completable?.complete(this, by: by, at: at), by, at);
+  }
 
   /// Marks an approved no-show as assigned staff at or after the tolerance
   /// boundary. Admins cannot mark no-shows.
-  /// Returns a new appointment with one audit entry; throws on a lifecycle
-  /// violation.
-  Appointment markNoShow({
+  /// Returns a result with a new appointment and one audit entry, or an error.
+  AppointmentResult markNoShow({
     required AppointmentActor by,
     required DateTime at,
-  }) => _changed(_state.markNoShow(this, by: by, at: at), by, at);
+  }) {
+    return _changed(
+      _state.noShowMarkable?.markNoShow(this, by: by, at: at),
+      by,
+      at,
+    );
+  }
 
   /// Whether this appointment reserves its booked slot.
   bool get occupiesSlot => _state.occupiesSlot;
 
   AppointmentState get _state => status.state;
 
-  Appointment _changed(
-    AppointmentStatus next,
+  AppointmentResult _changed(
+    TransitionDecision? decision,
     AppointmentActor by,
     DateTime at,
   ) {
-    return Appointment.restore(
-      id: id,
-      patientId: patientId,
-      staffId: staffId,
-      branchId: branchId,
-      departmentId: departmentId,
-      serviceId: serviceId,
-      serviceName: serviceName,
-      fee: fee,
-      date: date,
-      range: range,
-      status: next,
-      history: [
-        ...history,
-        AppointmentStatusChange(
-          status: next,
-          byUserId: by.id,
-          byRole: by.role,
-          at: at,
-        ),
-      ],
+    final next = decision?.next;
+    if (next == null) {
+      return AppointmentResult.error(
+        decision?.errorCode ?? AppointmentErrorCode.invalidTransition,
+      );
+    }
+    return AppointmentResult.success(
+      Appointment.restore(
+        id: id,
+        patientId: patientId,
+        staffId: staffId,
+        branchId: branchId,
+        departmentId: departmentId,
+        serviceId: serviceId,
+        serviceName: serviceName,
+        fee: fee,
+        date: date,
+        range: range,
+        status: next,
+        history: [
+          ...history,
+          AppointmentStatusChange(
+            status: next,
+            byUserId: by.id,
+            byRole: by.role,
+            at: at,
+          ),
+        ],
+      ),
     );
   }
 

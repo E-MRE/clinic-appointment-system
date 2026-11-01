@@ -1,7 +1,7 @@
+import 'package:clinic_appointment_system/core/constants/entity_constants.dart';
 import 'package:clinic_appointment_system/features/institution/domain/enums/institution_error_code.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/examination.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/lab_test.dart';
-import 'package:clinic_appointment_system/features/medical_services/domain/entities/medical_service.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/radiology_service.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/enums/lab_result_time.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/enums/medical_service_kind.dart';
@@ -17,7 +17,7 @@ void main() {
   group('MedicalService hierarchy', () {
     test('Examination exposes kind, accepts visitor, trims and updates id', () {
       final exam = Examination(
-        id: MedicalService.unsavedId,
+        id: EntityConstants.unsavedId,
         name: '  General Checkup  ',
         departmentId: '  dept-1  ',
         branchId: '  branch-1  ',
@@ -53,7 +53,7 @@ void main() {
       'RadiologyService exposes modality, trims note, and checks note length',
       () {
         final radiology = RadiologyService(
-          id: MedicalService.unsavedId,
+          id: EntityConstants.unsavedId,
           name: '  Chest X-Ray  ',
           departmentId: 'dept-2',
           branchId: 'branch-1',
@@ -140,7 +140,7 @@ void main() {
 
     test('LabTest manages fasting requirement, result time and trimming', () {
       final noFasting = LabTest(
-        id: MedicalService.unsavedId,
+        id: EntityConstants.unsavedId,
         name: '  Complete Blood Count  ',
         departmentId: 'dept-3',
         branchId: 'branch-1',

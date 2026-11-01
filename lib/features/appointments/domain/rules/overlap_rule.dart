@@ -1,3 +1,4 @@
+import 'package:clinic_appointment_system/core/constants/entity_constants.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_error_code.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/rules/appointment_booking_context.dart';
@@ -24,7 +25,7 @@ abstract base class OverlapRule implements AppointmentRule {
     AppointmentBookingContext context,
   ) {
     for (final existing in appointmentsToScan(context)) {
-      if (candidate.id != Appointment.unsavedId &&
+      if (candidate.id != EntityConstants.unsavedId &&
           existing.id == candidate.id) {
         continue;
       }

@@ -1,3 +1,4 @@
+import 'package:clinic_appointment_system/core/constants/entity_constants.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/examination.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/lab_test.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/medical_service.dart';
@@ -7,14 +8,13 @@ import 'package:clinic_appointment_system/features/medical_services/domain/enums
 import 'package:clinic_appointment_system/features/medical_services/domain/value_objects/money.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/value_objects/service_duration.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/doctor.dart';
-import 'package:clinic_appointment_system/features/users/domain/entities/staff.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/technician.dart';
 
 final class StaffFixtures {
   const StaffFixtures();
 
   Doctor doctor({
-    String id = Staff.unsavedId,
+    String id = EntityConstants.unsavedId,
     String fullName = 'Ada Kaya',
     String email = 'ada@example.com',
     String branchId = 'branch',
@@ -34,7 +34,7 @@ final class StaffFixtures {
   }
 
   Technician technician({
-    String id = Staff.unsavedId,
+    String id = EntityConstants.unsavedId,
     String fullName = 'Ece Kaya',
     String email = 'ece@example.com',
     String branchId = 'branch',

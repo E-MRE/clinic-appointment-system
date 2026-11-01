@@ -1,7 +1,8 @@
 part of 'appointment_state.dart';
 
 /// Lifecycle behavior for the pending status.
-final class PendingAppointmentState extends AppointmentState {
+final class PendingAppointmentState extends AppointmentState
+    implements ApprovableState, RejectableState, PatientCancellableState {
   /// Creates the immutable pending state.
   const PendingAppointmentState();
 
@@ -9,31 +10,43 @@ final class PendingAppointmentState extends AppointmentState {
   @override
   bool get occupiesSlot => true;
 
-  /// Allows the transition to approved.
+  /// The capability to approve in this state.
   @override
-  AppointmentStatus approve(
+  ApprovableState get approvable => this;
+
+  /// The capability to reject in this state.
+  @override
+  RejectableState get rejectable => this;
+
+  /// The capability to cancelByPatient in this state.
+  @override
+  PatientCancellableState get patientCancellable => this;
+
+  /// Decides whether to transition to approved.
+  @override
+  TransitionDecision approve(
     Appointment appointment, {
     required AppointmentActor by,
     required DateTime at,
   }) {
-    _requirePermission(by.mayActAsStaff(appointment.staffId));
-    return AppointmentStatus.approved;
+    final error = _permissionError(by.mayActAsStaff(appointment.staffId));
+    return _decide(AppointmentStatus.approved, error);
   }
 
-  /// Allows the transition to rejected.
+  /// Decides whether to transition to rejected.
   @override
-  AppointmentStatus reject(
+  TransitionDecision reject(
     Appointment appointment, {
     required AppointmentActor by,
     required DateTime at,
   }) {
-    _requirePermission(by.mayActAsStaff(appointment.staffId));
-    return AppointmentStatus.rejected;
+    final error = _permissionError(by.mayActAsStaff(appointment.staffId));
+    return _decide(AppointmentStatus.rejected, error);
   }
 
-  /// Allows the transition to cancelledByPatient.
+  /// Decides whether to transition to cancelledByPatient.
   @override
-  AppointmentStatus cancelByPatient(
+  TransitionDecision cancelByPatient(
     Appointment appointment, {
     required AppointmentActor by,
     required DateTime at,

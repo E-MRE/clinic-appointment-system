@@ -1,7 +1,12 @@
 part of 'appointment_state.dart';
 
 /// Lifecycle behavior for the approved status.
-final class ApprovedAppointmentState extends AppointmentState {
+final class ApprovedAppointmentState extends AppointmentState
+    implements
+        PatientCancellableState,
+        StaffCancellableState,
+        CompletableState,
+        NoShowMarkableState {
   /// Creates the immutable approved state.
   const ApprovedAppointmentState();
 
@@ -9,49 +14,67 @@ final class ApprovedAppointmentState extends AppointmentState {
   @override
   bool get occupiesSlot => true;
 
-  /// Allows the transition to cancelledByPatient.
+  /// The capability to cancelByPatient in this state.
   @override
-  AppointmentStatus cancelByPatient(
+  PatientCancellableState get patientCancellable => this;
+
+  /// The capability to cancelByStaff in this state.
+  @override
+  StaffCancellableState get staffCancellable => this;
+
+  /// The capability to complete in this state.
+  @override
+  CompletableState get completable => this;
+
+  /// The capability to markNoShow in this state.
+  @override
+  NoShowMarkableState get noShowMarkable => this;
+
+  /// Decides whether to transition to cancelledByPatient.
+  @override
+  TransitionDecision cancelByPatient(
     Appointment appointment, {
     required AppointmentActor by,
     required DateTime at,
   }) => _cancelForPatient(appointment, by, at);
 
-  /// Allows the transition to cancelledByStaff.
+  /// Decides whether to transition to cancelledByStaff.
   @override
-  AppointmentStatus cancelByStaff(
+  TransitionDecision cancelByStaff(
     Appointment appointment, {
     required AppointmentActor by,
     required DateTime at,
   }) {
-    _requirePermission(by.mayActAsStaff(appointment.staffId));
-    return AppointmentStatus.cancelledByStaff;
+    final error = _permissionError(by.mayActAsStaff(appointment.staffId));
+    return _decide(AppointmentStatus.cancelledByStaff, error);
   }
 
-  /// Allows the transition to completed.
+  /// Decides whether to transition to completed.
   @override
-  AppointmentStatus complete(
+  TransitionDecision complete(
     Appointment appointment, {
     required AppointmentActor by,
     required DateTime at,
   }) {
-    _requirePermission(by.mayActAsStaff(appointment.staffId));
-    _requireReached(at, appointment.startsAt);
-    return AppointmentStatus.completed;
+    final error =
+        _permissionError(by.mayActAsStaff(appointment.staffId)) ??
+        _reachedError(at, appointment.startsAt);
+    return _decide(AppointmentStatus.completed, error);
   }
 
-  /// Allows the transition to noShow.
+  /// Decides whether to transition to noShow.
   @override
-  AppointmentStatus markNoShow(
+  TransitionDecision markNoShow(
     Appointment appointment, {
     required AppointmentActor by,
     required DateTime at,
   }) {
-    _requirePermission(by.mayMarkNoShow(appointment.staffId));
     final earliest = appointment.startsAt.add(
       const Duration(minutes: AppointmentConstants.noShowToleranceMinutes),
     );
-    _requireReached(at, earliest);
-    return AppointmentStatus.noShow;
+    final error =
+        _permissionError(by.mayMarkNoShow(appointment.staffId)) ??
+        _reachedError(at, earliest);
+    return _decide(AppointmentStatus.noShow, error);
   }
 }

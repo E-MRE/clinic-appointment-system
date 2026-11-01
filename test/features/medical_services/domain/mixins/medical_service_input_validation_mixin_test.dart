@@ -1,6 +1,6 @@
+import 'package:clinic_appointment_system/core/constants/entity_constants.dart';
 import 'package:clinic_appointment_system/features/institution/domain/enums/institution_error_code.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/examination.dart';
-import 'package:clinic_appointment_system/features/medical_services/domain/entities/medical_service.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/radiology_service.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/enums/radiology_modality.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/value_objects/money.dart';
@@ -75,7 +75,7 @@ void main() {
 
     test('serviceError obeys first-error precedence', () {
       final bothInvalid = Examination(
-        id: MedicalService.unsavedId,
+        id: EntityConstants.unsavedId,
         name: '   ',
         departmentId: '   ',
         branchId: 'b1',
@@ -88,7 +88,7 @@ void main() {
       );
 
       final departmentInvalid = Examination(
-        id: MedicalService.unsavedId,
+        id: EntityConstants.unsavedId,
         name: 'Consultation',
         departmentId: '   ',
         branchId: 'b1',
@@ -101,7 +101,7 @@ void main() {
       );
 
       final detailsInvalid = RadiologyService(
-        id: MedicalService.unsavedId,
+        id: EntityConstants.unsavedId,
         name: 'MRI Scan',
         departmentId: 'dept-1',
         branchId: 'b1',
@@ -116,7 +116,7 @@ void main() {
       );
 
       final validService = Examination(
-        id: MedicalService.unsavedId,
+        id: EntityConstants.unsavedId,
         name: 'Valid Service',
         departmentId: 'dept-1',
         branchId: 'b1',

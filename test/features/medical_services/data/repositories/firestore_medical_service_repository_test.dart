@@ -1,10 +1,10 @@
+import 'package:clinic_appointment_system/core/constants/entity_constants.dart';
 import 'package:clinic_appointment_system/core/errors/institution_exception.dart';
 import 'package:clinic_appointment_system/features/institution/domain/enums/institution_error_code.dart';
 import 'package:clinic_appointment_system/features/medical_services/data/models/medical_service_model_factory.dart';
 import 'package:clinic_appointment_system/features/medical_services/data/repositories/firestore_medical_service_repository.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/examination.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/lab_test.dart';
-import 'package:clinic_appointment_system/features/medical_services/domain/entities/medical_service.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/radiology_service.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/enums/lab_result_time.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/enums/medical_service_kind.dart';
@@ -44,7 +44,7 @@ void main() {
       'creates examination service, writes frozen fields, and returns entity with id',
       () async {
         final draft = Examination(
-          id: MedicalService.unsavedId,
+          id: EntityConstants.unsavedId,
           name: 'General Consultation',
           departmentId: 'dept-1',
           branchId: 'branch-1',
@@ -81,7 +81,7 @@ void main() {
       'creates radiology service with and without preparation note',
       () async {
         final withNote = RadiologyService(
-          id: MedicalService.unsavedId,
+          id: EntityConstants.unsavedId,
           name: 'Chest X-Ray',
           departmentId: 'dept-2',
           branchId: 'branch-1',
@@ -109,7 +109,7 @@ void main() {
         expect(snapshotWithNote.data()?.containsKey('id'), isFalse);
 
         final noNote = RadiologyService(
-          id: MedicalService.unsavedId,
+          id: EntityConstants.unsavedId,
           name: 'Abdominal CT',
           departmentId: 'dept-2',
           branchId: 'branch-1',
@@ -140,7 +140,7 @@ void main() {
 
     test('creates lab test with and without fasting', () async {
       final withFasting = LabTest(
-        id: MedicalService.unsavedId,
+        id: EntityConstants.unsavedId,
         name: 'Fasting Blood Sugar',
         departmentId: 'dept-3',
         branchId: 'branch-1',
@@ -169,7 +169,7 @@ void main() {
       expect(snapshotWithFasting.data()?.containsKey('id'), isFalse);
 
       final noFasting = LabTest(
-        id: MedicalService.unsavedId,
+        id: EntityConstants.unsavedId,
         name: 'Urinalysis',
         departmentId: 'dept-3',
         branchId: 'branch-1',
@@ -298,7 +298,7 @@ void main() {
   group('updateService', () {
     test('writes updated fields and preserves unchanged structure', () async {
       final initial = Examination(
-        id: MedicalService.unsavedId,
+        id: EntityConstants.unsavedId,
         name: 'Initial Checkup',
         departmentId: 'dept-1',
         branchId: 'branch-1',
@@ -418,7 +418,7 @@ void main() {
         );
 
         final service = Examination(
-          id: MedicalService.unsavedId,
+          id: EntityConstants.unsavedId,
           name: 'Checkup',
           departmentId: 'dept-1',
           branchId: 'branch-1',

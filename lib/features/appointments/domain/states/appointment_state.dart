@@ -3,7 +3,13 @@ import 'package:clinic_appointment_system/features/appointments/domain/actors/ap
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_error_code.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status.dart';
-import 'package:clinic_appointment_system/features/appointments/domain/errors/appointment_exception.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/states/transitions/approvable_state.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/states/transitions/completable_state.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/states/transitions/no_show_markable_state.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/states/transitions/patient_cancellable_state.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/states/transitions/rejectable_state.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/states/transitions/staff_cancellable_state.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/states/transitions/transition_decision.dart';
 
 part 'approved_appointment_state.dart';
 part 'cancelled_by_patient_appointment_state.dart';
@@ -13,8 +19,8 @@ part 'no_show_appointment_state.dart';
 part 'pending_appointment_state.dart';
 part 'rejected_appointment_state.dart';
 
-/// Default-deny lifecycle behavior; subclasses override only allowed transitions
-/// and must supply whether their status occupies a booked slot.
+/// Shared lifecycle checks and optional capabilities.
+/// Subclasses must supply slot occupancy and expose only supported transitions.
 abstract base class AppointmentState {
   /// Creates a stateless lifecycle policy.
   const AppointmentState();
@@ -22,81 +28,60 @@ abstract base class AppointmentState {
   /// Subclasses must report whether appointments in this state occupy a slot.
   bool get occupiesSlot;
 
-  /// Rejects approve unless a subclass explicitly allows the transition.
-  AppointmentStatus approve(
-    Appointment appointment, {
-    required AppointmentActor by,
-    required DateTime at,
-  }) {
-    throw const AppointmentException(AppointmentErrorCode.invalidTransition);
-  }
+  /// Subclasses supporting approve must return their capability; otherwise null.
+  ApprovableState? get approvable => null;
 
-  /// Rejects reject unless a subclass explicitly allows the transition.
-  AppointmentStatus reject(
-    Appointment appointment, {
-    required AppointmentActor by,
-    required DateTime at,
-  }) {
-    throw const AppointmentException(AppointmentErrorCode.invalidTransition);
-  }
+  /// Subclasses supporting reject must return their capability; otherwise null.
+  RejectableState? get rejectable => null;
 
-  /// Rejects cancelByPatient unless a subclass explicitly allows the transition.
-  AppointmentStatus cancelByPatient(
-    Appointment appointment, {
-    required AppointmentActor by,
-    required DateTime at,
-  }) {
-    throw const AppointmentException(AppointmentErrorCode.invalidTransition);
-  }
+  /// Subclasses supporting cancelByPatient must return their capability; otherwise null.
+  PatientCancellableState? get patientCancellable => null;
 
-  /// Rejects cancelByStaff unless a subclass explicitly allows the transition.
-  AppointmentStatus cancelByStaff(
-    Appointment appointment, {
-    required AppointmentActor by,
-    required DateTime at,
-  }) {
-    throw const AppointmentException(AppointmentErrorCode.invalidTransition);
-  }
+  /// Subclasses supporting cancelByStaff must return their capability; otherwise null.
+  StaffCancellableState? get staffCancellable => null;
 
-  /// Rejects complete unless a subclass explicitly allows the transition.
-  AppointmentStatus complete(
-    Appointment appointment, {
-    required AppointmentActor by,
-    required DateTime at,
-  }) {
-    throw const AppointmentException(AppointmentErrorCode.invalidTransition);
-  }
+  /// Subclasses supporting complete must return their capability; otherwise null.
+  CompletableState? get completable => null;
 
-  /// Rejects markNoShow unless a subclass explicitly allows the transition.
-  AppointmentStatus markNoShow(
-    Appointment appointment, {
-    required AppointmentActor by,
-    required DateTime at,
-  }) {
-    throw const AppointmentException(AppointmentErrorCode.invalidTransition);
-  }
+  /// Subclasses supporting markNoShow must return their capability; otherwise null.
+  NoShowMarkableState? get noShowMarkable => null;
 
-  AppointmentStatus _cancelForPatient(
+  TransitionDecision _cancelForPatient(
     Appointment appointment,
     AppointmentActor by,
     DateTime at,
   ) {
-    _requirePermission(by.mayActAsPatient(appointment.patientId));
+    final error = _permissionError(by.mayActAsPatient(appointment.patientId));
+    if (error != null) {
+      return TransitionDecision.deny(error);
+    }
     if (!at.isBefore(appointment.startsAt)) {
-      throw const AppointmentException(AppointmentErrorCode.tooLate);
+      return const TransitionDecision.deny(AppointmentErrorCode.tooLate);
     }
-    return AppointmentStatus.cancelledByPatient;
+    return const TransitionDecision.allow(AppointmentStatus.cancelledByPatient);
   }
 
-  void _requireReached(DateTime at, DateTime earliest) {
+  AppointmentErrorCode? _reachedError(DateTime at, DateTime earliest) {
     if (at.isBefore(earliest)) {
-      throw const AppointmentException(AppointmentErrorCode.tooEarly);
+      return AppointmentErrorCode.tooEarly;
     }
+    return null;
   }
 
-  void _requirePermission(bool permitted) {
+  AppointmentErrorCode? _permissionError(bool permitted) {
     if (!permitted) {
-      throw const AppointmentException(AppointmentErrorCode.notPermitted);
+      return AppointmentErrorCode.notPermitted;
     }
+    return null;
+  }
+
+  TransitionDecision _decide(
+    AppointmentStatus next,
+    AppointmentErrorCode? error,
+  ) {
+    if (error != null) {
+      return TransitionDecision.deny(error);
+    }
+    return TransitionDecision.allow(next);
   }
 }

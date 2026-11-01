@@ -1,6 +1,6 @@
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_error_code.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status.dart';
-import 'package:clinic_appointment_system/features/appointments/domain/errors/appointment_exception.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status_state.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/value_objects/appointment_status_change.dart';
 import 'package:clinic_appointment_system/features/users/domain/enums/user_role.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -32,6 +32,29 @@ void main() {
     'markNoShow',
   ];
 
+  group('state capabilities', () {
+    for (final status in AppointmentStatus.values) {
+      test('${status.name} exposes exactly its allowed capabilities', () {
+        final state = status.state;
+        final capabilities = {
+          'approve': state.approvable,
+          'reject': state.rejectable,
+          'cancelByPatient': state.patientCancellable,
+          'cancelByStaff': state.staffCancellable,
+          'complete': state.completable,
+          'markNoShow': state.noShowMarkable,
+        };
+        for (final capability in capabilities.entries) {
+          if (allowed[status]?.containsKey(capability.key) ?? false) {
+            expect(capability.value, same(state));
+          } else {
+            expect(capability.value, isNull);
+          }
+        }
+      });
+    }
+  });
+
   group('allowed transitions and audit trail', () {
     for (final from in allowed.entries) {
       for (final transition in from.value.entries) {
@@ -55,11 +78,8 @@ void main() {
             }
             final by = fixture.actor(role, actorId);
             final original = fixture.restore(from.key);
-            final updated = fixture.transition(
-              transition.key,
-              original,
-              by,
-              at,
+            final updated = fixture.success(
+              fixture.transition(transition.key, original, by, at),
             );
             expect(updated.status, transition.value);
             expect(updated.history, [
@@ -94,8 +114,12 @@ void main() {
       () {
         final staff = fixture.actor(UserRole.doctor, 'staff');
         final requested = fixture.request();
-        final approved = requested.approve(by: staff, at: fixture.beforeStart);
-        final completed = approved.complete(by: staff, at: fixture.start);
+        final approved = fixture.success(
+          requested.approve(by: staff, at: fixture.beforeStart),
+        );
+        final completed = fixture.success(
+          approved.complete(by: staff, at: fixture.start),
+        );
         expect(completed.history, [
           fixture.change(AppointmentStatus.pending),
           AppointmentStatusChange(
@@ -129,20 +153,9 @@ void main() {
             () {
               final original = fixture.restore(status);
               final by = fixture.actor(role, 'staff');
-              expect(
-                () => fixture.transition(
-                  method,
-                  original,
-                  by,
-                  fixture.atTolerance,
-                ),
-                throwsA(
-                  isA<AppointmentException>().having(
-                    (error) => error.code,
-                    'code',
-                    AppointmentErrorCode.invalidTransition,
-                  ),
-                ),
+              fixture.expectError(
+                fixture.transition(method, original, by, fixture.atTolerance),
+                AppointmentErrorCode.invalidTransition,
               );
               expect(original.history, [fixture.change(status)]);
               expect(original.status, status);

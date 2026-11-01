@@ -1,4 +1,4 @@
-import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
+import 'package:clinic_appointment_system/core/constants/entity_constants.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_error_code.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/errors/appointment_exception.dart';
@@ -13,7 +13,7 @@ void main() {
   group('construction, restore, equality and immutability', () {
     test('patient requests a pending appointment with a first audit entry', () {
       final appointment = fixture.request();
-      expect(appointment.id, Appointment.unsavedId);
+      expect(appointment.id, EntityConstants.unsavedId);
       expect(appointment.patientId, 'patient');
       expect(appointment.staffId, 'staff');
       expect(appointment.branchId, 'branch');
@@ -40,13 +40,14 @@ void main() {
       });
     }
 
-    test('restore rejects empty or mismatching history', () {
-      for (final history in <List<AppointmentStatusChange>>[
-        [],
-        [fixture.change(AppointmentStatus.rejected)],
-      ]) {
+    for (final entry in <String, List<AppointmentStatusChange>>{
+      'empty': [],
+      'mismatching': [fixture.change(AppointmentStatus.rejected)],
+    }.entries) {
+      test('restore rejects ${entry.key} history', () {
         expect(
-          () => fixture.restore(AppointmentStatus.pending, history: history),
+          () =>
+              fixture.restore(AppointmentStatus.pending, history: entry.value),
           throwsA(
             isA<AppointmentException>().having(
               (error) => error.code,
@@ -55,8 +56,8 @@ void main() {
             ),
           ),
         );
-      }
-    });
+      });
+    }
 
     test('history is defensively copied and cannot be edited', () {
       final entries = [fixture.change(AppointmentStatus.pending)];

@@ -3,7 +3,9 @@ import 'package:clinic_appointment_system/core/time/clock_time.dart';
 import 'package:clinic_appointment_system/core/time/time_range.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/actors/appointment_actor.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_error_code.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/results/appointment_result.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/value_objects/appointment_status_change.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/value_objects/money.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/admin.dart';
@@ -12,6 +14,7 @@ import 'package:clinic_appointment_system/features/users/domain/entities/patient
 import 'package:clinic_appointment_system/features/users/domain/entities/technician.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/user.dart';
 import 'package:clinic_appointment_system/features/users/domain/enums/user_role.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 /// Real domain inputs shared by lifecycle tests.
 final class AppointmentFixture {
@@ -123,8 +126,30 @@ final class AppointmentFixture {
     );
   }
 
+  /// Checks the successful result contract and returns its appointment.
+  Appointment success(AppointmentResult result) {
+    expect(result.isSuccess, isTrue);
+    expect(result.isNotSuccess, isFalse);
+    expect(result.errorCode, isNull);
+    expect(result.message, isEmpty);
+    final appointment = result.appointment;
+    if (appointment == null) {
+      fail('A successful transition must return an appointment.');
+    }
+    return appointment;
+  }
+
+  /// Checks the failed result contract and its machine-readable cause.
+  void expectError(AppointmentResult result, AppointmentErrorCode errorCode) {
+    expect(result.isSuccess, isFalse);
+    expect(result.isNotSuccess, isTrue);
+    expect(result.appointment, isNull);
+    expect(result.errorCode, errorCode);
+    expect(result.message, isEmpty);
+  }
+
   /// Invokes a lifecycle method through the entity's public interface.
-  Appointment transition(
+  AppointmentResult transition(
     String method,
     Appointment appointment,
     AppointmentActor by,

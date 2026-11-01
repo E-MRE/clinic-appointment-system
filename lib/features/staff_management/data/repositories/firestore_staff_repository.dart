@@ -1,3 +1,4 @@
+import 'package:clinic_appointment_system/core/constants/entity_constants.dart';
 import 'package:clinic_appointment_system/core/constants/firestore_constants.dart';
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
 import 'package:clinic_appointment_system/core/errors/user_exception.dart';
@@ -23,7 +24,7 @@ final class FirestoreStaffRepository implements StaffRepository {
   /// Rejects unsaved ids and translates Firebase failures to [UserException].
   @override
   Future<DataResult<Staff>> createStaff(Staff staff) async {
-    if (staff.id == Staff.unsavedId) {
+    if (staff.id == EntityConstants.unsavedId) {
       throw const UserException(UserErrorCode.invalidProfile);
     }
     try {

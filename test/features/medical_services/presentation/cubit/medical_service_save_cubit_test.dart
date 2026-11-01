@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:clinic_appointment_system/core/constants/entity_constants.dart';
+
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
 import 'package:clinic_appointment_system/features/institution/domain/enums/institution_error_code.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/institution_save_state.dart';
@@ -162,7 +164,7 @@ void main() {
         await cubit.save(values, branchId: 'branch-1', original: null);
 
         expect(repository.createCalls, 1);
-        expect(repository.createdService?.id, MedicalService.unsavedId);
+        expect(repository.createdService?.id, EntityConstants.unsavedId);
         expect(repository.createdService?.name, 'General Consultation');
         expect(repository.createdService?.branchId, 'branch-1');
         expect(
@@ -262,7 +264,7 @@ void main() {
 }
 
 MedicalService _sampleService({
-  String id = MedicalService.unsavedId,
+  String id = EntityConstants.unsavedId,
   String name = 'Checkup',
 }) {
   return Examination(

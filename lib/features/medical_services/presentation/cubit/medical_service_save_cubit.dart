@@ -1,3 +1,4 @@
+import 'package:clinic_appointment_system/core/constants/entity_constants.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/institution_save_cubit.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/medical_service.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/usecases/create_medical_service_use_case.dart';
@@ -29,7 +30,7 @@ final class MedicalServiceSaveCubit
     MedicalService? original,
   }) {
     return executeRequest(() async {
-      final id = original?.id ?? MedicalService.unsavedId;
+      final id = original?.id ?? EntityConstants.unsavedId;
       final service = values.kind.formStrategy.build(
         values,
         id: id,

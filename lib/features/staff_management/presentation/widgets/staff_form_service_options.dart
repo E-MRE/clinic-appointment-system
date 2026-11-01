@@ -10,7 +10,7 @@ final class _StaffFormServiceOptions extends StatelessWidget {
     final state = context.watch<MedicalServiceListCubit>().state;
     final preview = values.role.staffFormStrategy.build(
       values,
-      id: Staff.unsavedId,
+      id: EntityConstants.unsavedId,
     );
     final services = <MedicalService>[
       if (state is InstitutionListLoaded<MedicalService>)

@@ -1,3 +1,4 @@
+import 'package:clinic_appointment_system/core/constants/entity_constants.dart';
 import 'package:clinic_appointment_system/core/enums/auth_error_code.dart';
 import 'package:clinic_appointment_system/core/errors/auth_exception.dart';
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
@@ -36,7 +37,7 @@ final class StaffSaveCubit extends Cubit<StaffSaveState> {
     return _executeRequest(() {
       final staff = values.role.staffFormStrategy.build(
         values,
-        id: Staff.unsavedId,
+        id: EntityConstants.unsavedId,
       );
       return _createStaff(
         StaffRegistration(
