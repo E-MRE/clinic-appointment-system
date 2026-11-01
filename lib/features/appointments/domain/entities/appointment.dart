@@ -10,6 +10,7 @@ import 'package:clinic_appointment_system/features/appointments/domain/results/a
 import 'package:clinic_appointment_system/features/appointments/domain/states/appointment_state.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/states/transitions/transition_decision.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/value_objects/appointment_status_change.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/value_objects/booked_slot.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/value_objects/money.dart';
 import 'package:equatable/equatable.dart';
 
@@ -114,6 +115,24 @@ final class Appointment extends Equatable {
   /// Unmodifiable audit entries in oldest-first order.
   final List<AppointmentStatusChange> history;
 
+  /// Copies this appointment with its client-generated persistence identifier.
+  Appointment withId(String id) {
+    return Appointment.restore(
+      id: id,
+      patientId: patientId,
+      staffId: staffId,
+      branchId: branchId,
+      departmentId: departmentId,
+      serviceId: serviceId,
+      serviceName: serviceName,
+      fee: fee,
+      date: date,
+      range: range,
+      status: status,
+      history: history,
+    );
+  }
+
   /// The duration derived from the booked time range.
   Duration get duration => Duration(minutes: range.durationMinutes);
 
@@ -198,6 +217,12 @@ final class Appointment extends Equatable {
 
   /// Whether this appointment reserves its booked slot.
   bool get occupiesSlot => _state.occupiesSlot;
+
+  /// The occupied projection, or null when this status releases the range.
+  BookedSlot? get bookedSlot {
+    if (!occupiesSlot) return null;
+    return BookedSlot(appointmentId: id, date: date, range: range);
+  }
 
   AppointmentState get _state => status.state;
 

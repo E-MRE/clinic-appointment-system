@@ -5,6 +5,13 @@ import 'package:clinic_appointment_system/core/router/app_router.dart';
 import 'package:clinic_appointment_system/core/states/theme_cubit.dart';
 import 'package:clinic_appointment_system/core/time/clock.dart';
 import 'package:clinic_appointment_system/core/time/system_clock.dart';
+import 'package:clinic_appointment_system/features/appointments/data/repositories/firestore_appointment_repository.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/repositories/appointment_repository.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/usecases/book_appointment_use_case.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/usecases/change_appointment_status_use_case.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_patient_appointments_use_case.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_staff_appointments_use_case.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_staff_booked_slots_use_case.dart';
 import 'package:clinic_appointment_system/features/auth/data/mappers/firebase_auth_exception_mapper.dart';
 import 'package:clinic_appointment_system/features/auth/data/repositories/firebase_auth_repository.dart';
 import 'package:clinic_appointment_system/features/auth/domain/mappers/auth_exception_mapper.dart';
@@ -144,6 +151,34 @@ mixin AppDependencyRegisterMixin {
       ),
     );
     injector.registerLazySingleton<Clock>(() => const SystemClock());
+    injector.registerLazySingleton<AppointmentRepository>(
+      () => FirestoreAppointmentRepository(injector.get<FirebaseFirestore>()),
+    );
+    injector.registerLazySingleton<BookAppointmentUseCase>(
+      () => BookAppointmentUseCase(
+        injector.get<AppointmentRepository>(),
+        injector.get<Clock>(),
+      ),
+    );
+    injector.registerLazySingleton<ChangeAppointmentStatusUseCase>(
+      () => ChangeAppointmentStatusUseCase(
+        injector.get<AppointmentRepository>(),
+        injector.get<Clock>(),
+      ),
+    );
+    injector.registerLazySingleton<WatchPatientAppointmentsUseCase>(
+      () => WatchPatientAppointmentsUseCase(
+        injector.get<AppointmentRepository>(),
+      ),
+    );
+    injector.registerLazySingleton<WatchStaffAppointmentsUseCase>(
+      () =>
+          WatchStaffAppointmentsUseCase(injector.get<AppointmentRepository>()),
+    );
+    injector.registerLazySingleton<WatchStaffBookedSlotsUseCase>(
+      () => WatchStaffBookedSlotsUseCase(injector.get<AppointmentRepository>()),
+    );
+
     injector.registerLazySingleton<AvailabilityPolicy>(
       () => const AvailabilityPolicy.standard(),
     );

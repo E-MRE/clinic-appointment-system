@@ -111,13 +111,98 @@ service cloud.firestore {
       }
     }
 
+    function occupiesSlot(status) {
+      return status in ['pending', 'approved', 'completed', 'noShow'];
+    }
+
+    function releasesSlot(old, next) {
+      return occupiesSlot(old.status)
+        && next.status in ['rejected', 'cancelledByPatient', 'cancelledByStaff'];
+    }
+
+    function bookingSlot(appointmentId, data) {
+      return { 'appointmentId': appointmentId, 'start': data.start, 'end': data.end };
+    }
+
+    function previousSlots(path) {
+      return exists(path) ? get(path).data.slots : [];
+    }
+
+    function appendedDay(path, slot) {
+      return getAfter(path).data.slots == previousSlots(path).concat([slot]);
+    }
+
+    function releasedDay(path, slot) {
+      return getAfter(path).data.slots == previousSlots(path).removeAll([slot]);
+    }
+
+    function unchangedDay(path) {
+      return exists(path)
+        ? getAfter(path).data == get(path).data
+        : !existsAfter(path);
+    }
+
+    // Overlap is enforced by the client transaction and domain validator;
+    // rules only keep the busy-slot projection in sync with appointments.
+    function validBookingProjection(appointmentId, data) {
+      let staffDay = /databases/$(database)/documents/staffBookings/$(data.staffId)/days/$(data.date);
+      let patientDay = /databases/$(database)/documents/patientBookings/$(data.patientId)/days/$(data.date);
+      let slot = bookingSlot(appointmentId, data);
+      return appendedDay(staffDay, slot) && appendedDay(patientDay, slot);
+    }
+
+    function validTransitionProjection(appointmentId, old, next) {
+      let staffDay = /databases/$(database)/documents/staffBookings/$(old.staffId)/days/$(old.date);
+      let patientDay = /databases/$(database)/documents/patientBookings/$(old.patientId)/days/$(old.date);
+      let slot = bookingSlot(appointmentId, old);
+      return releasesSlot(old, next)
+        ? releasedDay(staffDay, slot) && releasedDay(patientDay, slot)
+        : unchangedDay(staffDay) && unchangedDay(patientDay);
+    }
+
+    function validDayWrite(ownerId, date, ownerField) {
+      let next = request.resource.data;
+      let keys = ['slots', 'lastAppointmentId', 'updatedAt'];
+      return next.keys().hasOnly(keys) && next.keys().hasAll(keys)
+        && next.slots is list && isFilledString(next.lastAppointmentId)
+        && next.updatedAt == request.time
+        && pairedAppointment(ownerId, date, ownerField, next);
+    }
+
+    function pairedAppointment(ownerId, date, ownerField, next) {
+      let path = /databases/$(database)/documents/appointments/$(next.lastAppointmentId);
+      let existed = exists(path);
+      let after = getAfter(path).data;
+      let beforeSlots = resource == null ? [] : resource.data.slots;
+      let slot = bookingSlot(next.lastAppointmentId, after);
+      return after[ownerField] == ownerId && after.date == date
+        && ((!existed && existsAfter(path)
+            && next.slots == beforeSlots.concat([slot]))
+          || (existed && releasesSlot(get(path).data, after)
+            && next.slots == beforeSlots.removeAll([slot])));
+    }
+
+    match /staffBookings/{staffId}/days/{date} {
+      allow read: if isSignedIn();
+      allow create, update: if isSignedIn() && validDayWrite(staffId, date, 'staffId');
+      allow delete: if false;
+    }
+
+    match /patientBookings/{patientId}/days/{date} {
+      allow read: if isUser(patientId) || isAdmin();
+      allow create, update: if isSignedIn() && validDayWrite(patientId, date, 'patientId');
+      allow delete: if false;
+    }
+
     // appointments/{appointmentId}: lifecycle changes append an audit entry.
     match /appointments/{appointmentId} {
       allow read: if resource != null && (isAdmin()
         || isUser(resource.data.patientId) || isUser(resource.data.staffId));
       allow create: if isSignedIn() && callerRole() == 'patient'
-        && isValidAppointment(request.resource.data);
-      allow update: if isSignedIn() && isValidUpdate();
+        && isValidAppointment(request.resource.data)
+        && validBookingProjection(appointmentId, request.resource.data);
+      allow update: if isSignedIn() && isValidUpdate()
+        && validTransitionProjection(appointmentId, resource.data, request.resource.data);
       allow delete: if false;
 
       function callerRole() {
@@ -158,23 +243,28 @@ service cloud.firestore {
 
       function validStaff(data) {
         let profile = /databases/$(database)/documents/users/$(data.staffId);
-        return exists(profile) && get(profile).data.role in ['doctor', 'technician']
-          && get(profile).data.branchId == data.branchId
-          && get(profile).data.departmentId == data.departmentId;
+        return exists(profile) && staffMatchesAppointment(get(profile).data, data);
+      }
+
+      function staffMatchesAppointment(profile, data) {
+        return profile.role in ['doctor', 'technician']
+          && profile.branchId == data.branchId
+          && profile.departmentId == data.departmentId;
       }
 
       // Time-based appointment limits are validated in the domain layer.
       function isValidUpdate() {
         let old = resource.data;
         let next = request.resource.data;
+        let role = callerRole();
         return next.diff(old).affectedKeys().hasOnly(['status', 'history', 'updatedAt'])
           && next.updatedAt == request.time
           && old.history is list && old.history.size() > 0
           && next.history is list && next.history.size() == old.history.size() + 1
           && next.history[0:old.history.size()] == old.history
-          && validEntry(next.history[old.history.size()], next.status, callerRole())
+          && validEntry(next.history[old.history.size()], next.status, role)
           && next.history[old.history.size()].at >= old.history[old.history.size() - 1].at
-          && allowedTransition(old, next.status, callerRole());
+          && allowedTransition(old, next.status, role);
       }
 
       function allowedTransition(old, status, role) {

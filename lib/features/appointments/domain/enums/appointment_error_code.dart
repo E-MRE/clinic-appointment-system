@@ -1,5 +1,14 @@
 /// Provider-independent causes of appointment lifecycle and booking failures.
 enum AppointmentErrorCode {
+  /// The storage provider could not complete the operation.
+  unavailable,
+
+  /// A stored document could not be decoded safely.
+  invalidRecord,
+
+  /// The appointment requested for a transition no longer exists.
+  notFound,
+
   /// The current status does not allow this operation.
   invalidTransition,
 
