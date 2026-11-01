@@ -34,17 +34,13 @@ final class _WorkingHoursEditorRange extends StatelessWidget {
     final editor = context.read<WorkingHoursEditorCubit>();
     final draft = editor.state.day(day).ranges[index];
     final original = start ? draft.start : draft.end;
-    final chosen = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay(hour: original.hour, minute: original.minute),
-    );
+    final chosen = await context.pickClockTime(initial: original);
     if (chosen == null || context.mounted == false) return;
-    final time = ClockTime(hour: chosen.hour, minute: chosen.minute);
     editor.updateRange(
       day,
       index,
-      start ? time : draft.start,
-      start ? draft.end : time,
+      start ? chosen : draft.start,
+      start ? draft.end : chosen,
     );
   }
 }

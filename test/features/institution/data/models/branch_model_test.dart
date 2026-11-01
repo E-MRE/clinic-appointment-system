@@ -1,8 +1,8 @@
+import 'package:clinic_appointment_system/core/enums/weekday.dart';
+import 'package:clinic_appointment_system/core/time/clock_time.dart';
+import 'package:clinic_appointment_system/core/time/time_range.dart';
 import 'package:clinic_appointment_system/features/institution/data/models/branch_model.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/branch.dart';
-import 'package:clinic_appointment_system/features/institution/domain/enums/weekday.dart';
-import 'package:clinic_appointment_system/features/institution/domain/value_objects/clock_time.dart';
-import 'package:clinic_appointment_system/features/institution/domain/value_objects/time_range.dart';
 import 'package:clinic_appointment_system/features/institution/domain/value_objects/working_hours.dart';
 import 'package:flutter_test/flutter_test.dart';
 

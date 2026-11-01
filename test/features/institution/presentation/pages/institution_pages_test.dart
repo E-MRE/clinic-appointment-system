@@ -2,13 +2,14 @@ import 'dart:async';
 
 import 'package:clinic_appointment_system/core/constants/working_hours_constants.dart';
 import 'package:clinic_appointment_system/core/di/app_dependency.dart';
+import 'package:clinic_appointment_system/core/enums/weekday.dart';
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
 import 'package:clinic_appointment_system/core/theme/theme.dart';
+import 'package:clinic_appointment_system/core/time/clock_time.dart';
 import 'package:clinic_appointment_system/core/widgets/loading/loading_state.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/branch.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/clinic.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/department.dart';
-import 'package:clinic_appointment_system/features/institution/domain/enums/weekday.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/create_branch_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/create_clinic_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/create_department_use_case.dart';
@@ -18,7 +19,6 @@ import 'package:clinic_appointment_system/features/institution/domain/usecases/u
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_branches_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_clinics_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_departments_use_case.dart';
-import 'package:clinic_appointment_system/features/institution/domain/value_objects/clock_time.dart';
 import 'package:clinic_appointment_system/features/institution/domain/value_objects/working_hours.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/branch_list_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/branch_save_cubit.dart';

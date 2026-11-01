@@ -16,6 +16,7 @@ final class _DesktopNavigationLayout extends StatelessWidget {
           selectedIndex: shell.selectedIndex,
           onDestinationSelected: shell.onDestinationSelected,
           primaryAction: shell.primaryAction,
+          footer: shell.footer,
         ),
         Expanded(child: shell.child),
       ],

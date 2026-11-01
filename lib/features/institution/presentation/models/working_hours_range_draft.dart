@@ -1,6 +1,6 @@
 import 'package:clinic_appointment_system/core/constants/working_hours_constants.dart';
-import 'package:clinic_appointment_system/features/institution/domain/value_objects/clock_time.dart';
-import 'package:clinic_appointment_system/features/institution/domain/value_objects/time_range.dart';
+import 'package:clinic_appointment_system/core/time/clock_time.dart';
+import 'package:clinic_appointment_system/core/time/time_range.dart';
 
 /// Holds the editable start and end values for one working-hours range.
 final class WorkingHoursRangeDraft {

@@ -24,3 +24,21 @@ _Avoid_: Opening hours, schedule, availability
 **Closed day**:
 A weekday on which a branch has no working hours.
 _Avoid_: Holiday, day off
+
+## Availability
+
+**Availability window**:
+A time range during which a doctor or technician accepts appointments; it must lie inside one range of the branch's working hours.
+_Avoid_: Shift, schedule, working hours
+
+**Weekly window**:
+An availability window that recurs every week on one weekday.
+_Avoid_: Recurring shift, template
+
+**One-off window**:
+An availability window on one calendar date, added on top of that date's weekly windows; it never replaces them.
+_Avoid_: Exception, override, extra shift
+
+**Slot**:
+A bookable start time produced by splitting an availability window back to back by a service duration; a remainder shorter than the duration is dropped.
+_Avoid_: Appointment, time slot booking

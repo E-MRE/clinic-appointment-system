@@ -67,10 +67,21 @@ final class _StaffManagementTable extends StatelessWidget {
         semanticsLabel: LocaleKeys.staff_columns_actions.tr(),
         alignment: AppTableAlignment.end,
         cellBuilder: (context, member) {
-          return IconButton(
-            onPressed: () => context.openStaffEdit(member),
-            tooltip: LocaleKeys.staff_editTooltip.tr(),
-            icon: const Icon(Icons.edit_outlined),
+          return Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                onPressed: () => context.openStaffAvailability(member),
+                tooltip: LocaleKeys.staff_availabilityTooltip.tr(),
+                icon: const Icon(Icons.event_available_outlined),
+              ),
+              IconButton(
+                onPressed: () => context.openStaffEdit(member),
+                tooltip: LocaleKeys.staff_editTooltip.tr(),
+                icon: const Icon(Icons.edit_outlined),
+              ),
+            ],
           );
         },
       ),

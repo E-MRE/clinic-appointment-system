@@ -15,6 +15,21 @@ abstract final class FirestoreConstants {
   /// Collection containing user profiles.
   static const String users = 'users';
 
+  /// Collection containing staff availability schedules.
+  static const String staffAvailability = 'staffAvailability';
+
+  /// Field storing recurring availability windows.
+  static const String weekly = 'weekly';
+
+  /// Field storing dated availability windows.
+  static const String oneOff = 'oneOff';
+
+  /// Field storing a calendar date.
+  static const String date = 'date';
+
+  /// Server timestamp recorded when a schedule is updated.
+  static const String updatedAt = 'updatedAt';
+
   /// Field storing the clinic that owns a branch.
   static const String clinicId = 'clinicId';
 

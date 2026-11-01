@@ -1,6 +1,7 @@
 import 'package:clinic_appointment_system/core/constants/firestore_constants.dart';
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
 import 'package:clinic_appointment_system/core/errors/institution_exception.dart';
+import 'package:clinic_appointment_system/core/errors/time_exception.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/institution_record.dart';
 import 'package:clinic_appointment_system/features/institution/domain/enums/institution_error_code.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -35,6 +36,58 @@ abstract base class FirestoreInstitutionRepository<
   /// Firestore errors are emitted as [InstitutionException].
   Stream<DataResult<List<Entity>>> watchAll() {
     return _watchQuery(firestore.collection(collectionName));
+  }
+
+  /// Watches one record by [id]; a missing or malformed record is invalid.
+  Stream<DataResult<Entity>> watchById(String id) {
+    return firestore
+        .collection(collectionName)
+        .doc(id)
+        .snapshots()
+        .handleError(_handleStreamError)
+        .map((document) {
+          final data = document.data();
+          if (data == null) {
+            throw const InstitutionException(
+              InstitutionErrorCode.invalidRecord,
+            );
+          }
+          try {
+            return DataResult.success(
+              data: entityFromJson({...data, 'id': document.id}),
+            );
+          } on CheckedFromJsonException catch (_, stackTrace) {
+            Error.throwWithStackTrace(
+              const InstitutionException(InstitutionErrorCode.invalidRecord),
+              stackTrace,
+            );
+          } on TypeError catch (_, stackTrace) {
+            Error.throwWithStackTrace(
+              const InstitutionException(InstitutionErrorCode.invalidRecord),
+              stackTrace,
+            );
+          } on ArgumentError catch (_, stackTrace) {
+            Error.throwWithStackTrace(
+              const InstitutionException(InstitutionErrorCode.invalidRecord),
+              stackTrace,
+            );
+          } on FormatException catch (_, stackTrace) {
+            Error.throwWithStackTrace(
+              const InstitutionException(InstitutionErrorCode.invalidRecord),
+              stackTrace,
+            );
+          } on TimeException catch (_, stackTrace) {
+            Error.throwWithStackTrace(
+              const InstitutionException(InstitutionErrorCode.invalidRecord),
+              stackTrace,
+            );
+          } on InstitutionException catch (_, stackTrace) {
+            Error.throwWithStackTrace(
+              const InstitutionException(InstitutionErrorCode.invalidRecord),
+              stackTrace,
+            );
+          }
+        });
   }
 
   /// Watches records whose [field] equals [value], sorted by display name.
@@ -130,6 +183,11 @@ abstract base class FirestoreInstitutionRepository<
         stackTrace,
       );
     } on FormatException catch (_, stackTrace) {
+      Error.throwWithStackTrace(
+        const InstitutionException(InstitutionErrorCode.invalidRecord),
+        stackTrace,
+      );
+    } on TimeException catch (_, stackTrace) {
       Error.throwWithStackTrace(
         const InstitutionException(InstitutionErrorCode.invalidRecord),
         stackTrace,

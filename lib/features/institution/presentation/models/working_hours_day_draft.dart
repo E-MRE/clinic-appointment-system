@@ -1,7 +1,9 @@
+import 'package:clinic_appointment_system/core/enums/weekday.dart';
 import 'package:clinic_appointment_system/core/errors/institution_exception.dart';
+import 'package:clinic_appointment_system/core/errors/time_exception.dart';
 import 'package:clinic_appointment_system/features/institution/domain/enums/institution_error_code.dart';
-import 'package:clinic_appointment_system/features/institution/domain/enums/weekday.dart';
 import 'package:clinic_appointment_system/features/institution/domain/value_objects/working_hours.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/extensions/time_error_code_institution.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/models/working_hours_range_draft.dart';
 
 /// Holds one weekday's editable open state, ranges and domain validation code.
@@ -19,6 +21,8 @@ final class WorkingHoursDayDraft {
         WorkingHours({
           weekday: copiedRanges.map((range) => range.toTimeRange()).toList(),
         });
+      } on TimeException catch (exception) {
+        error = exception.code.institutionCode;
       } on InstitutionException catch (exception) {
         error = exception.code;
       }

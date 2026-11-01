@@ -10,7 +10,7 @@ final class _StaffFormEditResolver extends StatelessWidget {
   Widget build(BuildContext context) {
     final listState = context.watch<StaffListCubit>().state;
     if (listState is InstitutionListLoading<Staff>) {
-      return const _StaffFormLoadingView();
+      return const StaffFormLoadingView();
     }
     if (listState is InstitutionListLoaded<Staff>) {
       final matches = listState.items.where((s) => s.id == staffId);
@@ -18,6 +18,6 @@ final class _StaffFormEditResolver extends StatelessWidget {
         return _StaffFormEditBody(staff: matches.first);
       }
     }
-    return const _StaffFormNotFoundView();
+    return const StaffFormNotFoundView();
   }
 }

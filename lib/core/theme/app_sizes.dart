@@ -20,6 +20,16 @@
 /// * s144 → 144
 ///
 /// Widget-specific sizes that do not fit the scale:
+/// * availabilityDesktopMinWidth → 960
+/// * availabilityTimelineLabelTablet → 88
+/// * availabilityTimelineBar → 30
+/// * dashedBorderDash → 6
+/// * dashedBorderGap → 4
+/// * availabilityDayRow → 60
+/// * availabilityCalendarTile → 36
+/// * availabilityCalendarIcon → 18
+/// * timeRangeRemoveButton → 28
+/// * timeRangeRemoveIcon → 14
 /// * previewMobileWidth → 390
 /// * previewTabletWidth → 720
 /// * previewDesktopWidth → 1024
@@ -101,6 +111,46 @@ abstract final class AppSizes {
   static const double s144 = 144;
 
   // Widget-specific
+
+  /// Minimum width of the two-column availability editor before horizontal scrolling.
+  /// value = 960
+  static const double availabilityDesktopMinWidth = 960;
+
+  /// Timeline weekday label column width on tablet.
+  /// value = 88
+  static const double availabilityTimelineLabelTablet = 88;
+
+  /// Timeline range bar height.
+  /// value = 30
+  static const double availabilityTimelineBar = 30;
+
+  /// Length of a painted outline dash.
+  /// value = 6
+  static const double dashedBorderDash = 6;
+
+  /// Gap between consecutive outline dashes.
+  /// value = 4
+  static const double dashedBorderGap = s4;
+
+  /// Availability mobile weekday row minimum height.
+  /// value = 60
+  static const double availabilityDayRow = 60;
+
+  /// Availability one-off calendar tile diameter.
+  /// value = 36
+  static const double availabilityCalendarTile = 36;
+
+  /// Availability one-off calendar icon size.
+  /// value = 18
+  static const double availabilityCalendarIcon = 18;
+
+  /// Time range chip remove button diameter.
+  /// value = 28
+  static const double timeRangeRemoveButton = 28;
+
+  /// Time range chip remove icon size.
+  /// value = 14
+  static const double timeRangeRemoveIcon = 14;
 
   /// Form dialog maximum width.
   /// value = 560

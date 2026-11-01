@@ -39,6 +39,7 @@ final class AppNavigationShell extends StatelessWidget {
     required this.child,
     required this.logo,
     this.primaryAction,
+    this.footer,
     super.key,
   });
 
@@ -59,6 +60,9 @@ final class AppNavigationShell extends StatelessWidget {
 
   /// Optional desktop primary action.
   final Widget? primaryAction;
+
+  /// Optional widget pinned below the desktop destinations.
+  final Widget? footer;
 
   @override
   Widget build(BuildContext context) {

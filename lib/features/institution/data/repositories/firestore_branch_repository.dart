@@ -38,6 +38,11 @@ final class FirestoreBranchRepository
     return BranchModel.fromEntity(entity).toJson();
   }
 
+  /// Watches one branch by its document identifier.
+  @override
+  Stream<DataResult<Branch>> watchBranch(String branchId) =>
+      watchById(branchId);
+
   @override
   Stream<DataResult<List<Branch>>> watchBranches(String clinicId) {
     return watchWhere(FirestoreConstants.clinicId, clinicId);

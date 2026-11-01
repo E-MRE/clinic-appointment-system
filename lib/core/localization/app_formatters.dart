@@ -7,6 +7,22 @@ import 'package:intl/date_symbol_data_local.dart';
 final class AppFormatters {
   const AppFormatters._();
 
+  /// Formats a date using the current locale's long date pattern.
+  static String formatLongDate(
+    DateTime dateTime, {
+    String? locale,
+    BuildContext? context,
+  }) {
+    return DateFormat.yMMMMd(
+      _resolveLocale(locale: locale, context: context),
+    ).format(dateTime);
+  }
+
+  /// Formats a day and month without a year in the active locale.
+  static String formatDayMonth(DateTime dateTime, {String? locale}) {
+    return DateFormat.MMMMd(_resolveLocale(locale: locale)).format(dateTime);
+  }
+
   /// Ensures date formatting symbols are initialized for the specified [locales].
   static Future<void> ensureInitialized([
     List<String> locales = const ['tr_TR', 'en_US', 'tr', 'en'],

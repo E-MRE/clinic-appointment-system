@@ -18,6 +18,26 @@ abstract class LocaleKeys {
   static const common_loading = 'common.loading';
   static const common_search = 'common.search';
   static const common_confirm = 'common.confirm';
+  static const common_weekdays_monday = 'common.weekdays.monday';
+  static const common_weekdays_tuesday = 'common.weekdays.tuesday';
+  static const common_weekdays_wednesday = 'common.weekdays.wednesday';
+  static const common_weekdays_thursday = 'common.weekdays.thursday';
+  static const common_weekdays_friday = 'common.weekdays.friday';
+  static const common_weekdays_saturday = 'common.weekdays.saturday';
+  static const common_weekdays_sunday = 'common.weekdays.sunday';
+  static const common_weekdays = 'common.weekdays';
+  static const common_weekdaysShort_monday = 'common.weekdaysShort.monday';
+  static const common_weekdaysShort_tuesday = 'common.weekdaysShort.tuesday';
+  static const common_weekdaysShort_wednesday =
+      'common.weekdaysShort.wednesday';
+  static const common_weekdaysShort_thursday = 'common.weekdaysShort.thursday';
+  static const common_weekdaysShort_friday = 'common.weekdaysShort.friday';
+  static const common_weekdaysShort_saturday = 'common.weekdaysShort.saturday';
+  static const common_weekdaysShort_sunday = 'common.weekdaysShort.sunday';
+  static const common_weekdaysShort = 'common.weekdaysShort';
+  static const common_removeRange = 'common.removeRange';
+  static const common_selectTime = 'common.selectTime';
+  static const common_rangeOutsideHours = 'common.rangeOutsideHours';
   static const common = 'common';
   static const roles_patient = 'roles.patient';
   static const roles_doctor = 'roles.doctor';
@@ -310,15 +330,6 @@ abstract class LocaleKeys {
   static const institution_empty_departmentsDescription =
       'institution.empty.departmentsDescription';
   static const institution_empty = 'institution.empty';
-  static const institution_weekdays_monday = 'institution.weekdays.monday';
-  static const institution_weekdays_tuesday = 'institution.weekdays.tuesday';
-  static const institution_weekdays_wednesday =
-      'institution.weekdays.wednesday';
-  static const institution_weekdays_thursday = 'institution.weekdays.thursday';
-  static const institution_weekdays_friday = 'institution.weekdays.friday';
-  static const institution_weekdays_saturday = 'institution.weekdays.saturday';
-  static const institution_weekdays_sunday = 'institution.weekdays.sunday';
-  static const institution_weekdays = 'institution.weekdays';
   static const institution_errors_invalidTime =
       'institution.errors.invalidTime';
   static const institution_errors_closeBeforeOpen =
@@ -363,21 +374,6 @@ abstract class LocaleKeys {
   static const institution_today = 'institution.today';
   static const institution_selectClinic = 'institution.selectClinic';
   static const institution_openDaysCount = 'institution.openDaysCount';
-  static const institution_weekdaysShort_monday =
-      'institution.weekdaysShort.monday';
-  static const institution_weekdaysShort_tuesday =
-      'institution.weekdaysShort.tuesday';
-  static const institution_weekdaysShort_wednesday =
-      'institution.weekdaysShort.wednesday';
-  static const institution_weekdaysShort_thursday =
-      'institution.weekdaysShort.thursday';
-  static const institution_weekdaysShort_friday =
-      'institution.weekdaysShort.friday';
-  static const institution_weekdaysShort_saturday =
-      'institution.weekdaysShort.saturday';
-  static const institution_weekdaysShort_sunday =
-      'institution.weekdaysShort.sunday';
-  static const institution_weekdaysShort = 'institution.weekdaysShort';
   static const institution_allDaysClosed = 'institution.allDaysClosed';
   static const institution = 'institution';
   static const staff_addTitle = 'staff.addTitle';
@@ -439,6 +435,7 @@ abstract class LocaleKeys {
   static const staff_notFoundMessage = 'staff.notFoundMessage';
   static const staff_loading = 'staff.loading';
   static const staff_editTooltip = 'staff.editTooltip';
+  static const staff_availabilityTooltip = 'staff.availabilityTooltip';
   static const staff_columns_name = 'staff.columns.name';
   static const staff_columns_role = 'staff.columns.role';
   static const staff_columns_placement = 'staff.columns.placement';
@@ -446,4 +443,77 @@ abstract class LocaleKeys {
   static const staff_columns_actions = 'staff.columns.actions';
   static const staff_columns = 'staff.columns';
   static const staff = 'staff';
+  static const availability_title = 'availability.title';
+  static const availability_mobileSubtitle = 'availability.mobileSubtitle';
+  static const availability_tabletSubtitle = 'availability.tabletSubtitle';
+  static const availability_desktopSubtitle = 'availability.desktopSubtitle';
+  static const availability_weeklyTotal = 'availability.weeklyTotal';
+  static const availability_branchHours = 'availability.branchHours';
+  static const availability_closed = 'availability.closed';
+  static const availability_addForDay = 'availability.addForDay';
+  static const availability_outsideHours = 'availability.outsideHours';
+  static const availability_remove = 'availability.remove';
+  static const availability_oneOffTitle = 'availability.oneOffTitle';
+  static const availability_oneOffEmpty = 'availability.oneOffEmpty';
+  static const availability_addForDate = 'availability.addForDate';
+  static const availability_oneOffSubtitle = 'availability.oneOffSubtitle';
+  static const availability_removeOneOff = 'availability.removeOneOff';
+  static const availability_sheetTitle = 'availability.sheetTitle';
+  static const availability_weekly = 'availability.weekly';
+  static const availability_oneOff = 'availability.oneOff';
+  static const availability_weekday = 'availability.weekday';
+  static const availability_date = 'availability.date';
+  static const availability_start = 'availability.start';
+  static const availability_end = 'availability.end';
+  static const availability_helper = 'availability.helper';
+  static const availability_cancel = 'availability.cancel';
+  static const availability_save = 'availability.save';
+  static const availability_signOut = 'availability.signOut';
+  static const availability_doctorSubtitle = 'availability.doctorSubtitle';
+  static const availability_technicianSubtitle =
+      'availability.technicianSubtitle';
+  static const availability_loading = 'availability.loading';
+  static const availability_failureTitle = 'availability.failureTitle';
+  static const availability_retry = 'availability.retry';
+  static const availability_notFoundTitle = 'availability.notFoundTitle';
+  static const availability_notFoundMessage = 'availability.notFoundMessage';
+  static const availability_hours = 'availability.hours';
+  static const availability_hoursMinutes = 'availability.hoursMinutes';
+  static const availability_noMinutes = 'availability.noMinutes';
+  static const availability_windowAdded = 'availability.windowAdded';
+  static const availability_previewSingle = 'availability.previewSingle';
+  static const availability_previewMultiple = 'availability.previewMultiple';
+  static const availability_previewDuration = 'availability.previewDuration';
+  static const availability_errors_overlappingWindow =
+      'availability.errors.overlappingWindow';
+  static const availability_errors_overlapConflict =
+      'availability.errors.overlapConflict';
+  static const availability_errors_outsideBranchHours =
+      'availability.errors.outsideBranchHours';
+  static const availability_errors_branchClosed =
+      'availability.errors.branchClosed';
+  static const availability_errors_pastDate = 'availability.errors.pastDate';
+  static const availability_errors_tooManyWindows =
+      'availability.errors.tooManyWindows';
+  static const availability_errors_windowNotFound =
+      'availability.errors.windowNotFound';
+  static const availability_errors_invalidRecord =
+      'availability.errors.invalidRecord';
+  static const availability_errors_unavailable =
+      'availability.errors.unavailable';
+  static const availability_errors_endBeforeStart =
+      'availability.errors.endBeforeStart';
+  static const availability_errors_invalidTime =
+      'availability.errors.invalidTime';
+  static const availability_errors_invalidDate =
+      'availability.errors.invalidDate';
+  static const availability_errors = 'availability.errors';
+  static const availability_flaggedRange = 'availability.flaggedRange';
+  static const availability_addWindow = 'availability.addWindow';
+  static const availability_saveWindow = 'availability.saveWindow';
+  static const availability_weeklyTitle = 'availability.weeklyTitle';
+  static const availability_branchAxis = 'availability.branchAxis';
+  static const availability_editDay = 'availability.editDay';
+  static const availability_timelineFootnote = 'availability.timelineFootnote';
+  static const availability = 'availability';
 }

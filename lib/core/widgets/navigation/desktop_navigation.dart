@@ -8,6 +8,7 @@ final class _DesktopNavigation extends StatelessWidget {
     required this.selectedIndex,
     required this.onDestinationSelected,
     required this.primaryAction,
+    required this.footer,
   });
 
   final SvgGenImage logo;
@@ -15,6 +16,7 @@ final class _DesktopNavigation extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int> onDestinationSelected;
   final Widget? primaryAction;
+  final Widget? footer;
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +41,7 @@ final class _DesktopNavigation extends StatelessWidget {
               itemBuilder: _DesktopNavigationItem.new,
             ),
           ),
+          ?footer,
         ],
       ),
     );

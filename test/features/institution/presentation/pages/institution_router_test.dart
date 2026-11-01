@@ -8,6 +8,7 @@ import 'package:clinic_appointment_system/core/states/theme_cubit.dart';
 import 'package:clinic_appointment_system/core/theme/theme.dart';
 import 'package:clinic_appointment_system/features/auth/domain/entities/auth_session.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/auth_route_guard.dart';
+import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_state.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/branch.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/clinic.dart';
@@ -46,6 +47,7 @@ import '../../../../support/auth_cubit_factory.dart';
 import '../../../../support/auth_repository_doubles.dart';
 import '../../../../support/localization_test_app.dart';
 import '../../../../support/user_repository_double.dart';
+import '../../../availability/presentation/pages/doubles/availability_page_harness.dart';
 import '../../domain/doubles/fake_branch_repository.dart';
 import '../../domain/doubles/fake_clinic_repository.dart';
 import '../../domain/doubles/fake_department_repository.dart';
@@ -81,7 +83,7 @@ void main() {
         serviceIds: [],
         specialty: 'Cardiology',
       ),
-      AppRoutes.staffHome,
+      AppRoutes.staffAvailability,
     ),
   ]) {
     for (final path in [
@@ -130,7 +132,9 @@ void main() {
           guard.dispose();
           await authCubit.close();
         });
-        await _pumpRouter(tester, router);
+        final availability = AvailabilityPageHarness()..registerCubits();
+        addTearDown(availability.disposeRepositories);
+        await _pumpRouter(tester, router, authCubit: authCubit);
         expect(
           router.routeInformationProvider.value.uri.path,
           home == AppRoutes.adminHome ? path : home,
@@ -364,14 +368,22 @@ GoRouter _router(
   return createAppRouter(initialLocation: path, authGuard: guard);
 }
 
-Future<void> _pumpRouter(WidgetTester tester, GoRouter router) async {
+Future<void> _pumpRouter(
+  WidgetTester tester,
+  GoRouter router, {
+  AuthCubit? authCubit,
+}) async {
   await pumpLocalizedWidget(
     tester,
     LocalizationWrapper(
       child: Builder(
         builder: (context) {
-          return BlocProvider(
-            create: (_) => ThemeCubit(),
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider<ThemeCubit>(create: (_) => ThemeCubit()),
+              if (authCubit != null)
+                BlocProvider<AuthCubit>.value(value: authCubit),
+            ],
             child: MaterialApp.router(
               locale: context.locale,
               supportedLocales: context.supportedLocales,

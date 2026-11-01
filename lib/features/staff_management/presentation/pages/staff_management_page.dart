@@ -29,12 +29,12 @@ import 'package:clinic_appointment_system/features/staff_management/presentation
 import 'package:clinic_appointment_system/features/staff_management/presentation/cubit/staff_filter_cubit.dart';
 import 'package:clinic_appointment_system/features/staff_management/presentation/cubit/staff_list_cubit.dart';
 import 'package:clinic_appointment_system/features/staff_management/presentation/enums/staff_role_filter.dart';
-import 'package:clinic_appointment_system/features/staff_management/presentation/extensions/staff_initials.dart';
 import 'package:clinic_appointment_system/features/staff_management/presentation/extensions/staff_list_overview_presentation.dart';
 import 'package:clinic_appointment_system/features/staff_management/presentation/extensions/staff_overview_context.dart';
-import 'package:clinic_appointment_system/features/staff_management/presentation/extensions/user_role_staff_label.dart';
 import 'package:clinic_appointment_system/features/staff_management/presentation/widgets/staff_form.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/staff.dart';
+import 'package:clinic_appointment_system/features/users/presentation/extensions/staff_initials.dart';
+import 'package:clinic_appointment_system/features/users/presentation/extensions/user_role_staff_label.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -4,6 +4,8 @@ import 'package:clinic_appointment_system/features/institution/domain/models/bra
 import 'package:clinic_appointment_system/features/institution/domain/repositories/branch_repository.dart';
 
 final class FakeBranchRepository implements BranchRepository {
+  Stream<DataResult<Branch>> branchStream = const Stream.empty();
+  String? watchedBranchId;
   Stream<DataResult<List<Branch>>> branchesStream = const Stream.empty();
   DataResult<Branch> createResult = const DataResult.error();
   DataResult<Branch> updateResult = const DataResult.error();
@@ -12,6 +14,12 @@ final class FakeBranchRepository implements BranchRepository {
   String? watchedClinicId;
   int createCalls = 0;
   int updateCalls = 0;
+
+  @override
+  Stream<DataResult<Branch>> watchBranch(String branchId) {
+    watchedBranchId = branchId;
+    return branchStream;
+  }
 
   @override
   Stream<DataResult<List<Branch>>> watchBranches(String clinicId) {
