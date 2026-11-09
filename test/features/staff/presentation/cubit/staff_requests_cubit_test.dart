@@ -133,6 +133,15 @@ void main() {
 
     expect(cubit.state, isA<StaffRequestsLoading>());
   });
+
+  test('cancels the appointments stream subscription on close', () async {
+    cubit.watch('staff-7');
+    expect(repository.events.hasListener, isTrue);
+
+    await cubit.close();
+
+    expect(repository.events.hasListener, isFalse);
+  });
 }
 
 Appointment _appointment(
