@@ -56,7 +56,12 @@ final class _PatientAppointmentsTable extends StatelessWidget {
             onPressed: () {
               showDialog<void>(
                 context: context,
-                builder: (_) => _PatientAppointmentsDetailsDialog(entry: entry),
+                builder: (_) => _PatientAppointmentsDetailsDialog(
+                  appointmentId: entry.appointment.id,
+                  initialEntry: entry,
+                  appointmentsCubit: context.read<PatientAppointmentsCubit>(),
+                  catalogCubit: context.read<PatientCatalogCubit>(),
+                ),
               );
             },
           );

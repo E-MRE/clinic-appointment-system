@@ -30,6 +30,11 @@ final class BookAppointmentCubit extends Cubit<BookAppointmentState> {
 
   bool get _isClosingOrClosed => _isClosing || isClosed;
 
+  /// Clears a displayed failure after the booking selection changes.
+  void resetFailure() {
+    if (state is BookAppointmentFailure) emit(const BookAppointmentIdle());
+  }
+
   /// Requests the slot chosen in [selection] for [patient], with the
   /// availability and branch hours of [schedule]. Ignored while another
   /// request runs, while closing, or when the selection is incomplete.

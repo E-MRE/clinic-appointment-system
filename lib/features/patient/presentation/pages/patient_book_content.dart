@@ -7,15 +7,6 @@ final class _PatientBookContent extends StatelessWidget {
   final PatientCatalog catalog;
   final PatientAppointmentActor patient;
 
-  /// Flex share of the service and staff column on desktop.
-  int get _choiceFlex => 303;
-
-  /// Flex share of the date and time card on desktop.
-  int get _scheduleFlex => 424;
-
-  /// Flex share of the summary card on desktop.
-  int get _summaryFlex => 261;
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -39,15 +30,15 @@ final class _PatientBookContent extends StatelessWidget {
                   spacing: AppSizes.s20,
                   children: [
                     Expanded(
-                      flex: _choiceFlex,
+                      flex: PatientLayoutConstants.bookingChoiceFlex,
                       child: _PatientBookChoiceColumn(catalog: catalog),
                     ),
                     Expanded(
-                      flex: _scheduleFlex,
+                      flex: PatientLayoutConstants.bookingScheduleFlex,
                       child: _PatientBookScheduleCard(catalog: catalog),
                     ),
                     Expanded(
-                      flex: _summaryFlex,
+                      flex: PatientLayoutConstants.bookingSummaryFlex,
                       child: _PatientBookSummaryCard(
                         catalog: catalog,
                         patient: patient,

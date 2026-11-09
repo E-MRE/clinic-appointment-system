@@ -1,4 +1,5 @@
 import 'package:clinic_appointment_system/core/router/app_router.dart';
+import 'package:clinic_appointment_system/core/widgets/form_dialog/app_form_dialog.dart';
 import 'package:clinic_appointment_system/core/widgets/status_badge/status_badge.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_error_code.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status.dart';
@@ -82,6 +83,11 @@ void main() {
       expect(find.text('Bölümler'), findsOneWidget);
       expect(find.text('Kardiyoloji'), findsOneWidget);
       expect(find.text('1 hizmet'), findsNWidgets(4));
+      final flexes = tester
+          .widgetList<Expanded>(find.byType(Expanded))
+          .map((Expanded widget) => widget.flex)
+          .toList();
+      expect(flexes, containsAll([711, 376]));
       expect(tester.takeException(), isNull);
     });
   }
@@ -206,6 +212,72 @@ void main() {
     await tester.pumpAndSettle();
     expect(badge('Onaylandı'), findsNWidgets(3));
     expect(badge('Beklemede'), findsOneWidget);
+  });
+
+  testWidgets('an open details dialog follows live appointment status', (
+    tester,
+  ) async {
+    await pumpLoaded(tester);
+    await openDetails(tester, 1);
+    final dialog = find.byType(AppFormDialog);
+    expect(
+      find.descendant(of: dialog, matching: find.text('Beklemede')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: dialog, matching: find.text('Randevuyu iptal et')),
+      findsOneWidget,
+    );
+
+    final approved = fixtures.appointment(
+      'a2',
+      'lipid',
+      'zeynep',
+      AppointmentStatus.approved,
+      DateTime(2026, 10, 28, 8, 30),
+      10,
+    );
+    await tester.runAsync(() async {
+      harness.appointments.emit([
+        for (final appointment in fixtures.appointments)
+          if (appointment.id == 'a2') approved else appointment,
+      ]);
+      await Future<void>.delayed(Duration.zero);
+    });
+    await tester.pumpAndSettle();
+    expect(
+      find.descendant(of: dialog, matching: find.text('Onaylandı')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: dialog, matching: find.text('Randevuyu iptal et')),
+      findsOneWidget,
+    );
+
+    final rejected = fixtures.appointment(
+      'a2',
+      'lipid',
+      'zeynep',
+      AppointmentStatus.rejected,
+      DateTime(2026, 10, 28, 8, 30),
+      10,
+    );
+    await tester.runAsync(() async {
+      harness.appointments.emit([
+        for (final appointment in fixtures.appointments)
+          if (appointment.id == 'a2') rejected else appointment,
+      ]);
+      await Future<void>.delayed(Duration.zero);
+    });
+    await tester.pumpAndSettle();
+    expect(
+      find.descendant(of: dialog, matching: find.text('Reddedildi')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: dialog, matching: find.text('Randevuyu iptal et')),
+      findsNothing,
+    );
   });
 
   testWidgets('a department row opens booking for that department', (

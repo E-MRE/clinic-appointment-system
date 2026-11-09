@@ -6,7 +6,8 @@ extension AppointmentErrorCodeBooking on AppointmentErrorCode {
   bool get clearsSlot {
     return switch (this) {
       AppointmentErrorCode.staffOverlap ||
-      AppointmentErrorCode.patientOverlap => true,
+      AppointmentErrorCode.patientOverlap ||
+      AppointmentErrorCode.inPast => true,
       AppointmentErrorCode.unavailable ||
       AppointmentErrorCode.invalidRecord ||
       AppointmentErrorCode.notFound ||
@@ -15,7 +16,6 @@ extension AppointmentErrorCodeBooking on AppointmentErrorCode {
       AppointmentErrorCode.tooEarly ||
       AppointmentErrorCode.tooLate ||
       AppointmentErrorCode.invalidHistory ||
-      AppointmentErrorCode.inPast ||
       AppointmentErrorCode.outsideWorkingHours ||
       AppointmentErrorCode.outsideAvailability ||
       AppointmentErrorCode.serviceNotProvided => false,

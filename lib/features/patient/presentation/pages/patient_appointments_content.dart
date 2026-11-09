@@ -10,12 +10,6 @@ final class _PatientAppointmentsContent extends StatelessWidget {
   final String firstName;
   final PatientAppointmentsOverview overview;
 
-  /// Flex share of the appointments column on desktop.
-  int get _primaryFlex => 711;
-
-  /// Flex share of the notes and departments column on desktop.
-  int get _secondaryFlex => 376;
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -39,13 +33,13 @@ final class _PatientAppointmentsContent extends StatelessWidget {
                   spacing: AppSizes.s24,
                   children: [
                     Expanded(
-                      flex: _primaryFlex,
+                      flex: PatientLayoutConstants.appointmentsPrimaryFlex,
                       child: _PatientAppointmentsPrimaryColumn(
                         overview: overview,
                       ),
                     ),
                     Expanded(
-                      flex: _secondaryFlex,
+                      flex: PatientLayoutConstants.appointmentsSecondaryFlex,
                       child: _PatientAppointmentsSecondaryColumn(
                         overview: overview,
                       ),

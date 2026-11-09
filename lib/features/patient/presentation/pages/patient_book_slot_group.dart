@@ -10,9 +10,6 @@ final class _PatientBookSlotGroup extends StatelessWidget {
   final StaffSlotGroup group;
   final TimeRange? selectedSlot;
 
-  /// Slots per grid row.
-  int get _columns => 4;
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -23,8 +20,8 @@ final class _PatientBookSlotGroup extends StatelessWidget {
         GridView(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: _columns,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: PatientLayoutConstants.bookingSlotColumns,
             mainAxisExtent: AppSizes.s48,
             mainAxisSpacing: AppSizes.s8,
             crossAxisSpacing: AppSizes.s8,

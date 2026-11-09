@@ -2,67 +2,126 @@ part of 'patient_appointments_page.dart';
 
 /// Appointment details with the patient's cancel action.
 /// Owns its cancel request: closes with a confirmation on success and
-/// shows the localized error in place on failure.
+/// shows the localized error in place on failure. If the appointment leaves
+/// the observed list, keeps the entry that was current when the dialog opened.
 final class _PatientAppointmentsDetailsDialog extends StatelessWidget {
-  const _PatientAppointmentsDetailsDialog({required this.entry});
+  const _PatientAppointmentsDetailsDialog({
+    required this.appointmentId,
+    required this.initialEntry,
+    required this.appointmentsCubit,
+    required this.catalogCubit,
+  });
 
-  final PatientAppointmentEntry entry;
+  final String appointmentId;
+  final PatientAppointmentEntry initialEntry;
+  final PatientAppointmentsCubit appointmentsCubit;
+  final PatientCatalogCubit catalogCubit;
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<PatientAppointmentCancelCubit>(
-      create: (_) {
-        return AppDependency.injector.get<PatientAppointmentCancelCubit>();
-      },
-      child:
-          BlocListener<PatientAppointmentCancelCubit, AppointmentActionState>(
-            listener: _onCancelState,
-            child: AppFormDialog(
-              title: entry.serviceName,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                spacing: AppSizes.s16,
-                children: [
-                  AppDefinitionRow(
-                    label: LocaleKeys.patient_appointments_dialog_dateTime
-                        .translate(),
-                    child: AppText.bodyStrong(entry.longDateTimeLabel),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<PatientAppointmentsCubit>.value(value: appointmentsCubit),
+        BlocProvider<PatientCatalogCubit>.value(value: catalogCubit),
+      ],
+      child: BlocProvider<PatientAppointmentCancelCubit>(
+        create: (_) {
+          return AppDependency.injector.get<PatientAppointmentCancelCubit>();
+        },
+        child:
+            BlocListener<PatientAppointmentCancelCubit, AppointmentActionState>(
+              listener: _onCancelState,
+              child:
+                  BlocBuilder<
+                    PatientAppointmentsCubit,
+                    PatientAppointmentsState
+                  >(
+                    builder: (context, appointmentsState) {
+                      final catalogState = context
+                          .watch<PatientCatalogCubit>()
+                          .state;
+                      final entry = _currentEntry(
+                        appointmentsState,
+                        catalogState,
+                      );
+                      return AppFormDialog(
+                        title: entry.serviceName,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          spacing: AppSizes.s16,
+                          children: [
+                            AppDefinitionRow(
+                              label: LocaleKeys
+                                  .patient_appointments_dialog_dateTime
+                                  .translate(),
+                              child: AppText.bodyStrong(
+                                entry.longDateTimeLabel,
+                              ),
+                            ),
+                            AppDefinitionRow(
+                              label: LocaleKeys
+                                  .patient_appointments_dialog_staff
+                                  .translate(),
+                              child: AppText.bodyStrong(entry.staffName),
+                            ),
+                            AppDefinitionRow(
+                              label: LocaleKeys
+                                  .patient_appointments_dialog_location
+                                  .translate(),
+                              child: AppText.bodyStrong(entry.location),
+                            ),
+                            AppDefinitionRow(
+                              label: LocaleKeys.patient_appointments_dialog_fee
+                                  .translate(),
+                              child: AppText.bodyStrong(entry.fee),
+                            ),
+                            AppDefinitionRow(
+                              label: LocaleKeys
+                                  .patient_appointments_dialog_status
+                                  .translate(),
+                              child: AppointmentStatusBadge(
+                                status: entry.appointment.status,
+                              ),
+                            ),
+                            if (entry.cancellationNote case final note?)
+                              AppDefinitionRow(
+                                label: LocaleKeys
+                                    .patient_appointments_dialog_note
+                                    .translate(),
+                                child: AppText.bodyStrong(note),
+                              ),
+                            const _PatientAppointmentsCancelError(),
+                            _PatientAppointmentsDialogActions(entry: entry),
+                          ],
+                        ),
+                      );
+                    },
                   ),
-                  AppDefinitionRow(
-                    label: LocaleKeys.patient_appointments_dialog_staff
-                        .translate(),
-                    child: AppText.bodyStrong(entry.staffName),
-                  ),
-                  AppDefinitionRow(
-                    label: LocaleKeys.patient_appointments_dialog_location
-                        .translate(),
-                    child: AppText.bodyStrong(entry.location),
-                  ),
-                  AppDefinitionRow(
-                    label: LocaleKeys.patient_appointments_dialog_fee
-                        .translate(),
-                    child: AppText.bodyStrong(entry.fee),
-                  ),
-                  AppDefinitionRow(
-                    label: LocaleKeys.patient_appointments_dialog_status
-                        .translate(),
-                    child: AppointmentStatusBadge(
-                      status: entry.appointment.status,
-                    ),
-                  ),
-                  if (entry.cancellationNote case final note?)
-                    AppDefinitionRow(
-                      label: LocaleKeys.patient_appointments_dialog_note
-                          .translate(),
-                      child: AppText.bodyStrong(note),
-                    ),
-                  const _PatientAppointmentsCancelError(),
-                  _PatientAppointmentsDialogActions(entry: entry),
-                ],
-              ),
             ),
-          ),
+      ),
     );
+  }
+
+  PatientAppointmentEntry _currentEntry(
+    PatientAppointmentsState appointmentsState,
+    PatientCatalogState catalogState,
+  ) {
+    if (appointmentsState case PatientAppointmentsLoaded(:final appointments)) {
+      if (catalogState case PatientCatalogLoaded(:final catalog)) {
+        final overview = PatientAppointmentsOverview(
+          appointments: appointments,
+          catalog: catalog,
+          now: AppDependency.injector.get<Clock>().now(),
+          patient: PatientAppointmentActor(
+            id: initialEntry.appointment.patientId,
+          ),
+        );
+        for (final entry in overview.all) {
+          if (entry.appointment.id == appointmentId) return entry;
+        }
+      }
+    }
+    return initialEntry;
   }
 
   /// Closes the dialog and confirms a successful cancellation.

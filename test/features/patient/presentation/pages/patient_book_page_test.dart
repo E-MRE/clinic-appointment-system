@@ -109,6 +109,11 @@ void main() {
       expect(find.text('19 – 24 Ekim'), findsOneWidget);
       expect(find.text('—'), findsNWidgets(6));
       expect(submitButton(tester).onPressed, isNull);
+      final flexes = tester
+          .widgetList<Expanded>(find.byType(Expanded))
+          .map((Expanded widget) => widget.flex)
+          .toList();
+      expect(flexes, containsAll([303, 424, 261]));
 
       await tapText(tester, 'Dahiliye Muayenesi');
       await tester.pumpAndSettle();
@@ -124,6 +129,12 @@ void main() {
       expect(find.text('Dolu'), findsOneWidget);
       expect(find.text('12 boş'), findsOneWidget);
       expect(find.text('Sabah · 08:00–10:00'), findsOneWidget);
+      final slotGrid = tester.widgetList<GridView>(find.byType(GridView)).first;
+      expect(
+        (slotGrid.gridDelegate as SliverGridDelegateWithFixedCrossAxisCount)
+            .crossAxisCount,
+        4,
+      );
       expect(find.text('09:00'), findsOneWidget);
       expect(
         find.text(
@@ -200,6 +211,29 @@ void main() {
     expect(
       router.routeInformationProvider.value.uri.path,
       AppRoutes.patientBook,
+    );
+  });
+
+  testWidgets('changing the service clears a previous booking failure', (
+    tester,
+  ) async {
+    harness.appointments.bookFailure = AppointmentErrorCode.unavailable;
+    await pumpBook(tester);
+    await chooseMurat(tester);
+    await tapText(tester, '09:40');
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Randevu talep et'));
+    await harness.flush(tester);
+
+    expect(
+      find.text('İşlem şu anda tamamlanamadı. Lütfen tekrar deneyin.'),
+      findsOneWidget,
+    );
+    await tapText(tester, 'Kardiyoloji Muayenesi');
+    await tester.pumpAndSettle();
+    expect(
+      find.text('İşlem şu anda tamamlanamadı. Lütfen tekrar deneyin.'),
+      findsNothing,
     );
   });
 

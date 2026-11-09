@@ -15,6 +15,13 @@ final class _PatientBookEffects extends StatelessWidget {
       listeners: [
         BlocListener<BookingSelectionCubit, BookingSelection>(
           listenWhen: (previous, current) {
+            return _selectionChanged(previous, current) &&
+                !_isOnlySlotCleared(previous, current);
+          },
+          listener: _resetBookingFailure,
+        ),
+        BlocListener<BookingSelectionCubit, BookingSelection>(
+          listenWhen: (previous, current) {
             return current.schedulesDifferentlyFrom(previous);
           },
           listener: _onSelection,
@@ -38,6 +45,27 @@ final class _PatientBookEffects extends StatelessWidget {
       return;
     }
     schedule.watch(request);
+  }
+
+  void _resetBookingFailure(BuildContext context, BookingSelection selection) {
+    context.read<BookAppointmentCubit>().resetFailure();
+  }
+
+  bool _selectionChanged(BookingSelection previous, BookingSelection current) {
+    return previous.service?.id != current.service?.id ||
+        previous.staff?.id != current.staff?.id ||
+        previous.weekStart != current.weekStart ||
+        previous.date != current.date ||
+        previous.slot != current.slot;
+  }
+
+  bool _isOnlySlotCleared(BookingSelection previous, BookingSelection current) {
+    return previous.service?.id == current.service?.id &&
+        previous.staff?.id == current.staff?.id &&
+        previous.weekStart == current.weekStart &&
+        previous.date == current.date &&
+        previous.slot != null &&
+        current.slot == null;
   }
 
   void _onSchedule(BuildContext context, StaffWeekScheduleState state) {
