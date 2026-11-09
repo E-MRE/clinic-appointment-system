@@ -26,8 +26,13 @@
 /// * dashedBorderDash → 6
 /// * dashedBorderGap → 4
 /// * availabilityDayRow → 60
-/// * availabilityCalendarTile → 36
 /// * availabilityCalendarIcon → 18
+/// * iconTileMedium → 36
+/// * iconTileMediumIcon → 18
+/// * tabIndicator → 3
+/// * patientContentMaxWidth → 1200
+/// * appointmentDateTileWidth → 84
+/// * patientAppointmentsTableMinWidth → 560
 /// * timeRangeRemoveButton → 28
 /// * timeRangeRemoveIcon → 14
 /// * previewMobileWidth → 390
@@ -136,13 +141,33 @@ abstract final class AppSizes {
   /// value = 60
   static const double availabilityDayRow = 60;
 
-  /// Availability one-off calendar tile diameter.
-  /// value = 36
-  static const double availabilityCalendarTile = 36;
-
   /// Availability one-off calendar icon size.
   /// value = 18
-  static const double availabilityCalendarIcon = 18;
+  static const double availabilityCalendarIcon = iconTileMediumIcon;
+
+  /// Medium icon tile edge, shared by list rows and preparation notes.
+  /// value = 36
+  static const double iconTileMedium = 36;
+
+  /// Icon size inside a medium icon tile.
+  /// value = 18
+  static const double iconTileMediumIcon = 18;
+
+  /// Selected tab underline thickness.
+  /// value = 3
+  static const double tabIndicator = 3;
+
+  /// Maximum width of the patient pages' content column.
+  /// value = 1200
+  static const double patientContentMaxWidth = 1200;
+
+  /// Width of the next-appointment date tile.
+  /// value = 84
+  static const double appointmentDateTileWidth = 84;
+
+  /// Minimum width of the patient appointments table before it scrolls.
+  /// value = 560
+  static const double patientAppointmentsTableMinWidth = 560;
 
   /// Time range chip remove button diameter.
   /// value = 28

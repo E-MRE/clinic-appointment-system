@@ -20,6 +20,7 @@ import 'package:clinic_appointment_system/core/widgets/choice/app_segmented_cont
 import 'package:clinic_appointment_system/core/widgets/dashed_border/app_dashed_border.dart';
 import 'package:clinic_appointment_system/core/widgets/date_field/app_date_field.dart';
 import 'package:clinic_appointment_system/core/widgets/form_dialog/app_form_dialog.dart';
+import 'package:clinic_appointment_system/core/widgets/icon_tile/app_icon_tile.dart';
 import 'package:clinic_appointment_system/core/widgets/loading/loading_state.dart';
 import 'package:clinic_appointment_system/core/widgets/loading/loading_state_variant.dart';
 import 'package:clinic_appointment_system/core/widgets/message_banner/app_message_banner.dart';

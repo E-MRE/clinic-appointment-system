@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 /// * allXxxl → all 48
 /// * authCard → all 40
 /// * horizontalSm → horizontal 8
+/// * horizontalMd → horizontal 12
 /// * horizontalLg → horizontal 16
 /// * horizontalXl → horizontal 24
 /// * verticalSm → vertical 8
@@ -65,6 +66,9 @@ final class AppPadding extends EdgeInsets {
 
   /// value = horizontal 8
   const AppPadding.horizontalSm() : super.symmetric(horizontal: AppSizes.s8);
+
+  /// value = horizontal 12
+  const AppPadding.horizontalMd() : super.symmetric(horizontal: AppSizes.s12);
 
   /// value = horizontal 16
   const AppPadding.horizontalLg() : super.symmetric(horizontal: AppSizes.s16);

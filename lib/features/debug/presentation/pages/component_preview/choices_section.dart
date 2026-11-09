@@ -10,16 +10,18 @@ final class _ChoicesSection extends StatefulWidget {
   }
 }
 
-/// Keeps the two example selections independent.
+/// Keeps the example selections independent.
 final class _ChoicesSectionState extends State<_ChoicesSection> {
   late _PreviewTheme _filter;
   late _PreviewTheme _segment;
+  late _PreviewTheme _tab;
 
   @override
   void initState() {
     super.initState();
     _filter = _PreviewTheme.light;
     _segment = _PreviewTheme.light;
+    _tab = _PreviewTheme.light;
   }
 
   @override
@@ -40,6 +42,14 @@ final class _ChoicesSectionState extends State<_ChoicesSection> {
           onSelected: (value) {
             setState(() {
               _segment = value;
+            });
+          },
+        ),
+        _ChoicesTabBar(
+          selected: _tab,
+          onSelected: (value) {
+            setState(() {
+              _tab = value;
             });
           },
         ),

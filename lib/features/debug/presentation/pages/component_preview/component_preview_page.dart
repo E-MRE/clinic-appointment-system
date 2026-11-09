@@ -39,6 +39,7 @@ import 'package:clinic_appointment_system/core/widgets/surface/app_surface_paddi
 import 'package:clinic_appointment_system/core/widgets/surface/app_surface_radius.dart';
 import 'package:clinic_appointment_system/core/widgets/surface/app_surface_variant.dart';
 import 'package:clinic_appointment_system/core/widgets/system_overlay_region.dart';
+import 'package:clinic_appointment_system/core/widgets/tab_bar/app_tab_bar.dart';
 import 'package:clinic_appointment_system/core/widgets/text_field/app_text_field.dart';
 import 'package:clinic_appointment_system/core/widgets/time_field/app_time_field.dart';
 import 'package:clinic_appointment_system/core/widgets/time_range_chip/app_time_range_chip.dart';
@@ -85,6 +86,7 @@ part 'fields_error_select_field.dart';
 part 'choices_section.dart';
 part 'choices_filter_chips.dart';
 part 'choices_segmented_control.dart';
+part 'choices_tab_bar.dart';
 part 'navigation_section.dart';
 part 'navigation_preview_shell.dart';
 part 'other_section.dart';
