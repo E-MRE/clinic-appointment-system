@@ -23,6 +23,20 @@ final class AppFormatters {
     return DateFormat.MMMMd(_resolveLocale(locale: locale)).format(dateTime);
   }
 
+  /// Formats a day and abbreviated month in the active locale (`26 Eki`).
+  static String formatDayShortMonth(DateTime dateTime, {String? locale}) {
+    return DateFormat.MMMd(_resolveLocale(locale: locale)).format(dateTime);
+  }
+
+  /// Formats the abbreviated month in upper case (`EKİ`), using Turkish
+  /// casing rules for dotted and dotless `i` in Turkish locales.
+  static String formatShortMonthUpper(DateTime dateTime, {String? locale}) {
+    final loc = _resolveLocale(locale: locale);
+    final month = DateFormat.MMM(loc).format(dateTime);
+    if (!loc.toLowerCase().startsWith('tr')) return month.toUpperCase();
+    return month.replaceAll('i', 'İ').replaceAll('ı', 'I').toUpperCase();
+  }
+
   /// Ensures date formatting symbols are initialized for the specified [locales].
   static Future<void> ensureInitialized([
     List<String> locales = const ['tr_TR', 'en_US', 'tr', 'en'],

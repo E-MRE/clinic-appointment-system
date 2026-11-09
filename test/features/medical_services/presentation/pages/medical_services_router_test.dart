@@ -8,6 +8,7 @@ import 'package:clinic_appointment_system/core/states/theme_cubit.dart';
 import 'package:clinic_appointment_system/core/theme/theme.dart';
 import 'package:clinic_appointment_system/features/auth/domain/entities/auth_session.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/auth_route_guard.dart';
+import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_state.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/branch.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/clinic.dart';
@@ -56,6 +57,7 @@ import '../../../../support/user_repository_double.dart';
 import '../../../institution/domain/doubles/fake_branch_repository.dart';
 import '../../../institution/domain/doubles/fake_clinic_repository.dart';
 import '../../../institution/domain/doubles/fake_department_repository.dart';
+import '../../../patient/presentation/doubles/patient_page_harness.dart';
 import '../../domain/doubles/fake_medical_service_repository.dart';
 
 void main() {
@@ -223,10 +225,12 @@ void main() {
       await authCubit.close();
     });
 
-    await _pumpRouter(tester, router);
+    final patient = PatientPageHarness()..registerCubits();
+    addTearDown(patient.disposeRepositories);
+    await _pumpRouter(tester, router, authCubit: authCubit);
     expect(
       router.routeInformationProvider.value.uri.path,
-      AppRoutes.patientHome,
+      AppRoutes.patientAppointments,
     );
   });
 }
@@ -290,14 +294,22 @@ GoRouter _setupRouter(
   return createAppRouter(initialLocation: path, authGuard: guard);
 }
 
-Future<void> _pumpRouter(WidgetTester tester, GoRouter router) async {
+Future<void> _pumpRouter(
+  WidgetTester tester,
+  GoRouter router, {
+  AuthCubit? authCubit,
+}) async {
   await pumpLocalizedWidget(
     tester,
     LocalizationWrapper(
       child: Builder(
         builder: (context) {
-          return BlocProvider(
-            create: (_) => ThemeCubit(),
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider<ThemeCubit>(create: (_) => ThemeCubit()),
+              if (authCubit != null)
+                BlocProvider<AuthCubit>.value(value: authCubit),
+            ],
             child: MaterialApp.router(
               locale: context.locale,
               supportedLocales: context.supportedLocales,

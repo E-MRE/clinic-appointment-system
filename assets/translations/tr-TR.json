@@ -35,7 +35,8 @@
     },
     "removeRange": "Aralığı kaldır",
     "selectTime": "Saat seçin",
-    "rangeOutsideHours": "Aralık şube çalışma saatleri dışında"
+    "rangeOutsideHours": "Aralık şube çalışma saatleri dışında",
+    "notAvailable": "—"
   },
   "roles": {
     "patient": "Hasta",
@@ -45,7 +46,6 @@
     "admin": "Yönetici"
   },
   "home": {
-    "patient": "Hasta ana sayfası",
     "staff": "Personel ana sayfası",
     "admin": "Yönetici ana sayfası"
   },
@@ -63,6 +63,22 @@
       "completed": "Tamamlandı",
       "noShow": "Gelmedi",
       "cancelled": "İptal Edildi"
+    },
+    "errors": {
+      "unavailable": "İşlem şu anda tamamlanamadı. Lütfen tekrar deneyin.",
+      "invalidRecord": "Randevu kaydı okunamadı.",
+      "notFound": "Randevu artık mevcut değil.",
+      "invalidTransition": "Randevunun mevcut durumu bu işleme izin vermiyor.",
+      "notPermitted": "Bu işlem için yetkiniz yok.",
+      "tooEarly": "Bu işlem için henüz erken.",
+      "tooLate": "Başlamış bir randevu iptal edilemez.",
+      "invalidHistory": "Randevu geçmişi okunamadı.",
+      "inPast": "Geçmiş bir saate randevu alınamaz.",
+      "outsideWorkingHours": "Seçilen saat şube çalışma saatleri dışında.",
+      "outsideAvailability": "Personel bu saatte uygun değil.",
+      "serviceNotProvided": "Seçilen personel bu hizmeti vermiyor.",
+      "staffOverlap": "Bu saat artık dolu. Lütfen başka bir saat seçin.",
+      "patientOverlap": "Bu saatte başka bir randevunuz var."
     }
   },
   "services": {
@@ -476,5 +492,71 @@
     "branchAxis": "{} · {}",
     "editDay": "{} aralıklarını düzenle",
     "timelineFootnote": "Açık zemin şubenin çalışma saatlerini ({}) gösterir. Aralıklar bu saatlerin dışına taşamaz ve aynı gün içinde çakışamaz."
+  },
+  "patient": {
+    "signOut": "Çıkış yap",
+    "appointments": {
+      "title": "Randevularım",
+      "greeting": "Merhaba {}, {} yaklaşan randevunuz var.",
+      "greetingEmpty": "Merhaba {}, yaklaşan randevunuz yok.",
+      "loading": "Randevular yükleniyor",
+      "failureTitle": "Randevular yüklenemedi",
+      "retry": "Tekrar dene",
+      "nextLabel": "SIRADAKİ RANDEVU",
+      "cancel": "İptal et",
+      "details": "Ayrıntılar",
+      "tabs": {
+        "all": "Tümü ({})",
+        "upcoming": "Yaklaşan ({})",
+        "past": "Geçmiş ({})"
+      },
+      "emptyTabs": {
+        "all": "Henüz randevunuz yok.",
+        "upcoming": "Yaklaşan randevunuz yok.",
+        "past": "Geçmiş randevunuz yok."
+      },
+      "columns": {
+        "date": "Tarih",
+        "service": "Hizmet",
+        "staff": "Personel",
+        "status": "Durum",
+        "actions": "İşlemler"
+      },
+      "detailsTooltip": "Randevu ayrıntıları",
+      "dateTime": "{}, {}",
+      "detailLine": "{} · {} ({}) · {} · {}",
+      "location": "{}, {}",
+      "serviceCaption": "{} · {}",
+      "cancelledByPatient": "Sizin tarafınızdan iptal edildi",
+      "cancelledByStaff": "Personel tarafından iptal edildi",
+      "notesTitle": "Hazırlık notları",
+      "noteHeading": "{} · {}",
+      "fastingNote": "{} aç gelin. Su içebilirsiniz.",
+      "departmentsTitle": "Bölümler",
+      "departmentServices": "{} hizmet",
+      "dialog": {
+        "dateTime": "Tarih ve saat",
+        "dateTimeValue": "{} · {}",
+        "staff": "Doktor",
+        "location": "Yer",
+        "fee": "Ücret",
+        "status": "Durum",
+        "note": "Not",
+        "close": "Kapat",
+        "cancel": "Randevuyu iptal et"
+      },
+      "confirmCancel": {
+        "title": "Randevuyu iptal et",
+        "message": "Bu randevuyu iptal etmek istediğinize emin misiniz?",
+        "dismiss": "Vazgeç",
+        "confirm": "İptal et"
+      },
+      "cancelled": "Randevunuz iptal edildi."
+    },
+    "book": {
+      "title": "Randevu al",
+      "comingSoonTitle": "Yakında",
+      "comingSoonMessage": "Randevu alma ekranı yakında burada olacak."
+    }
   }
 }

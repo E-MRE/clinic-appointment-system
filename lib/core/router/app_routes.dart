@@ -4,8 +4,32 @@ abstract final class AppRoutes {
   /// Entry location redirected to the signed-in user's home.
   static const String home = '/';
 
-  /// Patient home location.
+  /// Patient home location; redirects to [patientAppointments].
   static const String patientHome = '/patient';
+
+  /// Relative path of the patient's appointment list.
+  static const String patientAppointmentsSegment = 'appointments';
+
+  /// The patient's appointment list location.
+  static const String patientAppointments =
+      '$patientHome/$patientAppointmentsSegment';
+
+  /// Relative path of the patient's booking page.
+  static const String patientBookSegment = 'book';
+
+  /// The patient's booking location.
+  static const String patientBook = '$patientHome/$patientBookSegment';
+
+  /// Query parameter preselecting a department on [patientBook].
+  static const String patientBookDepartmentParameter = 'department';
+
+  /// The booking location filtered to the department identified by [id].
+  static String patientBookForDepartment(String id) {
+    return Uri(
+      path: patientBook,
+      queryParameters: {patientBookDepartmentParameter: id},
+    ).toString();
+  }
 
   /// Shared doctor and technician home location.
   static const String staffHome = '/staff';

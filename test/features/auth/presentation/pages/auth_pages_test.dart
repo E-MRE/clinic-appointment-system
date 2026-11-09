@@ -52,6 +52,7 @@ import '../../../availability/presentation/pages/doubles/availability_page_harne
 import '../../../institution/domain/doubles/fake_branch_repository.dart';
 import '../../../institution/domain/doubles/fake_clinic_repository.dart';
 import '../../../institution/domain/doubles/fake_department_repository.dart';
+import '../../../patient/presentation/doubles/patient_page_harness.dart';
 
 void main() {
   setUpAll(() {
@@ -67,8 +68,8 @@ void main() {
   const roles = [
     (
       Patient(id: 'patient-1', fullName: 'A', email: 'patient@example.com'),
-      '/patient',
-      'Hasta ana sayfası',
+      AppRoutes.patientAppointments,
+      'Randevularım',
     ),
     (
       Doctor(
@@ -206,7 +207,7 @@ void main() {
     );
     expect(
       app.router.routeInformationProvider.value.uri.path,
-      AppRoutes.patientHome,
+      AppRoutes.patientAppointments,
     );
     expect(find.byType(AuthShell), findsNothing);
   });
@@ -219,7 +220,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(
       app.router.routeInformationProvider.value.uri.path,
-      AppRoutes.patientHome,
+      AppRoutes.patientAppointments,
     );
     expect(find.byType(SignUpPage), findsNothing);
   });
@@ -305,7 +306,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(
         app.router.routeInformationProvider.value.uri.path,
-        AppRoutes.patientHome,
+        AppRoutes.patientAppointments,
       );
       final credentials =
           verify(() => app.repository.signIn(captureAny())).captured.single
@@ -380,7 +381,7 @@ void main() {
     await _submit(tester);
     app.sessions.add(const DataResult.success(data: _session));
     await tester.pumpAndSettle();
-    expect(updates.last['uri'], AppRoutes.patientHome);
+    expect(updates.last['uri'], AppRoutes.patientAppointments);
     expect(updates.last['replace'], isTrue);
   });
 
@@ -438,7 +439,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(
       app.router.routeInformationProvider.value.uri.path,
-      AppRoutes.patientHome,
+      AppRoutes.patientAppointments,
     );
     final registration =
         verify(() => app.repository.signUp(captureAny())).captured.single
@@ -604,10 +605,12 @@ final class _AuthTestApp {
       ),
     );
     availability.registerCubits();
+    patient.registerCubits();
     router = createAppRouter(initialLocation: route, authGuard: configuration);
     sessions.add(DataResult.success(data: restored));
   }
   final availability = AvailabilityPageHarness();
+  final patient = PatientPageHarness();
   final users = TestUserRepository();
   final repository = MockAuthRepository();
   final sessions = StreamController<DataResult<AuthSession>>();
@@ -624,6 +627,7 @@ final class _AuthTestApp {
     await themeCubit.close();
     await sessions.close();
     await availability.disposeRepositories();
+    await patient.disposeRepositories();
     await AppDependency.injector.reset();
   }
 }

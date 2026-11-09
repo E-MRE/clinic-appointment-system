@@ -20,7 +20,9 @@ import 'package:clinic_appointment_system/features/institution/presentation/page
 import 'package:clinic_appointment_system/features/medical_services/presentation/pages/medical_service_form_page.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/pages/medical_services_page.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/pages/medical_services_route_scope.dart';
-import 'package:clinic_appointment_system/features/patient/presentation/pages/patient_home_page.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/pages/patient_appointments_page.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/pages/patient_book_page.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/widgets/patient_shell.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/widgets/staff_shell.dart';
 import 'package:clinic_appointment_system/features/staff_management/presentation/pages/staff_availability_page.dart';
 import 'package:clinic_appointment_system/features/staff_management/presentation/pages/staff_form_page.dart';
@@ -57,9 +59,38 @@ GoRouter createAppRouter({
         path: AppRoutes.home,
         pageBuilder: (_, state) => _fadePage(state, const HomePage()),
       ),
-      GoRoute(
-        path: AppRoutes.patientHome,
-        pageBuilder: (_, state) => _fadePage(state, const PatientHomePage()),
+      ShellRoute(
+        pageBuilder: (_, state, child) =>
+            _fadePage(state, PatientShell(child: child)),
+        routes: [
+          GoRoute(
+            path: AppRoutes.patientHome,
+            redirect: (_, state) {
+              if (state.uri.path == AppRoutes.patientHome) {
+                return AppRoutes.patientAppointments;
+              }
+              return null;
+            },
+            routes: [
+              GoRoute(
+                path: AppRoutes.patientAppointmentsSegment,
+                pageBuilder: (_, state) =>
+                    _fadePage(state, const PatientAppointmentsPage()),
+              ),
+              GoRoute(
+                path: AppRoutes.patientBookSegment,
+                pageBuilder: (_, state) => _fadePage(
+                  state,
+                  PatientBookPage(
+                    departmentId:
+                        state.uri.queryParameters[AppRoutes
+                            .patientBookDepartmentParameter],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
       ShellRoute(
         pageBuilder: (_, state, child) =>
