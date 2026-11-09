@@ -51,6 +51,7 @@
   },
   "appointment": {
     "title": "Randevu",
+    "dateTime": "{}, {}",
     "appointments": "Randevular",
     "newAppointment": "Yeni Randevu",
     "cancelAppointment": "Randevuyu İptal Et",
@@ -429,6 +430,18 @@
       "services": "Verdiği hizmetler",
       "actions": "İşlemler"
     }
+  },
+  "staffRequests": {
+    "title": "Talepler",
+    "subtitle": "Onay bekleyen randevu talepleri.",
+    "approve": "Onayla",
+    "approving": "Randevu onaylanıyor",
+    "approved": "Randevu onaylandı.",
+    "loading": "Talepler yükleniyor",
+    "failureTitle": "Talepler yüklenemedi",
+    "retry": "Tekrar dene",
+    "emptyTitle": "Onay bekleyen talep yok.",
+    "emptyMessage": "Yeni randevu talepleri geldiğinde burada listelenir."
   },
   "availability": {
     "title": "Uygunluk",

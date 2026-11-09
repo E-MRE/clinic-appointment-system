@@ -50,6 +50,7 @@ abstract class LocaleKeys {
   static const home_admin = 'home.admin';
   static const home = 'home';
   static const appointment_title = 'appointment.title';
+  static const appointment_dateTime = 'appointment.dateTime';
   static const appointment_appointments = 'appointment.appointments';
   static const appointment_newAppointment = 'appointment.newAppointment';
   static const appointment_cancelAppointment = 'appointment.cancelAppointment';
@@ -468,6 +469,17 @@ abstract class LocaleKeys {
   static const staff_columns_actions = 'staff.columns.actions';
   static const staff_columns = 'staff.columns';
   static const staff = 'staff';
+  static const staffRequests_title = 'staffRequests.title';
+  static const staffRequests_subtitle = 'staffRequests.subtitle';
+  static const staffRequests_approve = 'staffRequests.approve';
+  static const staffRequests_approving = 'staffRequests.approving';
+  static const staffRequests_approved = 'staffRequests.approved';
+  static const staffRequests_loading = 'staffRequests.loading';
+  static const staffRequests_failureTitle = 'staffRequests.failureTitle';
+  static const staffRequests_retry = 'staffRequests.retry';
+  static const staffRequests_emptyTitle = 'staffRequests.emptyTitle';
+  static const staffRequests_emptyMessage = 'staffRequests.emptyMessage';
+  static const staffRequests = 'staffRequests';
   static const availability_title = 'availability.title';
   static const availability_mobileSubtitle = 'availability.mobileSubtitle';
   static const availability_tabletSubtitle = 'availability.tabletSubtitle';

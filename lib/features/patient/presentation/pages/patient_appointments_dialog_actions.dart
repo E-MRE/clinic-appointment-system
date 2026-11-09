@@ -19,17 +19,14 @@ final class _PatientAppointmentsDialogActions extends StatelessWidget {
           child: Text(LocaleKeys.patient_appointments_dialog_close.translate()),
         ),
         if (entry.canCancel)
-          BlocBuilder<
-            PatientAppointmentCancelCubit,
-            PatientAppointmentCancelState
-          >(
+          BlocBuilder<PatientAppointmentCancelCubit, AppointmentActionState>(
             builder: (context, state) {
               return FilledButton(
                 style: FilledButton.styleFrom(
                   backgroundColor: colors.error,
                   foregroundColor: colors.onError,
                 ),
-                onPressed: state is PatientAppointmentCancelInProgress
+                onPressed: state is AppointmentActionInProgress
                     ? null
                     : () => context.requestAppointmentCancel(entry),
                 child: Text(

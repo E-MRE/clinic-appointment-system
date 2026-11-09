@@ -14,10 +14,7 @@ final class _PatientAppointmentsNextCard extends StatelessWidget {
         return AppDependency.injector.get<PatientAppointmentCancelCubit>();
       },
       child:
-          BlocListener<
-            PatientAppointmentCancelCubit,
-            PatientAppointmentCancelState
-          >(
+          BlocListener<PatientAppointmentCancelCubit, AppointmentActionState>(
             listener: _onCancelState,
             child: _PatientAppointmentsNextCardBody(entry: entry),
           ),
@@ -25,16 +22,12 @@ final class _PatientAppointmentsNextCard extends StatelessWidget {
   }
 
   /// Reports the outcome of a cancel request started from this card.
-  void _onCancelState(
-    BuildContext context,
-    PatientAppointmentCancelState state,
-  ) {
+  void _onCancelState(BuildContext context, AppointmentActionState state) {
     final message = switch (state) {
-      PatientAppointmentCancelSuccess() =>
+      AppointmentActionSuccess() =>
         LocaleKeys.patient_appointments_cancelled.translate(),
-      PatientAppointmentCancelFailure(:final errorCode) => errorCode.message,
-      PatientAppointmentCancelIdle() ||
-      PatientAppointmentCancelInProgress() => null,
+      AppointmentActionFailure(:final errorCode) => errorCode.message,
+      AppointmentActionIdle() || AppointmentActionInProgress() => null,
     };
     if (message == null) return;
     ScaffoldMessenger.of(

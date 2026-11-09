@@ -15,10 +15,7 @@ final class _PatientAppointmentsDetailsDialog extends StatelessWidget {
         return AppDependency.injector.get<PatientAppointmentCancelCubit>();
       },
       child:
-          BlocListener<
-            PatientAppointmentCancelCubit,
-            PatientAppointmentCancelState
-          >(
+          BlocListener<PatientAppointmentCancelCubit, AppointmentActionState>(
             listener: _onCancelState,
             child: AppFormDialog(
               title: entry.serviceName,
@@ -69,11 +66,8 @@ final class _PatientAppointmentsDetailsDialog extends StatelessWidget {
   }
 
   /// Closes the dialog and confirms a successful cancellation.
-  void _onCancelState(
-    BuildContext context,
-    PatientAppointmentCancelState state,
-  ) {
-    if (state is! PatientAppointmentCancelSuccess) return;
+  void _onCancelState(BuildContext context, AppointmentActionState state) {
+    if (state is! AppointmentActionSuccess) return;
     final messenger = ScaffoldMessenger.of(context);
     Navigator.of(context).pop();
     messenger.showSnackBar(

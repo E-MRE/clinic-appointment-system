@@ -41,6 +41,12 @@ abstract final class AppRoutes {
   static const String staffAvailability =
       '$staffHome/$staffAvailabilitySegment';
 
+  /// Relative staff requests path.
+  static const String staffRequestsSegment = 'requests';
+
+  /// Pending appointment requests location.
+  static const String staffRequests = '$staffHome/$staffRequestsSegment';
+
   /// Administrator home location.
   static const String adminHome = '/admin';
 

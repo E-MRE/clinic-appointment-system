@@ -5,8 +5,8 @@ import 'package:clinic_appointment_system/features/appointments/domain/enums/app
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/results/appointment_result.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/change_appointment_status_use_case.dart';
+import 'package:clinic_appointment_system/features/appointments/presentation/cubit/appointment_action_state.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_appointment_cancel_cubit.dart';
-import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_appointment_cancel_state.dart';
 import 'package:clinic_appointment_system/features/users/domain/enums/user_role.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -34,14 +34,14 @@ void main() {
   });
 
   test('cancels through the domain as the patient', () async {
-    final states = <PatientAppointmentCancelState>[];
+    final states = <AppointmentActionState>[];
     final subscription = cubit.stream.listen(states.add);
-    await cubit.cancel(fixtures.cardiology, patient: patient);
+    await cubit.perform(fixtures.cardiology, by: patient);
     await Future<void>.delayed(Duration.zero);
     await subscription.cancel();
     expect(states, [
-      isA<PatientAppointmentCancelInProgress>(),
-      isA<PatientAppointmentCancelSuccess>(),
+      isA<AppointmentActionInProgress>(),
+      isA<AppointmentActionSuccess>(),
     ]);
     expect(repository.changedIds, ['a1']);
     final cancelled = repository.changeResults.single.appointment;
@@ -53,27 +53,27 @@ void main() {
 
   test('a domain refusal reports its error code', () async {
     repository.stored['a4'] = fixtures.internal;
-    await cubit.cancel(fixtures.internal, patient: patient);
+    await cubit.perform(fixtures.internal, by: patient);
     final state = cubit.state;
-    expect(state, isA<PatientAppointmentCancelFailure>());
+    expect(state, isA<AppointmentActionFailure>());
     expect(
-      (state as PatientAppointmentCancelFailure).errorCode,
+      (state as AppointmentActionFailure).errorCode,
       AppointmentErrorCode.invalidTransition,
     );
 
     repository.failure = AppointmentErrorCode.notFound;
-    await cubit.cancel(fixtures.cardiology, patient: patient);
+    await cubit.perform(fixtures.cardiology, by: patient);
     expect(
-      (cubit.state as PatientAppointmentCancelFailure).errorCode,
+      (cubit.state as AppointmentActionFailure).errorCode,
       AppointmentErrorCode.notFound,
     );
   });
 
   test('a thrown exception reports unavailable', () async {
     repository.exception = Exception('offline');
-    await cubit.cancel(fixtures.cardiology, patient: patient);
+    await cubit.perform(fixtures.cardiology, by: patient);
     expect(
-      (cubit.state as PatientAppointmentCancelFailure).errorCode,
+      (cubit.state as AppointmentActionFailure).errorCode,
       AppointmentErrorCode.unavailable,
     );
   });
@@ -81,26 +81,26 @@ void main() {
   test('ignores a second request while one is in flight', () async {
     final pending = Completer<AppointmentResult>();
     repository.pending = pending;
-    final first = cubit.cancel(fixtures.cardiology, patient: patient);
-    await cubit.cancel(fixtures.cardiology, patient: patient);
+    final first = cubit.perform(fixtures.cardiology, by: patient);
+    await cubit.perform(fixtures.cardiology, by: patient);
     expect(repository.changedIds, ['a1']);
-    expect(cubit.state, isA<PatientAppointmentCancelInProgress>());
+    expect(cubit.state, isA<AppointmentActionInProgress>());
     pending.complete(AppointmentResult.success(fixtures.cardiology));
     await first;
-    expect(cubit.state, isA<PatientAppointmentCancelSuccess>());
+    expect(cubit.state, isA<AppointmentActionSuccess>());
   });
 
   test('a result arriving after close is ignored', () async {
     final pending = Completer<AppointmentResult>();
     repository.pending = pending;
-    final request = cubit.cancel(fixtures.cardiology, patient: patient);
+    final request = cubit.perform(fixtures.cardiology, by: patient);
     await cubit.close();
     pending.complete(
       const AppointmentResult.error(AppointmentErrorCode.unavailable),
     );
     await request;
-    expect(cubit.state, isA<PatientAppointmentCancelInProgress>());
-    await cubit.cancel(fixtures.cardiology, patient: patient);
+    expect(cubit.state, isA<AppointmentActionInProgress>());
+    await cubit.perform(fixtures.cardiology, by: patient);
     expect(repository.changedIds, ['a1']);
   });
 }

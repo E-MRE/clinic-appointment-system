@@ -15,17 +15,14 @@ final class _PatientAppointmentsNextActions extends StatelessWidget {
       alignment: WrapAlignment.end,
       children: [
         if (entry.canCancel)
-          BlocBuilder<
-            PatientAppointmentCancelCubit,
-            PatientAppointmentCancelState
-          >(
+          BlocBuilder<PatientAppointmentCancelCubit, AppointmentActionState>(
             builder: (context, state) {
               return OutlinedButton(
                 style: OutlinedButton.styleFrom(
                   foregroundColor: onPrimaryContainer,
                   side: BorderSide(color: onPrimaryContainer),
                 ),
-                onPressed: state is PatientAppointmentCancelInProgress
+                onPressed: state is AppointmentActionInProgress
                     ? null
                     : () => context.requestAppointmentCancel(entry),
                 child: Text(LocaleKeys.patient_appointments_cancel.translate()),

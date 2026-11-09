@@ -13,9 +13,9 @@ extension _PatientAppointmentsCancelRequest on BuildContext {
       builder: (_) => const _PatientAppointmentsCancelConfirmDialog(),
     );
     if (confirmed != true) return;
-    await cubit.cancel(
+    await cubit.perform(
       entry.appointment,
-      patient: PatientAppointmentActor(id: session.user.id),
+      by: PatientAppointmentActor(id: session.user.id),
     );
   }
 }
