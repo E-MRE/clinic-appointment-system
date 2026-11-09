@@ -224,7 +224,9 @@ void main() {
     );
     final page = tester.widget<PatientBookPage>(find.byType(PatientBookPage));
     expect(page.departmentId, 'radiology');
-    expect(find.text('Yakında'), findsOneWidget);
+    expect(find.byTooltip('Bölüm filtresini kaldır'), findsOneWidget);
+    expect(find.text('Akciğer Grafisi'), findsOneWidget);
+    expect(find.text('Lipid Paneli'), findsNothing);
   });
 
   for (final size in [PatientPageHarness.tablet, PatientPageHarness.mobile]) {

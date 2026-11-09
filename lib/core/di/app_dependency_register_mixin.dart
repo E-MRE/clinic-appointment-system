@@ -77,10 +77,13 @@ import 'package:clinic_appointment_system/features/medical_services/presentation
 import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_form_cubit.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_list_cubit.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_save_cubit.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/cubit/book_appointment_cubit.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/cubit/booking_selection_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_appointment_cancel_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_appointments_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_appointments_tab_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_catalog_cubit.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/cubit/staff_week_schedule_cubit.dart';
 import 'package:clinic_appointment_system/features/staff_management/data/models/staff_model_factory.dart';
 import 'package:clinic_appointment_system/features/staff_management/data/repositories/firestore_staff_repository.dart';
 import 'package:clinic_appointment_system/features/staff_management/data/services/firebase_secondary_auth_provider.dart';
@@ -453,6 +456,23 @@ mixin AppDependencyRegisterMixin {
     injector.registerFactory<PatientAppointmentCancelCubit>(
       () => PatientAppointmentCancelCubit(
         injector.get<ChangeAppointmentStatusUseCase>(),
+      ),
+    );
+    injector.registerFactory<BookingSelectionCubit>(
+      () => BookingSelectionCubit(injector.get<Clock>()),
+    );
+    injector.registerFactory<StaffWeekScheduleCubit>(
+      () => StaffWeekScheduleCubit(
+        injector.get<WatchStaffAvailabilityUseCase>(),
+        injector.get<WatchStaffBookedSlotsUseCase>(),
+        injector.get<Clock>(),
+        injector.get<SlotGenerator>(),
+      ),
+    );
+    injector.registerFactory<BookAppointmentCubit>(
+      () => BookAppointmentCubit(
+        injector.get<BookAppointmentUseCase>(),
+        injector.get<Clock>(),
       ),
     );
     injector.registerFactory<WorkingHoursEditorCubit>(

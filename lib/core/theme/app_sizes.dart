@@ -33,6 +33,8 @@
 /// * patientContentMaxWidth → 1200
 /// * appointmentDateTileWidth → 84
 /// * patientAppointmentsTableMinWidth → 560
+/// * bookingDayCellMinHeight → 76
+/// * bookingWeekButton → 36
 /// * timeRangeRemoveButton → 28
 /// * timeRangeRemoveIcon → 14
 /// * previewMobileWidth → 390
@@ -168,6 +170,14 @@ abstract final class AppSizes {
   /// Minimum width of the patient appointments table before it scrolls.
   /// value = 560
   static const double patientAppointmentsTableMinWidth = 560;
+
+  /// Minimum height of a day cell in the booking day strip.
+  /// value = 76
+  static const double bookingDayCellMinHeight = 76;
+
+  /// Diameter of the booking page's previous and next week buttons.
+  /// value = 36
+  static const double bookingWeekButton = iconTileMedium;
 
   /// Time range chip remove button diameter.
   /// value = 28

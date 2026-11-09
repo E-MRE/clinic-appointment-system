@@ -1,9 +1,13 @@
+import 'package:clinic_appointment_system/core/enums/weekday.dart';
 import 'package:clinic_appointment_system/core/time/calendar_date.dart';
 import 'package:clinic_appointment_system/core/time/clock_time.dart';
 import 'package:clinic_appointment_system/core/time/time_range.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/value_objects/appointment_status_change.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/value_objects/booked_slot.dart';
+import 'package:clinic_appointment_system/features/availability/domain/entities/staff_availability.dart';
+import 'package:clinic_appointment_system/features/availability/domain/entities/weekly_window.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/branch.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/clinic.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/department.dart';
@@ -43,8 +47,45 @@ final class PatientFixtures {
     clinicId: 'clinic',
     name: 'Merkez Şube',
     address: 'Adres',
-    workingHours: WorkingHours.closed(),
+    workingHours: branchHours,
   );
+
+  /// Monday through Saturday 08:00–18:00; closed on Sunday.
+  WorkingHours get branchHours => WorkingHours({
+    for (final day in Weekday.values)
+      if (day != Weekday.sunday) day: [range(8, 0, 600)],
+  });
+
+  /// Monday 19 October 2026, the Monday of [now]'s week.
+  CalendarDate get weekStart => CalendarDate(year: 2026, month: 10, day: 19);
+
+  /// Dr. Murat Şahin's week: Monday 09:00–10:00, Tuesday 08:00–10:00,
+  /// Wednesday 09:00–09:40, Thursday 09:00–12:00 and 13:30–14:30.
+  StaffAvailability get muratAvailability => StaffAvailability(
+    staffId: 'murat',
+    branchId: 'branch',
+    weekly: [
+      WeeklyWindow(weekday: Weekday.monday, range: range(9, 0, 60)),
+      WeeklyWindow(weekday: Weekday.tuesday, range: range(8, 0, 120)),
+      WeeklyWindow(weekday: Weekday.wednesday, range: range(9, 0, 40)),
+      WeeklyWindow(weekday: Weekday.thursday, range: range(13, 30, 60)),
+      WeeklyWindow(weekday: Weekday.thursday, range: range(9, 0, 180)),
+    ],
+  );
+
+  /// The range of [minutes] starting at [hour]:[minute].
+  TimeRange range(int hour, int minute, int minutes) {
+    final start = ClockTime(hour: hour, minute: minute);
+    return TimeRange(
+      start: start,
+      end: ClockTime.fromMinutes(start.minutesSinceMidnight + minutes),
+    );
+  }
+
+  /// An occupied [slot] on [date].
+  BookedSlot booked(String id, CalendarDate date, TimeRange slot) {
+    return BookedSlot(appointmentId: id, date: date, range: slot);
+  }
 
   List<Department> get departments => const [
     Department(id: 'cardio', name: 'Kardiyoloji', branchId: 'branch'),

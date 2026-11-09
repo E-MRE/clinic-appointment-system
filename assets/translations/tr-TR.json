@@ -555,8 +555,51 @@
     },
     "book": {
       "title": "Randevu al",
-      "comingSoonTitle": "Yakında",
-      "comingSoonMessage": "Randevu alma ekranı yakında burada olacak."
+      "subtitle": "Hizmeti ve doktoru seçin, uygun saatlerden birini işaretleyin.",
+      "loading": "Hizmetler yükleniyor",
+      "failureTitle": "Hizmetler yüklenemedi",
+      "retry": "Tekrar dene",
+      "serviceTitle": "1 · Hizmet",
+      "search": "Hizmet ara",
+      "removeDepartment": "Bölüm filtresini kaldır",
+      "noServices": "Aramanızla eşleşen hizmet yok.",
+      "serviceCaption": "{} · {} · {}",
+      "staffTitle": "2 · Doktor",
+      "staffHint": "Önce bir hizmet seçin.",
+      "staffCaption": "{} · {}",
+      "scheduleTitle": "3 · Tarih ve saat",
+      "previousWeek": "Önceki hafta",
+      "nextWeek": "Sonraki hafta",
+      "scheduleHint": "Saatleri görmek için bir doktor seçin.",
+      "scheduleLoading": "Uygun saatler yükleniyor",
+      "scheduleFailure": "Uygun saatler yüklenemedi.",
+      "noFreeDay": "Bu hafta uygun saat yok. Sonraki haftaya bakabilirsiniz.",
+      "dayFree": "{} boş",
+      "dayFull": "Dolu",
+      "dayClosed": "Kapalı",
+      "slotGroup": "{} · {}",
+      "slotTaken": "{}, dolu",
+      "periods": {
+        "morning": "Sabah",
+        "afternoon": "Öğleden sonra",
+        "evening": "Akşam"
+      },
+      "footnote": "Yalnızca {} adlı personelin uygun olduğu saatler listelenir. Üstü çizili saatler dolu.",
+      "summaryTitle": "4 · Özet ve onay",
+      "summary": {
+        "service": "Hizmet",
+        "duration": "Süre",
+        "fee": "Ücret",
+        "staff": "Doktor",
+        "location": "Yer",
+        "dateTime": "Tarih ve saat"
+      },
+      "locationValue": "{} · {}",
+      "dateTimeValue": "{} {} · {}",
+      "info": "Talebiniz doktor onayına gider. Onaylandığında randevunuz kesinleşir ve size bildirilir.",
+      "submit": "Randevu talep et",
+      "submitting": "Randevu talebi gönderiliyor",
+      "submitted": "Randevu talebiniz alındı."
     }
   }
 }

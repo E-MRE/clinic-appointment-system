@@ -8,9 +8,13 @@ import 'package:clinic_appointment_system/features/appointments/domain/repositor
 import 'package:clinic_appointment_system/features/appointments/domain/results/appointment_result.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/value_objects/booked_slot.dart';
 
+import 'keyed_streams.dart';
+
 /// Patient appointment streams plus a status change that runs the real
 /// domain transition on [stored] unless a failure or a pending completer
-/// is configured.
+/// is configured. Booked slots stream per `staffId/date` key; booking runs
+/// the real rule check against no occupied slots unless a failure or a
+/// pending completer is configured.
 final class PatientAppointmentRepository implements AppointmentRepository {
   final StreamController<DataResult<List<Appointment>>> events =
       StreamController.broadcast();
@@ -35,6 +39,23 @@ final class PatientAppointmentRepository implements AppointmentRepository {
 
   /// Completes the change later, when set.
   Completer<AppointmentResult>? pending;
+
+  /// Booked slot streams keyed by [bookedSlotsKey].
+  final KeyedStreams<BookedSlot> bookedSlots = KeyedStreams<BookedSlot>();
+
+  /// Candidates passed to [book].
+  final List<Appointment> bookedCandidates = [];
+
+  /// Error returned by [book] instead of running the check, when set.
+  AppointmentErrorCode? bookFailure;
+
+  /// Completes [book] later, when set.
+  Completer<DataResult<Appointment>>? bookPending;
+
+  /// The [bookedSlots] key of [staffId] on [date].
+  static String bookedSlotsKey(String staffId, CalendarDate date) {
+    return '$staffId/$date';
+  }
 
   /// Emits [appointments] as the patient's latest list.
   void emit(List<Appointment> appointments) {
@@ -78,7 +99,20 @@ final class PatientAppointmentRepository implements AppointmentRepository {
   Future<DataResult<Appointment>> book(
     Appointment candidate,
     AppointmentBookingCheck check,
-  ) => throw UnimplementedError();
+  ) async {
+    bookedCandidates.add(candidate);
+    if (bookPending case final Completer<DataResult<Appointment>> completer) {
+      return completer.future;
+    }
+    if (bookFailure case final AppointmentErrorCode code) {
+      return DataResult.error(errorCode: code);
+    }
+    final violations = check(const [], const []);
+    if (violations.isNotEmpty) {
+      return DataResult.error(errorCode: violations.first.code);
+    }
+    return DataResult.success(data: candidate.withId('booked'));
+  }
 
   @override
   Stream<DataResult<List<Appointment>>> watchStaffAppointments(
@@ -91,5 +125,5 @@ final class PatientAppointmentRepository implements AppointmentRepository {
   Stream<DataResult<List<BookedSlot>>> watchStaffBookedSlots(
     String staffId,
     CalendarDate date,
-  ) => throw UnimplementedError();
+  ) => bookedSlots.watch(bookedSlotsKey(staffId, date));
 }

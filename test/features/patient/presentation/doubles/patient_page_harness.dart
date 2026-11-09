@@ -5,19 +5,26 @@ import 'package:clinic_appointment_system/core/localization/app_formatters.dart'
 import 'package:clinic_appointment_system/core/localization/localization_wrapper.dart';
 import 'package:clinic_appointment_system/core/theme/theme.dart';
 import 'package:clinic_appointment_system/core/time/clock.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/usecases/book_appointment_use_case.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/change_appointment_status_use_case.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_patient_appointments_use_case.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_staff_booked_slots_use_case.dart';
 import 'package:clinic_appointment_system/features/auth/domain/entities/auth_session.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_state.dart';
+import 'package:clinic_appointment_system/features/availability/domain/services/slot_generator.dart';
+import 'package:clinic_appointment_system/features/availability/domain/usecases/watch_staff_availability_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_branches_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_clinics_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_departments_of_branches_use_case.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/usecases/watch_services_of_branches_use_case.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/cubit/book_appointment_cubit.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/cubit/booking_selection_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_appointment_cancel_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_appointments_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_appointments_tab_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_catalog_cubit.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/cubit/staff_week_schedule_cubit.dart';
 import 'package:clinic_appointment_system/features/staff_management/domain/usecases/watch_staff_use_case.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +39,7 @@ import '../../../../support/auth_repository_doubles.dart';
 import '../../../../support/localization_test_app.dart';
 import '../../../../support/user_repository_double.dart';
 import 'patient_appointment_repository.dart';
+import 'patient_availability_repository.dart';
 import 'patient_catalog_repositories.dart';
 import 'patient_fixtures.dart';
 
@@ -45,6 +53,8 @@ final class PatientPageHarness {
   final PatientCatalogRepositories catalog = PatientCatalogRepositories();
   final PatientAppointmentRepository appointments =
       PatientAppointmentRepository();
+  final PatientAvailabilityRepository availability =
+      PatientAvailabilityRepository();
   final MockAuthRepository authRepository = MockAuthRepository();
   final FixedClock clock = FixedClock(fixtures.now);
   late final AuthCubit auth;
@@ -99,6 +109,23 @@ final class PatientPageHarness {
     injector.registerFactory<PatientAppointmentCancelCubit>(
       () => PatientAppointmentCancelCubit(
         ChangeAppointmentStatusUseCase(appointments, clock),
+      ),
+    );
+    injector.registerFactory<BookingSelectionCubit>(
+      () => BookingSelectionCubit(clock),
+    );
+    injector.registerFactory<StaffWeekScheduleCubit>(
+      () => StaffWeekScheduleCubit(
+        WatchStaffAvailabilityUseCase(availability),
+        WatchStaffBookedSlotsUseCase(appointments),
+        clock,
+        const SlotGenerator(),
+      ),
+    );
+    injector.registerFactory<BookAppointmentCubit>(
+      () => BookAppointmentCubit(
+        BookAppointmentUseCase(appointments, clock),
+        clock,
       ),
     );
   }
@@ -171,6 +198,8 @@ final class PatientPageHarness {
   Future<void> disposeRepositories() async {
     await catalog.close();
     await appointments.events.close();
+    await appointments.bookedSlots.close();
+    await availability.close();
   }
 
   Future<void> dispose(WidgetTester tester) async {
