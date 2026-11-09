@@ -19,6 +19,12 @@ final class _OtherSection extends StatelessWidget {
             size: AppSizes.s24,
           ),
         ),
+        AppDefinitionRow(
+          label: LocaleKeys.componentPreview_sample.translate(),
+          child: AppText.bodyStrong(
+            LocaleKeys.componentPreview_sample.translate(),
+          ),
+        ),
         const _OtherSectionViewportPreview(),
         const _SharedActionsPreview(),
         const _AvailabilityComponentsPreview(),

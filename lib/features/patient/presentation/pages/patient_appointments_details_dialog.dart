@@ -26,27 +26,27 @@ final class _PatientAppointmentsDetailsDialog extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 spacing: AppSizes.s16,
                 children: [
-                  _PatientAppointmentsDetailRow(
+                  AppDefinitionRow(
                     label: LocaleKeys.patient_appointments_dialog_dateTime
                         .translate(),
                     child: AppText.bodyStrong(entry.longDateTimeLabel),
                   ),
-                  _PatientAppointmentsDetailRow(
+                  AppDefinitionRow(
                     label: LocaleKeys.patient_appointments_dialog_staff
                         .translate(),
                     child: AppText.bodyStrong(entry.staffName),
                   ),
-                  _PatientAppointmentsDetailRow(
+                  AppDefinitionRow(
                     label: LocaleKeys.patient_appointments_dialog_location
                         .translate(),
                     child: AppText.bodyStrong(entry.location),
                   ),
-                  _PatientAppointmentsDetailRow(
+                  AppDefinitionRow(
                     label: LocaleKeys.patient_appointments_dialog_fee
                         .translate(),
                     child: AppText.bodyStrong(entry.fee),
                   ),
-                  _PatientAppointmentsDetailRow(
+                  AppDefinitionRow(
                     label: LocaleKeys.patient_appointments_dialog_status
                         .translate(),
                     child: AppointmentStatusBadge(
@@ -54,7 +54,7 @@ final class _PatientAppointmentsDetailsDialog extends StatelessWidget {
                     ),
                   ),
                   if (entry.cancellationNote case final note?)
-                    _PatientAppointmentsDetailRow(
+                    AppDefinitionRow(
                       label: LocaleKeys.patient_appointments_dialog_note
                           .translate(),
                       child: AppText.bodyStrong(note),

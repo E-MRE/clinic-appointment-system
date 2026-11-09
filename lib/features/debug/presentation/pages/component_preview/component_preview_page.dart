@@ -17,6 +17,7 @@ import 'package:clinic_appointment_system/core/widgets/choice/app_choice_control
 import 'package:clinic_appointment_system/core/widgets/dashed_border/app_dashed_border.dart';
 import 'package:clinic_appointment_system/core/widgets/data_table/app_data_table.dart';
 import 'package:clinic_appointment_system/core/widgets/date_field/app_date_field.dart';
+import 'package:clinic_appointment_system/core/widgets/definition_row/app_definition_row.dart';
 import 'package:clinic_appointment_system/core/widgets/form_dialog/app_form_dialog.dart';
 import 'package:clinic_appointment_system/core/widgets/list_tile/app_list_tile.dart';
 import 'package:clinic_appointment_system/core/widgets/loading/loading_state.dart';

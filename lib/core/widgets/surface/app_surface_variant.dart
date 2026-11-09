@@ -5,6 +5,10 @@ enum AppSurfaceVariant {
   /// Standard surface using the low surface container.
   standard(borderWidth: AppSizes.borderThin),
 
+  /// Plain surface using the base surface color, such as an unselected
+  /// option card.
+  plain(borderWidth: AppSizes.borderThin),
+
   /// Highlighted surface using the primary container.
   highlighted(borderWidth: AppSizes.borderThick);
 

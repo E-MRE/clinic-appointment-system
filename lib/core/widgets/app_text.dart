@@ -13,6 +13,7 @@ final class AppText extends StatelessWidget {
     this.overflow,
     this.softWrap,
     this.fontWeight,
+    this.decoration,
     this.semanticsLabel,
     super.key,
   });
@@ -26,6 +27,7 @@ final class AppText extends StatelessWidget {
     this.overflow,
     this.softWrap,
     this.fontWeight,
+    this.decoration,
     this.semanticsLabel,
     super.key,
   }) : role = TextRole.display;
@@ -39,6 +41,7 @@ final class AppText extends StatelessWidget {
     this.overflow,
     this.softWrap,
     this.fontWeight,
+    this.decoration,
     this.semanticsLabel,
     super.key,
   }) : role = TextRole.headline;
@@ -52,6 +55,7 @@ final class AppText extends StatelessWidget {
     this.overflow,
     this.softWrap,
     this.fontWeight,
+    this.decoration,
     this.semanticsLabel,
     super.key,
   }) : role = TextRole.pageTitle;
@@ -65,6 +69,7 @@ final class AppText extends StatelessWidget {
     this.overflow,
     this.softWrap,
     this.fontWeight,
+    this.decoration,
     this.semanticsLabel,
     super.key,
   }) : role = TextRole.sectionTitle;
@@ -78,6 +83,7 @@ final class AppText extends StatelessWidget {
     this.overflow,
     this.softWrap,
     this.fontWeight,
+    this.decoration,
     this.semanticsLabel,
     super.key,
   }) : role = TextRole.cardTitle;
@@ -91,6 +97,7 @@ final class AppText extends StatelessWidget {
     this.overflow,
     this.softWrap,
     this.fontWeight,
+    this.decoration,
     this.semanticsLabel,
     super.key,
   }) : role = TextRole.bodyLarge;
@@ -104,6 +111,7 @@ final class AppText extends StatelessWidget {
     this.overflow,
     this.softWrap,
     this.fontWeight,
+    this.decoration,
     this.semanticsLabel,
     super.key,
   }) : role = TextRole.body;
@@ -117,6 +125,7 @@ final class AppText extends StatelessWidget {
     this.overflow,
     this.softWrap,
     this.fontWeight,
+    this.decoration,
     this.semanticsLabel,
     super.key,
   }) : role = TextRole.caption;
@@ -130,6 +139,7 @@ final class AppText extends StatelessWidget {
     this.overflow,
     this.softWrap,
     this.fontWeight,
+    this.decoration,
     this.semanticsLabel,
     super.key,
   }) : role = TextRole.bodyStrong;
@@ -143,6 +153,7 @@ final class AppText extends StatelessWidget {
     this.overflow,
     this.softWrap,
     this.fontWeight,
+    this.decoration,
     this.semanticsLabel,
     super.key,
   }) : role = TextRole.label;
@@ -156,6 +167,7 @@ final class AppText extends StatelessWidget {
     this.overflow,
     this.softWrap,
     this.fontWeight,
+    this.decoration,
     this.semanticsLabel,
     super.key,
   }) : role = TextRole.badge;
@@ -184,6 +196,9 @@ final class AppText extends StatelessWidget {
   /// Optional component-level weight override.
   final FontWeight? fontWeight;
 
+  /// Optional line drawn through, under or over the text.
+  final TextDecoration? decoration;
+
   /// Semantic label announced in place of [data].
   final String? semanticsLabel;
 
@@ -198,6 +213,7 @@ final class AppText extends StatelessWidget {
             brandForeground: brandColors.splashForeground,
           ),
           fontWeight: fontWeight,
+          decoration: decoration,
         );
     return Text(
       data,

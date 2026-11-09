@@ -36,6 +36,7 @@ final class AppTextField extends StatelessWidget {
     this.autocorrect = false,
     this.enableSuggestions = false,
     this.fillColor,
+    this.isLabelVisible = true,
     super.key,
   }) : assert(
          initialValue == null || controller == null,
@@ -117,13 +118,19 @@ final class AppTextField extends StatelessWidget {
   /// Optional surface fill override.
   final Color? fillColor;
 
+  /// Whether [label] is shown above the input; a hidden label is still
+  /// announced, and [hint] carries the visible prompt.
+  final bool isLabelVisible;
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        ExcludeSemantics(child: AppText.label(label)),
-        const EmptySize.s8Height(),
+        if (isLabelVisible) ...[
+          ExcludeSemantics(child: AppText.label(label)),
+          const EmptySize.s8Height(),
+        ],
         _AppTextInputField(
           label: label,
           fieldKey: fieldKey,
