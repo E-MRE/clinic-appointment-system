@@ -7,6 +7,7 @@ extension AppSurfaceVariantColors on AppSurfaceVariant {
   Color background(ColorScheme colors) {
     return switch (this) {
       AppSurfaceVariant.standard => colors.surfaceContainerLow,
+      AppSurfaceVariant.plain => colors.surface,
       AppSurfaceVariant.highlighted => colors.primaryContainer,
     };
   }
@@ -14,7 +15,8 @@ extension AppSurfaceVariantColors on AppSurfaceVariant {
   /// Border color of the surface.
   Color border(ColorScheme colors) {
     return switch (this) {
-      AppSurfaceVariant.standard => colors.outlineVariant,
+      AppSurfaceVariant.standard ||
+      AppSurfaceVariant.plain => colors.outlineVariant,
       AppSurfaceVariant.highlighted => colors.primary,
     };
   }

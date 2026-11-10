@@ -23,6 +23,31 @@ final class AppFormatters {
     return DateFormat.MMMMd(_resolveLocale(locale: locale)).format(dateTime);
   }
 
+  /// Formats an inclusive day range, naming the month once when both days
+  /// share it (`26 – 31 Ekim`, `28 Eylül – 3 Ekim`).
+  static String formatDayRange(DateTime start, DateTime end, {String? locale}) {
+    final loc = _resolveLocale(locale: locale);
+    final isSameMonth = start.year == end.year && start.month == end.month;
+    final first = isSameMonth
+        ? DateFormat.d(loc).format(start)
+        : DateFormat.MMMMd(loc).format(start);
+    return '$first – ${DateFormat.MMMMd(loc).format(end)}';
+  }
+
+  /// Formats a day and abbreviated month in the active locale (`26 Eki`).
+  static String formatDayShortMonth(DateTime dateTime, {String? locale}) {
+    return DateFormat.MMMd(_resolveLocale(locale: locale)).format(dateTime);
+  }
+
+  /// Formats the abbreviated month in upper case (`EKİ`), using Turkish
+  /// casing rules for dotted and dotless `i` in Turkish locales.
+  static String formatShortMonthUpper(DateTime dateTime, {String? locale}) {
+    final loc = _resolveLocale(locale: locale);
+    final month = DateFormat.MMM(loc).format(dateTime);
+    if (!loc.toLowerCase().startsWith('tr')) return month.toUpperCase();
+    return month.replaceAll('i', 'İ').replaceAll('ı', 'I').toUpperCase();
+  }
+
   /// Ensures date formatting symbols are initialized for the specified [locales].
   static Future<void> ensureInitialized([
     List<String> locales = const ['tr_TR', 'en_US', 'tr', 'en'],

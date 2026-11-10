@@ -9,8 +9,8 @@ final class _AvailabilityTimelineDayLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     final availability = context.watch<StaffAvailabilityCubit>().state;
     final branch = context.watch<AvailabilityBranchCubit>().state;
-    if (availability case WatchLoaded(:final data)) {
-      if (branch case WatchLoaded(data: final branch)) {
+    if (availability is WatchLoaded<StaffAvailability, AvailabilityErrorCode>) {
+      if (branch is WatchLoaded<Branch, InstitutionErrorCode>) {
         return SizedBox(
           width: context.screenSize.select(
             mobile: AppSizes.availabilityTimelineLabelTablet,
@@ -22,9 +22,9 @@ final class _AvailabilityTimelineDayLabel extends StatelessWidget {
             children: [
               AppText.bodyStrong(day.label),
               AppText.caption(
-                branch.workingHours.isClosedOn(day)
+                branch.data.workingHours.isClosedOn(day)
                     ? LocaleKeys.availability_noMinutes.translate()
-                    : data.minutesOn(day).availabilityLabel,
+                    : availability.data.minutesOn(day).availabilityLabel,
                 tone: TextTone.muted,
               ),
             ],

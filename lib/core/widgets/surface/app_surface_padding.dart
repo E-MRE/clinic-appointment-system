@@ -5,6 +5,9 @@ enum AppSurfacePadding {
   /// Padding = 0.
   none(AppPadding.none()),
 
+  /// Padding = 12.
+  dense(AppPadding.allMd()),
+
   /// Padding = 16.
   compact(AppPadding.allLg()),
 

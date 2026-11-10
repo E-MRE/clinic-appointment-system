@@ -28,9 +28,9 @@ final class _DesktopNavigation extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           AppBrandHeader(logo: logo, logoSize: AppSizes.s40),
-          if (primaryAction case final action?) ...[
+          if (primaryAction != null) ...[
             const EmptySize.s24Height(),
-            action,
+            primaryAction!,
           ],
           const EmptySize.s24Height(),
           Expanded(

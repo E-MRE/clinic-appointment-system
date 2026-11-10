@@ -22,7 +22,8 @@ final class AvailabilityPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<AuthCubit>().state;
-    if (state case AuthSignedIn(:final user)) {
+    if (state is AuthSignedIn) {
+      final user = state.user;
       final staff = user.staffProfile;
       if (staff != null) {
         return AvailabilityBody(

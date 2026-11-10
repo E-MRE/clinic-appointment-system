@@ -7,11 +7,10 @@ final class _AvailabilityFormHelper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final draft = context.watch<AvailabilityWindowDraftCubit>().state;
-    if (context.watch<AvailabilityBranchCubit>().state case WatchLoaded(
-      :final data,
-    )) {
+    final branch = context.watch<AvailabilityBranchCubit>().state;
+    if (branch is WatchLoaded<Branch, InstitutionErrorCode>) {
       return AppText.caption(
-        data.availabilityHelper(draft.selectedDay),
+        branch.data.availabilityHelper(draft.selectedDay),
         tone: TextTone.muted,
       );
     }

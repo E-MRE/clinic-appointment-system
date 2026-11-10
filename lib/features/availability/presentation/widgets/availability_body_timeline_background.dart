@@ -7,10 +7,9 @@ final class _AvailabilityTimelineBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (context.watch<AvailabilityBranchCubit>().state case WatchLoaded(
-      :final data,
-    )) {
-      if (data.workingHours.isClosedOn(day)) {
+    final branch = context.watch<AvailabilityBranchCubit>().state;
+    if (branch is WatchLoaded<Branch, InstitutionErrorCode>) {
+      if (branch.data.workingHours.isClosedOn(day)) {
         return AppDashedBorder(
           color: context.colorScheme.outlineVariant,
           strokeWidth: AppSizes.borderThin,

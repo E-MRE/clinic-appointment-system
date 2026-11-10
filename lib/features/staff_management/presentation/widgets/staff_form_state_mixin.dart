@@ -72,7 +72,8 @@ mixin _StaffFormStateMixin on State<_StaffFormContent> {
         for (final service in serviceState.items)
           if (service.branchId == values.branchId) service,
     ];
-    if (widget.staff case final original?) {
+    final original = widget.staff;
+    if (original != null) {
       saveCubit.update(
         values,
         original: original,
@@ -84,10 +85,10 @@ mixin _StaffFormStateMixin on State<_StaffFormContent> {
   }
 
   void _startDraft() {
-    if (widget.staff case final staff?) {
-      formCubit.startEdit(staff);
-    } else {
+    if (widget.staff == null) {
       formCubit.startCreate();
+    } else {
+      formCubit.startEdit(widget.staff!);
     }
   }
 

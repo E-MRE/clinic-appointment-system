@@ -12,8 +12,9 @@ extension StaffAvailabilitySubtitle on InstitutionListState<Department> {
   }
 
   String? _departmentNameOf(String departmentId) {
-    if (this case InstitutionListLoaded<Department>(:final items)) {
-      for (final department in items) {
+    final current = this;
+    if (current is InstitutionListLoaded<Department>) {
+      for (final department in current.items) {
         if (department.id == departmentId) return department.name;
       }
     }

@@ -6,18 +6,9 @@ final class _AvailabilityOneOffIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: AppSizes.availabilityCalendarTile,
-      height: AppSizes.availabilityCalendarTile,
-      decoration: BoxDecoration(
-        color: context.colorScheme.tertiaryContainer,
-        borderRadius: const AppRadius.small(),
-      ),
-      child: Icon(
-        Icons.calendar_today_outlined,
-        size: AppSizes.availabilityCalendarIcon,
-        color: context.colorScheme.onTertiaryContainer,
-      ),
+    return const AppIconTile(
+      icon: Icons.calendar_today_outlined,
+      variant: AppIconTileVariant.tertiary,
     );
   }
 }

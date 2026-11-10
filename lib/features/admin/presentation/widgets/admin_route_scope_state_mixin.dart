@@ -21,8 +21,9 @@ mixin _AdminRouteScopeStateMixin on State<_AdminRouteScopeContent> {
     clinicSubscription = clinics.stream.listen(_onClinicsChanged);
     branchSubscription = branches.stream.listen(_onBranchesChanged);
     selection.addListener(_onSelectionChanged);
-    if (widget.routeClinicId case final routeClinicId?) {
-      selection.selectClinic(routeClinicId);
+
+    if (widget.routeClinicId != null) {
+      selection.selectClinic(widget.routeClinicId!);
     }
     _onClinicsChanged(clinics.state);
     _onBranchesChanged(branches.state);
@@ -53,7 +54,8 @@ mixin _AdminRouteScopeStateMixin on State<_AdminRouteScopeContent> {
     } else {
       return;
     }
-    if (widget.routeClinicId case final routeClinicId?) {
+    final routeClinicId = widget.routeClinicId;
+    if (routeClinicId != null) {
       selection.selectClinic(routeClinicId);
       _onSelectionChanged();
       return;
@@ -93,7 +95,7 @@ mixin _AdminRouteScopeStateMixin on State<_AdminRouteScopeContent> {
     _watchedBranch = null;
     departments.clear();
     branches.clear();
-    if (clinicId case final id?) branches.watch(id);
+    if (clinicId != null) branches.watch(clinicId);
   }
 
   void _watchSelectedBranch() {
@@ -101,6 +103,6 @@ mixin _AdminRouteScopeStateMixin on State<_AdminRouteScopeContent> {
     if (branchId == _watchedBranch) return;
     _watchedBranch = branchId;
     departments.clear();
-    if (branchId case final id?) departments.watch(id);
+    if (branchId != null) departments.watch(branchId);
   }
 }

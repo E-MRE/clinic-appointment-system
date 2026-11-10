@@ -7,11 +7,18 @@ import 'package:flutter/material.dart';
 extension StaffDestinationNavigation on StaffDestination {
   /// The localized shell navigation item.
   AppNavigationDestination get destination {
-    return AppNavigationDestination(
-      label: LocaleKeys.availability_title.translate(),
-      icon: Icons.schedule_outlined,
-      selectedIcon: Icons.schedule,
-    );
+    return switch (this) {
+      StaffDestination.requests => AppNavigationDestination(
+        label: LocaleKeys.staffRequests_title.translate(),
+        icon: Icons.inbox_outlined,
+        selectedIcon: Icons.inbox,
+      ),
+      StaffDestination.availability => AppNavigationDestination(
+        label: LocaleKeys.availability_title.translate(),
+        icon: Icons.schedule_outlined,
+        selectedIcon: Icons.schedule,
+      ),
+    };
   }
 
   /// Whether this destination owns [path].

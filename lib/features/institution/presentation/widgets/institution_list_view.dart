@@ -40,23 +40,32 @@ final class InstitutionListView<
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<C, InstitutionListState<T>>(
-      builder: (context, state) => switch (state) {
-        InstitutionListLoading<T>() => LoadingState(
-          variant: loadingVariant,
-          label: LocaleKeys.institution_loading.tr(),
-        ),
-        InstitutionListFailure<T>(:final code) => _InstitutionListFailure(
-          message: code.message,
-          onRetry: onRetry,
-        ),
-        InstitutionListLoaded<T>(:final items) when items.isEmpty =>
-          _InstitutionListEmpty(
-            title: emptyTitle,
-            message: emptyMessage,
-            action: emptyAction,
-          ),
-        InstitutionListLoaded<T>(:final items) => loadedBuilder(items),
-      },
+      builder: (context, state) => _buildChild(state),
+    );
+  }
+
+  Widget _buildChild(InstitutionListState<T> state) {
+    if (state is InstitutionListFailure<T>) {
+      return _InstitutionListFailure(
+        message: state.code.message,
+        onRetry: onRetry,
+      );
+    }
+
+    if (state is InstitutionListLoaded<T>) {
+      if (state.items.isEmpty) {
+        return _InstitutionListEmpty(
+          title: emptyTitle,
+          message: emptyMessage,
+          action: emptyAction,
+        );
+      }
+      return loadedBuilder(state.items);
+    }
+
+    return LoadingState(
+      variant: loadingVariant,
+      label: LocaleKeys.institution_loading.tr(),
     );
   }
 }

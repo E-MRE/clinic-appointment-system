@@ -14,8 +14,9 @@ final class _AvailabilityTimelineTrack extends StatelessWidget {
         .watch<AvailabilityWindowDraftCubit>()
         .state
         .validWindow;
-    if (branch case WatchLoaded(data: final branch)) {
-      if (availability case WatchLoaded(:final data)) {
+    if (branch is WatchLoaded<Branch, InstitutionErrorCode>) {
+      if (availability
+          is WatchLoaded<StaffAvailability, AvailabilityErrorCode>) {
         return SizedBox(
           height: AppSizes.s40,
           child: LayoutBuilder(
@@ -25,17 +26,17 @@ final class _AvailabilityTimelineTrack extends StatelessWidget {
                   Positioned.fill(
                     child: _AvailabilityTimelineBackground(day: day),
                   ),
-                  for (final range in branch.workingHours.rangesOn(day))
+                  for (final range in branch.data.workingHours.rangesOn(day))
                     _AvailabilityTimelineOpening(
                       segment: timeline.segmentOf(range),
                       trackWidth: constraints.maxWidth,
                     ),
-                  for (final window in data.weeklyOn(day))
+                  for (final window in availability.data.weeklyOn(day))
                     _AvailabilityTimelinePositionedBar(
                       window: window,
                       segment: timeline.segmentOf(window.range),
                       trackWidth: constraints.maxWidth,
-                      variant: window.fitsWithin(branch.workingHours)
+                      variant: window.fitsWithin(branch.data.workingHours)
                           ? AvailabilityTimelineBarVariant.saved
                           : AvailabilityTimelineBarVariant.flagged,
                     ),

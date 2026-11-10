@@ -7,7 +7,7 @@ final class _AvailabilityOneOffSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final availability = context.watch<StaffAvailabilityCubit>().state;
-    if (availability case WatchLoaded(:final data)) {
+    if (availability is WatchLoaded<StaffAvailability, AvailabilityErrorCode>) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         spacing: AppSizes.s12,
@@ -18,11 +18,11 @@ final class _AvailabilityOneOffSection extends StatelessWidget {
               LocaleKeys.availability_oneOffTitle.translate(),
             ),
           ),
-          if (data.oneOff.isEmpty)
+          if (availability.data.oneOff.isEmpty)
             AppMutedMessage(
               message: LocaleKeys.availability_oneOffEmpty.translate(),
             ),
-          for (final window in data.oneOff)
+          for (final window in availability.data.oneOff)
             _AvailabilityOneOffItem(window: window),
           const _AvailabilityOneOffAddButton(),
         ],

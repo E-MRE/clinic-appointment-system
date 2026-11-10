@@ -7,7 +7,7 @@ import 'package:clinic_appointment_system/features/staff/presentation/enums/staf
 import 'package:clinic_appointment_system/features/staff/presentation/extensions/staff_destination_navigation.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/extensions/staff_location_destination.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/visitors/staff_role_subtitle_visitor.dart';
-import 'package:clinic_appointment_system/features/users/presentation/extensions/staff_initials.dart';
+import 'package:clinic_appointment_system/features/users/presentation/extensions/user_display_name.dart';
 import 'package:clinic_appointment_system/generated/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

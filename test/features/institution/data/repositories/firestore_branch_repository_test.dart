@@ -32,6 +32,38 @@ void main() {
     expect(result.data?.id, 'b1');
     expect(result.data?.name, 'Central');
   });
+  test('watches branches in Turkish alphabetical order', () async {
+    final firestore = FakeFirebaseFirestore();
+    const names = ['Üsküdar', 'Çankaya', 'Dikmen', 'Cebeci', 'İncek', 'Ilgaz'];
+    for (final name in names) {
+      await firestore.collection('branches').add({
+        'clinicId': 'c1',
+        'name': name,
+        'address': 'Main',
+        'workingHours': {
+          'monday': <dynamic>[],
+          'tuesday': <dynamic>[],
+          'wednesday': <dynamic>[],
+          'thursday': <dynamic>[],
+          'friday': <dynamic>[],
+          'saturday': <dynamic>[],
+          'sunday': <dynamic>[],
+        },
+      });
+    }
+    final result = await FirestoreBranchRepository(
+      firestore,
+    ).watchBranches('c1').first;
+    expect(result.data?.map((branch) => branch.name), [
+      'Cebeci',
+      'Çankaya',
+      'Dikmen',
+      'Ilgaz',
+      'İncek',
+      'Üsküdar',
+    ]);
+  });
+
   test('missing branch emits invalidRecord', () async {
     await expectLater(
       FirestoreBranchRepository(FakeFirebaseFirestore()).watchBranch('missing'),

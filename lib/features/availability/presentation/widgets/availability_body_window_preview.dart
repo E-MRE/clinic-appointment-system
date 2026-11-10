@@ -27,13 +27,17 @@ final class _AvailabilityWindowPreviewState
         .watch<AvailabilityWindowDraftCubit>()
         .state
         .validWindow;
-    final durations = context.watch<StaffServiceDurationsCubit>().state;
+    final durationsState = context.watch<StaffServiceDurationsCubit>().state;
     if (window == null) return const SizedBox.shrink();
+    final List<ServiceDuration> durations;
+    if (durationsState
+        is WatchLoaded<List<ServiceDuration>, InstitutionErrorCode>) {
+      durations = durationsState.data;
+    } else {
+      durations = const [];
+    }
     return AppMessageBanner(
-      message: AvailabilityPreview(window, switch (durations) {
-        WatchLoaded(:final data) => data,
-        _ => const [],
-      }, _generator).message,
+      message: AvailabilityPreview(window, durations, _generator).message,
       variant: AppMessageBannerVariant.highlight,
     );
   }

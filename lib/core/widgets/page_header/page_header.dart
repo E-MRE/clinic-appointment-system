@@ -42,10 +42,7 @@ final class PageHeader extends StatelessWidget {
                 tier: tier,
               ),
             ),
-            if (actions case final value?) ...[
-              const EmptySize.s8Width(),
-              value,
-            ],
+            if (actions != null) ...[const EmptySize.s8Width(), actions!],
           ],
         ),
       ),

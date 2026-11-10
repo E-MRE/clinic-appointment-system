@@ -30,6 +30,25 @@ void main() {
       );
     });
 
+    test('formats a week range naming a shared month once', () {
+      expect(
+        AppFormatters.formatDayRange(
+          DateTime(2026, 10, 26),
+          DateTime(2026, 10, 31),
+          locale: 'tr_TR',
+        ),
+        '26 – 31 Ekim',
+      );
+      expect(
+        AppFormatters.formatDayRange(
+          DateTime(2026, 9, 28),
+          DateTime(2026, 10, 3),
+          locale: 'tr_TR',
+        ),
+        '28 Eylül – 3 Ekim',
+      );
+    });
+
     test('formats service fee as ₺1.250,00', () {
       expect(AppFormatters.formatCurrency(1250, locale: 'tr'), '₺1.250,00');
       expect(AppFormatters.formatCurrency(1250, locale: 'tr_TR'), '₺1.250,00');

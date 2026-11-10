@@ -14,11 +14,11 @@ final class _AppListTileText extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         AppText.bodyStrong(title, maxLines: 2, overflow: TextOverflow.ellipsis),
-        if (subtitle case final subtitleText?)
+        if (subtitle != null)
           Padding(
             padding: const AppPadding.listTileSubtitle(),
             child: AppText.caption(
-              subtitleText,
+              subtitle ?? '',
               tone: TextTone.muted,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,

@@ -48,6 +48,7 @@ import '../../../../support/auth_repository_doubles.dart';
 import '../../../../support/localization_test_app.dart';
 import '../../../../support/user_repository_double.dart';
 import '../../../availability/presentation/pages/doubles/availability_page_harness.dart';
+import '../../../patient/presentation/doubles/patient_page_harness.dart';
 import '../../domain/doubles/fake_branch_repository.dart';
 import '../../domain/doubles/fake_clinic_repository.dart';
 import '../../domain/doubles/fake_department_repository.dart';
@@ -71,7 +72,7 @@ void main() {
     ),
     (
       const Patient(id: 'id', fullName: 'Patient', email: 'patient@test.com'),
-      AppRoutes.patientHome,
+      AppRoutes.patientAppointments,
     ),
     (
       const Doctor(
@@ -134,6 +135,8 @@ void main() {
         });
         final availability = AvailabilityPageHarness()..registerCubits();
         addTearDown(availability.disposeRepositories);
+        final patient = PatientPageHarness()..registerCubits();
+        addTearDown(patient.disposeRepositories);
         await _pumpRouter(tester, router, authCubit: authCubit);
         expect(
           router.routeInformationProvider.value.uri.path,

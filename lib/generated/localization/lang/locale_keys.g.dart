@@ -38,6 +38,7 @@ abstract class LocaleKeys {
   static const common_removeRange = 'common.removeRange';
   static const common_selectTime = 'common.selectTime';
   static const common_rangeOutsideHours = 'common.rangeOutsideHours';
+  static const common_notAvailable = 'common.notAvailable';
   static const common = 'common';
   static const roles_patient = 'roles.patient';
   static const roles_doctor = 'roles.doctor';
@@ -45,11 +46,11 @@ abstract class LocaleKeys {
   static const roles_technician = 'roles.technician';
   static const roles_admin = 'roles.admin';
   static const roles = 'roles';
-  static const home_patient = 'home.patient';
   static const home_staff = 'home.staff';
   static const home_admin = 'home.admin';
   static const home = 'home';
   static const appointment_title = 'appointment.title';
+  static const appointment_dateTime = 'appointment.dateTime';
   static const appointment_appointments = 'appointment.appointments';
   static const appointment_newAppointment = 'appointment.newAppointment';
   static const appointment_cancelAppointment = 'appointment.cancelAppointment';
@@ -62,6 +63,31 @@ abstract class LocaleKeys {
   static const appointment_status_noShow = 'appointment.status.noShow';
   static const appointment_status_cancelled = 'appointment.status.cancelled';
   static const appointment_status = 'appointment.status';
+  static const appointment_errors_unavailable =
+      'appointment.errors.unavailable';
+  static const appointment_errors_invalidRecord =
+      'appointment.errors.invalidRecord';
+  static const appointment_errors_notFound = 'appointment.errors.notFound';
+  static const appointment_errors_invalidTransition =
+      'appointment.errors.invalidTransition';
+  static const appointment_errors_notPermitted =
+      'appointment.errors.notPermitted';
+  static const appointment_errors_tooEarly = 'appointment.errors.tooEarly';
+  static const appointment_errors_tooLate = 'appointment.errors.tooLate';
+  static const appointment_errors_invalidHistory =
+      'appointment.errors.invalidHistory';
+  static const appointment_errors_inPast = 'appointment.errors.inPast';
+  static const appointment_errors_outsideWorkingHours =
+      'appointment.errors.outsideWorkingHours';
+  static const appointment_errors_outsideAvailability =
+      'appointment.errors.outsideAvailability';
+  static const appointment_errors_serviceNotProvided =
+      'appointment.errors.serviceNotProvided';
+  static const appointment_errors_staffOverlap =
+      'appointment.errors.staffOverlap';
+  static const appointment_errors_patientOverlap =
+      'appointment.errors.patientOverlap';
+  static const appointment_errors = 'appointment.errors';
   static const appointment = 'appointment';
   static const services_title = 'services.title';
   static const services_all = 'services.all';
@@ -443,6 +469,17 @@ abstract class LocaleKeys {
   static const staff_columns_actions = 'staff.columns.actions';
   static const staff_columns = 'staff.columns';
   static const staff = 'staff';
+  static const staffRequests_title = 'staffRequests.title';
+  static const staffRequests_subtitle = 'staffRequests.subtitle';
+  static const staffRequests_approve = 'staffRequests.approve';
+  static const staffRequests_approving = 'staffRequests.approving';
+  static const staffRequests_approved = 'staffRequests.approved';
+  static const staffRequests_loading = 'staffRequests.loading';
+  static const staffRequests_failureTitle = 'staffRequests.failureTitle';
+  static const staffRequests_retry = 'staffRequests.retry';
+  static const staffRequests_emptyTitle = 'staffRequests.emptyTitle';
+  static const staffRequests_emptyMessage = 'staffRequests.emptyMessage';
+  static const staffRequests = 'staffRequests';
   static const availability_title = 'availability.title';
   static const availability_mobileSubtitle = 'availability.mobileSubtitle';
   static const availability_tabletSubtitle = 'availability.tabletSubtitle';
@@ -516,4 +553,143 @@ abstract class LocaleKeys {
   static const availability_editDay = 'availability.editDay';
   static const availability_timelineFootnote = 'availability.timelineFootnote';
   static const availability = 'availability';
+  static const patient_signOut = 'patient.signOut';
+  static const patient_appointments_title = 'patient.appointments.title';
+  static const patient_appointments_greeting = 'patient.appointments.greeting';
+  static const patient_appointments_greetingEmpty =
+      'patient.appointments.greetingEmpty';
+  static const patient_appointments_loading = 'patient.appointments.loading';
+  static const patient_appointments_failureTitle =
+      'patient.appointments.failureTitle';
+  static const patient_appointments_retry = 'patient.appointments.retry';
+  static const patient_appointments_nextLabel =
+      'patient.appointments.nextLabel';
+  static const patient_appointments_cancel = 'patient.appointments.cancel';
+  static const patient_appointments_details = 'patient.appointments.details';
+  static const patient_appointments_tabs_all = 'patient.appointments.tabs.all';
+  static const patient_appointments_tabs_upcoming =
+      'patient.appointments.tabs.upcoming';
+  static const patient_appointments_tabs_past =
+      'patient.appointments.tabs.past';
+  static const patient_appointments_tabs = 'patient.appointments.tabs';
+  static const patient_appointments_emptyTabs_all =
+      'patient.appointments.emptyTabs.all';
+  static const patient_appointments_emptyTabs_upcoming =
+      'patient.appointments.emptyTabs.upcoming';
+  static const patient_appointments_emptyTabs_past =
+      'patient.appointments.emptyTabs.past';
+  static const patient_appointments_emptyTabs =
+      'patient.appointments.emptyTabs';
+  static const patient_appointments_columns_date =
+      'patient.appointments.columns.date';
+  static const patient_appointments_columns_service =
+      'patient.appointments.columns.service';
+  static const patient_appointments_columns_staff =
+      'patient.appointments.columns.staff';
+  static const patient_appointments_columns_status =
+      'patient.appointments.columns.status';
+  static const patient_appointments_columns_actions =
+      'patient.appointments.columns.actions';
+  static const patient_appointments_columns = 'patient.appointments.columns';
+  static const patient_appointments_detailsTooltip =
+      'patient.appointments.detailsTooltip';
+  static const patient_appointments_dateTime = 'patient.appointments.dateTime';
+  static const patient_appointments_detailLine =
+      'patient.appointments.detailLine';
+  static const patient_appointments_location = 'patient.appointments.location';
+  static const patient_appointments_serviceCaption =
+      'patient.appointments.serviceCaption';
+  static const patient_appointments_cancelledByPatient =
+      'patient.appointments.cancelledByPatient';
+  static const patient_appointments_cancelledByStaff =
+      'patient.appointments.cancelledByStaff';
+  static const patient_appointments_notesTitle =
+      'patient.appointments.notesTitle';
+  static const patient_appointments_noteHeading =
+      'patient.appointments.noteHeading';
+  static const patient_appointments_fastingNote =
+      'patient.appointments.fastingNote';
+  static const patient_appointments_departmentsTitle =
+      'patient.appointments.departmentsTitle';
+  static const patient_appointments_departmentServices =
+      'patient.appointments.departmentServices';
+  static const patient_appointments_dialog_dateTime =
+      'patient.appointments.dialog.dateTime';
+  static const patient_appointments_dialog_dateTimeValue =
+      'patient.appointments.dialog.dateTimeValue';
+  static const patient_appointments_dialog_staff =
+      'patient.appointments.dialog.staff';
+  static const patient_appointments_dialog_location =
+      'patient.appointments.dialog.location';
+  static const patient_appointments_dialog_fee =
+      'patient.appointments.dialog.fee';
+  static const patient_appointments_dialog_status =
+      'patient.appointments.dialog.status';
+  static const patient_appointments_dialog_note =
+      'patient.appointments.dialog.note';
+  static const patient_appointments_dialog_close =
+      'patient.appointments.dialog.close';
+  static const patient_appointments_dialog_cancel =
+      'patient.appointments.dialog.cancel';
+  static const patient_appointments_dialog = 'patient.appointments.dialog';
+  static const patient_appointments_confirmCancel_title =
+      'patient.appointments.confirmCancel.title';
+  static const patient_appointments_confirmCancel_message =
+      'patient.appointments.confirmCancel.message';
+  static const patient_appointments_confirmCancel_dismiss =
+      'patient.appointments.confirmCancel.dismiss';
+  static const patient_appointments_confirmCancel_confirm =
+      'patient.appointments.confirmCancel.confirm';
+  static const patient_appointments_confirmCancel =
+      'patient.appointments.confirmCancel';
+  static const patient_appointments_cancelled =
+      'patient.appointments.cancelled';
+  static const patient_appointments = 'patient.appointments';
+  static const patient_book_title = 'patient.book.title';
+  static const patient_book_subtitle = 'patient.book.subtitle';
+  static const patient_book_loading = 'patient.book.loading';
+  static const patient_book_failureTitle = 'patient.book.failureTitle';
+  static const patient_book_retry = 'patient.book.retry';
+  static const patient_book_serviceTitle = 'patient.book.serviceTitle';
+  static const patient_book_search = 'patient.book.search';
+  static const patient_book_removeDepartment = 'patient.book.removeDepartment';
+  static const patient_book_noServices = 'patient.book.noServices';
+  static const patient_book_serviceCaption = 'patient.book.serviceCaption';
+  static const patient_book_staffTitle = 'patient.book.staffTitle';
+  static const patient_book_staffHint = 'patient.book.staffHint';
+  static const patient_book_staffCaption = 'patient.book.staffCaption';
+  static const patient_book_scheduleTitle = 'patient.book.scheduleTitle';
+  static const patient_book_previousWeek = 'patient.book.previousWeek';
+  static const patient_book_nextWeek = 'patient.book.nextWeek';
+  static const patient_book_scheduleHint = 'patient.book.scheduleHint';
+  static const patient_book_scheduleLoading = 'patient.book.scheduleLoading';
+  static const patient_book_scheduleFailure = 'patient.book.scheduleFailure';
+  static const patient_book_noFreeDay = 'patient.book.noFreeDay';
+  static const patient_book_dayFree = 'patient.book.dayFree';
+  static const patient_book_dayFull = 'patient.book.dayFull';
+  static const patient_book_dayClosed = 'patient.book.dayClosed';
+  static const patient_book_slotGroup = 'patient.book.slotGroup';
+  static const patient_book_slotTaken = 'patient.book.slotTaken';
+  static const patient_book_periods_morning = 'patient.book.periods.morning';
+  static const patient_book_periods_afternoon =
+      'patient.book.periods.afternoon';
+  static const patient_book_periods_evening = 'patient.book.periods.evening';
+  static const patient_book_periods = 'patient.book.periods';
+  static const patient_book_footnote = 'patient.book.footnote';
+  static const patient_book_summaryTitle = 'patient.book.summaryTitle';
+  static const patient_book_summary_service = 'patient.book.summary.service';
+  static const patient_book_summary_duration = 'patient.book.summary.duration';
+  static const patient_book_summary_fee = 'patient.book.summary.fee';
+  static const patient_book_summary_staff = 'patient.book.summary.staff';
+  static const patient_book_summary_location = 'patient.book.summary.location';
+  static const patient_book_summary_dateTime = 'patient.book.summary.dateTime';
+  static const patient_book_summary = 'patient.book.summary';
+  static const patient_book_locationValue = 'patient.book.locationValue';
+  static const patient_book_dateTimeValue = 'patient.book.dateTimeValue';
+  static const patient_book_info = 'patient.book.info';
+  static const patient_book_submit = 'patient.book.submit';
+  static const patient_book_submitting = 'patient.book.submitting';
+  static const patient_book_submitted = 'patient.book.submitted';
+  static const patient_book = 'patient.book';
+  static const patient = 'patient';
 }

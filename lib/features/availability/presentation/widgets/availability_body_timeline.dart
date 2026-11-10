@@ -6,10 +6,9 @@ final class _AvailabilityTimeline extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (context.watch<AvailabilityBranchCubit>().state case WatchLoaded(
-      :final data,
-    )) {
-      final timeline = AvailabilityTimeline(data.workingHours);
+    final branch = context.watch<AvailabilityBranchCubit>().state;
+    if (branch is WatchLoaded<Branch, InstitutionErrorCode>) {
+      final timeline = AvailabilityTimeline(branch.data.workingHours);
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         spacing: AppSizes.s4,

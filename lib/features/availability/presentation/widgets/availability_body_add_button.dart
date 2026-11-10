@@ -10,14 +10,14 @@ final class _AvailabilityAddButton extends StatelessWidget {
     final saving =
         context.watch<AvailabilityWindowAddCubit>().state
             is AvailabilityWindowSaving;
-    if (branch case WatchLoaded(:final data)) {
+    if (branch is WatchLoaded<Branch, InstitutionErrorCode>) {
       return AppAddButton(
         label: LocaleKeys.availability_addWindow.translate(),
-        onPressed: saving || data.workingHours.openDays.isEmpty
+        onPressed: saving || branch.data.workingHours.openDays.isEmpty
             ? null
             : () {
                 context.read<AvailabilityWindowDraftCubit>().startWeekly(
-                  data.workingHours.openDays.first,
+                  branch.data.workingHours.openDays.first,
                 );
                 context.openAvailabilityEditor(showsWeekdaySelect: true);
               },

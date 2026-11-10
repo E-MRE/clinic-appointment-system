@@ -6,14 +6,13 @@ final class _AvailabilityBranchCaption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (context.watch<AvailabilityBranchCubit>().state case WatchLoaded(
-      :final data,
-    )) {
-      final timeline = AvailabilityTimeline(data.workingHours);
+    final branch = context.watch<AvailabilityBranchCubit>().state;
+    if (branch is WatchLoaded<Branch, InstitutionErrorCode>) {
+      final timeline = AvailabilityTimeline(branch.data.workingHours);
       return AppText.caption(
         LocaleKeys.availability_branchAxis.translate(
           args: [
-            data.name,
+            branch.data.name,
             timeline.isEmpty
                 ? LocaleKeys.availability_closed.translate()
                 : timeline.axisLabel,

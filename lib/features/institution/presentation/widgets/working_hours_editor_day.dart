@@ -23,8 +23,8 @@ final class _WorkingHoursEditorDay extends StatelessWidget {
             LocaleKeys.institution_closed.tr(),
             tone: TextTone.muted,
           ),
-        if (draft.error case final error?)
-          AppText.caption(error.message, tone: TextTone.error),
+        if (draft.error != null)
+          AppText.caption(draft.error!.message, tone: TextTone.error),
         const EmptySize.s8Height(),
       ],
     );

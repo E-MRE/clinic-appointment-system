@@ -1,4 +1,5 @@
 import 'package:clinic_appointment_system/core/router/app_router.dart';
+import 'package:clinic_appointment_system/core/widgets/navigation/app_navigation_shell.dart';
 import 'package:clinic_appointment_system/core/widgets/navigation/app_navigation_user_card.dart';
 import 'package:clinic_appointment_system/core/widgets/time_range_chip/app_time_range_chip.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/auth_route_guard.dart';
@@ -70,6 +71,29 @@ void main() {
       expect(tester.takeException(), isNull);
     });
   }
+
+  testWidgets(
+    '/staff redirects to availability and lists staff destinations in order',
+    (tester) async {
+      addTearDown(() => harness.dispose(tester));
+      final router = createAppRouter(initialLocation: AppRoutes.staffHome);
+      addTearDown(router.dispose);
+      await harness.pumpRouter(tester, router);
+      await harness.load(tester);
+
+      expect(
+        router.routeInformationProvider.value.uri.path,
+        AppRoutes.staffAvailability,
+      );
+      final shell = tester.widget<AppNavigationShell>(
+        find.byType(AppNavigationShell),
+      );
+      expect(shell.destinations.map((destination) => destination.label), [
+        'Talepler',
+        'Uygunluk',
+      ]);
+    },
+  );
 
   testWidgets('mobile sheet barrier covers the shell navigation', (
     tester,

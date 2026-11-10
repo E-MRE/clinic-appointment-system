@@ -19,8 +19,8 @@ final class _StatusBadgeContent extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (icon case final iconData?) ...[
-          Icon(iconData, size: AppSizes.statusIcon, color: foreground),
+        if (icon != null) ...[
+          Icon(icon, size: AppSizes.statusIcon, color: foreground),
           const EmptySize.s4Width(),
         ],
         Text(label, style: style),

@@ -24,17 +24,11 @@ final class _AppListTileContent extends StatelessWidget {
         constraints: const BoxConstraints(minHeight: AppSizes.s48),
         child: Row(
           children: [
-            if (leading case final leadingWidget?) ...[
-              leadingWidget,
-              const EmptySize.s12Width(),
-            ],
+            if (leading != null) ...[leading!, const EmptySize.s12Width()],
             Expanded(
               child: _AppListTileText(title: title, subtitle: subtitle),
             ),
-            if (trailing case final trailingWidget?) ...[
-              const EmptySize.s12Width(),
-              trailingWidget,
-            ],
+            if (trailing != null) ...[const EmptySize.s12Width(), trailing!],
           ],
         ),
       ),

@@ -20,6 +20,7 @@ import 'package:clinic_appointment_system/core/widgets/choice/app_segmented_cont
 import 'package:clinic_appointment_system/core/widgets/dashed_border/app_dashed_border.dart';
 import 'package:clinic_appointment_system/core/widgets/date_field/app_date_field.dart';
 import 'package:clinic_appointment_system/core/widgets/form_dialog/app_form_dialog.dart';
+import 'package:clinic_appointment_system/core/widgets/icon_tile/app_icon_tile.dart';
 import 'package:clinic_appointment_system/core/widgets/loading/loading_state.dart';
 import 'package:clinic_appointment_system/core/widgets/loading/loading_state_variant.dart';
 import 'package:clinic_appointment_system/core/widgets/message_banner/app_message_banner.dart';
@@ -35,6 +36,8 @@ import 'package:clinic_appointment_system/core/widgets/time_field/app_time_field
 import 'package:clinic_appointment_system/core/widgets/time_range_chip/app_time_range_chip.dart';
 import 'package:clinic_appointment_system/features/availability/domain/entities/availability_window.dart';
 import 'package:clinic_appointment_system/features/availability/domain/entities/one_off_window.dart';
+import 'package:clinic_appointment_system/features/availability/domain/entities/staff_availability.dart';
+import 'package:clinic_appointment_system/features/availability/domain/enums/availability_error_code.dart';
 import 'package:clinic_appointment_system/features/availability/domain/models/availability_subject.dart';
 import 'package:clinic_appointment_system/features/availability/domain/services/slot_generator.dart';
 import 'package:clinic_appointment_system/features/availability/presentation/cubit/availability_branch_cubit.dart';
@@ -56,7 +59,10 @@ import 'package:clinic_appointment_system/features/availability/presentation/mod
 import 'package:clinic_appointment_system/features/availability/presentation/models/availability_timeline.dart';
 import 'package:clinic_appointment_system/features/availability/presentation/models/timeline_segment.dart';
 import 'package:clinic_appointment_system/features/availability/presentation/visitors/availability_window_label_visitor.dart';
+import 'package:clinic_appointment_system/features/institution/domain/entities/branch.dart';
+import 'package:clinic_appointment_system/features/institution/domain/enums/institution_error_code.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/extensions/institution_error_code_localization.dart';
+import 'package:clinic_appointment_system/features/medical_services/domain/value_objects/service_duration.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/staff.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
