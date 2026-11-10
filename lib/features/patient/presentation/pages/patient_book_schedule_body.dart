@@ -16,17 +16,27 @@ final class _PatientBookScheduleBody extends StatelessWidget {
     }
     return BlocBuilder<StaffWeekScheduleCubit, StaffWeekScheduleState>(
       builder: (context, state) {
-        return switch (state) {
-          StaffWeekScheduleLoaded(:final schedule)
-              when selection.isScheduledBy(schedule.request) =>
-            _PatientBookWeekSlots(schedule: schedule, selection: selection),
-          StaffWeekScheduleFailure() => const _PatientBookScheduleFailure(),
-          _ => LoadingState(
-            variant: LoadingStateVariant.centeredIndicator,
-            label: LocaleKeys.patient_book_scheduleLoading.translate(),
-          ),
-        };
+        return _buildChild(state);
       },
+    );
+  }
+
+  Widget _buildChild(StaffWeekScheduleState state) {
+    if (state is StaffWeekScheduleLoaded &&
+        selection.isScheduledBy(state.schedule.request)) {
+      return _PatientBookWeekSlots(
+        schedule: state.schedule,
+        selection: selection,
+      );
+    }
+
+    if (state is StaffWeekScheduleFailure) {
+      return const _PatientBookScheduleFailure();
+    }
+
+    return LoadingState(
+      variant: LoadingStateVariant.centeredIndicator,
+      label: LocaleKeys.patient_book_scheduleLoading.translate(),
     );
   }
 }

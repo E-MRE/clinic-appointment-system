@@ -81,7 +81,8 @@ final class PatientAppointmentsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<AuthCubit>().state;
-    if (state case AuthSignedIn(:final user)) {
+    if (state is AuthSignedIn) {
+      final user = state.user;
       return MultiBlocProvider(
         key: ValueKey<String>(user.id),
         providers: [

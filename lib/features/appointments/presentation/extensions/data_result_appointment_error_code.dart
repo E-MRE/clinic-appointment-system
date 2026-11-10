@@ -6,9 +6,8 @@ extension DataResultAppointmentErrorCode<T> on DataResult<T> {
   /// The carried [AppointmentErrorCode], or
   /// [AppointmentErrorCode.unavailable] when the code is missing or foreign.
   AppointmentErrorCode get appointmentErrorCode {
-    return switch (errorCode) {
-      final AppointmentErrorCode code => code,
-      _ => AppointmentErrorCode.unavailable,
-    };
+    final currentErrorCode = errorCode;
+    if (currentErrorCode is AppointmentErrorCode) return currentErrorCode;
+    return AppointmentErrorCode.unavailable;
   }
 }

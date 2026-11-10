@@ -18,23 +18,19 @@ final class _AppListTileContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final leading = this.leading;
+    final trailing = this.trailing;
     return Padding(
       padding: density.padding,
       child: ConstrainedBox(
         constraints: const BoxConstraints(minHeight: AppSizes.s48),
         child: Row(
           children: [
-            if (leading case final leadingWidget?) ...[
-              leadingWidget,
-              const EmptySize.s12Width(),
-            ],
+            if (leading != null) ...[leading, const EmptySize.s12Width()],
             Expanded(
               child: _AppListTileText(title: title, subtitle: subtitle),
             ),
-            if (trailing case final trailingWidget?) ...[
-              const EmptySize.s12Width(),
-              trailingWidget,
-            ],
+            if (trailing != null) ...[const EmptySize.s12Width(), trailing],
           ],
         ),
       ),

@@ -66,11 +66,14 @@ final class PatientAppointmentsOverview {
 
   /// Preparation notes of upcoming appointments, earliest first.
   List<PatientPreparationNote> get preparationNotes {
-    return List<PatientPreparationNote>.unmodifiable([
-      for (final entry in upcoming)
-        if (entry.preparationNote case final String note)
-          PatientPreparationNote(entry: entry, note: note),
-    ]);
+    final notes = <PatientPreparationNote>[];
+    for (final entry in upcoming) {
+      final note = entry.preparationNote;
+      if (note != null) {
+        notes.add(PatientPreparationNote(entry: entry, note: note));
+      }
+    }
+    return List<PatientPreparationNote>.unmodifiable(notes);
   }
 
   /// Whether [appointment] is still open and starts at or after [now].

@@ -7,10 +7,10 @@ final class _PatientShellUserCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<AuthCubit>().state;
-    if (state case AuthSignedIn(:final user)) {
+    if (state is AuthSignedIn) {
       return AppNavigationUserCard(
-        initials: user.initials,
-        name: user.fullName,
+        initials: state.user.initials,
+        name: state.user.fullName,
         subtitle: LocaleKeys.roles_patient.translate(),
         signOutTooltip: LocaleKeys.patient_signOut.translate(),
         onSignOut: context.read<AuthCubit>().signOut,

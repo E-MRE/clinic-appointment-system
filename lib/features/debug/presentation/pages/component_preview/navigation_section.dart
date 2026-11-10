@@ -5,16 +5,18 @@ final class _NavigationSection extends StatelessWidget {
   const _NavigationSection();
   @override
   Widget build(BuildContext context) {
-    return Column(
-      spacing: AppSizes.s16,
-      children: [
-        for (final width in _PreviewWidth.values)
-          if (width.width case final double fixedWidth)
-            _TierPreview(
-              width: fixedWidth,
-              child: _NavigationPreviewShell(width: width),
-            ),
-      ],
-    );
+    final children = <Widget>[];
+    for (final width in _PreviewWidth.values) {
+      final fixedWidth = width.width;
+      if (fixedWidth is double) {
+        children.add(
+          _TierPreview(
+            width: fixedWidth,
+            child: _NavigationPreviewShell(width: width),
+          ),
+        );
+      }
+    }
+    return Column(spacing: AppSizes.s16, children: children);
   }
 }

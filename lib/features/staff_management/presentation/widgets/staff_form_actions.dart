@@ -14,7 +14,8 @@ final class _StaffFormActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (onCancel case final cancel?) {
+    final cancel = onCancel;
+    if (cancel != null) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.end,
         spacing: AppSizes.s8,

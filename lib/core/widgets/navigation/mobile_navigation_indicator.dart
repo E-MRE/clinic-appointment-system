@@ -13,6 +13,7 @@ final class _MobileNavigationIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = context.colorScheme;
+    final count = destination.badgeCount;
     return SizedBox(
       width: AppSizes.navigationIndicatorWidth,
       height: AppSizes.s32,
@@ -25,7 +26,7 @@ final class _MobileNavigationIndicator extends StatelessWidget {
             color: style.iconColor(scheme),
             size: AppSizes.s24,
           ),
-          if (destination.badgeCount case final count?)
+          if (count != null)
             Positioned(
               right: AppSizes.s8,
               child: _NavigationCountBadge(count: count),

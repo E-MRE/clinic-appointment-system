@@ -11,8 +11,8 @@ final class _AvailabilityWeekdaySelect extends StatelessWidget {
     final saving =
         context.watch<AvailabilityWindowAddCubit>().state
             is AvailabilityWindowSaving;
-    if (branch case WatchLoaded(:final data)) {
-      final days = data.workingHours.openDays;
+    if (branch is WatchLoaded<Branch, InstitutionErrorCode>) {
+      final days = branch.data.workingHours.openDays;
       return AppSelectField<Weekday>(
         label: LocaleKeys.availability_weekday.translate(),
         value: days.contains(draft.state.weekday) ? draft.state.weekday : null,

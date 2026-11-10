@@ -14,14 +14,11 @@ final class _AvailabilityBodyFrame extends StatelessWidget {
       listenWhen: (previous, current) =>
           current is AvailabilityWindowSaveFailure,
       listener: (context, state) {
-        if (state case AvailabilityWindowSaveFailure(
-          :final code,
-          :final conflict,
-        )) {
+        if (state is AvailabilityWindowSaveFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: AppText.body(
-                code.message(conflict: conflict),
+                state.code.message(conflict: state.conflict),
                 tone: TextTone.onInverse,
               ),
             ),

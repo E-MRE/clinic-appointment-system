@@ -11,12 +11,16 @@ final class _StaffRequestApproveButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AppointmentApproveCubit, AppointmentActionState>(
       builder: (context, state) {
-        final runningId = switch (state) {
-          AppointmentActionInProgress(:final appointmentId) => appointmentId,
-          AppointmentActionIdle() ||
-          AppointmentActionSuccess() ||
-          AppointmentActionFailure() => null,
-        };
+        final String? runningId;
+        if (state is AppointmentActionInProgress) {
+          runningId = state.appointmentId;
+        } else if (state is AppointmentActionSuccess) {
+          runningId = null;
+        } else if (state is AppointmentActionFailure) {
+          runningId = null;
+        } else {
+          runningId = null;
+        }
         return FilledButton(
           onPressed: runningId == null
               ? () => context.approveRequest(request)

@@ -9,16 +9,17 @@ final class _AvailabilityDayWindows extends StatelessWidget {
   Widget build(BuildContext context) {
     final branch = context.watch<AvailabilityBranchCubit>().state;
     final availability = context.watch<StaffAvailabilityCubit>().state;
-    if (branch case WatchLoaded(data: final branch)) {
-      if (availability case WatchLoaded(:final data)) {
+    if (branch is WatchLoaded<Branch, InstitutionErrorCode>) {
+      if (availability
+          is WatchLoaded<StaffAvailability, AvailabilityErrorCode>) {
         return Wrap(
           spacing: AppSizes.s8,
           runSpacing: AppSizes.s8,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            for (final window in data.weeklyOn(day))
+            for (final window in availability.data.weeklyOn(day))
               _AvailabilityRangeChip(window: window),
-            if (branch.workingHours.isClosedOn(day))
+            if (branch.data.workingHours.isClosedOn(day))
               AppText.body(
                 LocaleKeys.availability_closed.translate(),
                 tone: TextTone.muted,

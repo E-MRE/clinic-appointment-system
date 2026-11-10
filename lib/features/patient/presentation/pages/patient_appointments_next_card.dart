@@ -23,12 +23,16 @@ final class _PatientAppointmentsNextCard extends StatelessWidget {
 
   /// Reports the outcome of a cancel request started from this card.
   void _onCancelState(BuildContext context, AppointmentActionState state) {
-    final message = switch (state) {
-      AppointmentActionSuccess() =>
-        LocaleKeys.patient_appointments_cancelled.translate(),
-      AppointmentActionFailure(:final errorCode) => errorCode.message,
-      AppointmentActionIdle() || AppointmentActionInProgress() => null,
-    };
+    final String? message;
+    if (state is AppointmentActionSuccess) {
+      message = LocaleKeys.patient_appointments_cancelled.translate();
+    } else if (state is AppointmentActionFailure) {
+      message = state.errorCode.message;
+    } else if (state is AppointmentActionInProgress) {
+      message = null;
+    } else {
+      message = null;
+    }
     if (message == null) return;
     ScaffoldMessenger.of(
       context,

@@ -20,8 +20,8 @@ final class _InstitutionClinicPicker extends StatelessWidget {
               AppSelectOption(value: item.id, label: item.name),
           ],
           onChanged: (value) {
-            if (value case final selected?) {
-              InstitutionSelectionScope.read(context).selectClinic(selected);
+            if (value != null) {
+              InstitutionSelectionScope.read(context).selectClinic(value);
             }
           },
         ),

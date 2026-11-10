@@ -8,12 +8,12 @@ final class _PatientAppointmentsPrimaryColumn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final next = overview.next;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: AppSizes.s24,
       children: [
-        if (overview.next case final next?)
-          _PatientAppointmentsNextCard(entry: next),
+        if (next != null) _PatientAppointmentsNextCard(entry: next),
         _PatientAppointmentsListCard(overview: overview),
       ],
     );

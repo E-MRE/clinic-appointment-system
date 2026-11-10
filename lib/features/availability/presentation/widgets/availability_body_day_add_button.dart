@@ -11,8 +11,10 @@ final class _AvailabilityDayAddButton extends StatelessWidget {
     final saving =
         context.watch<AvailabilityWindowAddCubit>().state
             is AvailabilityWindowSaving;
-    if (branch case WatchLoaded(:final data)) {
-      if (data.workingHours.isClosedOn(day)) return const SizedBox.shrink();
+    if (branch is WatchLoaded<Branch, InstitutionErrorCode>) {
+      if (branch.data.workingHours.isClosedOn(day)) {
+        return const SizedBox.shrink();
+      }
       return SizedBox.square(
         dimension: AppSizes.s40,
         child: IconButton.outlined(

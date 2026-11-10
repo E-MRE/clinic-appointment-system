@@ -11,7 +11,8 @@ final class _AvailabilityTimelineBarOutline extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (variant.border(context.colorScheme) case final border?) {
+    final border = variant.border(context.colorScheme);
+    if (border != null) {
       return AppDashedBorder(
         color: border.color,
         strokeWidth: border.width,

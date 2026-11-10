@@ -6,7 +6,8 @@ extension _StaffRequestsApprove on BuildContext {
   /// [AppointmentApproveCubit].
   Future<void> approveRequest(Appointment request) async {
     final session = read<AuthCubit>().state;
-    if (session case AuthSignedIn(:final user)) {
+    if (session is AuthSignedIn) {
+      final user = session.user;
       final staff = user.staffProfile;
       if (staff != null) {
         await read<AppointmentApproveCubit>().perform(

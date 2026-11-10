@@ -11,8 +11,8 @@ final class _AvailabilityRangeChip extends StatelessWidget {
     final saving =
         context.watch<AvailabilityWindowRemoveCubit>().state
             is AvailabilityWindowSaving;
-    if (branch case WatchLoaded(:final data)) {
-      final fits = window.fitsWithin(data.workingHours);
+    if (branch is WatchLoaded<Branch, InstitutionErrorCode>) {
+      final fits = window.fitsWithin(branch.data.workingHours);
       return Semantics(
         label: fits
             ? window.range.label

@@ -15,23 +15,7 @@ final class _PatientAppointmentsNextCardBody extends StatelessWidget {
         borderRadius: const AppRadius.large(),
       ),
       child: context.screenSize.isMobile
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: AppSizes.s16,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: AppSizes.s16,
-                  children: [
-                    _PatientAppointmentsDateTile(entry: entry),
-                    Expanded(
-                      child: _PatientAppointmentsNextSummary(entry: entry),
-                    ),
-                  ],
-                ),
-                _PatientAppointmentsNextActions(entry: entry),
-              ],
-            )
+          ? _buildMobile()
           : Row(
               spacing: AppSizes.s24,
               children: [
@@ -40,6 +24,24 @@ final class _PatientAppointmentsNextCardBody extends StatelessWidget {
                 _PatientAppointmentsNextActions(entry: entry),
               ],
             ),
+    );
+  }
+
+  Column _buildMobile() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: AppSizes.s16,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: AppSizes.s16,
+          children: [
+            _PatientAppointmentsDateTile(entry: entry),
+            Expanded(child: _PatientAppointmentsNextSummary(entry: entry)),
+          ],
+        ),
+        _PatientAppointmentsNextActions(entry: entry),
+      ],
     );
   }
 }

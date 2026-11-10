@@ -25,12 +25,16 @@ final class _StaffRequestsView extends StatelessWidget {
   }
 
   void _onApproval(BuildContext context, AppointmentActionState state) {
-    final message = switch (state) {
-      AppointmentActionSuccess() =>
-        LocaleKeys.staffRequests_approved.translate(),
-      AppointmentActionFailure(:final errorCode) => errorCode.message,
-      AppointmentActionIdle() || AppointmentActionInProgress() => null,
-    };
+    final String? message;
+    if (state is AppointmentActionSuccess) {
+      message = LocaleKeys.staffRequests_approved.translate();
+    } else if (state is AppointmentActionFailure) {
+      message = state.errorCode.message;
+    } else if (state is AppointmentActionInProgress) {
+      message = null;
+    } else {
+      message = null;
+    }
     if (message == null) return;
     ScaffoldMessenger.of(
       context,

@@ -25,27 +25,7 @@ final class _PatientBookContent extends StatelessWidget {
                 subtitle: LocaleKeys.patient_book_subtitle.translate(),
               ),
               if (context.screenSize.isDesktop)
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: AppSizes.s20,
-                  children: [
-                    Expanded(
-                      flex: PatientLayoutConstants.bookingChoiceFlex,
-                      child: _PatientBookChoiceColumn(catalog: catalog),
-                    ),
-                    Expanded(
-                      flex: PatientLayoutConstants.bookingScheduleFlex,
-                      child: _PatientBookScheduleCard(catalog: catalog),
-                    ),
-                    Expanded(
-                      flex: PatientLayoutConstants.bookingSummaryFlex,
-                      child: _PatientBookSummaryCard(
-                        catalog: catalog,
-                        patient: patient,
-                      ),
-                    ),
-                  ],
-                )
+                _buildDesktop()
               else ...[
                 _PatientBookChoiceColumn(catalog: catalog),
                 _PatientBookScheduleCard(catalog: catalog),
@@ -55,6 +35,27 @@ final class _PatientBookContent extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Row _buildDesktop() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: AppSizes.s20,
+      children: [
+        Expanded(
+          flex: PatientLayoutConstants.bookingChoiceFlex,
+          child: _PatientBookChoiceColumn(catalog: catalog),
+        ),
+        Expanded(
+          flex: PatientLayoutConstants.bookingScheduleFlex,
+          child: _PatientBookScheduleCard(catalog: catalog),
+        ),
+        Expanded(
+          flex: PatientLayoutConstants.bookingSummaryFlex,
+          child: _PatientBookSummaryCard(catalog: catalog, patient: patient),
+        ),
+      ],
     );
   }
 }

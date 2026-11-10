@@ -28,22 +28,14 @@ final class StaffWeekSchedule {
       for (final date in request.dates)
         StaffScheduleDay(
           date: date,
-          groups: [
-            for (final window in availability.effectiveWindowsOn(
-              date,
-              request.branchHours,
-            ))
-              if (_upcomingSlots(
-                    window.range,
-                    date,
-                    request,
-                    generator,
-                    exclusion,
-                    now,
-                  )
-                  case final List<StaffSlot> slots when slots.isNotEmpty)
-                StaffSlotGroup(window: window.range, slots: slots),
-          ],
+          groups: _groupsFor(
+            date,
+            request,
+            availability,
+            generator,
+            exclusion,
+            now,
+          ),
         ),
     ];
     return StaffWeekSchedule._(request, availability, days);
@@ -98,5 +90,33 @@ final class StaffWeekSchedule {
         if (!date.atMinutes(range.start.minutesSinceMidnight).isBefore(now))
           StaffSlot(range: range, isTaken: exclusion.excludes(date, range)),
     ];
+  }
+
+  static List<StaffSlotGroup> _groupsFor(
+    CalendarDate date,
+    StaffWeekScheduleRequest request,
+    StaffAvailability availability,
+    SlotGenerator generator,
+    BookedSlotExclusion exclusion,
+    DateTime now,
+  ) {
+    final groups = <StaffSlotGroup>[];
+    for (final window in availability.effectiveWindowsOn(
+      date,
+      request.branchHours,
+    )) {
+      final slots = _upcomingSlots(
+        window.range,
+        date,
+        request,
+        generator,
+        exclusion,
+        now,
+      );
+      if (slots.isNotEmpty) {
+        groups.add(StaffSlotGroup(window: window.range, slots: slots));
+      }
+    }
+    return groups;
   }
 }

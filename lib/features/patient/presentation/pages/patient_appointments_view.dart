@@ -10,31 +10,42 @@ final class _PatientAppointmentsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final catalogState = context.watch<PatientCatalogCubit>().state;
     final appointmentsState = context.watch<PatientAppointmentsCubit>().state;
-    return AppScaffold(
-      child: switch ((catalogState, appointmentsState)) {
-        (_, PatientAppointmentsFailure(:final errorCode)) =>
-          _PatientAppointmentsFailure(errorCode: errorCode),
-        (PatientCatalogFailure(), _) => const _PatientAppointmentsFailure(
-          errorCode: AppointmentErrorCode.unavailable,
+
+    return AppScaffold(child: _buildChild(appointmentsState, catalogState));
+  }
+
+  Widget _buildChild(
+    PatientAppointmentsState appointmentsState,
+    PatientCatalogState catalogState,
+  ) {
+    if (appointmentsState is PatientAppointmentsFailure) {
+      return _PatientAppointmentsFailure(
+        errorCode: appointmentsState.errorCode,
+      );
+    }
+
+    if (catalogState is PatientCatalogFailure) {
+      return const _PatientAppointmentsFailure(
+        errorCode: AppointmentErrorCode.unavailable,
+      );
+    }
+
+    if (catalogState is PatientCatalogLoaded &&
+        appointmentsState is PatientAppointmentsLoaded) {
+      return _PatientAppointmentsContent(
+        firstName: user.firstName,
+        overview: PatientAppointmentsOverview(
+          appointments: appointmentsState.appointments,
+          catalog: catalogState.catalog,
+          now: AppDependency.injector.get<Clock>().now(),
+          patient: PatientAppointmentActor(id: user.id),
         ),
-        (
-          PatientCatalogLoaded(:final catalog),
-          PatientAppointmentsLoaded(:final appointments),
-        ) =>
-          _PatientAppointmentsContent(
-            firstName: user.firstName,
-            overview: PatientAppointmentsOverview(
-              appointments: appointments,
-              catalog: catalog,
-              now: AppDependency.injector.get<Clock>().now(),
-              patient: PatientAppointmentActor(id: user.id),
-            ),
-          ),
-        _ => LoadingState(
-          variant: LoadingStateVariant.skeletonList,
-          label: LocaleKeys.patient_appointments_loading.translate(),
-        ),
-      },
+      );
+    }
+
+    return LoadingState(
+      variant: LoadingStateVariant.skeletonList,
+      label: LocaleKeys.patient_appointments_loading.translate(),
     );
   }
 }

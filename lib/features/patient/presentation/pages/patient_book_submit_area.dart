@@ -18,9 +18,9 @@ final class _PatientBookSubmitArea extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           spacing: AppSizes.s16,
           children: [
-            if (state case BookAppointmentFailure(:final errorCode))
+            if (state is BookAppointmentFailure)
               AppMessageBanner(
-                message: errorCode.message,
+                message: state.errorCode.message,
                 variant: AppMessageBannerVariant.error,
               ),
             _PatientBookSubmitButton(

@@ -44,6 +44,7 @@ final class _PatientAppointmentsDetailsDialog extends StatelessWidget {
                         appointmentsState,
                         catalogState,
                       );
+                      final cancellationNote = entry.cancellationNote;
                       return AppFormDialog(
                         title: entry.serviceName,
                         child: Column(
@@ -83,12 +84,12 @@ final class _PatientAppointmentsDetailsDialog extends StatelessWidget {
                                 status: entry.appointment.status,
                               ),
                             ),
-                            if (entry.cancellationNote case final note?)
+                            if (cancellationNote != null)
                               AppDefinitionRow(
                                 label: LocaleKeys
                                     .patient_appointments_dialog_note
                                     .translate(),
-                                child: AppText.bodyStrong(note),
+                                child: AppText.bodyStrong(cancellationNote),
                               ),
                             const _PatientAppointmentsCancelError(),
                             _PatientAppointmentsDialogActions(entry: entry),
@@ -106,11 +107,11 @@ final class _PatientAppointmentsDetailsDialog extends StatelessWidget {
     PatientAppointmentsState appointmentsState,
     PatientCatalogState catalogState,
   ) {
-    if (appointmentsState case PatientAppointmentsLoaded(:final appointments)) {
-      if (catalogState case PatientCatalogLoaded(:final catalog)) {
+    if (appointmentsState is PatientAppointmentsLoaded) {
+      if (catalogState is PatientCatalogLoaded) {
         final overview = PatientAppointmentsOverview(
-          appointments: appointments,
-          catalog: catalog,
+          appointments: appointmentsState.appointments,
+          catalog: catalogState.catalog,
           now: AppDependency.injector.get<Clock>().now(),
           patient: PatientAppointmentActor(
             id: initialEntry.appointment.patientId,

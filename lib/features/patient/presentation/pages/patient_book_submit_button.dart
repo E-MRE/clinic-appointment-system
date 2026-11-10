@@ -16,17 +16,23 @@ final class _PatientBookSubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheduleState = context.watch<StaffWeekScheduleCubit>().state;
-    final schedule = switch (scheduleState) {
-      StaffWeekScheduleLoaded(:final schedule)
-          when selection.isComplete &&
-              selection.isScheduledBy(schedule.request) =>
-        schedule,
-      _ => null,
-    };
+    final StaffWeekSchedule? schedule;
+    if (scheduleState is StaffWeekScheduleLoaded &&
+        selection.isComplete &&
+        selection.isScheduledBy(scheduleState.schedule.request)) {
+      schedule = scheduleState.schedule;
+    } else {
+      schedule = null;
+    }
+    final VoidCallback? onPressed;
+    if (schedule == null || isBusy) {
+      onPressed = null;
+    } else {
+      final availableSchedule = schedule;
+      onPressed = () => _submit(context, availableSchedule);
+    }
     return FilledButton(
-      onPressed: schedule == null || isBusy
-          ? null
-          : () => _submit(context, schedule),
+      onPressed: onPressed,
       child: isBusy
           ? const _PatientBookSubmitProgress()
           : Text(LocaleKeys.patient_book_submit.translate()),

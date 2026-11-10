@@ -8,11 +8,14 @@ final class _StaffFormSaveError extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<StaffSaveCubit, StaffSaveState>(
       builder: (context, state) {
-        final message = switch (state) {
-          StaffSaveAuthFailure(:final code) => code.message,
-          StaffSaveProfileFailure(:final code) => code.staffMessage,
-          _ => null,
-        };
+        final String? message;
+        if (state is StaffSaveAuthFailure) {
+          message = state.code.message;
+        } else if (state is StaffSaveProfileFailure) {
+          message = state.code.staffMessage;
+        } else {
+          message = null;
+        }
         if (message == null) return const SizedBox.shrink();
         return Semantics(
           liveRegion: true,

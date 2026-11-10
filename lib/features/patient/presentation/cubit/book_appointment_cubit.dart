@@ -44,48 +44,55 @@ final class BookAppointmentCubit extends Cubit<BookAppointmentState> {
     required PatientAppointmentActor patient,
   }) async {
     if (_isClosingOrClosed || _isRequestInFlight) return;
-    if (selection case BookingSelection(
-      service: final MedicalService service,
-      staff: final Staff staff,
-      date: final CalendarDate date,
-      slot: final TimeRange slot,
-    )) {
-      _isRequestInFlight = true;
-      emit(const BookAppointmentInProgress());
-      try {
-        final result = await _book(
-          AppointmentBookingRequest(
-            candidate: Appointment.request(
-              patientId: patient.id,
-              staffId: staff.id,
-              branchId: service.branchId,
-              departmentId: service.departmentId,
-              serviceId: service.id,
-              serviceName: service.name,
-              fee: service.fee,
-              date: date,
-              range: slot,
-              by: patient,
-              at: _clock.now(),
-            ),
-            staff: staff,
-            service: service,
-            availability: schedule.availability,
-            branchHours: schedule.request.branchHours,
-          ),
-        );
-        final appointment = result.data;
-        if (result.isSuccess && appointment != null) {
-          _emit(BookAppointmentSuccess(appointment));
-          return;
+    final service = selection.service;
+    if (service is MedicalService) {
+      final staff = selection.staff;
+      if (staff is Staff) {
+        final date = selection.date;
+        if (date is CalendarDate) {
+          final slot = selection.slot;
+          if (slot is TimeRange) {
+            _isRequestInFlight = true;
+            emit(const BookAppointmentInProgress());
+            try {
+              final result = await _book(
+                AppointmentBookingRequest(
+                  candidate: Appointment.request(
+                    patientId: patient.id,
+                    staffId: staff.id,
+                    branchId: service.branchId,
+                    departmentId: service.departmentId,
+                    serviceId: service.id,
+                    serviceName: service.name,
+                    fee: service.fee,
+                    date: date,
+                    range: slot,
+                    by: patient,
+                    at: _clock.now(),
+                  ),
+                  staff: staff,
+                  service: service,
+                  availability: schedule.availability,
+                  branchHours: schedule.request.branchHours,
+                ),
+              );
+              final appointment = result.data;
+              if (result.isSuccess && appointment != null) {
+                _emit(BookAppointmentSuccess(appointment));
+                return;
+              }
+              _emit(BookAppointmentFailure(result.appointmentErrorCode));
+            } on AppointmentException catch (error) {
+              _emit(BookAppointmentFailure(error.code));
+            } on Exception {
+              _emit(
+                const BookAppointmentFailure(AppointmentErrorCode.unavailable),
+              );
+            } finally {
+              _isRequestInFlight = false;
+            }
+          }
         }
-        _emit(BookAppointmentFailure(result.appointmentErrorCode));
-      } on AppointmentException catch (error) {
-        _emit(BookAppointmentFailure(error.code));
-      } on Exception {
-        _emit(const BookAppointmentFailure(AppointmentErrorCode.unavailable));
-      } finally {
-        _isRequestInFlight = false;
       }
     }
   }

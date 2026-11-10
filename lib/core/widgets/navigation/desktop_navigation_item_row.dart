@@ -14,6 +14,7 @@ final class _DesktopNavigationItemRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final count = destination.badgeCount;
     return Row(
       children: [
         const EmptySize.s12Width(),
@@ -28,7 +29,7 @@ final class _DesktopNavigationItemRow extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        if (destination.badgeCount case final count?) ...[
+        if (count != null) ...[
           _NavigationCountBadge(count: count),
           const EmptySize.s8Width(),
         ],

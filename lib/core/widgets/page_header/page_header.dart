@@ -28,6 +28,7 @@ final class PageHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tier = context.screenSize.pageHeaderTier;
+    final value = actions;
     return ConstrainedBox(
       constraints: BoxConstraints(minHeight: tier.minimumHeight),
       child: Align(
@@ -42,10 +43,7 @@ final class PageHeader extends StatelessWidget {
                 tier: tier,
               ),
             ),
-            if (actions case final value?) ...[
-              const EmptySize.s8Width(),
-              value,
-            ],
+            if (value != null) ...[const EmptySize.s8Width(), value],
           ],
         ),
       ),

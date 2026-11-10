@@ -100,14 +100,19 @@ final class PatientCatalog {
         offered.putIfAbsent(service.departmentId, () => []).add(service);
       }
     }
-    return List<PatientDepartmentSummary>.unmodifiable([
-      for (final department in _departmentList)
-        if (offered[department.id] case final List<MedicalService> items)
+    final summaries = <PatientDepartmentSummary>[];
+    for (final department in _departmentList) {
+      final items = offered[department.id];
+      if (items != null) {
+        summaries.add(
           PatientDepartmentSummary(
             department: department,
             serviceCount: items.length,
           ),
-    ]);
+        );
+      }
+    }
+    return List<PatientDepartmentSummary>.unmodifiable(summaries);
   }
 
   static int _byName(InstitutionRecord first, InstitutionRecord second) {

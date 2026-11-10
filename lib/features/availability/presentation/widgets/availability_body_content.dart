@@ -14,11 +14,12 @@ final class _AvailabilityBodyContent extends StatelessWidget {
         label: LocaleKeys.availability_loading.translate(),
       );
     }
-    if (availability case WatchFailure(:final code)) {
-      return _AvailabilityFailure(message: code.message());
+    if (availability
+        is WatchFailure<StaffAvailability, AvailabilityErrorCode>) {
+      return _AvailabilityFailure(message: availability.code.message());
     }
-    if (branch case WatchFailure(:final code)) {
-      return _AvailabilityFailure(message: code.message);
+    if (branch is WatchFailure<Branch, InstitutionErrorCode>) {
+      return _AvailabilityFailure(message: branch.code.message);
     }
     return context.screenSize.select(
       mobile: const _AvailabilityMobileLayout(),

@@ -16,7 +16,9 @@ final class StaffWeekScheduleRequest {
     required this.branchHours,
   }) : dates = List<CalendarDate>.unmodifiable(
          List<CalendarDate>.generate(
-           _listedDays(branchHours),
+           branchHours.isClosedOn(Weekday.sunday)
+               ? BookingConstants.alwaysListedDays
+               : BookingConstants.daysPerWeek,
            weekStart.addDays,
          ),
        );
@@ -35,11 +37,4 @@ final class StaffWeekScheduleRequest {
 
   /// Monday through Saturday, plus Sunday when the branch opens on Sunday.
   final List<CalendarDate> dates;
-
-  static int _listedDays(WorkingHours branchHours) {
-    if (branchHours.isClosedOn(Weekday.sunday)) {
-      return BookingConstants.alwaysListedDays;
-    }
-    return BookingConstants.daysPerWeek;
-  }
 }

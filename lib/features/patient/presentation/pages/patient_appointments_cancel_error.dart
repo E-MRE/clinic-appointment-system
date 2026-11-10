@@ -8,9 +8,9 @@ final class _PatientAppointmentsCancelError extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<PatientAppointmentCancelCubit, AppointmentActionState>(
       builder: (context, state) {
-        if (state case AppointmentActionFailure(:final errorCode)) {
+        if (state is AppointmentActionFailure) {
           return AppMessageBanner(
-            message: errorCode.message,
+            message: state.errorCode.message,
             variant: AppMessageBannerVariant.error,
           );
         }

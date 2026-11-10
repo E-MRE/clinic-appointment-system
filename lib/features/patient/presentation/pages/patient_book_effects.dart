@@ -69,26 +69,19 @@ final class _PatientBookEffects extends StatelessWidget {
   }
 
   void _onSchedule(BuildContext context, StaffWeekScheduleState state) {
-    if (state case StaffWeekScheduleLoaded(:final schedule)) {
-      context.read<BookingSelectionCubit>().applySchedule(schedule);
+    if (state is StaffWeekScheduleLoaded) {
+      context.read<BookingSelectionCubit>().applySchedule(state.schedule);
     }
   }
 
   void _onRequest(BuildContext context, BookAppointmentState state) {
-    switch (state) {
-      case BookAppointmentSuccess():
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(LocaleKeys.patient_book_submitted.translate()),
-          ),
-        );
-        context.go(AppRoutes.patientAppointments);
-      case BookAppointmentFailure(:final errorCode) when errorCode.clearsSlot:
-        context.read<BookingSelectionCubit>().clearSlot();
-      case BookAppointmentIdle() ||
-          BookAppointmentInProgress() ||
-          BookAppointmentFailure():
-        break;
+    if (state is BookAppointmentSuccess) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(LocaleKeys.patient_book_submitted.translate())),
+      );
+      context.go(AppRoutes.patientAppointments);
+    } else if (state is BookAppointmentFailure && state.errorCode.clearsSlot) {
+      context.read<BookingSelectionCubit>().clearSlot();
     }
   }
 }

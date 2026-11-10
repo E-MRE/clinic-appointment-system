@@ -61,7 +61,8 @@ final class MedicalServiceSummaryVisitor
   @override
   MedicalServiceSummary visitLabTest(LabTest service) {
     final String fastingText;
-    if (service.fastingHours case final fasting?) {
+    final fasting = service.fastingHours;
+    if (fasting != null) {
       fastingText = LocaleKeys.services_summary_lab_fastingWithHours.translate(
         args: [fasting.formatted],
       );

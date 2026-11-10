@@ -9,9 +9,10 @@ extension AvailabilityHeaderPresentation
     on WatchState<StaffAvailability, AvailabilityErrorCode> {
   /// Adds the weekly total to a localized subtitle when loaded.
   String withWeeklyTotal(String subtitle) {
-    if (this case WatchLoaded(:final data)) {
+    final current = this;
+    if (current is WatchLoaded<StaffAvailability, AvailabilityErrorCode>) {
       return LocaleKeys.availability_weeklyTotal.translate(
-        args: [subtitle, data.weeklyMinutes.availabilityLabel],
+        args: [subtitle, current.data.weeklyMinutes.availabilityLabel],
       );
     }
     return subtitle;

@@ -14,14 +14,15 @@ final class _PageHeaderTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final subtitle = this.subtitle;
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         AppText.pageTitle(title),
-        if (subtitle case final value?) ...[
+        if (subtitle != null) ...[
           const EmptySize.s2Height(),
-          AppText(value, role: tier.subtitleRole, tone: TextTone.muted),
+          AppText(subtitle, role: tier.subtitleRole, tone: TextTone.muted),
         ],
       ],
     );

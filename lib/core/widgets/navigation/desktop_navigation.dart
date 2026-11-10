@@ -20,6 +20,7 @@ final class _DesktopNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final action = primaryAction;
     return Container(
       width: AppSizes.navigationSidebar,
       color: context.colorScheme.surfaceContainer,
@@ -28,10 +29,7 @@ final class _DesktopNavigation extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           AppBrandHeader(logo: logo, logoSize: AppSizes.s40),
-          if (primaryAction case final action?) ...[
-            const EmptySize.s24Height(),
-            action,
-          ],
+          if (action != null) ...[const EmptySize.s24Height(), action],
           const EmptySize.s24Height(),
           Expanded(
             child: _NavigationItemList(

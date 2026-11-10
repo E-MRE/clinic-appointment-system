@@ -6,11 +6,10 @@ final class _AvailabilityBranchBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (context.watch<AvailabilityBranchCubit>().state case WatchLoaded(
-      :final data,
-    )) {
+    final branch = context.watch<AvailabilityBranchCubit>().state;
+    if (branch is WatchLoaded<Branch, InstitutionErrorCode>) {
       return AppMessageBanner(
-        message: data.availabilityHoursMessage,
+        message: branch.data.availabilityHoursMessage,
         variant: AppMessageBannerVariant.info,
         icon: Icons.apartment_outlined,
       );
