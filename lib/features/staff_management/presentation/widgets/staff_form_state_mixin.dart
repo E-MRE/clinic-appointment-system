@@ -85,11 +85,10 @@ mixin _StaffFormStateMixin on State<_StaffFormContent> {
   }
 
   void _startDraft() {
-    final staff = widget.staff;
-    if (staff != null) {
-      formCubit.startEdit(staff);
-    } else {
+    if (widget.staff == null) {
       formCubit.startCreate();
+    } else {
+      formCubit.startEdit(widget.staff!);
     }
   }
 

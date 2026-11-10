@@ -9,7 +9,6 @@ final class _WorkingHoursEditorDay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final draft = context.watch<WorkingHoursEditorCubit>().state.day(day);
-    final error = draft.error;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -24,7 +23,8 @@ final class _WorkingHoursEditorDay extends StatelessWidget {
             LocaleKeys.institution_closed.tr(),
             tone: TextTone.muted,
           ),
-        if (error != null) AppText.caption(error.message, tone: TextTone.error),
+        if (draft.error != null)
+          AppText.caption(draft.error!.message, tone: TextTone.error),
         const EmptySize.s8Height(),
       ],
     );

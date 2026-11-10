@@ -61,17 +61,19 @@ final class MedicalServiceSummaryVisitor
   @override
   MedicalServiceSummary visitLabTest(LabTest service) {
     final String fastingText;
-    final fasting = service.fastingHours;
-    if (fasting != null) {
+
+    if (service.fastingHours != null) {
       fastingText = LocaleKeys.services_summary_lab_fastingWithHours.translate(
-        args: [fasting.formatted],
+        args: [service.fastingHours!.formatted],
       );
     } else {
       fastingText = LocaleKeys.services_summary_lab_fastingNone.translate();
     }
+
     final resultText = LocaleKeys.services_summary_lab_resultFormat.translate(
       args: [service.resultTime.resultSummary],
     );
+
     final summaryText = '$fastingText · $resultText';
     return MedicalServiceSummary(
       tableSubtitle: summaryText,

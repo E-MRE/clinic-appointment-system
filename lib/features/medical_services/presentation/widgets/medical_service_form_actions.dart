@@ -9,13 +9,12 @@ final class _MedicalServiceFormActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cancel = onCancel;
-    if (cancel != null) {
+    if (onCancel != null) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.end,
         spacing: AppSizes.s8,
         children: [
-          _MedicalServiceFormCancelButton(onCancel: cancel),
+          _MedicalServiceFormCancelButton(onCancel: onCancel!),
           _MedicalServiceFormSaveButton(onSave: onSave),
         ],
       );

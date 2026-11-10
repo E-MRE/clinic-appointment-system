@@ -9,7 +9,6 @@ final class _AppListTileText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final subtitle = this.subtitle;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -19,7 +18,7 @@ final class _AppListTileText extends StatelessWidget {
           Padding(
             padding: const AppPadding.listTileSubtitle(),
             child: AppText.caption(
-              subtitle,
+              subtitle ?? '',
               tone: TextTone.muted,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,

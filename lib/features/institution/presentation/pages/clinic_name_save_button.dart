@@ -13,11 +13,11 @@ final class _ClinicNameSaveButton extends StatelessWidget {
       onPressed: () {
         final save = context.read<ClinicSaveCubit>();
         final name = controller.text.trim();
-        final existing = clinic;
-        if (existing != null) {
-          save.update(existing, name);
-        } else {
+
+        if (clinic == null) {
           save.create(name);
+        } else {
+          save.update(clinic!, name);
         }
       },
       child: AppText.label(

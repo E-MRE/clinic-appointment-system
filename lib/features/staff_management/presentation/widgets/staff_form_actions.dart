@@ -14,22 +14,22 @@ final class _StaffFormActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cancel = onCancel;
-    if (cancel != null) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        spacing: AppSizes.s8,
-        children: [
-          _StaffFormCancelButton(onCancel: cancel),
-          Flexible(
-            child: _StaffFormSaveButton(isEditing: isEditing, onSave: onSave),
-          ),
-        ],
+    if (onCancel == null) {
+      return SizedBox(
+        width: double.infinity,
+        child: _StaffFormSaveButton(isEditing: isEditing, onSave: onSave),
       );
     }
-    return SizedBox(
-      width: double.infinity,
-      child: _StaffFormSaveButton(isEditing: isEditing, onSave: onSave),
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      spacing: AppSizes.s8,
+      children: [
+        _StaffFormCancelButton(onCancel: onCancel!),
+        Flexible(
+          child: _StaffFormSaveButton(isEditing: isEditing, onSave: onSave),
+        ),
+      ],
     );
   }
 }

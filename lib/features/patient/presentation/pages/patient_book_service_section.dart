@@ -11,7 +11,6 @@ final class _PatientBookServiceSection extends StatelessWidget {
     return BlocBuilder<BookingSelectionCubit, BookingSelection>(
       builder: (context, selection) {
         final services = selection.servicesIn(catalog);
-        final departmentId = selection.departmentId;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           spacing: AppSizes.s12,
@@ -20,10 +19,10 @@ final class _PatientBookServiceSection extends StatelessWidget {
               title: LocaleKeys.patient_book_serviceTitle.translate(),
             ),
             const _PatientBookSearchField(),
-            if (departmentId != null)
+            if (selection.departmentId != null)
               _PatientBookDepartmentChip(
                 name:
-                    catalog.departmentById(departmentId)?.name ??
+                    catalog.departmentById(selection.departmentId!)?.name ??
                     LocaleKeys.common_notAvailable.translate(),
               ),
             if (services.isEmpty)

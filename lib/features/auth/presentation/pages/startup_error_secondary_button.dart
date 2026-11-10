@@ -12,10 +12,9 @@ final class _StartupSecondaryActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final signOut = onSignOut;
-    if (signOut != null) {
+    if (onSignOut != null) {
       return OutlinedButton(
-        onPressed: signOut,
+        onPressed: onSignOut,
         child: Text(LocaleKeys.auth_signOut.translate()),
       );
     }

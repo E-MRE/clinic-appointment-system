@@ -44,7 +44,7 @@ final class _PatientAppointmentsDetailsDialog extends StatelessWidget {
                         appointmentsState,
                         catalogState,
                       );
-                      final cancellationNote = entry.cancellationNote;
+
                       return AppFormDialog(
                         title: entry.serviceName,
                         child: Column(
@@ -84,12 +84,14 @@ final class _PatientAppointmentsDetailsDialog extends StatelessWidget {
                                 status: entry.appointment.status,
                               ),
                             ),
-                            if (cancellationNote != null)
+                            if (entry.cancellationNote != null)
                               AppDefinitionRow(
                                 label: LocaleKeys
                                     .patient_appointments_dialog_note
                                     .translate(),
-                                child: AppText.bodyStrong(cancellationNote),
+                                child: AppText.bodyStrong(
+                                  entry.cancellationNote ?? '',
+                                ),
                               ),
                             const _PatientAppointmentsCancelError(),
                             _PatientAppointmentsDialogActions(entry: entry),

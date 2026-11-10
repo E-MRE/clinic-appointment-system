@@ -21,9 +21,9 @@ mixin _AdminRouteScopeStateMixin on State<_AdminRouteScopeContent> {
     clinicSubscription = clinics.stream.listen(_onClinicsChanged);
     branchSubscription = branches.stream.listen(_onBranchesChanged);
     selection.addListener(_onSelectionChanged);
-    final routeClinicId = widget.routeClinicId;
-    if (routeClinicId != null) {
-      selection.selectClinic(routeClinicId);
+
+    if (widget.routeClinicId != null) {
+      selection.selectClinic(widget.routeClinicId!);
     }
     _onClinicsChanged(clinics.state);
     _onBranchesChanged(branches.state);

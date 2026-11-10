@@ -16,7 +16,6 @@ final class _StatusBadgeContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final icon = this.icon;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [

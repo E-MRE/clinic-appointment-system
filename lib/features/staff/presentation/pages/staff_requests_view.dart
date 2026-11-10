@@ -30,11 +30,10 @@ final class _StaffRequestsView extends StatelessWidget {
       message = LocaleKeys.staffRequests_approved.translate();
     } else if (state is AppointmentActionFailure) {
       message = state.errorCode.message;
-    } else if (state is AppointmentActionInProgress) {
-      message = null;
     } else {
       message = null;
     }
+
     if (message == null) return;
     ScaffoldMessenger.of(
       context,

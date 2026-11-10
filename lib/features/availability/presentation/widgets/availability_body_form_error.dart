@@ -8,10 +8,10 @@ final class _AvailabilityFormError extends StatelessWidget {
   Widget build(BuildContext context) {
     final draft = context.watch<AvailabilityWindowDraftCubit>().state;
     final save = context.watch<AvailabilityWindowAddCubit>().state;
-    final error = draft.timeError;
-    if (error != null) {
+
+    if (draft.timeError != null) {
       return AppMessageBanner(
-        message: error.availabilityMessage,
+        message: draft.timeError!.availabilityMessage,
         variant: AppMessageBannerVariant.error,
       );
     }

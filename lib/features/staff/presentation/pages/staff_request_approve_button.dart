@@ -14,17 +14,14 @@ final class _StaffRequestApproveButton extends StatelessWidget {
         final String? runningId;
         if (state is AppointmentActionInProgress) {
           runningId = state.appointmentId;
-        } else if (state is AppointmentActionSuccess) {
-          runningId = null;
-        } else if (state is AppointmentActionFailure) {
-          runningId = null;
         } else {
           runningId = null;
         }
+
         return FilledButton(
-          onPressed: runningId == null
-              ? () => context.approveRequest(request)
-              : null,
+          onPressed: runningId != null
+              ? null
+              : () => context.approveRequest(request),
           child: runningId == request.id
               ? const _StaffRequestApproveProgress()
               : AppText.label(

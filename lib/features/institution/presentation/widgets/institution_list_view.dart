@@ -40,9 +40,7 @@ final class InstitutionListView<
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<C, InstitutionListState<T>>(
-      builder: (context, state) {
-        return _buildChild(state);
-      },
+      builder: (context, state) => _buildChild(state),
     );
   }
 

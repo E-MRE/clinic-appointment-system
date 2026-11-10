@@ -1,6 +1,4 @@
-import 'package:clinic_appointment_system/core/time/calendar_date.dart';
 import 'package:clinic_appointment_system/core/time/clock.dart';
-import 'package:clinic_appointment_system/core/time/time_range.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/actors/patient_appointment_actor.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_error_code.dart';
@@ -8,11 +6,9 @@ import 'package:clinic_appointment_system/features/appointments/domain/errors/ap
 import 'package:clinic_appointment_system/features/appointments/domain/models/appointment_booking_request.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/book_appointment_use_case.dart';
 import 'package:clinic_appointment_system/features/appointments/presentation/extensions/data_result_appointment_error_code.dart';
-import 'package:clinic_appointment_system/features/medical_services/domain/entities/medical_service.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/book_appointment_state.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/models/booking_selection.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/models/staff_week_schedule.dart';
-import 'package:clinic_appointment_system/features/users/domain/entities/staff.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Requests the chosen appointment for the signed-in patient, one request
@@ -44,56 +40,56 @@ final class BookAppointmentCubit extends Cubit<BookAppointmentState> {
     required PatientAppointmentActor patient,
   }) async {
     if (_isClosingOrClosed || _isRequestInFlight) return;
+
     final service = selection.service;
-    if (service is MedicalService) {
-      final staff = selection.staff;
-      if (staff is Staff) {
-        final date = selection.date;
-        if (date is CalendarDate) {
-          final slot = selection.slot;
-          if (slot is TimeRange) {
-            _isRequestInFlight = true;
-            emit(const BookAppointmentInProgress());
-            try {
-              final result = await _book(
-                AppointmentBookingRequest(
-                  candidate: Appointment.request(
-                    patientId: patient.id,
-                    staffId: staff.id,
-                    branchId: service.branchId,
-                    departmentId: service.departmentId,
-                    serviceId: service.id,
-                    serviceName: service.name,
-                    fee: service.fee,
-                    date: date,
-                    range: slot,
-                    by: patient,
-                    at: _clock.now(),
-                  ),
-                  staff: staff,
-                  service: service,
-                  availability: schedule.availability,
-                  branchHours: schedule.request.branchHours,
-                ),
-              );
-              final appointment = result.data;
-              if (result.isSuccess && appointment != null) {
-                _emit(BookAppointmentSuccess(appointment));
-                return;
-              }
-              _emit(BookAppointmentFailure(result.appointmentErrorCode));
-            } on AppointmentException catch (error) {
-              _emit(BookAppointmentFailure(error.code));
-            } on Exception {
-              _emit(
-                const BookAppointmentFailure(AppointmentErrorCode.unavailable),
-              );
-            } finally {
-              _isRequestInFlight = false;
-            }
-          }
-        }
+    if (service == null) return;
+
+    final staff = selection.staff;
+    if (staff == null) return;
+
+    final date = selection.date;
+    if (date == null) return;
+
+    final slot = selection.slot;
+    if (slot == null) return;
+
+    _isRequestInFlight = true;
+    emit(const BookAppointmentInProgress());
+
+    try {
+      final result = await _book(
+        AppointmentBookingRequest(
+          candidate: Appointment.request(
+            patientId: patient.id,
+            staffId: staff.id,
+            branchId: service.branchId,
+            departmentId: service.departmentId,
+            serviceId: service.id,
+            serviceName: service.name,
+            fee: service.fee,
+            date: date,
+            range: slot,
+            by: patient,
+            at: _clock.now(),
+          ),
+          staff: staff,
+          service: service,
+          availability: schedule.availability,
+          branchHours: schedule.request.branchHours,
+        ),
+      );
+      final appointment = result.data;
+      if (result.isSuccess && appointment != null) {
+        _emit(BookAppointmentSuccess(appointment));
+        return;
       }
+      _emit(BookAppointmentFailure(result.appointmentErrorCode));
+    } on AppointmentException catch (error) {
+      _emit(BookAppointmentFailure(error.code));
+    } on Exception {
+      _emit(const BookAppointmentFailure(AppointmentErrorCode.unavailable));
+    } finally {
+      _isRequestInFlight = false;
     }
   }
 
