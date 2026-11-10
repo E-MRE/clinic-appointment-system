@@ -1,3 +1,4 @@
+import 'package:clinic_appointment_system/core/extensions/turkish_alphabetical_comparison.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/branch.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/department.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/institution_record.dart';
@@ -8,25 +9,54 @@ import 'package:clinic_appointment_system/features/users/domain/entities/staff.d
 /// An immutable snapshot of every clinic's branches, departments, services
 /// and staff, with the lookups the patient screens need.
 final class PatientCatalog {
-  /// Indexes the supplied records by id and sorts services by name.
-  PatientCatalog({
+  /// Indexes records by id and sorts services and departments by Turkish name.
+  factory PatientCatalog({
     required List<Branch> branches,
     required List<Department> departments,
     required List<MedicalService> services,
     required List<Staff> staff,
-  }) : _branches = {for (final branch in branches) branch.id: branch},
-       _departments = {
-         for (final department in departments) department.id: department,
-       },
-       _services = {for (final service in services) service.id: service},
-       _staff = {for (final member in staff) member.id: member},
-       services = List<MedicalService>.unmodifiable(
-         <MedicalService>[...services]..sort(_byName),
-       ),
-       _departmentList = List<Department>.unmodifiable(
-         <Department>[...departments]..sort(_byName),
-       ),
-       _staffList = List<Staff>.unmodifiable(staff);
+  }) {
+    final branchesById = {for (final branch in branches) branch.id: branch};
+    final departmentsById = {
+      for (final department in departments) department.id: department,
+    };
+    final servicesById = {for (final service in services) service.id: service};
+    final staffById = {for (final member in staff) member.id: member};
+
+    final sortedServices = <MedicalService>[...services]..sort(_byName);
+    final sortedDepartments = <Department>[...departments]..sort(_byName);
+
+    final immutableServices = List<MedicalService>.unmodifiable(sortedServices);
+    final immutableDepartments = List<Department>.unmodifiable(
+      sortedDepartments,
+    );
+    final immutableStaff = List<Staff>.unmodifiable(staff);
+
+    return PatientCatalog._(
+      branchesById: branchesById,
+      departmentsById: departmentsById,
+      servicesById: servicesById,
+      staffById: staffById,
+      departmentList: immutableDepartments,
+      staffList: immutableStaff,
+      services: immutableServices,
+    );
+  }
+
+  PatientCatalog._({
+    required Map<String, Branch> branchesById,
+    required Map<String, Department> departmentsById,
+    required Map<String, MedicalService> servicesById,
+    required Map<String, Staff> staffById,
+    required List<Department> departmentList,
+    required List<Staff> staffList,
+    required this.services,
+  }) : _branches = branchesById,
+       _departments = departmentsById,
+       _services = servicesById,
+       _staff = staffById,
+       _departmentList = departmentList,
+       _staffList = staffList;
 
   final Map<String, Branch> _branches;
   final Map<String, Department> _departments;
@@ -35,7 +65,7 @@ final class PatientCatalog {
   final List<Department> _departmentList;
   final List<Staff> _staffList;
 
-  /// Every service, sorted by name.
+  /// Every service, sorted by Turkish name.
   final List<MedicalService> services;
 
   /// The branch identified by [id], or null when unknown.
@@ -61,7 +91,7 @@ final class PatientCatalog {
     );
   }
 
-  /// Departments with at least one bookable service, sorted by name.
+  /// Departments with at least one bookable service, sorted by Turkish name.
   /// A service is bookable when [staffFor] returns at least one member.
   List<PatientDepartmentSummary> get departmentsWithServiceCounts {
     final offered = <String, List<MedicalService>>{};
@@ -81,6 +111,6 @@ final class PatientCatalog {
   }
 
   static int _byName(InstitutionRecord first, InstitutionRecord second) {
-    return first.name.compareTo(second.name);
+    return first.name.compareTurkishAlphabetically(second.name);
   }
 }

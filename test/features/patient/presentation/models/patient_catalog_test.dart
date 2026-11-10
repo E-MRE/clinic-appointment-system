@@ -28,6 +28,91 @@ void main() {
     ]);
   });
 
+  test('sorts services and departments in Turkish alphabetical order', () {
+    const names = [
+      'Çocuk Sağlığı',
+      'Dahiliye',
+      'Cildiye',
+      'İç Hastalıkları',
+      'Ortopedi',
+      'Öz Bakım',
+      'Üroloji',
+      'Şeker Ölçümü',
+    ];
+    final departments = [
+      for (final entry in names.asMap().entries)
+        Department(
+          id: 'department-${entry.key}',
+          name: entry.value,
+          branchId: 'branch',
+        ),
+    ];
+    final services = List<Examination>.generate(names.length, (int index) {
+      return Examination(
+        id: 'service-$index',
+        name: names[index],
+        departmentId: 'department-$index',
+        branchId: 'branch',
+        duration: ServiceDuration(10),
+        fee: Money.minorUnits(100),
+      );
+    });
+    final staff = <Doctor>[
+      ...List<Doctor>.generate(names.length, (int index) {
+        return Doctor(
+          id: 'doctor-$index',
+          fullName: 'Doctor $index',
+          email: 'doctor-$index@test',
+          branchId: 'branch',
+          departmentId: 'department-$index',
+          serviceIds: ['service-$index'],
+          specialty: 'General practice',
+        );
+      }),
+      const Doctor(
+        id: 'doctor-later',
+        fullName: 'Doctor later',
+        email: 'doctor-later@test',
+        branchId: 'branch',
+        departmentId: 'department-0',
+        serviceIds: ['service-0'],
+        specialty: 'General practice',
+      ),
+    ];
+    final catalog = PatientCatalog(
+      branches: [fixtures.branch],
+      departments: departments,
+      services: services,
+      staff: staff,
+    );
+    const expectedNames = [
+      'Cildiye',
+      'Çocuk Sağlığı',
+      'Dahiliye',
+      'İç Hastalıkları',
+      'Ortopedi',
+      'Öz Bakım',
+      'Şeker Ölçümü',
+      'Üroloji',
+    ];
+
+    expect(catalog.services.map((service) => service.name), expectedNames);
+    expect(
+      catalog.departmentsWithServiceCounts.map(
+        (summary) => summary.department.name,
+      ),
+      expectedNames,
+    );
+    expect(departments.map((department) => department.name), names);
+    expect(services.map((service) => service.name), names);
+    expect(
+      catalog
+          .staffFor(catalog.serviceById('service-0')!)
+          .map((member) => member.id),
+      ['doctor-0', 'doctor-later'],
+    );
+  });
+
   test('staffFor requires the assigned service and the same branch', () {
     final otherBranch = Examination(
       id: 'cardio-exam-annex',
