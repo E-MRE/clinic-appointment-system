@@ -2,6 +2,7 @@ import 'package:clinic_appointment_system/core/constants/firestore_constants.dar
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
 import 'package:clinic_appointment_system/core/errors/institution_exception.dart';
 import 'package:clinic_appointment_system/core/errors/time_exception.dart';
+import 'package:clinic_appointment_system/core/extensions/turkish_alphabetical_comparison.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/institution_record.dart';
 import 'package:clinic_appointment_system/features/institution/domain/enums/institution_error_code.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -165,7 +166,7 @@ abstract base class FirestoreInstitutionRepository<
     try {
       final entities = snapshot.docs.map((document) {
         return entityFromJson({...document.data(), 'id': document.id});
-      }).toList()..sort((first, second) => first.name.compareTo(second.name));
+      }).toList()..sort(_byName);
       return DataResult.success(data: entities);
     } on CheckedFromJsonException catch (_, stackTrace) {
       Error.throwWithStackTrace(
@@ -208,5 +209,9 @@ abstract base class FirestoreInstitutionRepository<
       );
     }
     Error.throwWithStackTrace(error, stackTrace);
+  }
+
+  static int _byName(InstitutionRecord first, InstitutionRecord second) {
+    return first.name.compareTurkishAlphabetically(second.name);
   }
 }
