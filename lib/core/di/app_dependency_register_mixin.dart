@@ -85,7 +85,10 @@ import 'package:clinic_appointment_system/features/patient/presentation/cubit/pa
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_catalog_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/staff_week_schedule_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_approve_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_complete_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_no_show_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_reject_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_staff_cancel_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_calendar_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_request_selection_cubit.dart';
@@ -488,6 +491,21 @@ mixin AppDependencyRegisterMixin {
     );
     injector.registerFactory<AppointmentRejectCubit>(
       () => AppointmentRejectCubit(
+        injector.get<ChangeAppointmentStatusUseCase>(),
+      ),
+    );
+    injector.registerFactory<AppointmentCompleteCubit>(
+      () => AppointmentCompleteCubit(
+        injector.get<ChangeAppointmentStatusUseCase>(),
+      ),
+    );
+    injector.registerFactory<AppointmentNoShowCubit>(
+      () => AppointmentNoShowCubit(
+        injector.get<ChangeAppointmentStatusUseCase>(),
+      ),
+    );
+    injector.registerFactory<AppointmentStaffCancelCubit>(
+      () => AppointmentStaffCancelCubit(
         injector.get<ChangeAppointmentStatusUseCase>(),
       ),
     );

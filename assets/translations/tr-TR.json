@@ -511,6 +511,19 @@
       "staffDoesNotProvideService": "Bu hizmeti vermiyorsunuz"
     }
   },
+  "staffAppointmentDialog": {
+    "complete": "Tamamlandı",
+    "noShow": "Gelmedi",
+    "cancelAction": "İptal et…",
+    "cancelTitle": "Randevuyu iptal et",
+    "cancel": "İptal et",
+    "completed": "Randevu tamamlandı olarak işaretlendi.",
+    "noShowMarked": "Randevu gelmedi olarak işaretlendi.",
+    "cancelled": "Randevu iptal edildi.",
+    "statusReason": "Gerekçe",
+    "completeTooEarly": "Randevu saati gelince işaretlenebilir.",
+    "noShowTooEarly": "\"Gelmedi\" {}'te açılır ({} dk tolerans)."
+  },
   "availability": {
     "title": "Uygunluk",
     "mobileSubtitle": "Haftalık tekrar eden aralıklar",

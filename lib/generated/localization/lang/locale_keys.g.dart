@@ -562,6 +562,27 @@ abstract class LocaleKeys {
       'staffRequests.rules.staffDoesNotProvideService';
   static const staffRequests_rules = 'staffRequests.rules';
   static const staffRequests = 'staffRequests';
+  static const staffAppointmentDialog_complete =
+      'staffAppointmentDialog.complete';
+  static const staffAppointmentDialog_noShow = 'staffAppointmentDialog.noShow';
+  static const staffAppointmentDialog_cancelAction =
+      'staffAppointmentDialog.cancelAction';
+  static const staffAppointmentDialog_cancelTitle =
+      'staffAppointmentDialog.cancelTitle';
+  static const staffAppointmentDialog_cancel = 'staffAppointmentDialog.cancel';
+  static const staffAppointmentDialog_completed =
+      'staffAppointmentDialog.completed';
+  static const staffAppointmentDialog_noShowMarked =
+      'staffAppointmentDialog.noShowMarked';
+  static const staffAppointmentDialog_cancelled =
+      'staffAppointmentDialog.cancelled';
+  static const staffAppointmentDialog_statusReason =
+      'staffAppointmentDialog.statusReason';
+  static const staffAppointmentDialog_completeTooEarly =
+      'staffAppointmentDialog.completeTooEarly';
+  static const staffAppointmentDialog_noShowTooEarly =
+      'staffAppointmentDialog.noShowTooEarly';
+  static const staffAppointmentDialog = 'staffAppointmentDialog';
   static const availability_title = 'availability.title';
   static const availability_mobileSubtitle = 'availability.mobileSubtitle';
   static const availability_tabletSubtitle = 'availability.tabletSubtitle';

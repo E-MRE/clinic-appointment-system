@@ -17,6 +17,12 @@ final class _StaffRequestsDetailPanel extends StatelessWidget {
         ? workspaceState.workspace
         : null;
     final service = workspace?.serviceById(request.serviceId);
+    final String location;
+    if (workspace != null) {
+      location = '${workspace.branch.name} · ${workspace.department.name}';
+    } else {
+      location = LocaleKeys.common_notAvailable.translate();
+    }
     final history = StaffPatientHistory.fromAppointments(
       patientId: request.patientId,
       appointments: appointments,
@@ -30,8 +36,16 @@ final class _StaffRequestsDetailPanel extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           spacing: AppSizes.s20,
           children: [
-            _StaffRequestDetailHeader(request: request),
-            _StaffRequestDetailGrid(request: request, workspace: workspace),
+            StaffPatientHeader(
+              appointment: request,
+              subtitle: request.requestedAgoLabel(
+                AppDependency.injector.get<Clock>().now(),
+              ),
+            ),
+            StaffAppointmentDetailGrid(
+              appointment: request,
+              location: location,
+            ),
             if (workspace != null && service != null)
               _StaffRequestDetailRuleChecks(
                 request: request,

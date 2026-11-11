@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:clinic_appointment_system/core/di/app_dependency.dart';
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
 import 'package:clinic_appointment_system/core/errors/result.dart';
@@ -21,12 +23,16 @@ import 'package:clinic_appointment_system/features/institution/domain/value_obje
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/medical_service.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/usecases/watch_medical_services_use_case.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_approve_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_complete_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_no_show_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_reject_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_staff_cancel_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_calendar_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_workspace_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/pages/staff_calendar_page.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/pages/staff_requests_page.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/widgets/staff_appointment_dialog.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/doctor.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -48,6 +54,10 @@ import '../../../../medical_services/domain/doubles/fake_medical_service_reposit
 
 /// Authenticated staff page with controllable appointment events and changes.
 final class StaffRequestsPageHarness {
+  /// Creates a harness with a controllable current time.
+  StaffRequestsPageHarness({DateTime? now})
+    : clock = FixedClock(now ?? DateTime(2026, 10, 20, 9));
+
   /// Viewport sizes required by the requests page acceptance criteria.
   static const Size mobile = Size(390, 844);
   static const Size tablet = Size(834, 1194);
@@ -57,7 +67,7 @@ final class StaffRequestsPageHarness {
   final StaffAppointmentRepository repository = StaffAppointmentRepository();
 
   /// Fixed time keeping approval and request ranges deterministic.
-  final Clock clock = FixedClock(DateTime(2026, 10, 20, 9));
+  final Clock clock;
 
   final MockAuthRepository _authRepository = MockAuthRepository();
   final MockBranchRepository branchRepo = MockBranchRepository();
@@ -114,6 +124,21 @@ final class StaffRequestsPageHarness {
     );
     AppDependency.injector.registerFactory<AppointmentRejectCubit>(
       () => AppointmentRejectCubit(
+        ChangeAppointmentStatusUseCase(repository, clock),
+      ),
+    );
+    AppDependency.injector.registerFactory<AppointmentCompleteCubit>(
+      () => AppointmentCompleteCubit(
+        ChangeAppointmentStatusUseCase(repository, clock),
+      ),
+    );
+    AppDependency.injector.registerFactory<AppointmentNoShowCubit>(
+      () => AppointmentNoShowCubit(
+        ChangeAppointmentStatusUseCase(repository, clock),
+      ),
+    );
+    AppDependency.injector.registerFactory<AppointmentStaffCancelCubit>(
+      () => AppointmentStaffCancelCubit(
         ChangeAppointmentStatusUseCase(repository, clock),
       ),
     );
@@ -216,6 +241,41 @@ final class StaffRequestsPageHarness {
           BlocProvider<StaffWorkspaceCubit>.value(value: workspaceCubit),
         ],
         child: StaffCalendarPage(onAppointmentTap: onAppointmentTap),
+      ),
+    );
+  }
+
+  /// Pumps a localized launcher that opens the standalone appointment dialog.
+  Future<void> pumpDialog(
+    WidgetTester tester,
+    Appointment appointment, {
+    Size size = desktop,
+  }) async {
+    tester.view.physicalSize = size;
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    final screenSize = BreakpointsConstants.resolve(size.width, size.height);
+    final workspaceCubit = AppDependency.injector.get<StaffWorkspaceCubit>()
+      ..watch(staff);
+    addTearDown(workspaceCubit.close);
+    await loadTestTranslations(
+      tester,
+      theme: LightTheme(screenSize).themeData,
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<AuthCubit>.value(value: auth),
+          BlocProvider<StaffWorkspaceCubit>.value(value: workspaceCubit),
+        ],
+        child: Scaffold(
+          body: Builder(
+            builder: (context) => TextButton(
+              onPressed: () =>
+                  unawaited(StaffAppointmentDialog.show(context, appointment)),
+              child: const Text('Open appointment'),
+            ),
+          ),
+        ),
       ),
     );
   }
