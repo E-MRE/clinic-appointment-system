@@ -468,6 +468,14 @@
       "byDate": "Tarihe göre",
       "byRequestTime": "Talep sırasına göre"
     },
+    "detail": {
+      "dateTime": "Tarih ve saat",
+      "service": "Hizmet",
+      "durationAndFee": "Süre ve ücret",
+      "location": "Yer",
+      "rulesSection": "Kural kontrolü",
+      "historySection": "Bu hastayla geçmiş"
+    },
     "history": {
       "completed": "{} tamamlandı",
       "lastVisit": "Son ziyaret: {}"

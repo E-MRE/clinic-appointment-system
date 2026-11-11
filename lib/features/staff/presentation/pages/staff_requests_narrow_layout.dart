@@ -29,16 +29,44 @@ final class _StaffRequestsNarrowLayout extends StatelessWidget {
         return MultiBlocProvider(
           providers: [
             BlocProvider<AuthCubit>.value(value: context.read<AuthCubit>()),
+            BlocProvider<StaffAppointmentsCubit>.value(
+              value: context.read<StaffAppointmentsCubit>(),
+            ),
+            BlocProvider<StaffWorkspaceCubit>.value(
+              value: context.read<StaffWorkspaceCubit>(),
+            ),
             BlocProvider<AppointmentApproveCubit>.value(
               value: context.read<AppointmentApproveCubit>(),
             ),
+            BlocProvider<AppointmentRejectCubit>.value(
+              value: context.read<AppointmentRejectCubit>(),
+            ),
           ],
-          child: Dialog(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                maxWidth: AppSizes.formDialogMaxWidth,
+          child: MultiBlocListener(
+            listeners: [
+              BlocListener<AppointmentApproveCubit, AppointmentActionState>(
+                listener: (dialogContext, state) {
+                  if (state is AppointmentActionSuccess) {
+                    Navigator.of(dialogContext).pop();
+                  }
+                },
               ),
-              child: _StaffRequestsDetailPanel(request: request),
+              BlocListener<AppointmentRejectCubit, AppointmentActionState>(
+                listener: (dialogContext, state) {
+                  if (state is AppointmentActionSuccess) {
+                    Navigator.of(dialogContext).pop();
+                  }
+                },
+              ),
+            ],
+            child: Dialog(
+              insetPadding: const AppPadding.pageMobile(),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxWidth: AppSizes.formDialogMaxWidth,
+                ),
+                child: _StaffRequestsDetailPanel(request: request),
+              ),
             ),
           ),
         );

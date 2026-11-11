@@ -1,8 +1,6 @@
 part of 'staff_requests_page.dart';
 
-/// Placeholder detail panel for the selected request.
-///
-/// Replaced by the complete review panel in the next lane.
+/// Detail panel for the selected request.
 final class _StaffRequestsDetailPanel extends StatelessWidget {
   const _StaffRequestsDetailPanel({required this.request});
 
@@ -10,16 +8,43 @@ final class _StaffRequestsDetailPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appointments = context
+        .watch<StaffAppointmentsCubit>()
+        .state
+        .appointments;
+    final workspaceState = context.watch<StaffWorkspaceCubit>().state;
+    final workspace = workspaceState is StaffWorkspaceLoaded
+        ? workspaceState.workspace
+        : null;
+    final service = workspace?.serviceById(request.serviceId);
+    final history = StaffPatientHistory.fromAppointments(
+      patientId: request.patientId,
+      appointments: appointments,
+    );
+
     return AppSurface(
       padding: AppSurfacePadding.comfortable,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        spacing: AppSizes.s16,
-        children: [
-          AppText.cardTitle(request.displayPatientName),
-          _StaffRequestApproveButton(request: request),
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
+          spacing: AppSizes.s20,
+          children: [
+            _StaffRequestDetailHeader(request: request),
+            _StaffRequestDetailGrid(request: request, workspace: workspace),
+            if (workspace != null && service != null)
+              _StaffRequestDetailRuleChecks(
+                request: request,
+                workspace: workspace,
+                service: service,
+                appointments: appointments,
+              ),
+            if (history.hasHistory)
+              _StaffRequestDetailPatientHistory(history: history),
+            const Divider(),
+            _StaffRequestsDetailActions(request: request),
+          ],
+        ),
       ),
     );
   }

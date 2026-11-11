@@ -510,6 +510,16 @@ abstract class LocaleKeys {
   static const staffRequests_sort_byRequestTime =
       'staffRequests.sort.byRequestTime';
   static const staffRequests_sort = 'staffRequests.sort';
+  static const staffRequests_detail_dateTime = 'staffRequests.detail.dateTime';
+  static const staffRequests_detail_service = 'staffRequests.detail.service';
+  static const staffRequests_detail_durationAndFee =
+      'staffRequests.detail.durationAndFee';
+  static const staffRequests_detail_location = 'staffRequests.detail.location';
+  static const staffRequests_detail_rulesSection =
+      'staffRequests.detail.rulesSection';
+  static const staffRequests_detail_historySection =
+      'staffRequests.detail.historySection';
+  static const staffRequests_detail = 'staffRequests.detail';
   static const staffRequests_history_completed =
       'staffRequests.history.completed';
   static const staffRequests_history_lastVisit =

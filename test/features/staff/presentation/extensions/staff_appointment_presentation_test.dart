@@ -82,4 +82,19 @@ void main() {
     );
     expect(dated.startsAt, isNotNull);
   });
+
+  testWidgets(
+    'formats scheduleRangeLabel and durationAndFeeLabel for detail panel',
+    (tester) async {
+      await loadTestTranslations(tester);
+
+      final request = fixture.restore(
+        AppointmentStatus.pending,
+        patientName: 'Ali Yılmaz',
+      );
+
+      expect(request.scheduleRangeLabel, 'Paz 1 Kas · 10:00–10:30');
+      expect(request.durationAndFeeLabel, '30 dk · ₺850');
+    },
+  );
 }

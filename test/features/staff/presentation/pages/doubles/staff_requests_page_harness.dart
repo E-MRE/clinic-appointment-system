@@ -21,6 +21,7 @@ import 'package:clinic_appointment_system/features/institution/domain/value_obje
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/medical_service.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/usecases/watch_medical_services_use_case.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_approve_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_reject_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_workspace_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/pages/staff_requests_page.dart';
@@ -57,6 +58,11 @@ final class StaffRequestsPageHarness {
   final Clock clock = FixedClock(DateTime(2026, 10, 20, 9));
 
   final MockAuthRepository _authRepository = MockAuthRepository();
+  final MockBranchRepository branchRepo = MockBranchRepository();
+  final FakeDepartmentRepository departmentRepo = FakeDepartmentRepository();
+  final FakeMedicalServiceRepository servicesRepo =
+      FakeMedicalServiceRepository();
+  late final FakeStaffAvailabilityRepository availabilityRepo;
   late final AuthCubit auth;
   late final Doctor staff;
 
@@ -104,7 +110,11 @@ final class StaffRequestsPageHarness {
         ChangeAppointmentStatusUseCase(repository, clock),
       ),
     );
-    final branchRepo = MockBranchRepository();
+    AppDependency.injector.registerFactory<AppointmentRejectCubit>(
+      () => AppointmentRejectCubit(
+        ChangeAppointmentStatusUseCase(repository, clock),
+      ),
+    );
     when(() => branchRepo.watchBranch(any())).thenAnswer(
       (_) => Stream.value(
         DataResult.success(
@@ -118,23 +128,17 @@ final class StaffRequestsPageHarness {
         ),
       ),
     );
-    final departmentRepo = FakeDepartmentRepository()
-      ..departmentsStream = Stream.value(
-        const DataResult.success(
-          data: [
-            Department(
-              id: 'department',
-              branchId: 'branch',
-              name: 'Cardiology',
-            ),
-          ],
-        ),
-      ).asBroadcastStream();
-    final servicesRepo = FakeMedicalServiceRepository()
-      ..servicesStream = Stream.value(
-        const DataResult<List<MedicalService>>.success(data: []),
-      ).asBroadcastStream();
-    final availabilityRepo =
+    departmentRepo.departmentsStream = Stream.value(
+      const DataResult.success(
+        data: [
+          Department(id: 'department', branchId: 'branch', name: 'Cardiology'),
+        ],
+      ),
+    ).asBroadcastStream();
+    servicesRepo.servicesStream = Stream.value(
+      const DataResult<List<MedicalService>>.success(data: []),
+    ).asBroadcastStream();
+    availabilityRepo =
         FakeStaffAvailabilityRepository(
             StaffAvailability(staffId: staff.id, branchId: 'branch'),
           )
