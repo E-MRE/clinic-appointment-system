@@ -3,11 +3,10 @@ import 'package:clinic_appointment_system/core/router/app_router.dart';
 import 'package:clinic_appointment_system/core/time/calendar_date.dart';
 import 'package:clinic_appointment_system/core/widgets/navigation/app_navigation_shell.dart';
 import 'package:clinic_appointment_system/core/widgets/navigation/app_navigation_user_card.dart';
-import 'package:clinic_appointment_system/core/widgets/time_range_chip/app_time_range_chip.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/auth_route_guard.dart';
-import 'package:clinic_appointment_system/features/availability/presentation/pages/availability_page.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/pages/staff_calendar_page.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/widgets/staff_shell.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -29,7 +28,7 @@ void main() {
     AvailabilityPageHarness.tablet,
     AvailabilityPageHarness.desktop,
   ]) {
-    testWidgets('doctor at /staff lands inside staff shell at $size', (
+    testWidgets('doctor at /staff lands on the calendar at $size', (
       tester,
     ) async {
       addTearDown(() => harness.dispose(tester));
@@ -46,16 +45,10 @@ void main() {
       await harness.load(tester);
       expect(
         router.routeInformationProvider.value.uri.path,
-        AppRoutes.staffAvailability,
+        AppRoutes.staffCalendar,
       );
       expect(find.byType(StaffShell), findsOneWidget);
-      expect(find.byType(AvailabilityPage), findsOneWidget);
-      if (size == AvailabilityPageHarness.mobile) {
-        expect(find.byType(AppTimeRangeChip), findsNWidgets(2));
-      } else {
-        expect(find.text('09:00–10:00'), findsOneWidget);
-        expect(find.text('13:00–14:00'), findsOneWidget);
-      }
+      expect(find.byType(StaffCalendarPage), findsOneWidget);
       if (size == AvailabilityPageHarness.desktop) {
         expect(find.byType(AppNavigationUserCard), findsOneWidget);
         expect(find.text('Ada Kaya'), findsOneWidget);
@@ -70,7 +63,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(
         router.routeInformationProvider.value.uri.path,
-        AppRoutes.staffAvailability,
+        AppRoutes.staffCalendar,
       );
       expect(find.byType(StaffShell), findsOneWidget);
       expect(tester.takeException(), isNull);
@@ -78,7 +71,7 @@ void main() {
   }
 
   testWidgets(
-    '/staff redirects to availability and lists staff destinations in order',
+    '/staff redirects to the calendar and lists staff destinations in order',
     (tester) async {
       addTearDown(() => harness.dispose(tester));
       final router = createAppRouter(initialLocation: AppRoutes.staffHome);
@@ -88,12 +81,13 @@ void main() {
 
       expect(
         router.routeInformationProvider.value.uri.path,
-        AppRoutes.staffAvailability,
+        AppRoutes.staffCalendar,
       );
       final shell = tester.widget<AppNavigationShell>(
         find.byType(AppNavigationShell),
       );
       expect(shell.destinations.map((destination) => destination.label), [
+        'Takvim',
         'Talepler',
         'Uygunluk',
       ]);
@@ -167,7 +161,9 @@ void main() {
     tester,
   ) async {
     addTearDown(() => harness.dispose(tester));
-    final router = createAppRouter(initialLocation: AppRoutes.staffHome);
+    final router = createAppRouter(
+      initialLocation: AppRoutes.staffAvailability,
+    );
     addTearDown(router.dispose);
     await harness.pumpRouter(tester, router);
     await harness.load(tester);
@@ -185,7 +181,7 @@ void main() {
   });
 
   testWidgets(
-    'technician uses availability home and cannot open administrator staff',
+    'technician uses the calendar home and cannot open administrator staff',
     (tester) async {
       await tester.runAsync(() async {
         await harness.dispose(tester);
@@ -212,7 +208,7 @@ void main() {
       await harness.load(tester);
       expect(
         router.routeInformationProvider.value.uri.path,
-        AppRoutes.staffAvailability,
+        AppRoutes.staffCalendar,
       );
       expect(find.text('Teknisyen'), findsOneWidget);
       expect(find.text('Ece Kaya'), findsOneWidget);

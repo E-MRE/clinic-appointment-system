@@ -34,6 +34,7 @@ import 'package:clinic_appointment_system/features/medical_services/domain/useca
 import 'package:clinic_appointment_system/features/medical_services/domain/value_objects/money.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/value_objects/service_duration.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_calendar_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_workspace_cubit.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/staff.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/user.dart';
@@ -200,6 +201,9 @@ final class AvailabilityPageHarness {
         WatchStaffAppointmentsUseCase(appointmentsRepository),
         clock,
       ),
+    );
+    injector.registerFactory<StaffCalendarCubit>(
+      () => StaffCalendarCubit(clock: clock),
     );
     injector.registerFactory<StaffWorkspaceCubit>(
       () => StaffWorkspaceCubit(

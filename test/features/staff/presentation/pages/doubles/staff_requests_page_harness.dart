@@ -23,7 +23,9 @@ import 'package:clinic_appointment_system/features/medical_services/domain/useca
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_approve_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_reject_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_calendar_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_workspace_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/pages/staff_calendar_page.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/pages/staff_requests_page.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/doctor.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -147,6 +149,9 @@ final class StaffRequestsPageHarness {
               data: StaffAvailability(staffId: staff.id, branchId: 'branch'),
             ),
           ).asBroadcastStream();
+    AppDependency.injector.registerFactory<StaffCalendarCubit>(
+      () => StaffCalendarCubit(clock: clock),
+    );
     AppDependency.injector.registerFactory<StaffWorkspaceCubit>(
       () => StaffWorkspaceCubit(
         WatchStaffAvailabilityUseCase(availabilityRepo),
@@ -180,6 +185,37 @@ final class StaffRequestsPageHarness {
           BlocProvider<StaffWorkspaceCubit>.value(value: workspaceCubit),
         ],
         child: const StaffRequestsPage(),
+      ),
+    );
+  }
+
+  /// Pumps [StaffCalendarPage] at [size] with the real localized app theme.
+  Future<void> pumpCalendar(
+    WidgetTester tester, {
+    required Size size,
+    ValueChanged<Appointment>? onAppointmentTap,
+  }) async {
+    tester.view.physicalSize = size;
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    final screenSize = BreakpointsConstants.resolve(size.width, size.height);
+    final appointmentsCubit =
+        AppDependency.injector.get<StaffAppointmentsCubit>()..watch(staff.id);
+    addTearDown(appointmentsCubit.close);
+    final workspaceCubit = AppDependency.injector.get<StaffWorkspaceCubit>()
+      ..watch(staff);
+    addTearDown(workspaceCubit.close);
+    await loadTestTranslations(
+      tester,
+      theme: LightTheme(screenSize).themeData,
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<AuthCubit>.value(value: auth),
+          BlocProvider<StaffAppointmentsCubit>.value(value: appointmentsCubit),
+          BlocProvider<StaffWorkspaceCubit>.value(value: workspaceCubit),
+        ],
+        child: StaffCalendarPage(onAppointmentTap: onAppointmentTap),
       ),
     );
   }

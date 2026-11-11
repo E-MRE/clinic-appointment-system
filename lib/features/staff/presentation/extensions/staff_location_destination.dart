@@ -3,9 +3,9 @@ import 'package:clinic_appointment_system/features/staff/presentation/extensions
 
 /// Resolves staff navigation from a route location.
 extension StaffLocationDestination on String {
-  /// Matching destination, falling back to availability.
+  /// Matching destination, falling back to calendar.
   StaffDestination get staffDestination => StaffDestination.values.firstWhere(
     (item) => item.matches(this),
-    orElse: () => StaffDestination.availability,
+    orElse: () => StaffDestination.calendar,
   );
 }

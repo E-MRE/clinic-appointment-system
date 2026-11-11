@@ -108,6 +108,12 @@ final class StaffCalendarLayout extends Equatable {
     return _fractionOfMinutes(time.minutesSinceMidnight);
   }
 
+  /// Converts a [range] to a 0..1 fraction representing its vertical height
+  /// relative to the full calendar axis span ([startHour]..[endHour]).
+  double heightFractionOf(TimeRange range) {
+    return fractionOf(range.end) - fractionOf(range.start);
+  }
+
   int get _startMinutes => startHour * ClockConstants.minutesPerHour;
 
   int get _endMinutes => endHour * ClockConstants.minutesPerHour;

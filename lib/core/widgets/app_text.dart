@@ -8,6 +8,7 @@ final class AppText extends StatelessWidget {
     this.data, {
     required this.role,
     this.tone = TextTone.normal,
+    this.color,
     this.textAlign,
     this.maxLines,
     this.overflow,
@@ -22,6 +23,7 @@ final class AppText extends StatelessWidget {
   const AppText.display(
     this.data, {
     this.tone = TextTone.normal,
+    this.color,
     this.textAlign,
     this.maxLines,
     this.overflow,
@@ -36,6 +38,7 @@ final class AppText extends StatelessWidget {
   const AppText.headline(
     this.data, {
     this.tone = TextTone.normal,
+    this.color,
     this.textAlign,
     this.maxLines,
     this.overflow,
@@ -50,6 +53,7 @@ final class AppText extends StatelessWidget {
   const AppText.pageTitle(
     this.data, {
     this.tone = TextTone.normal,
+    this.color,
     this.textAlign,
     this.maxLines,
     this.overflow,
@@ -64,6 +68,7 @@ final class AppText extends StatelessWidget {
   const AppText.sectionTitle(
     this.data, {
     this.tone = TextTone.normal,
+    this.color,
     this.textAlign,
     this.maxLines,
     this.overflow,
@@ -78,6 +83,7 @@ final class AppText extends StatelessWidget {
   const AppText.cardTitle(
     this.data, {
     this.tone = TextTone.normal,
+    this.color,
     this.textAlign,
     this.maxLines,
     this.overflow,
@@ -92,6 +98,7 @@ final class AppText extends StatelessWidget {
   const AppText.bodyLarge(
     this.data, {
     this.tone = TextTone.normal,
+    this.color,
     this.textAlign,
     this.maxLines,
     this.overflow,
@@ -106,6 +113,7 @@ final class AppText extends StatelessWidget {
   const AppText.body(
     this.data, {
     this.tone = TextTone.normal,
+    this.color,
     this.textAlign,
     this.maxLines,
     this.overflow,
@@ -120,6 +128,7 @@ final class AppText extends StatelessWidget {
   const AppText.caption(
     this.data, {
     this.tone = TextTone.normal,
+    this.color,
     this.textAlign,
     this.maxLines,
     this.overflow,
@@ -134,6 +143,7 @@ final class AppText extends StatelessWidget {
   const AppText.bodyStrong(
     this.data, {
     this.tone = TextTone.normal,
+    this.color,
     this.textAlign,
     this.maxLines,
     this.overflow,
@@ -148,6 +158,7 @@ final class AppText extends StatelessWidget {
   const AppText.label(
     this.data, {
     this.tone = TextTone.normal,
+    this.color,
     this.textAlign,
     this.maxLines,
     this.overflow,
@@ -162,6 +173,7 @@ final class AppText extends StatelessWidget {
   const AppText.badge(
     this.data, {
     this.tone = TextTone.normal,
+    this.color,
     this.textAlign,
     this.maxLines,
     this.overflow,
@@ -180,6 +192,9 @@ final class AppText extends StatelessWidget {
 
   /// Semantic foreground color role.
   final TextTone tone;
+
+  /// Optional explicit foreground color, overriding [tone] when set.
+  final Color? color;
 
   /// Alignment of the text within its line.
   final TextAlign? textAlign;
@@ -205,13 +220,16 @@ final class AppText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final brandColors = context.brandColors;
+    final resolvedColor =
+        color ??
+        tone.resolve(
+          context.colorScheme,
+          brandForeground: brandColors.splashForeground,
+        );
     final style = role
         .resolve(context.textTheme)
         ?.copyWith(
-          color: tone.resolve(
-            context.colorScheme,
-            brandForeground: brandColors.splashForeground,
-          ),
+          color: resolvedColor,
           fontWeight: fontWeight,
           decoration: decoration,
         );

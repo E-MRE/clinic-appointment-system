@@ -8,6 +8,12 @@ extension StaffDestinationNavigation on StaffDestination {
   /// The localized shell navigation item, optionally displaying [badgeCount].
   AppNavigationDestination destination({int? badgeCount}) {
     return switch (this) {
+      StaffDestination.calendar => AppNavigationDestination(
+        label: LocaleKeys.staffCalendar_title.translate(),
+        icon: Icons.calendar_today_outlined,
+        selectedIcon: Icons.calendar_today,
+        badgeCount: badgeCount,
+      ),
       StaffDestination.requests => AppNavigationDestination(
         label: LocaleKeys.staffRequests_title.translate(),
         icon: Icons.inbox_outlined,

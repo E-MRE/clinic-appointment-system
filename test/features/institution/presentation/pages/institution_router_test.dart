@@ -84,7 +84,7 @@ void main() {
         serviceIds: [],
         specialty: 'Cardiology',
       ),
-      AppRoutes.staffAvailability,
+      AppRoutes.staffCalendar,
     ),
   ]) {
     for (final path in [

@@ -444,6 +444,26 @@
       "actions": "İşlemler"
     }
   },
+  "staffCalendar": {
+    "title": "Takvim",
+    "headerTitle": "Takvim · {}",
+    "subtitleWeek": "Bu hafta {} randevu · {} talep onay bekliyor",
+    "subtitleDay": "{} randevu",
+    "today": "Bugün",
+    "previous": "Önceki",
+    "next": "Sonraki",
+    "viewDay": "Gün",
+    "viewWeek": "Hafta",
+    "legend": {
+      "availability": "Uygunluk aralığı"
+    },
+    "dayHeader": {
+      "appointmentCount": "{} randevu"
+    },
+    "branchClosed": "Şube kapalı",
+    "loading": "Takvim yükleniyor",
+    "failureTitle": "Takvim yüklenemedi"
+  },
   "staffRequests": {
     "title": "Talepler",
     "headerTitle": "Onay bekleyen talepler",

@@ -485,6 +485,25 @@ abstract class LocaleKeys {
   static const staff_columns_actions = 'staff.columns.actions';
   static const staff_columns = 'staff.columns';
   static const staff = 'staff';
+  static const staffCalendar_title = 'staffCalendar.title';
+  static const staffCalendar_headerTitle = 'staffCalendar.headerTitle';
+  static const staffCalendar_subtitleWeek = 'staffCalendar.subtitleWeek';
+  static const staffCalendar_subtitleDay = 'staffCalendar.subtitleDay';
+  static const staffCalendar_today = 'staffCalendar.today';
+  static const staffCalendar_previous = 'staffCalendar.previous';
+  static const staffCalendar_next = 'staffCalendar.next';
+  static const staffCalendar_viewDay = 'staffCalendar.viewDay';
+  static const staffCalendar_viewWeek = 'staffCalendar.viewWeek';
+  static const staffCalendar_legend_availability =
+      'staffCalendar.legend.availability';
+  static const staffCalendar_legend = 'staffCalendar.legend';
+  static const staffCalendar_dayHeader_appointmentCount =
+      'staffCalendar.dayHeader.appointmentCount';
+  static const staffCalendar_dayHeader = 'staffCalendar.dayHeader';
+  static const staffCalendar_branchClosed = 'staffCalendar.branchClosed';
+  static const staffCalendar_loading = 'staffCalendar.loading';
+  static const staffCalendar_failureTitle = 'staffCalendar.failureTitle';
+  static const staffCalendar = 'staffCalendar';
   static const staffRequests_title = 'staffRequests.title';
   static const staffRequests_headerTitle = 'staffRequests.headerTitle';
   static const staffRequests_subtitle = 'staffRequests.subtitle';

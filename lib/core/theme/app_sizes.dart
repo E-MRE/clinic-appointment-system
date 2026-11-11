@@ -30,6 +30,9 @@
 /// * iconTileMedium → 36
 /// * iconTileMediumIcon → 18
 /// * tabIndicator → 3
+/// * staffCalendarHourHeight → 84
+/// * staffCalendarHourColumnWidth → 64
+/// * staffCalendarHeaderHeight → 48
 /// * patientContentMaxWidth → 1200
 /// * appointmentDateTileWidth → 84
 /// * patientAppointmentsTableMinWidth → 560
@@ -158,6 +161,18 @@ abstract final class AppSizes {
   /// Selected tab underline thickness.
   /// value = 3
   static const double tabIndicator = 3;
+
+  /// Row height for a single hour in the staff calendar grid.
+  /// value = 84
+  static const double staffCalendarHourHeight = 84;
+
+  /// Width of the hour labels column in the staff calendar grid.
+  /// value = 64
+  static const double staffCalendarHourColumnWidth = s64;
+
+  /// Height of the day headers row in the staff calendar grid.
+  /// value = 48
+  static const double staffCalendarHeaderHeight = s48;
 
   /// Maximum width of the patient pages' content column.
   /// value = 1200
