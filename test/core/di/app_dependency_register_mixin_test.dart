@@ -62,6 +62,7 @@ import 'package:clinic_appointment_system/features/staff/presentation/cubit/appo
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_reject_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_request_selection_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_workspace_cubit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -150,6 +151,8 @@ void main() {
     () async {
       final firstRequests = container.get<StaffAppointmentsCubit>();
       final secondRequests = container.get<StaffAppointmentsCubit>();
+      final firstWorkspace = container.get<StaffWorkspaceCubit>();
+      final secondWorkspace = container.get<StaffWorkspaceCubit>();
       final firstApproval = container.get<AppointmentApproveCubit>();
       final secondApproval = container.get<AppointmentApproveCubit>();
       final firstReject = container.get<AppointmentRejectCubit>();
@@ -158,12 +161,15 @@ void main() {
       final secondSelection = container.get<StaffRequestSelectionCubit>();
 
       expect(firstRequests, isNot(same(secondRequests)));
+      expect(firstWorkspace, isNot(same(secondWorkspace)));
       expect(firstApproval, isNot(same(secondApproval)));
       expect(firstReject, isNot(same(secondReject)));
       expect(firstSelection, isNot(same(secondSelection)));
       await Future.wait([
         firstRequests.close(),
         secondRequests.close(),
+        firstWorkspace.close(),
+        secondWorkspace.close(),
         firstApproval.close(),
         secondApproval.close(),
         firstReject.close(),

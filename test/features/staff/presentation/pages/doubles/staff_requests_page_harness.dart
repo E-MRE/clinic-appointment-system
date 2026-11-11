@@ -11,8 +11,17 @@ import 'package:clinic_appointment_system/features/appointments/domain/usecases/
 import 'package:clinic_appointment_system/features/auth/domain/entities/auth_session.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_state.dart';
+import 'package:clinic_appointment_system/features/availability/domain/entities/staff_availability.dart';
+import 'package:clinic_appointment_system/features/availability/domain/usecases/watch_staff_availability_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/entities/branch.dart';
+import 'package:clinic_appointment_system/features/institution/domain/entities/department.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_branch_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_departments_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/value_objects/working_hours.dart';
+import 'package:clinic_appointment_system/features/medical_services/domain/usecases/watch_medical_services_use_case.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_approve_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_workspace_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/pages/staff_requests_page.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/doctor.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/user.dart';
@@ -29,6 +38,10 @@ import '../../../../../support/auth_repository_doubles.dart';
 import '../../../../../support/localization_test_app.dart';
 import '../../../../../support/user_repository_double.dart';
 import '../../../../appointments/presentation/doubles/staff_appointment_repository.dart';
+import '../../../../availability/domain/doubles/fake_staff_availability_repository.dart';
+import '../../../../availability/presentation/doubles/mock_branch_repository.dart';
+import '../../../../institution/domain/doubles/fake_department_repository.dart';
+import '../../../../medical_services/domain/doubles/fake_medical_service_repository.dart';
 
 /// Authenticated staff page with controllable appointment events and changes.
 final class StaffRequestsPageHarness {
@@ -90,6 +103,45 @@ final class StaffRequestsPageHarness {
         ChangeAppointmentStatusUseCase(repository, clock),
       ),
     );
+    final branchRepo = MockBranchRepository();
+    when(() => branchRepo.watchBranch(any())).thenAnswer(
+      (_) => Stream.value(
+        DataResult.success(
+          data: Branch(
+            id: 'branch',
+            clinicId: 'clinic',
+            name: 'Merkez Şube',
+            address: 'Adres',
+            workingHours: WorkingHours.closed(),
+          ),
+        ),
+      ),
+    );
+    final departmentRepo = FakeDepartmentRepository()
+      ..departmentsStream = Stream.value(
+        const DataResult.success(
+          data: [
+            Department(
+              id: 'department',
+              branchId: 'branch',
+              name: 'Cardiology',
+            ),
+          ],
+        ),
+      );
+    final servicesRepo = FakeMedicalServiceRepository()
+      ..servicesStream = Stream.value(const DataResult.success(data: []));
+    final availabilityRepo = FakeStaffAvailabilityRepository(
+      StaffAvailability(staffId: staff.id, branchId: 'branch'),
+    );
+    AppDependency.injector.registerFactory<StaffWorkspaceCubit>(
+      () => StaffWorkspaceCubit(
+        WatchStaffAvailabilityUseCase(availabilityRepo),
+        WatchBranchUseCase(branchRepo),
+        WatchDepartmentsUseCase(departmentRepo),
+        WatchMedicalServicesUseCase(servicesRepo),
+      ),
+    );
   }
 
   /// Pumps [StaffRequestsPage] at [size] with the real localized app theme.
@@ -99,11 +151,17 @@ final class StaffRequestsPageHarness {
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
     final screenSize = BreakpointsConstants.resolve(size.width, size.height);
+    final appointmentsCubit =
+        AppDependency.injector.get<StaffAppointmentsCubit>()..watch(staff.id);
+    addTearDown(appointmentsCubit.close);
     await loadTestTranslations(
       tester,
       theme: LightTheme(screenSize).themeData,
-      child: BlocProvider<AuthCubit>.value(
-        value: auth,
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<AuthCubit>.value(value: auth),
+          BlocProvider<StaffAppointmentsCubit>.value(value: appointmentsCubit),
+        ],
         child: const StaffRequestsPage(),
       ),
     );

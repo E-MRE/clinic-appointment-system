@@ -41,30 +41,9 @@ final class StaffRequestsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<AuthCubit>().state;
-    if (state is AuthSignedIn) {
-      final user = state.user;
-      final staff = user.staffProfile;
-      if (staff != null) {
-        return MultiBlocProvider(
-          key: ValueKey<String>(staff.id),
-          providers: [
-            BlocProvider<StaffAppointmentsCubit>(
-              create: (_) {
-                return AppDependency.injector.get<StaffAppointmentsCubit>()
-                  ..watch(staff.id);
-              },
-            ),
-            BlocProvider<AppointmentApproveCubit>(
-              create: (_) {
-                return AppDependency.injector.get<AppointmentApproveCubit>();
-              },
-            ),
-          ],
-          child: const _StaffRequestsView(),
-        );
-      }
-    }
-    return const SizedBox.shrink();
+    return BlocProvider<AppointmentApproveCubit>(
+      create: (_) => AppDependency.injector.get<AppointmentApproveCubit>(),
+      child: const _StaffRequestsView(),
+    );
   }
 }

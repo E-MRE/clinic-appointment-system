@@ -7,6 +7,7 @@ import 'package:clinic_appointment_system/core/localization/app_formatters.dart'
 import 'package:clinic_appointment_system/core/localization/localization_wrapper.dart';
 import 'package:clinic_appointment_system/core/theme/theme.dart';
 import 'package:clinic_appointment_system/core/time/clock.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_staff_appointments_use_case.dart';
 import 'package:clinic_appointment_system/features/auth/domain/entities/auth_session.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_state.dart';
@@ -24,11 +25,16 @@ import 'package:clinic_appointment_system/features/availability/presentation/cub
 import 'package:clinic_appointment_system/features/availability/presentation/cubit/staff_availability_cubit.dart';
 import 'package:clinic_appointment_system/features/availability/presentation/cubit/staff_service_durations_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/branch.dart';
+import 'package:clinic_appointment_system/features/institution/domain/entities/department.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_branch_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_departments_use_case.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/examination.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/medical_service.dart';
+import 'package:clinic_appointment_system/features/medical_services/domain/usecases/watch_medical_services_use_case.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/value_objects/money.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/value_objects/service_duration.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_workspace_cubit.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/staff.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/user.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -43,6 +49,8 @@ import '../../../../../support/auth_cubit_factory.dart';
 import '../../../../../support/auth_repository_doubles.dart';
 import '../../../../../support/localization_test_app.dart';
 import '../../../../../support/user_repository_double.dart';
+import '../../../../appointments/presentation/doubles/staff_appointment_repository.dart';
+import '../../../../institution/domain/doubles/fake_department_repository.dart';
 import '../../../../medical_services/domain/doubles/fake_medical_service_repository.dart';
 import '../../../../staff_management/domain/doubles/staff_fixtures.dart';
 import '../../../domain/support/availability_fixture.dart';
@@ -66,9 +74,12 @@ final class AvailabilityPageHarness {
   );
   final MockBranchRepository branches = MockBranchRepository();
   final MockAuthRepository authRepository = MockAuthRepository();
+  final StaffAppointmentRepository appointmentsRepository =
+      StaffAppointmentRepository();
   final StreamController<DataResult<Branch>> branchEvents =
       StreamController.broadcast();
   final FixedClock clock = FixedClock(DateTime(2026, 11, 2));
+  User? currentProfile;
   late final AuthCubit auth;
   late StaffAvailabilityCubit availability;
   late AvailabilityBranchCubit branchCubit;
@@ -94,6 +105,7 @@ final class AvailabilityPageHarness {
   Future<void> initialize({User? user}) async {
     await AppFormatters.ensureInitialized();
     final profile = user ?? staff;
+    currentProfile = profile;
     when(() => authRepository.authStateChanges()).thenAnswer(
       (_) => Stream.value(
         DataResult.success(
@@ -170,6 +182,33 @@ final class AvailabilityPageHarness {
       );
       return remove;
     });
+    final activeStaff = currentProfile?.staffProfile ?? staff;
+    final departmentRepo = FakeDepartmentRepository()
+      ..departmentsStream = Stream.value(
+        DataResult.success(
+          data: [
+            Department(
+              id: activeStaff.departmentId,
+              name: 'Kardiyoloji',
+              branchId: activeStaff.branchId,
+            ),
+          ],
+        ),
+      );
+    injector.registerFactory<StaffAppointmentsCubit>(
+      () => StaffAppointmentsCubit(
+        WatchStaffAppointmentsUseCase(appointmentsRepository),
+        clock,
+      ),
+    );
+    injector.registerFactory<StaffWorkspaceCubit>(
+      () => StaffWorkspaceCubit(
+        WatchStaffAvailabilityUseCase(repository),
+        WatchBranchUseCase(branches),
+        WatchDepartmentsUseCase(departmentRepo),
+        WatchMedicalServicesUseCase(services),
+      ),
+    );
   }
 
   void setSize(WidgetTester tester, Size size) {
@@ -265,6 +304,7 @@ final class AvailabilityPageHarness {
 
   /// Closes repository streams when another harness owns authentication and DI.
   Future<void> disposeRepositories() async {
+    await appointmentsRepository.events.close();
     await serviceEvents.close();
     await repository.events.close();
     await branchEvents.close();
