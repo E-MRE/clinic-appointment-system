@@ -10,9 +10,6 @@ final class _StaffCalendarAppointmentBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final onAppointmentTap = _StaffCalendarScope.maybeOf(
-      context,
-    )?.onAppointmentTap;
     final variant = appointment.status.badgeVariant;
     final status = variant.appointmentStatus ?? AppointmentStatus.pending;
     final colors = context.statusColors.resolve(status);
@@ -68,9 +65,7 @@ final class _StaffCalendarAppointmentBlock extends StatelessWidget {
     return Material(
       type: MaterialType.transparency,
       child: InkWell(
-        onTap: () {
-          onAppointmentTap?.call(appointment);
-        },
+        onTap: () => _open(context),
         borderRadius: const AppRadius.xSmall(),
         child: Semantics(
           button: true,
@@ -79,5 +74,18 @@ final class _StaffCalendarAppointmentBlock extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// Calls the page's tap hook when one is set; otherwise opens the staff
+  /// appointment dialog.
+  void _open(BuildContext context) {
+    final onAppointmentTap = _StaffCalendarScope.maybeOf(
+      context,
+    )?.onAppointmentTap;
+    if (onAppointmentTap != null) {
+      onAppointmentTap(appointment);
+      return;
+    }
+    unawaited(StaffAppointmentDialog.show(context, appointment));
   }
 }

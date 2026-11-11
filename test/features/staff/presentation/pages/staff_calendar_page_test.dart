@@ -13,6 +13,7 @@ import 'package:clinic_appointment_system/features/institution/domain/entities/b
 import 'package:clinic_appointment_system/features/institution/domain/value_objects/working_hours.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/medical_service.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/value_objects/money.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/widgets/staff_appointment_dialog.dart';
 import 'package:clinic_appointment_system/features/users/domain/enums/user_role.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -261,6 +262,29 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(tapped, appointment);
+  });
+
+  testWidgets('tapping an appointment block opens the staff dialog', (
+    tester,
+  ) async {
+    addTearDown(() => harness.dispose(tester));
+    configureWorkspace();
+    final appointment = makeAppointment(
+      id: 'apt-dialog',
+      patientName: 'Zeynep Kaya',
+      date: CalendarDate(year: 2026, month: 10, day: 20),
+      range: TimeRange(
+        start: ClockTime(hour: 9, minute: 20),
+        end: ClockTime(hour: 9, minute: 40),
+      ),
+    );
+
+    await harness.pumpCalendar(tester, size: StaffRequestsPageHarness.desktop);
+    await harness.emitAndPump(tester, [appointment]);
+    await tester.tap(find.text('Zeynep Kaya'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(StaffAppointmentDialog), findsOneWidget);
   });
 
   testWidgets('now line indicator exists on today column', (tester) async {
