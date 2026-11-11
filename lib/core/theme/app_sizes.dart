@@ -36,6 +36,7 @@
 /// * patientContentMaxWidth → 1200
 /// * appointmentDateTileWidth → 84
 /// * patientAppointmentsTableMinWidth → 560
+/// * patientAppointmentsCaptionMaxWidth → 240
 /// * bookingDayCellMinHeight → 76
 /// * bookingWeekButton → 36
 /// * timeRangeRemoveButton → 28
@@ -185,6 +186,11 @@ abstract final class AppSizes {
   /// Minimum width of the patient appointments table before it scrolls.
   /// value = 560
   static const double patientAppointmentsTableMinWidth = 560;
+
+  /// Maximum width of the service caption in the patient appointments table,
+  /// so a long cancellation reason ellipsizes instead of widening the column.
+  /// value = 240
+  static const double patientAppointmentsCaptionMaxWidth = 240;
 
   /// Minimum height of a day cell in the booking day strip.
   /// value = 76

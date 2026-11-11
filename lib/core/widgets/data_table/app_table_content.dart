@@ -21,8 +21,11 @@ final class _AppTableContent<T> extends StatelessWidget {
       color: context.colorScheme.outlineVariant,
       width: AppSizes.borderThin,
     );
+    // Columns are not flexible: Table's flex pass shrinks flexible columns
+    // below their content and cuts single-line cells. A table narrower than
+    // its viewport spreads the free space evenly across the columns instead.
     return Table(
-      defaultColumnWidth: const IntrinsicColumnWidth(flex: 1),
+      defaultColumnWidth: const IntrinsicColumnWidth(),
       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       children: [
         _headerRow(border),
