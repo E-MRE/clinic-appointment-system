@@ -446,8 +446,11 @@
   },
   "staffRequests": {
     "title": "Talepler",
+    "headerTitle": "Onay bekleyen talepler",
     "subtitle": "Onay bekleyen randevu talepleri.",
     "headerSubtitle": "{} talep · en eskisi {} oluşturuldu",
+    "headerSubtitleCountOnly": "{} talep",
+    "fallbackPatientName": "Hasta",
     "approve": "Onayla",
     "approving": "Randevu onaylanıyor",
     "approved": "Randevu onaylandı.",

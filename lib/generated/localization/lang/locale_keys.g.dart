@@ -486,8 +486,13 @@ abstract class LocaleKeys {
   static const staff_columns = 'staff.columns';
   static const staff = 'staff';
   static const staffRequests_title = 'staffRequests.title';
+  static const staffRequests_headerTitle = 'staffRequests.headerTitle';
   static const staffRequests_subtitle = 'staffRequests.subtitle';
   static const staffRequests_headerSubtitle = 'staffRequests.headerSubtitle';
+  static const staffRequests_headerSubtitleCountOnly =
+      'staffRequests.headerSubtitleCountOnly';
+  static const staffRequests_fallbackPatientName =
+      'staffRequests.fallbackPatientName';
   static const staffRequests_approve = 'staffRequests.approve';
   static const staffRequests_approving = 'staffRequests.approving';
   static const staffRequests_approved = 'staffRequests.approved';

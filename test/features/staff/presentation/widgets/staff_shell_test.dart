@@ -1,7 +1,11 @@
+import 'package:clinic_appointment_system/core/errors/data_result.dart';
 import 'package:clinic_appointment_system/core/router/app_router.dart';
+import 'package:clinic_appointment_system/core/time/calendar_date.dart';
 import 'package:clinic_appointment_system/core/widgets/navigation/app_navigation_shell.dart';
 import 'package:clinic_appointment_system/core/widgets/navigation/app_navigation_user_card.dart';
 import 'package:clinic_appointment_system/core/widgets/time_range_chip/app_time_range_chip.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/auth_route_guard.dart';
 import 'package:clinic_appointment_system/features/availability/presentation/pages/availability_page.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/widgets/staff_shell.dart';
@@ -9,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../../appointments/domain/support/appointment_fixture.dart';
 import '../../../availability/presentation/pages/doubles/availability_page_harness.dart';
 
 void main() {
@@ -92,6 +97,69 @@ void main() {
         'Talepler',
         'Uygunluk',
       ]);
+    },
+  );
+
+  testWidgets(
+    'Talepler item shows the pending count, and no badge when there are none',
+    (tester) async {
+      addTearDown(() => harness.dispose(tester));
+      final router = createAppRouter(initialLocation: AppRoutes.staffHome);
+      addTearDown(router.dispose);
+      await harness.pumpRouter(tester, router);
+      await harness.load(tester);
+
+      var shell = tester.widget<AppNavigationShell>(
+        find.byType(AppNavigationShell),
+      );
+      final requestsDestination = shell.destinations.firstWhere(
+        (destination) => destination.label == 'Talepler',
+      );
+      expect(requestsDestination.badgeCount, isNull);
+
+      const fixture = AppointmentFixture();
+      final pending1 = Appointment.restore(
+        id: 'p1',
+        patientId: 'patient',
+        patientName: 'Patient',
+        staffId: 'staff',
+        branchId: 'branch',
+        departmentId: 'department',
+        serviceId: 'service',
+        serviceName: 'Examination',
+        fee: fixture.fee,
+        date: CalendarDate(year: 2026, month: 11, day: 3),
+        range: fixture.range,
+        status: AppointmentStatus.pending,
+        history: [fixture.change(AppointmentStatus.pending)],
+      );
+      final pending2 = Appointment.restore(
+        id: 'p2',
+        patientId: 'patient',
+        patientName: 'Patient',
+        staffId: 'staff',
+        branchId: 'branch',
+        departmentId: 'department',
+        serviceId: 'service',
+        serviceName: 'Examination',
+        fee: fixture.fee,
+        date: CalendarDate(year: 2026, month: 11, day: 4),
+        range: fixture.range,
+        status: AppointmentStatus.pending,
+        history: [fixture.change(AppointmentStatus.pending)],
+      );
+      harness.appointmentsRepository.events.add(
+        DataResult.success(data: [pending1, pending2]),
+      );
+      await tester.pumpAndSettle();
+
+      shell = tester.widget<AppNavigationShell>(
+        find.byType(AppNavigationShell),
+      );
+      final badgedRequests = shell.destinations.firstWhere(
+        (destination) => destination.label == 'Talepler',
+      );
+      expect(badgedRequests.badgeCount, 2);
     },
   );
 

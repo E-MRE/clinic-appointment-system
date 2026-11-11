@@ -1,38 +1,54 @@
 import 'package:clinic_appointment_system/core/di/app_dependency.dart';
 import 'package:clinic_appointment_system/core/localization/localization.dart';
 import 'package:clinic_appointment_system/core/theme/theme.dart';
+import 'package:clinic_appointment_system/core/time/clock.dart';
 import 'package:clinic_appointment_system/core/widgets/announced_semantics.dart';
 import 'package:clinic_appointment_system/core/widgets/app_scaffold.dart';
 import 'package:clinic_appointment_system/core/widgets/app_text.dart';
+import 'package:clinic_appointment_system/core/widgets/avatar/app_avatar.dart';
+import 'package:clinic_appointment_system/core/widgets/choice/app_choice.dart';
 import 'package:clinic_appointment_system/core/widgets/loading/loading_state.dart';
 import 'package:clinic_appointment_system/core/widgets/loading/loading_state_variant.dart';
 import 'package:clinic_appointment_system/core/widgets/page_header/page_header.dart';
 import 'package:clinic_appointment_system/core/widgets/state/empty_state.dart';
 import 'package:clinic_appointment_system/core/widgets/state/error_state.dart';
 import 'package:clinic_appointment_system/core/widgets/surface/app_surface.dart';
+import 'package:clinic_appointment_system/core/widgets/surface/app_surface_padding.dart';
+import 'package:clinic_appointment_system/core/widgets/surface/app_surface_variant.dart';
+import 'package:clinic_appointment_system/core/widgets/tab_bar/app_tab_bar.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
 import 'package:clinic_appointment_system/features/appointments/presentation/cubit/appointment_action_state.dart';
 import 'package:clinic_appointment_system/features/appointments/presentation/extensions/appointment_error_code_localization.dart';
-import 'package:clinic_appointment_system/features/appointments/presentation/extensions/appointment_schedule_label.dart';
-import 'package:clinic_appointment_system/features/appointments/presentation/widgets/appointment_status_badge.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_state.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_approve_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_state.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_request_selection_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_workspace_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_workspace_state.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/enums/staff_request_sort.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/extensions/staff_appointment_presentation.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/extensions/staff_request_sort_ordering.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/extensions/staff_requests_header_subtitle.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/visitors/staff_appointment_actor_visitor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-part 'staff_requests_view.dart';
-part 'staff_requests_body.dart';
-part 'staff_requests_failure.dart';
-part 'staff_requests_empty.dart';
-part 'staff_requests_list.dart';
-part 'staff_request_row.dart';
 part 'staff_request_approve_button.dart';
 part 'staff_request_approve_progress.dart';
+part 'staff_request_card.dart';
 part 'staff_requests_approve.dart';
+part 'staff_requests_body.dart';
+part 'staff_requests_desktop_layout.dart';
+part 'staff_requests_detail_panel.dart';
+part 'staff_requests_empty.dart';
+part 'staff_requests_failure.dart';
+part 'staff_requests_header.dart';
+part 'staff_requests_list.dart';
+part 'staff_requests_narrow_layout.dart';
+part 'staff_requests_sort_toggle.dart';
+part 'staff_requests_view.dart';
 
 /// The signed-in staff member's pending appointment requests.
 final class StaffRequestsPage extends StatelessWidget {
@@ -41,8 +57,23 @@ final class StaffRequestsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<AppointmentApproveCubit>(
-      create: (_) => AppDependency.injector.get<AppointmentApproveCubit>(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AppointmentApproveCubit>(
+          create: (_) => AppDependency.injector.get<AppointmentApproveCubit>(),
+        ),
+        BlocProvider<StaffRequestSelectionCubit>(
+          create: (context) {
+            final cubit = StaffRequestSelectionCubit();
+            final pending = context
+                .read<StaffAppointmentsCubit>()
+                .state
+                .pendingRequests;
+            cubit.syncRequests(pending);
+            return cubit;
+          },
+        ),
+      ],
       child: const _StaffRequestsView(),
     );
   }

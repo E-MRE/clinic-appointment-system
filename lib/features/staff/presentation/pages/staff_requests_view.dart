@@ -6,18 +6,26 @@ final class _StaffRequestsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AppointmentApproveCubit, AppointmentActionState>(
-      listener: _onApproval,
-      child: AppScaffold(
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<AppointmentApproveCubit, AppointmentActionState>(
+          listener: _onApproval,
+        ),
+        BlocListener<StaffAppointmentsCubit, StaffAppointmentsState>(
+          listener: (context, state) {
+            context.read<StaffRequestSelectionCubit>().syncRequests(
+              state.pendingRequests,
+            );
+          },
+        ),
+      ],
+      child: const AppScaffold(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            PageHeader(
-              title: LocaleKeys.staffRequests_title.translate(),
-              subtitle: LocaleKeys.staffRequests_subtitle.translate(),
-            ),
-            const EmptySize.s16Height(),
-            const Expanded(child: _StaffRequestsBody()),
+            _StaffRequestsHeader(),
+            EmptySize.s16Height(),
+            Expanded(child: _StaffRequestsBody()),
           ],
         ),
       ),

@@ -18,13 +18,13 @@ import 'package:clinic_appointment_system/features/institution/domain/entities/d
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_branch_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_departments_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/domain/value_objects/working_hours.dart';
+import 'package:clinic_appointment_system/features/medical_services/domain/entities/medical_service.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/usecases/watch_medical_services_use_case.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_approve_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_workspace_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/pages/staff_requests_page.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/doctor.dart';
-import 'package:clinic_appointment_system/features/users/domain/entities/user.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -58,7 +58,7 @@ final class StaffRequestsPageHarness {
 
   final MockAuthRepository _authRepository = MockAuthRepository();
   late final AuthCubit auth;
-  late final User staff;
+  late final Doctor staff;
 
   /// Initializes a signed-in doctor and the page's screen-scoped cubits.
   Future<void> initialize() async {
@@ -92,6 +92,7 @@ final class StaffRequestsPageHarness {
       TestUserRepository()..getResult = DataResult.success(data: staff),
     );
     await auth.stream.firstWhere((state) => state is AuthSignedIn);
+    AppDependency.injector.registerSingleton<Clock>(clock);
     AppDependency.injector.registerFactory<StaffAppointmentsCubit>(
       () => StaffAppointmentsCubit(
         WatchStaffAppointmentsUseCase(repository),
@@ -128,12 +129,20 @@ final class StaffRequestsPageHarness {
             ),
           ],
         ),
-      );
+      ).asBroadcastStream();
     final servicesRepo = FakeMedicalServiceRepository()
-      ..servicesStream = Stream.value(const DataResult.success(data: []));
-    final availabilityRepo = FakeStaffAvailabilityRepository(
-      StaffAvailability(staffId: staff.id, branchId: 'branch'),
-    );
+      ..servicesStream = Stream.value(
+        const DataResult<List<MedicalService>>.success(data: []),
+      ).asBroadcastStream();
+    final availabilityRepo =
+        FakeStaffAvailabilityRepository(
+            StaffAvailability(staffId: staff.id, branchId: 'branch'),
+          )
+          ..stream = Stream.value(
+            DataResult.success(
+              data: StaffAvailability(staffId: staff.id, branchId: 'branch'),
+            ),
+          ).asBroadcastStream();
     AppDependency.injector.registerFactory<StaffWorkspaceCubit>(
       () => StaffWorkspaceCubit(
         WatchStaffAvailabilityUseCase(availabilityRepo),
@@ -154,6 +163,9 @@ final class StaffRequestsPageHarness {
     final appointmentsCubit =
         AppDependency.injector.get<StaffAppointmentsCubit>()..watch(staff.id);
     addTearDown(appointmentsCubit.close);
+    final workspaceCubit = AppDependency.injector.get<StaffWorkspaceCubit>()
+      ..watch(staff);
+    addTearDown(workspaceCubit.close);
     await loadTestTranslations(
       tester,
       theme: LightTheme(screenSize).themeData,
@@ -161,6 +173,7 @@ final class StaffRequestsPageHarness {
         providers: [
           BlocProvider<AuthCubit>.value(value: auth),
           BlocProvider<StaffAppointmentsCubit>.value(value: appointmentsCubit),
+          BlocProvider<StaffWorkspaceCubit>.value(value: workspaceCubit),
         ],
         child: const StaffRequestsPage(),
       ),
