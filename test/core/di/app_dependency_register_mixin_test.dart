@@ -59,7 +59,8 @@ import 'package:clinic_appointment_system/features/medical_services/presentation
 import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_list_cubit.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_save_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_approve_cubit.dart';
-import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_requests_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_reject_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_cubit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -146,18 +147,23 @@ void main() {
   test(
     'staff request cubits resolve as independent screen-owned factories',
     () async {
-      final firstRequests = container.get<StaffRequestsCubit>();
-      final secondRequests = container.get<StaffRequestsCubit>();
+      final firstRequests = container.get<StaffAppointmentsCubit>();
+      final secondRequests = container.get<StaffAppointmentsCubit>();
       final firstApproval = container.get<AppointmentApproveCubit>();
       final secondApproval = container.get<AppointmentApproveCubit>();
+      final firstReject = container.get<AppointmentRejectCubit>();
+      final secondReject = container.get<AppointmentRejectCubit>();
 
       expect(firstRequests, isNot(same(secondRequests)));
       expect(firstApproval, isNot(same(secondApproval)));
+      expect(firstReject, isNot(same(secondReject)));
       await Future.wait([
         firstRequests.close(),
         secondRequests.close(),
         firstApproval.close(),
         secondApproval.close(),
+        firstReject.close(),
+        secondReject.close(),
       ]);
     },
   );

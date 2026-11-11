@@ -36,7 +36,14 @@
     "removeRange": "Aralığı kaldır",
     "selectTime": "Saat seçin",
     "rangeOutsideHours": "Aralık şube çalışma saatleri dışında",
-    "notAvailable": "—"
+    "notAvailable": "—",
+    "relativeTime": {
+      "justNow": "az önce",
+      "minutesAgo": "{} dk önce",
+      "hoursAgo": "{} saat önce",
+      "yesterday": "dün",
+      "daysAgo": "{} gün önce"
+    }
   },
   "roles": {
     "patient": "Hasta",
@@ -81,6 +88,11 @@
       "staffOverlap": "Bu saat artık dolu. Lütfen başka bir saat seçin.",
       "patientOverlap": "Bu saatte başka bir randevunuz var.",
       "reasonTooLong": "Gerekçe en fazla 500 karakter olabilir."
+    },
+    "reasonDialog": {
+      "reasonLabel": "Gerekçe (isteğe bağlı)",
+      "reasonHelper": "Gerekçe hastanın randevu kaydında görünür.",
+      "dismiss": "Vazgeç"
     }
   },
   "services": {
@@ -435,14 +447,38 @@
   "staffRequests": {
     "title": "Talepler",
     "subtitle": "Onay bekleyen randevu talepleri.",
+    "headerSubtitle": "{} talep · en eskisi {} oluşturuldu",
     "approve": "Onayla",
     "approving": "Randevu onaylanıyor",
     "approved": "Randevu onaylandı.",
+    "reject": "Reddet",
+    "rejectAction": "Reddet…",
+    "rejectTitle": "Talebi reddet",
+    "rejected": "Talep reddedildi.",
+    "requestedAgo": "{} talep etti",
     "loading": "Talepler yükleniyor",
     "failureTitle": "Talepler yüklenemedi",
     "retry": "Tekrar dene",
     "emptyTitle": "Onay bekleyen talep yok.",
-    "emptyMessage": "Yeni randevu talepleri geldiğinde burada listelenir."
+    "emptyMessage": "Yeni randevu talepleri geldiğinde burada listelenir.",
+    "sort": {
+      "byDate": "Tarihe göre",
+      "byRequestTime": "Talep sırasına göre"
+    },
+    "history": {
+      "completed": "{} tamamlandı",
+      "lastVisit": "Son ziyaret: {}"
+    },
+    "rules": {
+      "withinAvailability": "Uygunluk aralığınızda ({})",
+      "outsideAvailability": "Uygunluk aralığınızın dışında",
+      "withinWorkingHours": "Şube çalışma saatleri içinde ({})",
+      "outsideWorkingHours": "Şube çalışma saatlerinin dışında",
+      "noStaffOverlap": "Bu saatte onaylı başka randevunuz yok",
+      "hasStaffOverlap": "Bu saatte onaylı başka bir randevunuz var",
+      "staffProvidesService": "Bu hizmeti veriyorsunuz",
+      "staffDoesNotProvideService": "Bu hizmeti vermiyorsunuz"
+    }
   },
   "availability": {
     "title": "Uygunluk",

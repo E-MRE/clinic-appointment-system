@@ -39,6 +39,13 @@ abstract class LocaleKeys {
   static const common_selectTime = 'common.selectTime';
   static const common_rangeOutsideHours = 'common.rangeOutsideHours';
   static const common_notAvailable = 'common.notAvailable';
+  static const common_relativeTime_justNow = 'common.relativeTime.justNow';
+  static const common_relativeTime_minutesAgo =
+      'common.relativeTime.minutesAgo';
+  static const common_relativeTime_hoursAgo = 'common.relativeTime.hoursAgo';
+  static const common_relativeTime_yesterday = 'common.relativeTime.yesterday';
+  static const common_relativeTime_daysAgo = 'common.relativeTime.daysAgo';
+  static const common_relativeTime = 'common.relativeTime';
   static const common = 'common';
   static const roles_patient = 'roles.patient';
   static const roles_doctor = 'roles.doctor';
@@ -90,6 +97,13 @@ abstract class LocaleKeys {
   static const appointment_errors_reasonTooLong =
       'appointment.errors.reasonTooLong';
   static const appointment_errors = 'appointment.errors';
+  static const appointment_reasonDialog_reasonLabel =
+      'appointment.reasonDialog.reasonLabel';
+  static const appointment_reasonDialog_reasonHelper =
+      'appointment.reasonDialog.reasonHelper';
+  static const appointment_reasonDialog_dismiss =
+      'appointment.reasonDialog.dismiss';
+  static const appointment_reasonDialog = 'appointment.reasonDialog';
   static const appointment = 'appointment';
   static const services_title = 'services.title';
   static const services_all = 'services.all';
@@ -473,14 +487,46 @@ abstract class LocaleKeys {
   static const staff = 'staff';
   static const staffRequests_title = 'staffRequests.title';
   static const staffRequests_subtitle = 'staffRequests.subtitle';
+  static const staffRequests_headerSubtitle = 'staffRequests.headerSubtitle';
   static const staffRequests_approve = 'staffRequests.approve';
   static const staffRequests_approving = 'staffRequests.approving';
   static const staffRequests_approved = 'staffRequests.approved';
+  static const staffRequests_reject = 'staffRequests.reject';
+  static const staffRequests_rejectAction = 'staffRequests.rejectAction';
+  static const staffRequests_rejectTitle = 'staffRequests.rejectTitle';
+  static const staffRequests_rejected = 'staffRequests.rejected';
+  static const staffRequests_requestedAgo = 'staffRequests.requestedAgo';
   static const staffRequests_loading = 'staffRequests.loading';
   static const staffRequests_failureTitle = 'staffRequests.failureTitle';
   static const staffRequests_retry = 'staffRequests.retry';
   static const staffRequests_emptyTitle = 'staffRequests.emptyTitle';
   static const staffRequests_emptyMessage = 'staffRequests.emptyMessage';
+  static const staffRequests_sort_byDate = 'staffRequests.sort.byDate';
+  static const staffRequests_sort_byRequestTime =
+      'staffRequests.sort.byRequestTime';
+  static const staffRequests_sort = 'staffRequests.sort';
+  static const staffRequests_history_completed =
+      'staffRequests.history.completed';
+  static const staffRequests_history_lastVisit =
+      'staffRequests.history.lastVisit';
+  static const staffRequests_history = 'staffRequests.history';
+  static const staffRequests_rules_withinAvailability =
+      'staffRequests.rules.withinAvailability';
+  static const staffRequests_rules_outsideAvailability =
+      'staffRequests.rules.outsideAvailability';
+  static const staffRequests_rules_withinWorkingHours =
+      'staffRequests.rules.withinWorkingHours';
+  static const staffRequests_rules_outsideWorkingHours =
+      'staffRequests.rules.outsideWorkingHours';
+  static const staffRequests_rules_noStaffOverlap =
+      'staffRequests.rules.noStaffOverlap';
+  static const staffRequests_rules_hasStaffOverlap =
+      'staffRequests.rules.hasStaffOverlap';
+  static const staffRequests_rules_staffProvidesService =
+      'staffRequests.rules.staffProvidesService';
+  static const staffRequests_rules_staffDoesNotProvideService =
+      'staffRequests.rules.staffDoesNotProvideService';
+  static const staffRequests_rules = 'staffRequests.rules';
   static const staffRequests = 'staffRequests';
   static const availability_title = 'availability.title';
   static const availability_mobileSubtitle = 'availability.mobileSubtitle';

@@ -6,21 +6,22 @@ final class _StaffRequestsBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<StaffRequestsCubit, StaffRequestsState>(
+    return BlocBuilder<StaffAppointmentsCubit, StaffAppointmentsState>(
       builder: (context, state) {
         return _buildChild(state);
       },
     );
   }
 
-  Widget _buildChild(StaffRequestsState state) {
-    if (state is StaffRequestsFailure) {
+  Widget _buildChild(StaffAppointmentsState state) {
+    if (state is StaffAppointmentsFailure) {
       return _StaffRequestsFailure(message: state.errorCode.message);
     }
 
-    if (state is StaffRequestsLoaded) {
-      if (state.requests.isEmpty) return const _StaffRequestsEmpty();
-      return _StaffRequestsList(requests: state.requests);
+    if (state is StaffAppointmentsLoaded) {
+      final requests = state.pendingRequests;
+      if (requests.isEmpty) return const _StaffRequestsEmpty();
+      return _StaffRequestsList(requests: requests);
     }
 
     return LoadingState(

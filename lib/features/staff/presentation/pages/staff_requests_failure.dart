@@ -17,7 +17,7 @@ final class _StaffRequestsFailure extends StatelessWidget {
       ),
       iconBackground: context.colorScheme.errorContainer,
       primaryAction: FilledButton(
-        onPressed: context.read<StaffRequestsCubit>().retry,
+        onPressed: context.read<StaffAppointmentsCubit>().retry,
         child: AppText.label(
           LocaleKeys.staffRequests_retry.translate(),
           tone: TextTone.onPrimary,

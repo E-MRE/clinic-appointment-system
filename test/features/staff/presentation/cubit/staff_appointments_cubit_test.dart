@@ -6,8 +6,8 @@ import 'package:clinic_appointment_system/features/appointments/domain/entities/
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_error_code.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_staff_appointments_use_case.dart';
-import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_requests_cubit.dart';
-import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_requests_state.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../core/time/support/fixed_clock.dart';
@@ -17,11 +17,11 @@ import '../../../appointments/presentation/doubles/staff_appointment_repository.
 void main() {
   const fixture = AppointmentFixture();
   late StaffAppointmentRepository repository;
-  late StaffRequestsCubit cubit;
+  late StaffAppointmentsCubit cubit;
 
   setUp(() {
     repository = StaffAppointmentRepository();
-    cubit = StaffRequestsCubit(
+    cubit = StaffAppointmentsCubit(
       WatchStaffAppointmentsUseCase(repository),
       FixedClock(DateTime(2026, 12, 15, 23, 5)),
     );
@@ -32,13 +32,13 @@ void main() {
     await repository.events.close();
   });
 
-  test('watches from today through sixty days ahead, inclusive', () {
+  test('watches from 365 days back through sixty days ahead, inclusive', () {
     cubit.watch('staff-7');
 
     expect(repository.watchedQueries, [
       (
         'staff-7',
-        CalendarDate(year: 2026, month: 12, day: 15),
+        CalendarDate(year: 2025, month: 12, day: 15),
         CalendarDate(year: 2027, month: 2, day: 13),
       ),
     ]);
@@ -70,9 +70,11 @@ void main() {
       repository.emit([later, approved, earlier]);
       await Future<void>.delayed(Duration.zero);
 
-      expect(cubit.state, isA<StaffRequestsLoaded>());
+      expect(cubit.state, isA<StaffAppointmentsLoaded>());
       expect(
-        (cubit.state as StaffRequestsLoaded).requests.map((item) => item.id),
+        (cubit.state as StaffAppointmentsLoaded).pendingRequests.map(
+          (item) => item.id,
+        ),
         ['earlier', 'later'],
       );
 
@@ -86,7 +88,9 @@ void main() {
       await Future<void>.delayed(Duration.zero);
 
       expect(
-        (cubit.state as StaffRequestsLoaded).requests.map((item) => item.id),
+        (cubit.state as StaffAppointmentsLoaded).pendingRequests.map(
+          (item) => item.id,
+        ),
         ['newest'],
       );
     },
@@ -102,17 +106,17 @@ void main() {
         ),
       );
       await Future<void>.delayed(Duration.zero);
-      expect(cubit.state, isA<StaffRequestsFailure>());
+      expect(cubit.state, isA<StaffAppointmentsFailure>());
       expect(
-        (cubit.state as StaffRequestsFailure).errorCode,
+        (cubit.state as StaffAppointmentsFailure).errorCode,
         AppointmentErrorCode.notFound,
       );
 
       repository.events.addError(StateError('stream failed'));
       await Future<void>.delayed(Duration.zero);
-      expect(cubit.state, isA<StaffRequestsFailure>());
+      expect(cubit.state, isA<StaffAppointmentsFailure>());
       expect(
-        (cubit.state as StaffRequestsFailure).errorCode,
+        (cubit.state as StaffAppointmentsFailure).errorCode,
         AppointmentErrorCode.unavailable,
       );
     },
@@ -131,7 +135,7 @@ void main() {
     ]);
     await Future<void>.delayed(Duration.zero);
 
-    expect(cubit.state, isA<StaffRequestsLoading>());
+    expect(cubit.state, isA<StaffAppointmentsLoading>());
   });
 
   test('cancels the appointments stream subscription on close', () async {

@@ -18,8 +18,8 @@ import 'package:clinic_appointment_system/features/appointments/presentation/wid
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_state.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_approve_cubit.dart';
-import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_requests_cubit.dart';
-import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_requests_state.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_state.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/visitors/staff_appointment_actor_visitor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -49,9 +49,9 @@ final class StaffRequestsPage extends StatelessWidget {
         return MultiBlocProvider(
           key: ValueKey<String>(staff.id),
           providers: [
-            BlocProvider<StaffRequestsCubit>(
+            BlocProvider<StaffAppointmentsCubit>(
               create: (_) {
-                return AppDependency.injector.get<StaffRequestsCubit>()
+                return AppDependency.injector.get<StaffAppointmentsCubit>()
                   ..watch(staff.id);
               },
             ),

@@ -12,7 +12,7 @@ import 'package:clinic_appointment_system/features/auth/domain/entities/auth_ses
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_state.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_approve_cubit.dart';
-import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_requests_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/pages/staff_requests_page.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/doctor.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/user.dart';
@@ -79,9 +79,11 @@ final class StaffRequestsPageHarness {
       TestUserRepository()..getResult = DataResult.success(data: staff),
     );
     await auth.stream.firstWhere((state) => state is AuthSignedIn);
-    AppDependency.injector.registerFactory<StaffRequestsCubit>(
-      () =>
-          StaffRequestsCubit(WatchStaffAppointmentsUseCase(repository), clock),
+    AppDependency.injector.registerFactory<StaffAppointmentsCubit>(
+      () => StaffAppointmentsCubit(
+        WatchStaffAppointmentsUseCase(repository),
+        clock,
+      ),
     );
     AppDependency.injector.registerFactory<AppointmentApproveCubit>(
       () => AppointmentApproveCubit(
