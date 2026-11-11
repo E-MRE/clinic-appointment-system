@@ -154,6 +154,7 @@ Appointment _appointment(
   return Appointment.restore(
     id: id,
     patientId: 'patient-7',
+    patientName: 'Patient 7',
     staffId: 'staff-7',
     branchId: 'branch-1',
     departmentId: 'department-1',

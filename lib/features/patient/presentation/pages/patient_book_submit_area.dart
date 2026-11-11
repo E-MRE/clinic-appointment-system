@@ -5,10 +5,12 @@ final class _PatientBookSubmitArea extends StatelessWidget {
   const _PatientBookSubmitArea({
     required this.selection,
     required this.patient,
+    required this.patientName,
   });
 
   final BookingSelection selection;
   final PatientAppointmentActor patient;
+  final String patientName;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +28,7 @@ final class _PatientBookSubmitArea extends StatelessWidget {
             _PatientBookSubmitButton(
               selection: selection,
               patient: patient,
+              patientName: patientName,
               isBusy: state is BookAppointmentInProgress,
             ),
           ],

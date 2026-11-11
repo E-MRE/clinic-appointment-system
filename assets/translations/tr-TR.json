@@ -79,7 +79,8 @@
       "outsideAvailability": "Personel bu saatte uygun değil.",
       "serviceNotProvided": "Seçilen personel bu hizmeti vermiyor.",
       "staffOverlap": "Bu saat artık dolu. Lütfen başka bir saat seçin.",
-      "patientOverlap": "Bu saatte başka bir randevunuz var."
+      "patientOverlap": "Bu saatte başka bir randevunuz var.",
+      "reasonTooLong": "Gerekçe en fazla 500 karakter olabilir."
     }
   },
   "services": {
@@ -542,6 +543,7 @@
       "serviceCaption": "{} · {}",
       "cancelledByPatient": "Sizin tarafınızdan iptal edildi",
       "cancelledByStaff": "Personel tarafından iptal edildi",
+      "reason": "Gerekçe: {}",
       "notesTitle": "Hazırlık notları",
       "noteHeading": "{} · {}",
       "fastingNote": "{} aç gelin. Su içebilirsiniz.",

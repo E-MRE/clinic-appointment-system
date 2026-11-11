@@ -64,11 +64,13 @@ void main() {
   Future<void> submit({
     BookingSelection? choices,
     PatientAppointmentActor? by,
+    String? patientName,
   }) {
     return cubit.submit(
       selection: choices ?? selection(),
       schedule: schedule,
       patient: by ?? patient,
+      patientName: patientName ?? fixtures.patient.fullName,
     );
   }
 
@@ -84,6 +86,7 @@ void main() {
     ]);
     final candidate = repository.bookedCandidates.single;
     expect(candidate.patientId, fixtures.patient.id);
+    expect(candidate.patientName, fixtures.patient.fullName);
     expect(candidate.staffId, 'murat');
     expect(candidate.branchId, 'branch');
     expect(candidate.departmentId, 'internal');

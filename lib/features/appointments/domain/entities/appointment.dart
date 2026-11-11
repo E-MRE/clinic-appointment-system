@@ -1,3 +1,4 @@
+import 'package:clinic_appointment_system/core/constants/appointment_constants.dart';
 import 'package:clinic_appointment_system/core/constants/entity_constants.dart';
 import 'package:clinic_appointment_system/core/time/calendar_date.dart';
 import 'package:clinic_appointment_system/core/time/time_range.dart';
@@ -21,6 +22,7 @@ final class Appointment extends Equatable {
   factory Appointment.request({
     String id = EntityConstants.unsavedId,
     required String patientId,
+    required String patientName,
     required String staffId,
     required String branchId,
     required String departmentId,
@@ -38,6 +40,7 @@ final class Appointment extends Equatable {
     return Appointment.restore(
       id: id,
       patientId: patientId,
+      patientName: patientName,
       staffId: staffId,
       branchId: branchId,
       departmentId: departmentId,
@@ -63,6 +66,7 @@ final class Appointment extends Equatable {
   Appointment.restore({
     required this.id,
     required this.patientId,
+    required this.patientName,
     required this.staffId,
     required this.branchId,
     required this.departmentId,
@@ -84,6 +88,9 @@ final class Appointment extends Equatable {
 
   /// The patient who requested this appointment.
   final String patientId;
+
+  /// The patient's full name captured at booking.
+  final String patientName;
 
   /// The doctor or technician assigned to this appointment.
   final String staffId;
@@ -120,6 +127,7 @@ final class Appointment extends Equatable {
     return Appointment.restore(
       id: id,
       patientId: patientId,
+      patientName: patientName,
       staffId: staffId,
       branchId: branchId,
       departmentId: departmentId,
@@ -132,6 +140,9 @@ final class Appointment extends Equatable {
       history: history,
     );
   }
+
+  /// The optional reason attached to the current status, if any.
+  String? get statusReason => history.last.reason;
 
   /// The duration derived from the booked time range.
   Duration get duration => Duration(minutes: range.durationMinutes);
@@ -161,8 +172,14 @@ final class Appointment extends Equatable {
   AppointmentResult reject({
     required AppointmentActor by,
     required DateTime at,
+    String? reason,
   }) {
-    return _changed(_state.rejectable?.reject(this, by: by, at: at), by, at);
+    return _changedWithReason(
+      _state.rejectable?.reject(this, by: by, at: at),
+      by,
+      at,
+      reason,
+    );
   }
 
   /// Cancels a pending or approved appointment as its own patient before start.
@@ -183,11 +200,13 @@ final class Appointment extends Equatable {
   AppointmentResult cancelByStaff({
     required AppointmentActor by,
     required DateTime at,
+    String? reason,
   }) {
-    return _changed(
+    return _changedWithReason(
       _state.staffCancellable?.cancelByStaff(this, by: by, at: at),
       by,
       at,
+      reason,
     );
   }
 
@@ -226,11 +245,35 @@ final class Appointment extends Equatable {
 
   AppointmentState get _state => status.state;
 
-  AppointmentResult _changed(
+  /// Trims [reason]; a blank reason becomes null.
+  String? _normalizeReason(String? reason) {
+    if (reason == null) return null;
+    final trimmed = reason.trim();
+    return trimmed.isEmpty ? null : trimmed;
+  }
+
+  /// Applies [decision] with the normalized [reason] on its audit entry,
+  /// or returns reasonTooLong when the reason exceeds the allowed length.
+  AppointmentResult _changedWithReason(
     TransitionDecision? decision,
     AppointmentActor by,
     DateTime at,
+    String? reason,
   ) {
+    final normalized = _normalizeReason(reason);
+    if (normalized != null &&
+        normalized.length > AppointmentConstants.statusReasonMaxLength) {
+      return const AppointmentResult.error(AppointmentErrorCode.reasonTooLong);
+    }
+    return _changed(decision, by, at, reason: normalized);
+  }
+
+  AppointmentResult _changed(
+    TransitionDecision? decision,
+    AppointmentActor by,
+    DateTime at, {
+    String? reason,
+  }) {
     final next = decision?.next;
     if (next == null) {
       return AppointmentResult.error(
@@ -241,6 +284,7 @@ final class Appointment extends Equatable {
       Appointment.restore(
         id: id,
         patientId: patientId,
+        patientName: patientName,
         staffId: staffId,
         branchId: branchId,
         departmentId: departmentId,
@@ -257,6 +301,7 @@ final class Appointment extends Equatable {
             byUserId: by.id,
             byRole: by.role,
             at: at,
+            reason: reason,
           ),
         ],
       ),
@@ -268,6 +313,7 @@ final class Appointment extends Equatable {
   List<Object> get props => [
     id,
     patientId,
+    patientName,
     staffId,
     branchId,
     departmentId,

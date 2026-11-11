@@ -18,7 +18,8 @@ extension AppointmentErrorCodeBooking on AppointmentErrorCode {
       AppointmentErrorCode.invalidHistory ||
       AppointmentErrorCode.outsideWorkingHours ||
       AppointmentErrorCode.outsideAvailability ||
-      AppointmentErrorCode.serviceNotProvided => false,
+      AppointmentErrorCode.serviceNotProvided ||
+      AppointmentErrorCode.reasonTooLong => false,
     };
   }
 }

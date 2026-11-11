@@ -6,11 +6,13 @@ final class _PatientBookSubmitButton extends StatelessWidget {
   const _PatientBookSubmitButton({
     required this.selection,
     required this.patient,
+    required this.patientName,
     required this.isBusy,
   });
 
   final BookingSelection selection;
   final PatientAppointmentActor patient;
+  final String patientName;
   final bool isBusy;
 
   @override
@@ -42,6 +44,7 @@ final class _PatientBookSubmitButton extends StatelessWidget {
       selection: selection,
       schedule: schedule,
       patient: patient,
+      patientName: patientName,
     );
   }
 }

@@ -73,6 +73,7 @@ void main() {
           .data();
       expect(data, {
         'patientId': 'patient',
+        'patientName': 'Patient',
         'staffId': 'staff',
         'branchId': 'branch',
         'departmentId': 'department',

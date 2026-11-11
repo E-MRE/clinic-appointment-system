@@ -18,6 +18,7 @@ final class AppointmentModel {
       Appointment.restore(
         id: id,
         patientId: json[FirestoreConstants.patientId] as String,
+        patientName: json[FirestoreConstants.patientName] as String? ?? '',
         staffId: json[FirestoreConstants.staffId] as String,
         branchId: json[FirestoreConstants.branchId] as String,
         departmentId: json[FirestoreConstants.departmentId] as String,
@@ -48,6 +49,7 @@ final class AppointmentModel {
   Map<String, dynamic> toJson() {
     return {
       FirestoreConstants.patientId: appointment.patientId,
+      FirestoreConstants.patientName: appointment.patientName,
       FirestoreConstants.staffId: appointment.staffId,
       FirestoreConstants.branchId: appointment.branchId,
       FirestoreConstants.departmentId: appointment.departmentId,

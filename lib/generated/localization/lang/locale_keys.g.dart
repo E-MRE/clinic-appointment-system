@@ -87,6 +87,8 @@ abstract class LocaleKeys {
       'appointment.errors.staffOverlap';
   static const appointment_errors_patientOverlap =
       'appointment.errors.patientOverlap';
+  static const appointment_errors_reasonTooLong =
+      'appointment.errors.reasonTooLong';
   static const appointment_errors = 'appointment.errors';
   static const appointment = 'appointment';
   static const services_title = 'services.title';
@@ -603,6 +605,7 @@ abstract class LocaleKeys {
       'patient.appointments.cancelledByPatient';
   static const patient_appointments_cancelledByStaff =
       'patient.appointments.cancelledByStaff';
+  static const patient_appointments_reason = 'patient.appointments.reason';
   static const patient_appointments_notesTitle =
       'patient.appointments.notesTitle';
   static const patient_appointments_noteHeading =

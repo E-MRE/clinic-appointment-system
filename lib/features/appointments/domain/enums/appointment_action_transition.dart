@@ -10,15 +10,24 @@ extension AppointmentActionTransition on AppointmentAction {
     Appointment current, {
     required AppointmentActor by,
     required DateTime at,
+    String? reason,
   }) {
     return switch (this) {
       AppointmentAction.approve => current.approve(by: by, at: at),
-      AppointmentAction.reject => current.reject(by: by, at: at),
+      AppointmentAction.reject => current.reject(
+        by: by,
+        at: at,
+        reason: reason,
+      ),
       AppointmentAction.cancelByPatient => current.cancelByPatient(
         by: by,
         at: at,
       ),
-      AppointmentAction.cancelByStaff => current.cancelByStaff(by: by, at: at),
+      AppointmentAction.cancelByStaff => current.cancelByStaff(
+        by: by,
+        at: at,
+        reason: reason,
+      ),
       AppointmentAction.complete => current.complete(by: by, at: at),
       AppointmentAction.markNoShow => current.markNoShow(by: by, at: at),
     };

@@ -8,9 +8,11 @@ final class AppointmentStatusRequest {
     required this.appointmentId,
     required this.action,
     required this.by,
+    this.reason,
   });
 
   final String appointmentId;
   final AppointmentAction action;
   final AppointmentActor by;
+  final String? reason;
 }

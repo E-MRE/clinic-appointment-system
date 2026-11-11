@@ -1,3 +1,4 @@
+import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_error_code.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status_state.dart';
@@ -139,6 +140,93 @@ void main() {
         expect(approved.history, hasLength(2));
       },
     );
+  });
+
+  group('status change reasons and statusReason projection', () {
+    final staff = fixture.actor(UserRole.doctor, 'staff');
+
+    for (final (label, create) in [
+      (
+        'reject',
+        (Appointment a, String? reason) =>
+            a.reject(by: staff, at: fixture.beforeStart, reason: reason),
+      ),
+      (
+        'cancelByStaff',
+        (Appointment a, String? reason) =>
+            a.cancelByStaff(by: staff, at: fixture.start, reason: reason),
+      ),
+    ]) {
+      final baseStatus = label == 'reject'
+          ? AppointmentStatus.pending
+          : AppointmentStatus.approved;
+
+      test('$label stores trimmed reason and sets statusReason', () {
+        final appointment = fixture.restore(baseStatus);
+        final result = create(appointment, '   Device maintenance required   ');
+        final updated = fixture.success(result);
+        expect(updated.statusReason, 'Device maintenance required');
+        expect(updated.history.last.reason, 'Device maintenance required');
+      });
+
+      test('$label turns blank reason into null', () {
+        final appointment = fixture.restore(baseStatus);
+        final result = create(appointment, '     ');
+        final updated = fixture.success(result);
+        expect(updated.statusReason, isNull);
+        expect(updated.history.last.reason, isNull);
+      });
+
+      test('$label allows exactly 500 characters', () {
+        final appointment = fixture.restore(baseStatus);
+        final reason500 = 'a' * 500;
+        final result = create(appointment, reason500);
+        final updated = fixture.success(result);
+        expect(updated.statusReason, reason500);
+      });
+
+      test('$label rejects 501 characters with reasonTooLong', () {
+        final appointment = fixture.restore(baseStatus);
+        final reason501 = 'a' * 501;
+        final result = create(appointment, reason501);
+        fixture.expectError(result, AppointmentErrorCode.reasonTooLong);
+        expect(appointment.status, baseStatus);
+        expect(appointment.history, [fixture.change(baseStatus)]);
+      });
+    }
+
+    test('approve, complete, markNoShow, cancelByPatient have no reason', () {
+      final requested = fixture.request();
+      expect(requested.history.single.reason, isNull);
+      expect(requested.statusReason, isNull);
+
+      final approved = fixture.success(
+        requested.approve(by: staff, at: fixture.beforeStart),
+      );
+      expect(approved.history.last.reason, isNull);
+      expect(approved.statusReason, isNull);
+
+      final completed = fixture.success(
+        approved.complete(by: staff, at: fixture.start),
+      );
+      expect(completed.history.last.reason, isNull);
+      expect(completed.statusReason, isNull);
+
+      final app2 = fixture.restore(AppointmentStatus.approved);
+      final noShow = fixture.success(
+        app2.markNoShow(by: staff, at: fixture.atTolerance),
+      );
+      expect(noShow.history.last.reason, isNull);
+      expect(noShow.statusReason, isNull);
+
+      final app3 = fixture.restore(AppointmentStatus.approved);
+      final patient = fixture.actor(UserRole.patient, 'patient');
+      final cancelled = fixture.success(
+        app3.cancelByPatient(by: patient, at: fixture.beforeStart),
+      );
+      expect(cancelled.history.last.reason, isNull);
+      expect(cancelled.statusReason, isNull);
+    });
   });
 
   group('forbidden transition matrix', () {

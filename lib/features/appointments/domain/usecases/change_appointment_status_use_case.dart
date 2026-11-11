@@ -17,7 +17,12 @@ final class ChangeAppointmentStatusUseCase
   @override
   Future<AppointmentResult> call(AppointmentStatusRequest request) {
     return _repository.changeStatus(request.appointmentId, (current) {
-      return request.action.apply(current, by: request.by, at: _clock.now());
+      return request.action.apply(
+        current,
+        by: request.by,
+        at: _clock.now(),
+        reason: request.reason,
+      );
     });
   }
 }

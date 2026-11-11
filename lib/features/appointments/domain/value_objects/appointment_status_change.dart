@@ -11,6 +11,7 @@ final class AppointmentStatusChange extends Equatable {
     required this.byUserId,
     required this.byRole,
     required this.at,
+    this.reason,
   });
 
   /// The status reached by this operation.
@@ -25,7 +26,10 @@ final class AppointmentStatusChange extends Equatable {
   /// The moment explicitly supplied by the caller.
   final DateTime at;
 
+  /// An optional explanation attached when rejecting or cancelling.
+  final String? reason;
+
   /// All audit values defining equality.
   @override
-  List<Object> get props => [status, byUserId, byRole, at];
+  List<Object?> get props => [status, byUserId, byRole, at, reason];
 }

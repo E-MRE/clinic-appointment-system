@@ -5,7 +5,7 @@ import { arrayRemove, collection, deleteDoc, doc, getDoc, getDocs, query, server
 
 const rules = readFileSync(new URL('../../firestore.rules', import.meta.url), 'utf8');
 const profiles = {
-  patient: { role: 'patient' }, other: { role: 'patient' },
+  patient: { role: 'patient', fullName: 'Elif Kaya' }, other: { role: 'patient', fullName: 'Other Patient' },
   doctor: { role: 'doctor', branchId: 'branch-1', departmentId: 'department-1' },
   technician: { role: 'technician', branchId: 'branch-1', departmentId: 'department-1' },
   doctor2: { role: 'doctor', branchId: 'branch-2', departmentId: 'department-1' },
@@ -15,11 +15,13 @@ const profiles = {
 let env;
 function signedIn(uid) { return env.authenticatedContext(uid).firestore(); }
 function ref(db, id = 'a1') { return doc(db, 'appointments', id); }
-function entry(status = 'pending', uid = 'patient', role = 'patient', at = new Date()) {
-  return { status, byUserId: uid, byRole: role, at };
+function entry(status = 'pending', uid = 'patient', role = 'patient', at = new Date(), reason = undefined) {
+  const result = { status, byUserId: uid, byRole: role, at };
+  if (reason !== undefined) result.reason = reason;
+  return result;
 }
 function appointment(change = {}) {
-  return { patientId: 'patient', staffId: 'doctor', branchId: 'branch-1', departmentId: 'department-1',
+  return { patientId: 'patient', patientName: 'Elif Kaya', staffId: 'doctor', branchId: 'branch-1', departmentId: 'department-1',
     serviceId: 'service-1', serviceName: 'Consultation', feeMinorUnits: 100, date: '2026-12-01',
     start: '10:00', end: '10:30', status: 'pending', history: [entry()],
     createdAt: serverTimestamp(), updatedAt: serverTimestamp(), ...change };
@@ -115,6 +117,8 @@ describe('appointments create', () => {
   const invalid = {
     'another patient': { patientId: 'other' }, 'wrong status': { status: 'approved' },
     'extra key': { extra: true }, 'missing key': { serviceId: undefined },
+    'missing patientName': { patientName: undefined },
+    'mismatched patientName': { patientName: 'Wrong Name' },
     'blank staff': { staffId: ' ' }, 'blank branch': { branchId: ' ' },
     'blank department': { departmentId: ' ' }, 'blank service': { serviceId: ' ' },
     'blank service name': { serviceName: ' ' }, 'zero fee': { feeMinorUnits: 0 },
@@ -197,6 +201,58 @@ describe('appointments update', () => {
   it('denies a signed-out update', async () => {
     const base = await seed();
     await assertFails(updateDoc(ref(env.unauthenticatedContext().firestore()), update(base, 'approved', 'doctor')));
+  });
+  it('allows staff to reject with a reason', async () => {
+    const base = await seed({ status: 'pending' });
+    const reason = 'Cihaz bakımda, başka bir gün seçin.';
+    await assertSucceeds(transition(signedIn('doctor'), base, 'rejected', 'doctor', {
+      history: [...base.history, entry('rejected', 'doctor', 'doctor', new Date(), reason)],
+    }));
+  });
+  it('allows staff to cancel an approved appointment with a reason', async () => {
+    const base = await seed({ status: 'approved' });
+    const reason = 'Acil ameliyat nedeniyle iptal edildi.';
+    await assertSucceeds(transition(signedIn('doctor'), base, 'cancelledByStaff', 'doctor', {
+      history: [...base.history, entry('cancelledByStaff', 'doctor', 'doctor', new Date(), reason)],
+    }));
+  });
+  it('denies a reason on approve', async () => {
+    const base = await seed({ status: 'pending' });
+    await assertFails(updateDoc(ref(signedIn('doctor')), update(base, 'approved', 'doctor', {
+      history: [...base.history, entry('approved', 'doctor', 'doctor', new Date(), 'Not allowed on approve')],
+    })));
+  });
+  it('denies a reason on cancelByPatient', async () => {
+    const base = await seed({ status: 'pending' });
+    await assertFails(updateDoc(ref(signedIn('patient')), update(base, 'cancelledByPatient', 'patient', {
+      history: [...base.history, entry('cancelledByPatient', 'patient', 'patient', new Date(), 'Not allowed')],
+    })));
+  });
+  it('denies an empty reason on reject', async () => {
+    const base = await seed({ status: 'pending' });
+    await assertFails(transition(signedIn('doctor'), base, 'rejected', 'doctor', {
+      history: [...base.history, entry('rejected', 'doctor', 'doctor', new Date(), '')],
+    }));
+  });
+  it('denies a 501-character reason on reject', async () => {
+    const base = await seed({ status: 'pending' });
+    const longReason = 'x'.repeat(501);
+    await assertFails(transition(signedIn('doctor'), base, 'rejected', 'doctor', {
+      history: [...base.history, entry('rejected', 'doctor', 'doctor', new Date(), longReason)],
+    }));
+  });
+  it('allows an update on a legacy document without patientName', async () => {
+    const legacy = appointment({ createdAt: new Date(0), updatedAt: new Date(0),
+      history: [entry('pending', 'patient', 'patient', new Date(Date.now() - 10000))] });
+    delete legacy.patientName;
+    await env.withSecurityRulesDisabled(async (context) => {
+      const db = context.firestore();
+      await setDoc(ref(db), legacy);
+      for (const day of dayRefs(db, legacy)) {
+        await setDoc(day, dayData([slot(legacy)]));
+      }
+    });
+    await assertSucceeds(updateDoc(ref(signedIn('doctor')), update(legacy, 'approved', 'doctor')));
   });
 });
 

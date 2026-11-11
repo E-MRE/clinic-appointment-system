@@ -121,6 +121,23 @@ void main() {
     expect(find.text('Tarih ve saat'), findsNothing);
   });
 
+  testWidgets('details dialog shows reason for a rejected appointment', (
+    tester,
+  ) async {
+    await pumpLoaded(tester);
+    await openDetails(tester, 5);
+    expect(find.text('Akciğer Grafisi'), findsWidgets);
+    expect(
+      find.descendant(
+        of: find.byType(Dialog),
+        matching: find.text('Gerekçe: Cihaz bakımda, başka bir gün seçin.'),
+      ),
+      findsOneWidget,
+    );
+    await tester.tap(find.text('Kapat'));
+    await tester.pumpAndSettle();
+  });
+
   testWidgets('confirmed cancel calls the patient cancel and closes', (
     tester,
   ) async {

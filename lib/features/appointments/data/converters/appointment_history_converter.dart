@@ -22,6 +22,7 @@ final class AppointmentHistoryConverter {
           json[FirestoreConstants.byRole] as String,
         ),
         at: (json[FirestoreConstants.at] as Timestamp).toDate(),
+        reason: json[FirestoreConstants.reason] as String?,
       );
     }).toList();
   }
@@ -35,6 +36,7 @@ final class AppointmentHistoryConverter {
             FirestoreConstants.byUserId: entry.byUserId,
             FirestoreConstants.byRole: entry.byRole.name,
             FirestoreConstants.at: Timestamp.fromDate(entry.at),
+            if (entry.reason != null) FirestoreConstants.reason: entry.reason,
           },
         )
         .toList();

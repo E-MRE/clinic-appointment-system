@@ -235,6 +235,7 @@ final class PatientFixtures {
     AppointmentStatus.rejected,
     DateTime(2026, 9, 29, 15),
     15,
+    reason: 'Cihaz bakımda, başka bir gün seçin.',
   );
 
   /// 22 September, cancelled by the patient.
@@ -268,12 +269,15 @@ final class PatientFixtures {
     DateTime start,
     int minutes, {
     String? patientId,
+    String? patientName,
+    String? reason,
   }) {
     final service = services.firstWhere((item) => item.id == serviceId);
     final startTime = ClockTime(hour: start.hour, minute: start.minute);
     return Appointment.restore(
       id: id,
       patientId: patientId ?? patient.id,
+      patientName: patientName ?? patient.fullName,
       staffId: staffId,
       branchId: service.branchId,
       departmentId: service.departmentId,
@@ -292,6 +296,7 @@ final class PatientFixtures {
           byUserId: patient.id,
           byRole: UserRole.patient,
           at: DateTime(2026, 9),
+          reason: reason,
         ),
       ],
     );
