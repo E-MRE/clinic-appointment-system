@@ -126,6 +126,7 @@ final class AppTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
       children: [
         if (isLabelVisible) ...[
           ExcludeSemantics(child: AppText.label(label)),

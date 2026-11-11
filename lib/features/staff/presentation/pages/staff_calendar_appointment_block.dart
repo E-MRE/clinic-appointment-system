@@ -10,12 +10,11 @@ final class _StaffCalendarAppointmentBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final variant = appointment.status.badgeVariant;
-    final status = variant.appointmentStatus ?? AppointmentStatus.pending;
-    final colors = context.statusColors.resolve(status);
+    final tone = appointment.status.calendarTone;
+    final colors = context.statusColors.resolve(tone);
     final bg = colors.bg;
     final fg = colors.fg;
-    final isPending = variant == StatusBadgeVariant.pending;
+    final isPending = tone == AppointmentStatus.pending;
     final formattedTime = AppFormatters.formatTime(
       appointment.startsAt,
       context: context,

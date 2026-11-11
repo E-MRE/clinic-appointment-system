@@ -35,7 +35,10 @@ final class _StaffAppointmentDialogContent extends StatelessWidget {
           spacing: AppSizes.s20,
           children: [
             StaffPatientHeader(appointment: appointment),
-            AppointmentStatusBadge(status: appointment.status),
+            Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: AppointmentStatusBadge(status: appointment.status),
+            ),
             StaffAppointmentDetailGrid(
               appointment: appointment,
               location: location,

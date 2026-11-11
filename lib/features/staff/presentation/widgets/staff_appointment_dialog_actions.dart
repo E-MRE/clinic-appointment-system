@@ -30,122 +30,103 @@ final class _StaffAppointmentDialogActions extends StatelessWidget {
     final cancelOffer = _offerFor(AppointmentAction.cancelByStaff);
 
     if (appointment.status == AppointmentStatus.pending) {
-      return Wrap(
-        alignment: WrapAlignment.end,
-        spacing: AppSizes.s12,
-        runSpacing: AppSizes.s8,
-        children: [
+      return _StaffAppointmentDialogActionBar(
+        hints: _hints,
+        buttons: [
           if (rejectOffer != null)
-            _StaffAppointmentDialogActionButton(
-              hint: rejectOffer.hint,
-              button: OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: context.colorScheme.error,
-                  side: BorderSide(color: context.colorScheme.error),
-                ),
-                onPressed: isBusy || !rejectOffer.isEnabled
-                    ? null
-                    : () => _reject(context),
-                child: rejectState is AppointmentActionInProgress
-                    ? _StaffAppointmentDialogProgress(
-                        label: LocaleKeys.staffRequests_reject.translate(),
-                      )
-                    : Text(LocaleKeys.staffRequests_rejectAction.translate()),
+            OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                foregroundColor: context.colorScheme.error,
+                side: BorderSide(color: context.colorScheme.error),
               ),
+              onPressed: isBusy || !rejectOffer.isEnabled
+                  ? null
+                  : () => _reject(context),
+              child: rejectState is AppointmentActionInProgress
+                  ? _StaffAppointmentDialogProgress(
+                      label: LocaleKeys.staffRequests_reject.translate(),
+                    )
+                  : Text(LocaleKeys.staffRequests_rejectAction.translate()),
             ),
           if (approveOffer != null)
-            _StaffAppointmentDialogActionButton(
-              hint: approveOffer.hint,
-              button: FilledButton(
-                onPressed: isBusy || !approveOffer.isEnabled
-                    ? null
-                    : () => context.performAsStaff(
-                        context.read<AppointmentApproveCubit>(),
-                        appointment,
-                      ),
-                child: approveState is AppointmentActionInProgress
-                    ? _StaffAppointmentDialogProgress(
-                        label: LocaleKeys.staffRequests_approving.translate(),
-                      )
-                    : Text(LocaleKeys.staffRequests_approve.translate()),
-              ),
+            FilledButton(
+              onPressed: isBusy || !approveOffer.isEnabled
+                  ? null
+                  : () => context.performAsStaff(
+                      context.read<AppointmentApproveCubit>(),
+                      appointment,
+                    ),
+              child: approveState is AppointmentActionInProgress
+                  ? _StaffAppointmentDialogProgress(
+                      label: LocaleKeys.staffRequests_approving.translate(),
+                    )
+                  : Text(LocaleKeys.staffRequests_approve.translate()),
             ),
         ],
       );
     }
 
     if (appointment.status == AppointmentStatus.approved) {
-      return Wrap(
-        alignment: WrapAlignment.end,
-        spacing: AppSizes.s12,
-        runSpacing: AppSizes.s8,
-        children: [
+      return _StaffAppointmentDialogActionBar(
+        hints: _hints,
+        buttons: [
           if (completeOffer != null)
-            _StaffAppointmentDialogActionButton(
-              hint: completeOffer.hint,
-              button: FilledButton(
-                onPressed: isBusy || !completeOffer.isEnabled
-                    ? null
-                    : () => context.performAsStaff(
-                        context.read<AppointmentCompleteCubit>(),
-                        appointment,
-                      ),
-                child: completeState is AppointmentActionInProgress
-                    ? _StaffAppointmentDialogProgress(
-                        label: LocaleKeys.staffAppointmentDialog_complete
-                            .translate(),
-                      )
-                    : Text(
-                        LocaleKeys.staffAppointmentDialog_complete.translate(),
-                      ),
-              ),
+            FilledButton(
+              onPressed: isBusy || !completeOffer.isEnabled
+                  ? null
+                  : () => context.performAsStaff(
+                      context.read<AppointmentCompleteCubit>(),
+                      appointment,
+                    ),
+              child: completeState is AppointmentActionInProgress
+                  ? _StaffAppointmentDialogProgress(
+                      label: LocaleKeys.staffAppointmentDialog_complete
+                          .translate(),
+                    )
+                  : Text(
+                      LocaleKeys.staffAppointmentDialog_complete.translate(),
+                    ),
             ),
           if (noShowOffer != null)
-            _StaffAppointmentDialogActionButton(
-              hint: noShowOffer.hint,
-              button: OutlinedButton(
-                onPressed: isBusy || !noShowOffer.isEnabled
-                    ? null
-                    : () => context.performAsStaff(
-                        context.read<AppointmentNoShowCubit>(),
-                        appointment,
-                      ),
-                child: noShowState is AppointmentActionInProgress
-                    ? _StaffAppointmentDialogProgress(
-                        label: LocaleKeys.staffAppointmentDialog_noShow
-                            .translate(),
-                      )
-                    : Text(
-                        LocaleKeys.staffAppointmentDialog_noShow.translate(),
-                      ),
-              ),
+            OutlinedButton(
+              onPressed: isBusy || !noShowOffer.isEnabled
+                  ? null
+                  : () => context.performAsStaff(
+                      context.read<AppointmentNoShowCubit>(),
+                      appointment,
+                    ),
+              child: noShowState is AppointmentActionInProgress
+                  ? _StaffAppointmentDialogProgress(
+                      label: LocaleKeys.staffAppointmentDialog_noShow
+                          .translate(),
+                    )
+                  : Text(LocaleKeys.staffAppointmentDialog_noShow.translate()),
             ),
           if (cancelOffer != null)
-            _StaffAppointmentDialogActionButton(
-              hint: cancelOffer.hint,
-              button: TextButton(
-                style: TextButton.styleFrom(
-                  foregroundColor: context.colorScheme.error,
-                ),
-                onPressed: isBusy || !cancelOffer.isEnabled
-                    ? null
-                    : () => _cancel(context),
-                child: cancelState is AppointmentActionInProgress
-                    ? _StaffAppointmentDialogProgress(
-                        label: LocaleKeys.staffAppointmentDialog_cancelAction
-                            .translate(),
-                      )
-                    : Text(
-                        LocaleKeys.staffAppointmentDialog_cancelAction
-                            .translate(),
-                      ),
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: context.colorScheme.error,
               ),
+              onPressed: isBusy || !cancelOffer.isEnabled
+                  ? null
+                  : () => _cancel(context),
+              child: cancelState is AppointmentActionInProgress
+                  ? _StaffAppointmentDialogProgress(
+                      label: LocaleKeys.staffAppointmentDialog_cancelAction
+                          .translate(),
+                    )
+                  : Text(
+                      LocaleKeys.staffAppointmentDialog_cancelAction
+                          .translate(),
+                    ),
             ),
         ],
       );
     }
     return const SizedBox.shrink();
   }
+
+  Iterable<String> get _hints => offers.map((offer) => offer.hint).nonNulls;
 
   StaffAppointmentActionOffer? _offerFor(AppointmentAction action) {
     return offers.where((offer) => offer.action == action).firstOrNull;

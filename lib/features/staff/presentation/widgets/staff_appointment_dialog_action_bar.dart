@@ -1,25 +1,31 @@
 part of 'staff_appointment_dialog.dart';
 
-/// Places an optional muted lifecycle hint below its action button.
-final class _StaffAppointmentDialogActionButton extends StatelessWidget {
-  const _StaffAppointmentDialogActionButton({
-    required this.button,
-    required this.hint,
+/// Lines up the action buttons evenly at the end and lists the hints of
+/// temporarily disabled actions below them.
+final class _StaffAppointmentDialogActionBar extends StatelessWidget {
+  const _StaffAppointmentDialogActionBar({
+    required this.buttons,
+    required this.hints,
   });
 
-  final Widget button;
-  final String? hint;
+  final List<Widget> buttons;
+  final Iterable<String> hints;
 
   @override
   Widget build(BuildContext context) {
-    final hintText = hint;
     return Column(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: AppSizes.s4,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      spacing: AppSizes.s8,
       children: [
-        button,
-        if (hintText != null) AppText.caption(hintText, tone: TextTone.muted),
+        Wrap(
+          alignment: WrapAlignment.end,
+          spacing: AppSizes.s12,
+          runSpacing: AppSizes.s8,
+          children: buttons,
+        ),
+        for (final hint in hints)
+          AppText.caption(hint, tone: TextTone.muted, textAlign: TextAlign.end),
       ],
     );
   }

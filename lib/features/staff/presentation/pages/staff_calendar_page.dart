@@ -17,11 +17,8 @@ import 'package:clinic_appointment_system/core/widgets/loading/loading_state.dar
 import 'package:clinic_appointment_system/core/widgets/loading/loading_state_variant.dart';
 import 'package:clinic_appointment_system/core/widgets/page_header/page_header.dart';
 import 'package:clinic_appointment_system/core/widgets/state/error_state.dart';
-import 'package:clinic_appointment_system/core/widgets/status_badge/status_badge_variant.dart';
-import 'package:clinic_appointment_system/core/widgets/status_badge/status_badge_variant_status.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
 import 'package:clinic_appointment_system/features/appointments/presentation/extensions/appointment_error_code_localization.dart';
-import 'package:clinic_appointment_system/features/appointments/presentation/extensions/appointment_status_presentation.dart';
 import 'package:clinic_appointment_system/features/availability/domain/entities/staff_availability.dart';
 import 'package:clinic_appointment_system/features/institution/domain/value_objects/working_hours.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_cubit.dart';
@@ -30,6 +27,7 @@ import 'package:clinic_appointment_system/features/staff/presentation/cubit/staf
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_workspace_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_workspace_state.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/enums/staff_calendar_view.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/extensions/appointment_status_calendar_tone.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/extensions/staff_appointment_presentation.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/extensions/staff_calendar_header_title.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/models/staff_calendar_day.dart';

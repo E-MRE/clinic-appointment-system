@@ -31,7 +31,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'staff_appointment_dialog_actions.dart';
-part 'staff_appointment_dialog_action_button.dart';
+part 'staff_appointment_dialog_action_bar.dart';
 part 'staff_appointment_dialog_content.dart';
 part 'staff_appointment_dialog_error.dart';
 part 'staff_appointment_dialog_progress.dart';

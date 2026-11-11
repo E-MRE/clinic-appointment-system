@@ -169,4 +169,26 @@ void main() {
       const AppointmentReasonConfirmation(reason: 'Önceden girilen gerekçe'),
     );
   });
+
+  testWidgets('sizes to its content on a tall screen', (tester) async {
+    tester.view.physicalSize = const Size(1200, 1000);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await loadTestTranslations(
+      tester,
+      theme: theme,
+      child: buildLauncher(onResult: (_) {}),
+    );
+
+    await tester.tap(find.text('Open'));
+    await tester.pumpAndSettle();
+
+    final surface = find
+        .descendant(
+          of: find.byType(AlertDialog),
+          matching: find.byType(Material),
+        )
+        .first;
+    expect(tester.getSize(surface).height, lessThan(480));
+  });
 }
