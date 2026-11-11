@@ -87,6 +87,7 @@ import 'package:clinic_appointment_system/features/patient/presentation/cubit/st
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_approve_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_reject_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_calendar_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_request_selection_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_workspace_cubit.dart';
 import 'package:clinic_appointment_system/features/staff_management/data/models/staff_model_factory.dart';
@@ -468,6 +469,9 @@ mixin AppDependencyRegisterMixin {
         injector.get<WatchStaffAppointmentsUseCase>(),
         injector.get<Clock>(),
       ),
+    );
+    injector.registerFactory<StaffCalendarCubit>(
+      () => StaffCalendarCubit(clock: injector.get<Clock>()),
     );
     injector.registerFactory<StaffWorkspaceCubit>(
       () => StaffWorkspaceCubit(
