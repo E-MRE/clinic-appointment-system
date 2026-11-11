@@ -87,6 +87,7 @@ import 'package:clinic_appointment_system/features/patient/presentation/cubit/st
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_approve_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_reject_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_request_selection_cubit.dart';
 import 'package:clinic_appointment_system/features/staff_management/data/models/staff_model_factory.dart';
 import 'package:clinic_appointment_system/features/staff_management/data/repositories/firestore_staff_repository.dart';
 import 'package:clinic_appointment_system/features/staff_management/data/services/firebase_secondary_auth_provider.dart';
@@ -476,6 +477,9 @@ mixin AppDependencyRegisterMixin {
       () => AppointmentRejectCubit(
         injector.get<ChangeAppointmentStatusUseCase>(),
       ),
+    );
+    injector.registerFactory<StaffRequestSelectionCubit>(
+      StaffRequestSelectionCubit.new,
     );
     injector.registerFactory<BookingSelectionCubit>(
       () => BookingSelectionCubit(injector.get<Clock>()),

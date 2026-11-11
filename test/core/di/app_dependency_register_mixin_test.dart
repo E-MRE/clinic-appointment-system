@@ -61,6 +61,7 @@ import 'package:clinic_appointment_system/features/medical_services/presentation
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_approve_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_reject_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_request_selection_cubit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -153,10 +154,13 @@ void main() {
       final secondApproval = container.get<AppointmentApproveCubit>();
       final firstReject = container.get<AppointmentRejectCubit>();
       final secondReject = container.get<AppointmentRejectCubit>();
+      final firstSelection = container.get<StaffRequestSelectionCubit>();
+      final secondSelection = container.get<StaffRequestSelectionCubit>();
 
       expect(firstRequests, isNot(same(secondRequests)));
       expect(firstApproval, isNot(same(secondApproval)));
       expect(firstReject, isNot(same(secondReject)));
+      expect(firstSelection, isNot(same(secondSelection)));
       await Future.wait([
         firstRequests.close(),
         secondRequests.close(),
@@ -164,6 +168,8 @@ void main() {
         secondApproval.close(),
         firstReject.close(),
         secondReject.close(),
+        firstSelection.close(),
+        secondSelection.close(),
       ]);
     },
   );
