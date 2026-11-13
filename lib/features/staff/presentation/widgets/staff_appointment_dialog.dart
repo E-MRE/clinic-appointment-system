@@ -27,6 +27,7 @@ import 'package:clinic_appointment_system/features/staff/presentation/models/sta
 import 'package:clinic_appointment_system/features/staff/presentation/models/staff_appointment_action_offers.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/widgets/staff_appointment_detail_grid.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/widgets/staff_patient_header.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

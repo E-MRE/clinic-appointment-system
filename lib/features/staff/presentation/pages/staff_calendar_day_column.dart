@@ -18,8 +18,7 @@ final class _StaffCalendarDayColumn extends StatelessWidget {
   final double hourHeight;
   final bool showsRightBorder;
 
-  /// Offset starting internal grid lines at the second hour boundary.
-  static const int _nextHourOffset = 1;
+  int get _nextHourOffset => 1;
 
   double _rangeTop(TimeRange range) =>
       layout.fractionOf(range.start) * totalHeight;
@@ -31,17 +30,15 @@ final class _StaffCalendarDayColumn extends StatelessWidget {
   Widget build(BuildContext context) {
     final nowFraction = day.date == today ? layout.nowFraction : null;
 
-    return Container(
-      decoration: BoxDecoration(
-        border: showsRightBorder
-            ? Border(
-                right: BorderSide(
-                  color: context.colorScheme.outlineVariant,
-                  width: AppSizes.borderThin,
-                ),
-              )
-            : null,
+    final border = Border(
+      right: BorderSide(
+        color: context.colorScheme.outlineVariant,
+        width: AppSizes.borderThin,
       ),
+    );
+
+    return Container(
+      decoration: BoxDecoration(border: showsRightBorder ? border : null),
       child: Stack(
         fit: StackFit.expand,
         clipBehavior: Clip.none,

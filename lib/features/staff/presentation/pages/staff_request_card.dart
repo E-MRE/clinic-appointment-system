@@ -33,23 +33,7 @@ final class _StaffRequestCard extends StatelessWidget {
               spacing: AppSizes.s12,
               children: [
                 AppAvatar(initials: request.patientInitials),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: AppSizes.s4,
-                    children: [
-                      AppText.bodyStrong(request.displayPatientName),
-                      AppText.caption(
-                        request.scheduleAndServiceLabel,
-                        tone: TextTone.muted,
-                      ),
-                      AppText.caption(
-                        request.requestedAgoLabel(clock.now()),
-                        tone: TextTone.muted,
-                      ),
-                    ],
-                  ),
-                ),
+                Expanded(child: _buildCardBody(clock)),
                 Icon(
                   Icons.chevron_right,
                   size: AppSizes.s20,
@@ -60,6 +44,21 @@ final class _StaffRequestCard extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Column _buildCardBody(Clock clock) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: AppSizes.s4,
+      children: [
+        AppText.bodyStrong(request.displayPatientName),
+        AppText.caption(request.scheduleAndServiceLabel, tone: TextTone.muted),
+        AppText.caption(
+          request.requestedAgoLabel(clock.now()),
+          tone: TextTone.muted,
+        ),
+      ],
     );
   }
 }

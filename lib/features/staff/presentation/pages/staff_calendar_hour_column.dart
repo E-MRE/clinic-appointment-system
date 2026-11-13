@@ -13,23 +13,16 @@ final class _StaffCalendarHourColumn extends StatelessWidget {
   final double hourHeight;
 
   /// Vertical offset centering the hour label on its horizontal grid line.
-  static const double _labelCenterOffset = 8;
+  double get _labelCenterOffset => 8;
 
   /// Width to zero-pad the single-digit hour component.
-  static const int _clockComponentWidth = 2;
+  int get _clockComponentWidth => 2;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: AppSizes.staffCalendarHourColumnWidth,
-      decoration: BoxDecoration(
-        border: Border(
-          right: BorderSide(
-            color: context.colorScheme.outlineVariant,
-            width: AppSizes.borderThin,
-          ),
-        ),
-      ),
+      decoration: _buildDecoration(context),
       child: Stack(
         fit: StackFit.expand,
         children: [
@@ -47,6 +40,17 @@ final class _StaffCalendarHourColumn extends StatelessWidget {
               ),
             ),
         ],
+      ),
+    );
+  }
+
+  BoxDecoration _buildDecoration(BuildContext context) {
+    return BoxDecoration(
+      border: Border(
+        right: BorderSide(
+          color: context.colorScheme.outlineVariant,
+          width: AppSizes.borderThin,
+        ),
       ),
     );
   }

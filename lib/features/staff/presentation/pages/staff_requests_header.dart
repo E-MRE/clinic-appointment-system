@@ -7,17 +7,9 @@ final class _StaffRequestsHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<StaffAppointmentsCubit>().state;
-    final String? subtitle;
-    if (state is StaffAppointmentsLoaded) {
-      final clock = AppDependency.injector.get<Clock>();
-      subtitle = state.pendingRequests.headerSubtitle(clock);
-    } else {
-      subtitle = null;
-    }
+    final String? subtitle = _getSubtitle(state);
 
-    final isDesktop = context.screenSize.isDesktop;
-
-    if (isDesktop) {
+    if (context.screenSize.isDesktop) {
       return PageHeader(
         title: LocaleKeys.staffRequests_headerTitle.translate(),
         subtitle: subtitle,
@@ -36,5 +28,14 @@ final class _StaffRequestsHeader extends StatelessWidget {
         const _StaffRequestsSortToggle(),
       ],
     );
+  }
+
+  String? _getSubtitle(StaffAppointmentsState state) {
+    if (state is StaffAppointmentsLoaded) {
+      final clock = AppDependency.injector.get<Clock>();
+      return state.pendingRequests.headerSubtitle(clock);
+    }
+
+    return null;
   }
 }

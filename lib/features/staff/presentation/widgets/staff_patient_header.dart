@@ -22,7 +22,6 @@ final class StaffPatientHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final supportingText = subtitle;
     return Row(
       spacing: AppSizes.s12,
       children: [
@@ -36,8 +35,8 @@ final class StaffPatientHeader extends StatelessWidget {
             spacing: AppSizes.s4,
             children: [
               AppText.cardTitle(appointment.displayPatientName),
-              if (supportingText != null)
-                AppText.caption(supportingText, tone: TextTone.muted),
+              if (subtitle != null)
+                AppText.caption(subtitle!, tone: TextTone.muted),
             ],
           ),
         ),

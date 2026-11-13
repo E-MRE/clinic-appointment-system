@@ -1,8 +1,7 @@
 import 'package:clinic_appointment_system/core/localization/app_formatters.dart';
 import 'package:clinic_appointment_system/core/time/calendar_date.dart';
-import 'package:clinic_appointment_system/features/availability/domain/entities/staff_availability.dart';
-import 'package:clinic_appointment_system/features/institution/domain/value_objects/working_hours.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/extensions/staff_calendar_header_title.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/models/staff_calendar_day.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/models/staff_calendar_layout.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -15,13 +14,17 @@ void main() {
 
   StaffCalendarLayout makeLayout(List<CalendarDate> dates) {
     return StaffCalendarLayout(
-      visibleDates: dates,
-      appointments: const [],
-      availability: StaffAvailability.empty(
-        staffId: 'staff_1',
-        branchId: 'branch_1',
-      ),
-      branchHours: WorkingHours.closed(),
+      days: [
+        for (final date in dates)
+          StaffCalendarDay(
+            date: date,
+            isClosed: false,
+            availabilityBands: const [],
+            appointments: const [],
+          ),
+      ],
+      startHour: 8,
+      endHour: 18,
       now: DateTime(2026, 10, 26, 10),
     );
   }

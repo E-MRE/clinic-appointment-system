@@ -9,11 +9,11 @@ final class _StaffRequestsDesktopLayout extends StatelessWidget {
 
   /// Flex weight of the list column.
   /// value = 2
-  static const int _listFlex = 2;
+  int get _listFlex => 2;
 
   /// Flex weight of the detail panel column.
   /// value = 3
-  static const int _detailFlex = 3;
+  int get _detailFlex => 3;
 
   final List<Appointment> requests;
   final String? selectedId;

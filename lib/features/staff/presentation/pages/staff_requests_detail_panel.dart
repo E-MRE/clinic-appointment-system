@@ -12,17 +12,14 @@ final class _StaffRequestsDetailPanel extends StatelessWidget {
         .watch<StaffAppointmentsCubit>()
         .state
         .appointments;
+
     final workspaceState = context.watch<StaffWorkspaceCubit>().state;
     final workspace = workspaceState is StaffWorkspaceLoaded
         ? workspaceState.workspace
         : null;
+
     final service = workspace?.serviceById(request.serviceId);
-    final String location;
-    if (workspace != null) {
-      location = '${workspace.branch.name} · ${workspace.department.name}';
-    } else {
-      location = LocaleKeys.common_notAvailable.translate();
-    }
+    final String location = _getLocation(workspaceState);
     final history = StaffPatientHistory.fromAppointments(
       patientId: request.patientId,
       appointments: appointments,
@@ -61,5 +58,13 @@ final class _StaffRequestsDetailPanel extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _getLocation(StaffWorkspaceState workspaceState) {
+    if (workspaceState is StaffWorkspaceLoaded) {
+      return '${workspaceState.workspace.branch.name} · ${workspaceState.workspace.department.name}';
+    }
+
+    return LocaleKeys.common_notAvailable.translate();
   }
 }

@@ -12,13 +12,13 @@ final class _StaffCalendarNowLine extends StatelessWidget {
   final double totalHeight;
 
   /// Height of the current-time horizontal indicator.
-  static const double _nowLineHeight = 2;
+  double get _nowLineHeight => 2;
 
   /// Diameter of the indicator dot anchored on the current-time line.
-  static const double _nowDotSize = 8;
+  double get _nowDotSize => 8;
 
   /// Divisor used to center elements vertically or horizontally on their axis.
-  static const double _halvingDivisor = 2;
+  double get _halvingDivisor => 2;
 
   @override
   Widget build(BuildContext context) {

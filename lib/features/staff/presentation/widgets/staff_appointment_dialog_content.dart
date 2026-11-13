@@ -9,22 +9,15 @@ final class _StaffAppointmentDialogContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final workspaceState = context.watch<StaffWorkspaceCubit>().state;
-    final workspace = workspaceState is StaffWorkspaceLoaded
-        ? workspaceState.workspace
-        : null;
-    final String location;
-    if (workspace != null) {
-      location = '${workspace.branch.name} · ${workspace.department.name}';
-    } else {
-      location = LocaleKeys.common_notAvailable.translate();
-    }
-    final actor = context.staffAppointmentActor;
+
+    final location = _getLocation(workspaceState);
+    final reason = appointment.statusReason;
+
     final offers = StaffAppointmentActionOffers(
       appointment: appointment,
-      actor: actor,
+      actor: context.staffAppointmentActor,
       at: AppDependency.injector.get<Clock>().now(),
     ).offers;
-    final reason = appointment.statusReason;
 
     return SizedBox(
       width: AppSizes.formDialogMaxWidth,
@@ -45,8 +38,7 @@ final class _StaffAppointmentDialogContent extends StatelessWidget {
             ),
             if (reason != null && reason.trim().isNotEmpty)
               AppDefinitionRow(
-                label: LocaleKeys.staffAppointmentDialog_statusReason
-                    .translate(),
+                label: LocaleKeys.staffAppointmentDialog_statusReason.tr(),
                 child: AppText.body(reason),
               ),
             const _StaffAppointmentDialogError(),
@@ -61,5 +53,14 @@ final class _StaffAppointmentDialogContent extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _getLocation(StaffWorkspaceState workspaceState) {
+    if (workspaceState is StaffWorkspaceLoaded) {
+      final workspace = workspaceState.workspace;
+      return '${workspace.branch.name} · ${workspace.department.name}';
+    }
+
+    return LocaleKeys.common_notAvailable.translate();
   }
 }

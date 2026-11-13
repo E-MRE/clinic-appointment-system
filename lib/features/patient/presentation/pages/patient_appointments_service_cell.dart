@@ -6,8 +6,7 @@ final class _PatientAppointmentsServiceCell extends StatelessWidget {
 
   final PatientAppointmentEntry entry;
 
-  /// value = 1; the caption stays on one line, the details dialog shows it all.
-  static const int _captionLines = 1;
+  int get _captionLines => 1;
 
   @override
   Widget build(BuildContext context) {

@@ -15,15 +15,25 @@ final class _StaffCalendarLegendItem extends StatelessWidget {
   final bool isDashed;
 
   /// Alpha multiplier softening the outline border of solid legend swatches.
-  static const double _borderAlpha = 0.4;
+  double get _borderAlpha => 0.4;
 
   @override
   Widget build(BuildContext context) {
     final outlineColor = foreground ?? context.colorScheme.outlineVariant;
 
-    final Widget swatch;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        _buildSwatch(outlineColor),
+        const EmptySize.s8Width(),
+        AppText.caption(label, tone: TextTone.muted),
+      ],
+    );
+  }
+
+  Widget _buildSwatch(Color outlineColor) {
     if (isDashed && foreground != null) {
-      swatch = AppDashedBorder(
+      return AppDashedBorder(
         color: foreground!,
         strokeWidth: AppSizes.borderThin,
         radius: const AppRadius.xSmall(),
@@ -33,28 +43,18 @@ final class _StaffCalendarLegendItem extends StatelessWidget {
           color: background,
         ),
       );
-    } else {
-      swatch = Container(
-        width: AppSizes.s16,
-        height: AppSizes.s16,
-        decoration: BoxDecoration(
-          color: background,
-          borderRadius: const AppRadius.xSmall(),
-          border: Border.all(
-            color: outlineColor.withValues(alpha: _borderAlpha),
-            width: AppSizes.borderThin,
-          ),
-        ),
-      );
     }
-
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        swatch,
-        const EmptySize.s8Width(),
-        AppText.caption(label, tone: TextTone.muted),
-      ],
+    return Container(
+      width: AppSizes.s16,
+      height: AppSizes.s16,
+      decoration: BoxDecoration(
+        color: background,
+        borderRadius: const AppRadius.xSmall(),
+        border: Border.all(
+          color: outlineColor.withValues(alpha: _borderAlpha),
+          width: AppSizes.borderThin,
+        ),
+      ),
     );
   }
 }

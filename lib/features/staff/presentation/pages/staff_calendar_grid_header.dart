@@ -7,7 +7,7 @@ final class _StaffCalendarGridHeader extends StatelessWidget {
   final StaffCalendarLayout layout;
   final CalendarDate today;
 
-  static const int _lastIndexOffset = 1;
+  int get _lastIndexOffset => 1;
 
   @override
   Widget build(BuildContext context) {
@@ -18,14 +18,7 @@ final class _StaffCalendarGridHeader extends StatelessWidget {
         children: [
           Container(
             width: AppSizes.staffCalendarHourColumnWidth,
-            decoration: BoxDecoration(
-              border: Border(
-                right: BorderSide(
-                  color: context.colorScheme.outlineVariant,
-                  width: AppSizes.borderThin,
-                ),
-              ),
-            ),
+            decoration: _buildDecoration(context),
           ),
           for (int i = 0; i < layout.days.length; i++)
             Expanded(
@@ -36,6 +29,17 @@ final class _StaffCalendarGridHeader extends StatelessWidget {
               ),
             ),
         ],
+      ),
+    );
+  }
+
+  BoxDecoration _buildDecoration(BuildContext context) {
+    return BoxDecoration(
+      border: Border(
+        right: BorderSide(
+          color: context.colorScheme.outlineVariant,
+          width: AppSizes.borderThin,
+        ),
       ),
     );
   }

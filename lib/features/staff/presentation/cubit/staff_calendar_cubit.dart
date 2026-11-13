@@ -15,8 +15,8 @@ final class StaffCalendarCubit extends Cubit<StaffCalendarState> {
         StaffCalendarState(view: StaffCalendarView.week, anchor: clock.today),
       );
 
-  static const int _dayStep = 1;
-  static const int _weekStep = 7;
+  int get _dayStep => 1;
+  int get _weekStep => 7;
 
   final Clock _clock;
 

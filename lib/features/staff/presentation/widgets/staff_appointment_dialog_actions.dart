@@ -17,12 +17,14 @@ final class _StaffAppointmentDialogActions extends StatelessWidget {
     final completeState = context.watch<AppointmentCompleteCubit>().state;
     final noShowState = context.watch<AppointmentNoShowCubit>().state;
     final cancelState = context.watch<AppointmentStaffCancelCubit>().state;
+
     final isBusy =
         approveState is AppointmentActionInProgress ||
         rejectState is AppointmentActionInProgress ||
         completeState is AppointmentActionInProgress ||
         noShowState is AppointmentActionInProgress ||
         cancelState is AppointmentActionInProgress;
+
     final rejectOffer = _offerFor(AppointmentAction.reject);
     final approveOffer = _offerFor(AppointmentAction.approve);
     final completeOffer = _offerFor(AppointmentAction.complete);

@@ -1,6 +1,6 @@
 part of 'staff_requests_page.dart';
 
-/// Actions row for the selected request: "Reddet…" and "Onayla".
+/// Actions row for the selected request.
 final class _StaffRequestsDetailActions extends StatelessWidget {
   const _StaffRequestsDetailActions({required this.request});
 
@@ -17,67 +17,80 @@ final class _StaffRequestsDetailActions extends StatelessWidget {
             final isRejectRunning = rejectState is AppointmentActionInProgress;
             final isDisabled = isApproveRunning || isRejectRunning;
 
-            final isThisApproving =
-                isApproveRunning && approveState.appointmentId == request.id;
-            final isThisRejecting =
-                isRejectRunning && rejectState.appointmentId == request.id;
-
-            final errorColor = context.colorScheme.error;
-
-            final Widget approveChild;
-            if (isThisApproving) {
-              approveChild = const _StaffRequestApproveProgress();
-            } else {
-              approveChild = Row(
-                mainAxisSize: MainAxisSize.min,
-                spacing: AppSizes.s8,
-                children: [
-                  const Icon(Icons.check, size: AppSizes.s20),
-                  Text(LocaleKeys.staffRequests_approve.translate()),
-                ],
-              );
-            }
-
-            final Widget rejectChild;
-            if (isThisRejecting) {
-              rejectChild = const _StaffRequestApproveProgress();
-            } else {
-              rejectChild = Text(
-                LocaleKeys.staffRequests_rejectAction.translate(),
-              );
-            }
-
             return Wrap(
               alignment: WrapAlignment.end,
               spacing: AppSizes.s12,
               runSpacing: AppSizes.s8,
               children: [
-                OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: errorColor,
-                    side: BorderSide(
-                      color: isDisabled
-                          ? context.colorScheme.outlineVariant
-                          : errorColor,
-                    ),
-                  ),
-                  onPressed: isDisabled ? null : () => _onReject(context),
-                  child: rejectChild,
-                ),
-                FilledButton(
-                  onPressed: isDisabled
-                      ? null
-                      : () => context.performAsStaff(
-                          context.read<AppointmentApproveCubit>(),
-                          request,
-                        ),
-                  child: approveChild,
-                ),
+                _buildOutlinedButton(context, rejectState, isDisabled),
+                _buildFilledButton(context, approveState, isDisabled),
               ],
             );
           },
         );
       },
+    );
+  }
+
+  FilledButton _buildFilledButton(
+    BuildContext context,
+    AppointmentActionState approveState,
+    bool isDisabled,
+  ) {
+    return FilledButton(
+      onPressed: isDisabled
+          ? null
+          : () => context.performAsStaff(
+              context.read<AppointmentApproveCubit>(),
+              request,
+            ),
+      child: _buildApprove(approveState),
+    );
+  }
+
+  OutlinedButton _buildOutlinedButton(
+    BuildContext context,
+    AppointmentActionState rejectState,
+    bool isDisabled,
+  ) {
+    return OutlinedButton(
+      style: OutlinedButton.styleFrom(
+        foregroundColor: context.colorScheme.error,
+        side: BorderSide(
+          color: isDisabled
+              ? context.colorScheme.outlineVariant
+              : context.colorScheme.error,
+        ),
+      ),
+      onPressed: isDisabled ? null : () => _onReject(context),
+      child: _buildReject(rejectState),
+    );
+  }
+
+  Widget _buildReject(AppointmentActionState rejectState) {
+    if (rejectState is AppointmentActionInProgress) {
+      if (rejectState.appointmentId == request.id) {
+        return const _StaffRequestApproveProgress();
+      }
+    }
+
+    return Text(LocaleKeys.staffRequests_rejectAction.translate());
+  }
+
+  Widget _buildApprove(AppointmentActionState approveState) {
+    if (approveState is AppointmentActionInProgress) {
+      if (approveState.appointmentId == request.id) {
+        return const _StaffRequestApproveProgress();
+      }
+    }
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      spacing: AppSizes.s8,
+      children: [
+        const Icon(Icons.check, size: AppSizes.s20),
+        Text(LocaleKeys.staffRequests_approve.translate()),
+      ],
     );
   }
 

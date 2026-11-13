@@ -10,11 +10,11 @@ extension AppointmentActionTooEarlyHint on AppointmentAction {
   /// The hint for this action on [appointment], or null when the action has
   /// no time boundary.
   String? tooEarlyHint(Appointment appointment) {
-    return switch (this) {
-      AppointmentAction.complete =>
-        LocaleKeys.staffAppointmentDialog_completeTooEarly.translate(),
-      AppointmentAction.markNoShow =>
-        LocaleKeys.staffAppointmentDialog_noShowTooEarly.translate(
+    switch (this) {
+      case AppointmentAction.complete:
+        return LocaleKeys.staffAppointmentDialog_completeTooEarly.translate();
+      case AppointmentAction.markNoShow:
+        return LocaleKeys.staffAppointmentDialog_noShowTooEarly.translate(
           args: [
             AppFormatters.formatTime(
               appointment.startsAt.add(
@@ -25,11 +25,12 @@ extension AppointmentActionTooEarlyHint on AppointmentAction {
             ),
             '${AppointmentConstants.noShowToleranceMinutes}',
           ],
-        ),
-      AppointmentAction.approve ||
-      AppointmentAction.reject ||
-      AppointmentAction.cancelByPatient ||
-      AppointmentAction.cancelByStaff => null,
-    };
+        );
+      case AppointmentAction.approve:
+      case AppointmentAction.reject:
+      case AppointmentAction.cancelByPatient:
+      case AppointmentAction.cancelByStaff:
+        return null;
+    }
   }
 }

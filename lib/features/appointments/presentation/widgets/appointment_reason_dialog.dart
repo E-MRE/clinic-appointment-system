@@ -45,10 +45,55 @@ final class AppointmentReasonDialog extends StatefulWidget {
       _AppointmentReasonDialogState();
 }
 
-final class _AppointmentReasonDialogState
-    extends State<AppointmentReasonDialog> {
-  /// value = 4; visible lines of the reason field.
-  static const int _reasonLines = 4;
+final class _AppointmentReasonDialogState extends State<AppointmentReasonDialog>
+    with _AppointmentReasonDialogMixin {
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          AppText.sectionTitle(widget.title),
+          const EmptySize.s4Height(),
+          AppText.body(widget.subtitle, tone: TextTone.muted),
+        ],
+      ),
+      content: _buildContent(),
+      actions: [
+        TextButton(
+          onPressed: _onDismiss,
+          child: Text(LocaleKeys.appointment_reasonDialog_dismiss.translate()),
+        ),
+        FilledButton(
+          style: FilledButton.styleFrom(
+            backgroundColor: context.colorScheme.error,
+            foregroundColor: context.colorScheme.onError,
+          ),
+          onPressed: _onConfirm,
+          child: Text(widget.confirmLabel),
+        ),
+      ],
+    );
+  }
+
+  SizedBox _buildContent() {
+    return SizedBox(
+      width: AppSizes.formDialogMaxWidth,
+      child: AppTextField(
+        controller: _controller,
+        label: LocaleKeys.appointment_reasonDialog_reasonLabel.translate(),
+        helper: LocaleKeys.appointment_reasonDialog_reasonHelper.translate(),
+        maxLength: AppointmentConstants.statusReasonMaxLength,
+        maxLengthEnforcement: MaxLengthEnforcement.enforced,
+        maxLines: _reasonLines,
+      ),
+    );
+  }
+}
+
+mixin _AppointmentReasonDialogMixin on State<AppointmentReasonDialog> {
+  int get _reasonLines => 4;
 
   late final TextEditingController _controller;
 
@@ -72,45 +117,5 @@ final class _AppointmentReasonDialogState
 
   void _onDismiss() {
     Navigator.of(context).pop(null);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          AppText.sectionTitle(widget.title),
-          const EmptySize.s4Height(),
-          AppText.body(widget.subtitle, tone: TextTone.muted),
-        ],
-      ),
-      content: SizedBox(
-        width: AppSizes.formDialogMaxWidth,
-        child: AppTextField(
-          controller: _controller,
-          label: LocaleKeys.appointment_reasonDialog_reasonLabel.translate(),
-          helper: LocaleKeys.appointment_reasonDialog_reasonHelper.translate(),
-          maxLength: AppointmentConstants.statusReasonMaxLength,
-          maxLengthEnforcement: MaxLengthEnforcement.enforced,
-          maxLines: _reasonLines,
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: _onDismiss,
-          child: Text(LocaleKeys.appointment_reasonDialog_dismiss.translate()),
-        ),
-        FilledButton(
-          style: FilledButton.styleFrom(
-            backgroundColor: context.colorScheme.error,
-            foregroundColor: context.colorScheme.onError,
-          ),
-          onPressed: _onConfirm,
-          child: Text(widget.confirmLabel),
-        ),
-      ],
-    );
   }
 }

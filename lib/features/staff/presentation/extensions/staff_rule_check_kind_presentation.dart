@@ -7,33 +7,34 @@ extension StaffRuleCheckKindPresentation on StaffRuleCheckKind {
   /// The text of a passed check; [detail] fills the parentheses of the
   /// availability and working-hours texts.
   String passedLabel(String? detail) {
-    return switch (this) {
-      StaffRuleCheckKind.withinAvailability =>
-        LocaleKeys.staffRequests_rules_withinAvailability.translate(
+    switch (this) {
+      case StaffRuleCheckKind.withinAvailability:
+        return LocaleKeys.staffRequests_rules_withinAvailability.translate(
           args: [detail ?? ''],
-        ),
-      StaffRuleCheckKind.withinWorkingHours =>
-        LocaleKeys.staffRequests_rules_withinWorkingHours.translate(
+        );
+      case StaffRuleCheckKind.withinWorkingHours:
+        return LocaleKeys.staffRequests_rules_withinWorkingHours.translate(
           args: [detail ?? ''],
-        ),
-      StaffRuleCheckKind.noStaffOverlap =>
-        LocaleKeys.staffRequests_rules_noStaffOverlap.translate(),
-      StaffRuleCheckKind.staffProvidesService =>
-        LocaleKeys.staffRequests_rules_staffProvidesService.translate(),
-    };
+        );
+      case StaffRuleCheckKind.noStaffOverlap:
+        return LocaleKeys.staffRequests_rules_noStaffOverlap.translate();
+      case StaffRuleCheckKind.staffProvidesService:
+        return LocaleKeys.staffRequests_rules_staffProvidesService.translate();
+    }
   }
 
   /// The text of a failed check.
   String get failedLabel {
-    return switch (this) {
-      StaffRuleCheckKind.withinAvailability =>
-        LocaleKeys.staffRequests_rules_outsideAvailability.translate(),
-      StaffRuleCheckKind.withinWorkingHours =>
-        LocaleKeys.staffRequests_rules_outsideWorkingHours.translate(),
-      StaffRuleCheckKind.noStaffOverlap =>
-        LocaleKeys.staffRequests_rules_hasStaffOverlap.translate(),
-      StaffRuleCheckKind.staffProvidesService =>
-        LocaleKeys.staffRequests_rules_staffDoesNotProvideService.translate(),
-    };
+    switch (this) {
+      case StaffRuleCheckKind.withinAvailability:
+        return LocaleKeys.staffRequests_rules_outsideAvailability.translate();
+      case StaffRuleCheckKind.withinWorkingHours:
+        return LocaleKeys.staffRequests_rules_outsideWorkingHours.translate();
+      case StaffRuleCheckKind.noStaffOverlap:
+        return LocaleKeys.staffRequests_rules_hasStaffOverlap.translate();
+      case StaffRuleCheckKind.staffProvidesService:
+        return LocaleKeys.staffRequests_rules_staffDoesNotProvideService
+            .translate();
+    }
   }
 }

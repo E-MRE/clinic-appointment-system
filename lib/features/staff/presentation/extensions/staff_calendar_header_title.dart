@@ -6,7 +6,7 @@ import 'package:clinic_appointment_system/features/staff/presentation/models/sta
 
 /// Presentation title formatting for the staff calendar header.
 extension StaffCalendarHeaderTitle on StaffCalendarLayout {
-  static const int _singleDayCount = 1;
+  int get _singleDayCount => 1;
 
   /// Formats the header title based on whether the layout spans a single day or a week.
   String get headerTitle {
@@ -17,13 +17,13 @@ extension StaffCalendarHeaderTitle on StaffCalendarLayout {
     return _weekTitle(days.first.date, days.last.date);
   }
 
-  /// Formats a single day title (`Pazartesi, 26 Ekim`).
+  /// Formats a single day title.
   String _dayTitle(CalendarDate date) {
     final dayMonth = AppFormatters.formatDayMonth(date.startOfDay);
     return '${date.weekday.label}, $dayMonth';
   }
 
-  /// Formats an inclusive week title (`26 – 31 Ekim` or `30 Eki – 4 Kas`).
+  /// Formats an inclusive week title.
   String _weekTitle(CalendarDate start, CalendarDate end) {
     if (start.year == end.year && start.month == end.month) {
       final endDayMonth = AppFormatters.formatDayMonth(end.startOfDay);
