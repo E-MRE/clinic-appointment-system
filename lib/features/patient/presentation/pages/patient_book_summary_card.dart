@@ -2,10 +2,15 @@ part of 'patient_book_page.dart';
 
 /// The summary step: chosen values, the approval note and the request.
 final class _PatientBookSummaryCard extends StatelessWidget {
-  const _PatientBookSummaryCard({required this.catalog, required this.patient});
+  const _PatientBookSummaryCard({
+    required this.catalog,
+    required this.patient,
+    required this.patientName,
+  });
 
   final PatientCatalog catalog;
   final PatientAppointmentActor patient;
+  final String patientName;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +31,11 @@ final class _PatientBookSummaryCard extends StatelessWidget {
                 message: LocaleKeys.patient_book_info.translate(),
                 variant: AppMessageBannerVariant.highlight,
               ),
-              _PatientBookSubmitArea(selection: selection, patient: patient),
+              _PatientBookSubmitArea(
+                selection: selection,
+                patient: patient,
+                patientName: patientName,
+              ),
             ],
           );
         },

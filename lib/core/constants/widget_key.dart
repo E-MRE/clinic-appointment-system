@@ -23,4 +23,7 @@ final class WidgetKey extends ValueKey<String> {
 
   /// value = auth_feedback
   const WidgetKey.authFeedback() : super('auth_feedback');
+
+  /// value = staff_calendar_now_line
+  const WidgetKey.staffCalendarNowLine() : super('staff_calendar_now_line');
 }

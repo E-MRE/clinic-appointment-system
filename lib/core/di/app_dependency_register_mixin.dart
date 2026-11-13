@@ -85,7 +85,14 @@ import 'package:clinic_appointment_system/features/patient/presentation/cubit/pa
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_catalog_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/staff_week_schedule_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_approve_cubit.dart';
-import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_requests_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_complete_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_no_show_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_reject_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_staff_cancel_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_calendar_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_request_selection_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_workspace_cubit.dart';
 import 'package:clinic_appointment_system/features/staff_management/data/models/staff_model_factory.dart';
 import 'package:clinic_appointment_system/features/staff_management/data/repositories/firestore_staff_repository.dart';
 import 'package:clinic_appointment_system/features/staff_management/data/services/firebase_secondary_auth_provider.dart';
@@ -460,16 +467,50 @@ mixin AppDependencyRegisterMixin {
         injector.get<ChangeAppointmentStatusUseCase>(),
       ),
     );
-    injector.registerFactory<StaffRequestsCubit>(
-      () => StaffRequestsCubit(
+    injector.registerFactory<StaffAppointmentsCubit>(
+      () => StaffAppointmentsCubit(
         injector.get<WatchStaffAppointmentsUseCase>(),
         injector.get<Clock>(),
+      ),
+    );
+    injector.registerFactory<StaffCalendarCubit>(
+      () => StaffCalendarCubit(clock: injector.get<Clock>()),
+    );
+    injector.registerFactory<StaffWorkspaceCubit>(
+      () => StaffWorkspaceCubit(
+        injector.get<WatchStaffAvailabilityUseCase>(),
+        injector.get<WatchBranchUseCase>(),
+        injector.get<WatchDepartmentsUseCase>(),
+        injector.get<WatchMedicalServicesUseCase>(),
       ),
     );
     injector.registerFactory<AppointmentApproveCubit>(
       () => AppointmentApproveCubit(
         injector.get<ChangeAppointmentStatusUseCase>(),
       ),
+    );
+    injector.registerFactory<AppointmentRejectCubit>(
+      () => AppointmentRejectCubit(
+        injector.get<ChangeAppointmentStatusUseCase>(),
+      ),
+    );
+    injector.registerFactory<AppointmentCompleteCubit>(
+      () => AppointmentCompleteCubit(
+        injector.get<ChangeAppointmentStatusUseCase>(),
+      ),
+    );
+    injector.registerFactory<AppointmentNoShowCubit>(
+      () => AppointmentNoShowCubit(
+        injector.get<ChangeAppointmentStatusUseCase>(),
+      ),
+    );
+    injector.registerFactory<AppointmentStaffCancelCubit>(
+      () => AppointmentStaffCancelCubit(
+        injector.get<ChangeAppointmentStatusUseCase>(),
+      ),
+    );
+    injector.registerFactory<StaffRequestSelectionCubit>(
+      StaffRequestSelectionCubit.new,
     );
     injector.registerFactory<BookingSelectionCubit>(
       () => BookingSelectionCubit(injector.get<Clock>()),

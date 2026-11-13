@@ -1,23 +1,34 @@
 part of 'staff_requests_page.dart';
 
-/// Header and request list, reporting every approval result.
+/// Header and request list, reporting every action result.
 final class _StaffRequestsView extends StatelessWidget {
   const _StaffRequestsView();
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AppointmentApproveCubit, AppointmentActionState>(
-      listener: _onApproval,
-      child: AppScaffold(
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<AppointmentApproveCubit, AppointmentActionState>(
+          listener: _onApproval,
+        ),
+        BlocListener<AppointmentRejectCubit, AppointmentActionState>(
+          listener: _onRejection,
+        ),
+        BlocListener<StaffAppointmentsCubit, StaffAppointmentsState>(
+          listener: (context, state) {
+            context.read<StaffRequestSelectionCubit>().syncRequests(
+              state.pendingRequests,
+            );
+          },
+        ),
+      ],
+      child: const AppScaffold(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            PageHeader(
-              title: LocaleKeys.staffRequests_title.translate(),
-              subtitle: LocaleKeys.staffRequests_subtitle.translate(),
-            ),
-            const EmptySize.s16Height(),
-            const Expanded(child: _StaffRequestsBody()),
+            _StaffRequestsHeader(),
+            EmptySize.s16Height(),
+            Expanded(child: _StaffRequestsBody()),
           ],
         ),
       ),
@@ -25,9 +36,29 @@ final class _StaffRequestsView extends StatelessWidget {
   }
 
   void _onApproval(BuildContext context, AppointmentActionState state) {
+    _showFeedback(
+      context,
+      state,
+      successMessage: LocaleKeys.staffRequests_approved.translate(),
+    );
+  }
+
+  void _onRejection(BuildContext context, AppointmentActionState state) {
+    _showFeedback(
+      context,
+      state,
+      successMessage: LocaleKeys.staffRequests_rejected.translate(),
+    );
+  }
+
+  void _showFeedback(
+    BuildContext context,
+    AppointmentActionState state, {
+    required String successMessage,
+  }) {
     final String? message;
     if (state is AppointmentActionSuccess) {
-      message = LocaleKeys.staffRequests_approved.translate();
+      message = successMessage;
     } else if (state is AppointmentActionFailure) {
       message = state.errorCode.message;
     } else {

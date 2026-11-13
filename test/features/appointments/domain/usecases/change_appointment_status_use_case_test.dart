@@ -72,4 +72,32 @@ void main() {
     );
     expect(result.errorCode, AppointmentErrorCode.notPermitted);
   });
+
+  test('reject passes reason through usecase', () async {
+    repository.current = f.restore(AppointmentStatus.pending);
+    final result = await useCase(
+      AppointmentStatusRequest(
+        appointmentId: 'appointment',
+        action: AppointmentAction.reject,
+        by: f.actor(UserRole.doctor, 'staff'),
+        reason: 'Maintenance',
+      ),
+    );
+    expect(result.appointment?.status, AppointmentStatus.rejected);
+    expect(result.appointment?.statusReason, 'Maintenance');
+  });
+
+  test('cancelByStaff passes reason through usecase', () async {
+    repository.current = f.restore(AppointmentStatus.approved);
+    final result = await useCase(
+      AppointmentStatusRequest(
+        appointmentId: 'appointment',
+        action: AppointmentAction.cancelByStaff,
+        by: f.actor(UserRole.doctor, 'staff'),
+        reason: 'Emergency',
+      ),
+    );
+    expect(result.appointment?.status, AppointmentStatus.cancelledByStaff);
+    expect(result.appointment?.statusReason, 'Emergency');
+  });
 }

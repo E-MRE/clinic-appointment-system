@@ -38,6 +38,7 @@ final class BookAppointmentCubit extends Cubit<BookAppointmentState> {
     required BookingSelection selection,
     required StaffWeekSchedule schedule,
     required PatientAppointmentActor patient,
+    required String patientName,
   }) async {
     if (_isClosingOrClosed || _isRequestInFlight) return;
 
@@ -61,6 +62,7 @@ final class BookAppointmentCubit extends Cubit<BookAppointmentState> {
         AppointmentBookingRequest(
           candidate: Appointment.request(
             patientId: patient.id,
+            patientName: patientName,
             staffId: staff.id,
             branchId: service.branchId,
             departmentId: service.departmentId,

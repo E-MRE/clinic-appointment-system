@@ -45,6 +45,7 @@ import 'package:clinic_appointment_system/core/widgets/text_field/app_text_field
 import 'package:clinic_appointment_system/core/widgets/time_field/app_time_field.dart';
 import 'package:clinic_appointment_system/core/widgets/time_range_chip/app_time_range_chip.dart';
 import 'package:clinic_appointment_system/core/widgets/viewport_scroll_view.dart';
+import 'package:clinic_appointment_system/features/appointments/presentation/widgets/appointment_reason_dialog.dart';
 import 'package:clinic_appointment_system/generated/assets.gen.dart';
 import 'package:flutter/material.dart';
 

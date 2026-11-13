@@ -30,6 +30,8 @@ extension AppointmentErrorCodeLocalization on AppointmentErrorCode {
         LocaleKeys.appointment_errors_staffOverlap,
       AppointmentErrorCode.patientOverlap =>
         LocaleKeys.appointment_errors_patientOverlap,
+      AppointmentErrorCode.reasonTooLong =>
+        LocaleKeys.appointment_errors_reasonTooLong,
     }.translate();
   }
 }

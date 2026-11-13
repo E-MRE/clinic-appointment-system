@@ -39,6 +39,13 @@ abstract class LocaleKeys {
   static const common_selectTime = 'common.selectTime';
   static const common_rangeOutsideHours = 'common.rangeOutsideHours';
   static const common_notAvailable = 'common.notAvailable';
+  static const common_relativeTime_justNow = 'common.relativeTime.justNow';
+  static const common_relativeTime_minutesAgo =
+      'common.relativeTime.minutesAgo';
+  static const common_relativeTime_hoursAgo = 'common.relativeTime.hoursAgo';
+  static const common_relativeTime_yesterday = 'common.relativeTime.yesterday';
+  static const common_relativeTime_daysAgo = 'common.relativeTime.daysAgo';
+  static const common_relativeTime = 'common.relativeTime';
   static const common = 'common';
   static const roles_patient = 'roles.patient';
   static const roles_doctor = 'roles.doctor';
@@ -87,7 +94,16 @@ abstract class LocaleKeys {
       'appointment.errors.staffOverlap';
   static const appointment_errors_patientOverlap =
       'appointment.errors.patientOverlap';
+  static const appointment_errors_reasonTooLong =
+      'appointment.errors.reasonTooLong';
   static const appointment_errors = 'appointment.errors';
+  static const appointment_reasonDialog_reasonLabel =
+      'appointment.reasonDialog.reasonLabel';
+  static const appointment_reasonDialog_reasonHelper =
+      'appointment.reasonDialog.reasonHelper';
+  static const appointment_reasonDialog_dismiss =
+      'appointment.reasonDialog.dismiss';
+  static const appointment_reasonDialog = 'appointment.reasonDialog';
   static const appointment = 'appointment';
   static const services_title = 'services.title';
   static const services_all = 'services.all';
@@ -469,17 +485,104 @@ abstract class LocaleKeys {
   static const staff_columns_actions = 'staff.columns.actions';
   static const staff_columns = 'staff.columns';
   static const staff = 'staff';
+  static const staffCalendar_title = 'staffCalendar.title';
+  static const staffCalendar_headerTitle = 'staffCalendar.headerTitle';
+  static const staffCalendar_subtitleWeek = 'staffCalendar.subtitleWeek';
+  static const staffCalendar_subtitleDay = 'staffCalendar.subtitleDay';
+  static const staffCalendar_today = 'staffCalendar.today';
+  static const staffCalendar_previous = 'staffCalendar.previous';
+  static const staffCalendar_next = 'staffCalendar.next';
+  static const staffCalendar_viewDay = 'staffCalendar.viewDay';
+  static const staffCalendar_viewWeek = 'staffCalendar.viewWeek';
+  static const staffCalendar_legend_availability =
+      'staffCalendar.legend.availability';
+  static const staffCalendar_legend = 'staffCalendar.legend';
+  static const staffCalendar_dayHeader_appointmentCount =
+      'staffCalendar.dayHeader.appointmentCount';
+  static const staffCalendar_dayHeader = 'staffCalendar.dayHeader';
+  static const staffCalendar_branchClosed = 'staffCalendar.branchClosed';
+  static const staffCalendar_loading = 'staffCalendar.loading';
+  static const staffCalendar_failureTitle = 'staffCalendar.failureTitle';
+  static const staffCalendar = 'staffCalendar';
   static const staffRequests_title = 'staffRequests.title';
+  static const staffRequests_headerTitle = 'staffRequests.headerTitle';
   static const staffRequests_subtitle = 'staffRequests.subtitle';
+  static const staffRequests_headerSubtitle = 'staffRequests.headerSubtitle';
+  static const staffRequests_headerSubtitleCountOnly =
+      'staffRequests.headerSubtitleCountOnly';
+  static const staffRequests_fallbackPatientName =
+      'staffRequests.fallbackPatientName';
   static const staffRequests_approve = 'staffRequests.approve';
   static const staffRequests_approving = 'staffRequests.approving';
   static const staffRequests_approved = 'staffRequests.approved';
+  static const staffRequests_reject = 'staffRequests.reject';
+  static const staffRequests_rejectAction = 'staffRequests.rejectAction';
+  static const staffRequests_rejectTitle = 'staffRequests.rejectTitle';
+  static const staffRequests_rejected = 'staffRequests.rejected';
+  static const staffRequests_requestedAgo = 'staffRequests.requestedAgo';
   static const staffRequests_loading = 'staffRequests.loading';
   static const staffRequests_failureTitle = 'staffRequests.failureTitle';
   static const staffRequests_retry = 'staffRequests.retry';
   static const staffRequests_emptyTitle = 'staffRequests.emptyTitle';
   static const staffRequests_emptyMessage = 'staffRequests.emptyMessage';
+  static const staffRequests_sort_byDate = 'staffRequests.sort.byDate';
+  static const staffRequests_sort_byRequestTime =
+      'staffRequests.sort.byRequestTime';
+  static const staffRequests_sort = 'staffRequests.sort';
+  static const staffRequests_detail_dateTime = 'staffRequests.detail.dateTime';
+  static const staffRequests_detail_service = 'staffRequests.detail.service';
+  static const staffRequests_detail_durationAndFee =
+      'staffRequests.detail.durationAndFee';
+  static const staffRequests_detail_location = 'staffRequests.detail.location';
+  static const staffRequests_detail_rulesSection =
+      'staffRequests.detail.rulesSection';
+  static const staffRequests_detail_historySection =
+      'staffRequests.detail.historySection';
+  static const staffRequests_detail = 'staffRequests.detail';
+  static const staffRequests_history_completed =
+      'staffRequests.history.completed';
+  static const staffRequests_history_lastVisit =
+      'staffRequests.history.lastVisit';
+  static const staffRequests_history = 'staffRequests.history';
+  static const staffRequests_rules_withinAvailability =
+      'staffRequests.rules.withinAvailability';
+  static const staffRequests_rules_outsideAvailability =
+      'staffRequests.rules.outsideAvailability';
+  static const staffRequests_rules_withinWorkingHours =
+      'staffRequests.rules.withinWorkingHours';
+  static const staffRequests_rules_outsideWorkingHours =
+      'staffRequests.rules.outsideWorkingHours';
+  static const staffRequests_rules_noStaffOverlap =
+      'staffRequests.rules.noStaffOverlap';
+  static const staffRequests_rules_hasStaffOverlap =
+      'staffRequests.rules.hasStaffOverlap';
+  static const staffRequests_rules_staffProvidesService =
+      'staffRequests.rules.staffProvidesService';
+  static const staffRequests_rules_staffDoesNotProvideService =
+      'staffRequests.rules.staffDoesNotProvideService';
+  static const staffRequests_rules = 'staffRequests.rules';
   static const staffRequests = 'staffRequests';
+  static const staffAppointmentDialog_complete =
+      'staffAppointmentDialog.complete';
+  static const staffAppointmentDialog_noShow = 'staffAppointmentDialog.noShow';
+  static const staffAppointmentDialog_cancelAction =
+      'staffAppointmentDialog.cancelAction';
+  static const staffAppointmentDialog_cancelTitle =
+      'staffAppointmentDialog.cancelTitle';
+  static const staffAppointmentDialog_cancel = 'staffAppointmentDialog.cancel';
+  static const staffAppointmentDialog_completed =
+      'staffAppointmentDialog.completed';
+  static const staffAppointmentDialog_noShowMarked =
+      'staffAppointmentDialog.noShowMarked';
+  static const staffAppointmentDialog_cancelled =
+      'staffAppointmentDialog.cancelled';
+  static const staffAppointmentDialog_statusReason =
+      'staffAppointmentDialog.statusReason';
+  static const staffAppointmentDialog_completeTooEarly =
+      'staffAppointmentDialog.completeTooEarly';
+  static const staffAppointmentDialog_noShowTooEarly =
+      'staffAppointmentDialog.noShowTooEarly';
+  static const staffAppointmentDialog = 'staffAppointmentDialog';
   static const availability_title = 'availability.title';
   static const availability_mobileSubtitle = 'availability.mobileSubtitle';
   static const availability_tabletSubtitle = 'availability.tabletSubtitle';
@@ -603,6 +706,7 @@ abstract class LocaleKeys {
       'patient.appointments.cancelledByPatient';
   static const patient_appointments_cancelledByStaff =
       'patient.appointments.cancelledByStaff';
+  static const patient_appointments_reason = 'patient.appointments.reason';
   static const patient_appointments_notesTitle =
       'patient.appointments.notesTitle';
   static const patient_appointments_noteHeading =

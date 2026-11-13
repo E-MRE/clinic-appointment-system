@@ -41,4 +41,7 @@ enum AppointmentErrorCode {
 
   /// An occupied appointment overlaps for the patient.
   patientOverlap,
+
+  /// A status change reason exceeds the maximum allowed character length.
+  reasonTooLong,
 }

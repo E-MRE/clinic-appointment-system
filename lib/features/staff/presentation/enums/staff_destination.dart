@@ -2,6 +2,9 @@ import 'package:clinic_appointment_system/core/router/app_routes.dart';
 
 /// Destinations available to signed-in staff.
 enum StaffDestination {
+  /// Doctor and technician calendar.
+  calendar(AppRoutes.staffCalendar),
+
   /// Pending appointment requests awaiting approval.
   requests(AppRoutes.staffRequests),
 

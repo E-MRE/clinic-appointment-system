@@ -57,6 +57,7 @@ final class BookingFixture {
     String id = '',
     String staffId = 'staff',
     String patientId = 'patient',
+    String patientName = 'Patient',
     String serviceId = 'service',
     CalendarDate? date,
     TimeRange? range,
@@ -64,6 +65,7 @@ final class BookingFixture {
   }) => Appointment.restore(
     id: id,
     patientId: patientId,
+    patientName: patientName,
     staffId: staffId,
     branchId: 'branch',
     departmentId: 'department',

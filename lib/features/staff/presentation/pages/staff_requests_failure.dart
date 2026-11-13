@@ -1,6 +1,6 @@
 part of 'staff_requests_page.dart';
 
-/// Recoverable failure that restarts the request observation.
+/// Recoverable failure that restarts request observation and workspace data.
 final class _StaffRequestsFailure extends StatelessWidget {
   const _StaffRequestsFailure({required this.message});
 
@@ -17,7 +17,10 @@ final class _StaffRequestsFailure extends StatelessWidget {
       ),
       iconBackground: context.colorScheme.errorContainer,
       primaryAction: FilledButton(
-        onPressed: context.read<StaffRequestsCubit>().retry,
+        onPressed: () {
+          context.read<StaffAppointmentsCubit>().retry();
+          context.read<StaffWorkspaceCubit>().retry();
+        },
         child: AppText.label(
           LocaleKeys.staffRequests_retry.translate(),
           tone: TextTone.onPrimary,

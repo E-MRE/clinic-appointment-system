@@ -34,6 +34,12 @@ abstract final class AppRoutes {
   /// Shared doctor and technician home location.
   static const String staffHome = '/staff';
 
+  /// Relative staff calendar path.
+  static const String staffCalendarSegment = 'calendar';
+
+  /// Doctor and technician calendar location.
+  static const String staffCalendar = '$staffHome/$staffCalendarSegment';
+
   /// Relative staff availability path.
   static const String staffAvailabilitySegment = 'availability';
 

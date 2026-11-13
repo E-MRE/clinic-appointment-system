@@ -42,6 +42,9 @@ abstract final class FirestoreConstants {
   /// Patient owning an appointment.
   static const String patientId = 'patientId';
 
+  /// Patient's full name captured at booking.
+  static const String patientName = 'patientName';
+
   /// Assigned staff member.
   static const String staffId = 'staffId';
 
@@ -65,6 +68,9 @@ abstract final class FirestoreConstants {
 
   /// Client timestamp of an audit entry.
   static const String at = 'at';
+
+  /// Field storing an optional status-change reason in an audit entry.
+  static const String reason = 'reason';
 
   /// Field storing recurring availability windows.
   static const String weekly = 'weekly';

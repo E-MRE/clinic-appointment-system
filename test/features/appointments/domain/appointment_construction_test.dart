@@ -15,6 +15,7 @@ void main() {
       final appointment = fixture.request();
       expect(appointment.id, EntityConstants.unsavedId);
       expect(appointment.patientId, 'patient');
+      expect(appointment.patientName, 'Patient');
       expect(appointment.staffId, 'staff');
       expect(appointment.branchId, 'branch');
       expect(appointment.departmentId, 'department');
@@ -86,6 +87,10 @@ void main() {
         original,
         isNot(fixture.restore(AppointmentStatus.pending, id: 'other')),
       );
+      expect(
+        original,
+        isNot(fixture.restore(AppointmentStatus.pending, patientName: 'other')),
+      );
       final otherEntry = AppointmentStatusChange(
         status: AppointmentStatus.pending,
         byUserId: 'other',
@@ -126,6 +131,13 @@ void main() {
           byUserId: entry.byUserId,
           byRole: entry.byRole,
           at: fixture.start,
+        ),
+        AppointmentStatusChange(
+          status: entry.status,
+          byUserId: entry.byUserId,
+          byRole: entry.byRole,
+          at: entry.at,
+          reason: 'Reason',
         ),
       ]) {
         expect(entry, isNot(different));

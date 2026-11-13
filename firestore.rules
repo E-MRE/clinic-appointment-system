@@ -209,26 +209,37 @@ service cloud.firestore {
         return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
       }
 
+      function callerFullName() {
+        return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.fullName;
+      }
+
       function isNearRequestTime(time) {
         return time is timestamp
           && time >= request.time - duration.value(5, 'm')
           && time <= request.time + duration.value(5, 'm');
       }
 
+      // Limits: reason size 500 must match AppointmentConstants.statusReasonMaxLength.
       function validEntry(entry, status, role) {
         return entry is map
-          && entry.keys().hasOnly(['status', 'byUserId', 'byRole', 'at'])
+          && entry.keys().hasOnly(['status', 'byUserId', 'byRole', 'at', 'reason'])
           && entry.keys().hasAll(['status', 'byUserId', 'byRole', 'at'])
           && entry.status == status && entry.byUserId == request.auth.uid
-          && entry.byRole == role && isNearRequestTime(entry.at);
+          && entry.byRole == role && isNearRequestTime(entry.at)
+          && (!('reason' in entry)
+            || (status in ['rejected', 'cancelledByStaff']
+              && entry.reason is string
+              && entry.reason.size() >= 1
+              && entry.reason.size() <= 500));
       }
 
       function isValidAppointment(data) {
-        let keys = ['patientId', 'staffId', 'branchId', 'departmentId',
+        let keys = ['patientId', 'patientName', 'staffId', 'branchId', 'departmentId',
           'serviceId', 'serviceName', 'feeMinorUnits', 'date', 'start', 'end',
           'status', 'history', 'createdAt', 'updatedAt'];
         return data.keys().hasOnly(keys) && data.keys().hasAll(keys)
-          && isUser(data.patientId) && isFilledString(data.staffId)
+          && isUser(data.patientId) && data.patientName == callerFullName()
+          && isFilledString(data.staffId)
           && isFilledString(data.branchId) && isFilledString(data.departmentId)
           && isFilledString(data.serviceId) && isFilledString(data.serviceName)
           && data.feeMinorUnits is int && data.feeMinorUnits > 0

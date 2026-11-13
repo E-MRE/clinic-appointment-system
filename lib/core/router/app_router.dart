@@ -23,6 +23,7 @@ import 'package:clinic_appointment_system/features/medical_services/presentation
 import 'package:clinic_appointment_system/features/patient/presentation/pages/patient_appointments_page.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/pages/patient_book_page.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/widgets/patient_shell.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/pages/staff_calendar_page.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/pages/staff_requests_page.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/widgets/staff_shell.dart';
 import 'package:clinic_appointment_system/features/staff_management/presentation/pages/staff_availability_page.dart';
@@ -101,11 +102,16 @@ GoRouter createAppRouter({
             path: AppRoutes.staffHome,
             redirect: (_, state) {
               if (state.uri.path == AppRoutes.staffHome) {
-                return AppRoutes.staffAvailability;
+                return AppRoutes.staffCalendar;
               }
               return null;
             },
             routes: [
+              GoRoute(
+                path: AppRoutes.staffCalendarSegment,
+                pageBuilder: (_, state) =>
+                    _fadePage(state, const StaffCalendarPage()),
+              ),
               GoRoute(
                 path: AppRoutes.staffRequestsSegment,
                 pageBuilder: (_, state) =>

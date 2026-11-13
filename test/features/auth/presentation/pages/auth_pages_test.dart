@@ -81,8 +81,8 @@ void main() {
         serviceIds: [],
         specialty: 'Cardiology',
       ),
-      AppRoutes.staffAvailability,
-      'Haftalık tekrar eden aralıklar',
+      AppRoutes.staffCalendar,
+      'Bugün',
     ),
     (
       Technician(
@@ -93,8 +93,8 @@ void main() {
         departmentId: 'd',
         serviceIds: [],
       ),
-      AppRoutes.staffAvailability,
-      'Haftalık tekrar eden aralıklar',
+      AppRoutes.staffCalendar,
+      'Bugün',
     ),
     (
       Admin(id: 'patient-1', fullName: 'A', email: 'patient@example.com'),

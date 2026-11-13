@@ -25,11 +25,12 @@ abstract class AppointmentActionCubit extends Cubit<AppointmentActionState> {
 
   bool get _isClosingOrClosed => _isClosing || isClosed;
 
-  /// Requests [action] on [appointment] as [by]; ignored while another
-  /// request runs or the cubit is closing.
+  /// Requests [action] on [appointment] as [by], with an optional [reason];
+  /// ignored while another request runs or the cubit is closing.
   Future<void> perform(
     Appointment appointment, {
     required AppointmentActor by,
+    String? reason,
   }) async {
     if (_isClosingOrClosed || _isRequestInFlight) return;
     _isRequestInFlight = true;
@@ -40,6 +41,7 @@ abstract class AppointmentActionCubit extends Cubit<AppointmentActionState> {
           appointmentId: appointment.id,
           action: action,
           by: by,
+          reason: reason,
         ),
       );
       if (result.isSuccess) {

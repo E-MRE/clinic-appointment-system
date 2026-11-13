@@ -25,7 +25,9 @@ void main() {
 
   Future<void> load(WidgetTester tester, Size size, bool dark) async {
     addTearDown(() => harness.dispose(tester));
-    final router = createAppRouter(initialLocation: AppRoutes.staffHome);
+    final router = createAppRouter(
+      initialLocation: AppRoutes.staffAvailability,
+    );
     addTearDown(router.dispose);
     await harness.pumpRouter(tester, router, size: size, dark: dark);
     await harness.load(

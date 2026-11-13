@@ -5,6 +5,7 @@ import 'package:clinic_appointment_system/features/appointments/domain/enums/app
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/pages/patient_book_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
@@ -119,6 +120,23 @@ void main() {
     await tester.tap(find.text('Kapat'));
     await tester.pumpAndSettle();
     expect(find.text('Tarih ve saat'), findsNothing);
+  });
+
+  testWidgets('details dialog shows reason for a rejected appointment', (
+    tester,
+  ) async {
+    await pumpLoaded(tester);
+    await openDetails(tester, 5);
+    expect(find.text('Akciğer Grafisi'), findsWidgets);
+    expect(
+      find.descendant(
+        of: find.byType(Dialog),
+        matching: find.text('Gerekçe: Cihaz bakımda, başka bir gün seçin.'),
+      ),
+      findsOneWidget,
+    );
+    await tester.tap(find.text('Kapat'));
+    await tester.pumpAndSettle();
   });
 
   testWidgets('confirmed cancel calls the patient cancel and closes', (
@@ -278,6 +296,48 @@ void main() {
       find.descendant(of: dialog, matching: find.text('Randevuyu iptal et')),
       findsNothing,
     );
+  });
+
+  testWidgets('a long reason caption keeps the details button on screen', (
+    tester,
+  ) async {
+    await pumpLoaded(tester);
+    final longReason = 'Cihaz bakımda, başka bir gün seçin. ' * 12;
+    final rejected = fixtures.appointment(
+      'a6',
+      'xray',
+      'can',
+      AppointmentStatus.rejected,
+      DateTime(2026, 9, 29, 15),
+      15,
+      reason: longReason.trim(),
+    );
+    await tester.runAsync(() async {
+      harness.appointments.emit([
+        for (final appointment in fixtures.appointments)
+          if (appointment.id == 'a6') rejected else appointment,
+      ]);
+      await Future<void>.delayed(Duration.zero);
+    });
+    await tester.pumpAndSettle();
+
+    final caption = find.textContaining('Gerekçe: Cihaz bakımda');
+    expect(caption, findsOneWidget);
+    expect(tester.getSize(caption).width, lessThanOrEqualTo(240));
+    final date = tester.renderObject<RenderParagraph>(
+      find.text('29 Eyl, 15:00'),
+    );
+    expect(
+      date.size.width,
+      greaterThanOrEqualTo(date.getMaxIntrinsicWidth(double.infinity)),
+    );
+    for (final chevron in find.byTooltip('Randevu ayrıntıları').evaluate()) {
+      expect(
+        tester.getRect(find.byWidget(chevron.widget)).right,
+        lessThanOrEqualTo(PatientPageHarness.desktop.width),
+      );
+    }
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('a department row opens booking for that department', (

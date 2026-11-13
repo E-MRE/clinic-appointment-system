@@ -30,9 +30,13 @@
 /// * iconTileMedium → 36
 /// * iconTileMediumIcon → 18
 /// * tabIndicator → 3
+/// * staffCalendarHourHeight → 84
+/// * staffCalendarHourColumnWidth → 64
+/// * staffCalendarHeaderHeight → 48
 /// * patientContentMaxWidth → 1200
 /// * appointmentDateTileWidth → 84
 /// * patientAppointmentsTableMinWidth → 560
+/// * patientAppointmentsCaptionMaxWidth → 240
 /// * bookingDayCellMinHeight → 76
 /// * bookingWeekButton → 36
 /// * timeRangeRemoveButton → 28
@@ -159,6 +163,18 @@ abstract final class AppSizes {
   /// value = 3
   static const double tabIndicator = 3;
 
+  /// Row height for a single hour in the staff calendar grid.
+  /// value = 84
+  static const double staffCalendarHourHeight = 84;
+
+  /// Width of the hour labels column in the staff calendar grid.
+  /// value = 64
+  static const double staffCalendarHourColumnWidth = s64;
+
+  /// Height of the day headers row in the staff calendar grid.
+  /// value = 48
+  static const double staffCalendarHeaderHeight = s48;
+
   /// Maximum width of the patient pages' content column.
   /// value = 1200
   static const double patientContentMaxWidth = 1200;
@@ -170,6 +186,11 @@ abstract final class AppSizes {
   /// Minimum width of the patient appointments table before it scrolls.
   /// value = 560
   static const double patientAppointmentsTableMinWidth = 560;
+
+  /// Maximum width of the service caption in the patient appointments table,
+  /// so a long cancellation reason ellipsizes instead of widening the column.
+  /// value = 240
+  static const double patientAppointmentsCaptionMaxWidth = 240;
 
   /// Minimum height of a day cell in the booking day strip.
   /// value = 76

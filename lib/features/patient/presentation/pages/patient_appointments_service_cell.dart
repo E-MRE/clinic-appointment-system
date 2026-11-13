@@ -6,6 +6,8 @@ final class _PatientAppointmentsServiceCell extends StatelessWidget {
 
   final PatientAppointmentEntry entry;
 
+  int get _captionLines => 1;
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -19,7 +21,17 @@ final class _PatientAppointmentsServiceCell extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               AppText.bodyStrong(entry.serviceName),
-              AppText.caption(entry.serviceCaption, tone: TextTone.muted),
+              ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxWidth: AppSizes.patientAppointmentsCaptionMaxWidth,
+                ),
+                child: AppText.caption(
+                  entry.serviceCaption,
+                  tone: TextTone.muted,
+                  maxLines: _captionLines,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
             ],
           ),
         ),

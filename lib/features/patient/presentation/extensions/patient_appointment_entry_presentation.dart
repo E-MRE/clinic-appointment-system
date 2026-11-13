@@ -73,6 +73,12 @@ extension PatientAppointmentEntryPresentation on PatientAppointmentEntry {
 
   /// Who cancelled the appointment, or null when it is not cancelled.
   String? get cancellationNote {
+    final reason = appointment.statusReason;
+    if (reason != null &&
+        (appointment.status == AppointmentStatus.rejected ||
+            appointment.status == AppointmentStatus.cancelledByStaff)) {
+      return LocaleKeys.patient_appointments_reason.translate(args: [reason]);
+    }
     return switch (appointment.status) {
       AppointmentStatus.cancelledByPatient =>
         LocaleKeys.patient_appointments_cancelledByPatient.translate(),

@@ -36,7 +36,14 @@
     "removeRange": "Aralığı kaldır",
     "selectTime": "Saat seçin",
     "rangeOutsideHours": "Aralık şube çalışma saatleri dışında",
-    "notAvailable": "—"
+    "notAvailable": "—",
+    "relativeTime": {
+      "justNow": "az önce",
+      "minutesAgo": "{} dk önce",
+      "hoursAgo": "{} saat önce",
+      "yesterday": "dün",
+      "daysAgo": "{} gün önce"
+    }
   },
   "roles": {
     "patient": "Hasta",
@@ -79,7 +86,13 @@
       "outsideAvailability": "Personel bu saatte uygun değil.",
       "serviceNotProvided": "Seçilen personel bu hizmeti vermiyor.",
       "staffOverlap": "Bu saat artık dolu. Lütfen başka bir saat seçin.",
-      "patientOverlap": "Bu saatte başka bir randevunuz var."
+      "patientOverlap": "Bu saatte başka bir randevunuz var.",
+      "reasonTooLong": "Gerekçe en fazla 500 karakter olabilir."
+    },
+    "reasonDialog": {
+      "reasonLabel": "Gerekçe (isteğe bağlı)",
+      "reasonHelper": "Gerekçe hastanın randevu kaydında görünür.",
+      "dismiss": "Vazgeç"
     }
   },
   "services": {
@@ -431,17 +444,85 @@
       "actions": "İşlemler"
     }
   },
+  "staffCalendar": {
+    "title": "Takvim",
+    "headerTitle": "Takvim · {}",
+    "subtitleWeek": "Bu hafta {} randevu · {} talep onay bekliyor",
+    "subtitleDay": "{} randevu",
+    "today": "Bugün",
+    "previous": "Önceki",
+    "next": "Sonraki",
+    "viewDay": "Gün",
+    "viewWeek": "Hafta",
+    "legend": {
+      "availability": "Uygunluk aralığı"
+    },
+    "dayHeader": {
+      "appointmentCount": "{} randevu"
+    },
+    "branchClosed": "Şube kapalı",
+    "loading": "Takvim yükleniyor",
+    "failureTitle": "Takvim yüklenemedi"
+  },
   "staffRequests": {
     "title": "Talepler",
+    "headerTitle": "Onay bekleyen talepler",
     "subtitle": "Onay bekleyen randevu talepleri.",
+    "headerSubtitle": "{} talep · en eskisi {} oluşturuldu",
+    "headerSubtitleCountOnly": "{} talep",
+    "fallbackPatientName": "Hasta",
     "approve": "Onayla",
     "approving": "Randevu onaylanıyor",
     "approved": "Randevu onaylandı.",
+    "reject": "Reddet",
+    "rejectAction": "Reddet…",
+    "rejectTitle": "Talebi reddet",
+    "rejected": "Talep reddedildi.",
+    "requestedAgo": "{} talep etti",
     "loading": "Talepler yükleniyor",
     "failureTitle": "Talepler yüklenemedi",
     "retry": "Tekrar dene",
     "emptyTitle": "Onay bekleyen talep yok.",
-    "emptyMessage": "Yeni randevu talepleri geldiğinde burada listelenir."
+    "emptyMessage": "Yeni randevu talepleri geldiğinde burada listelenir.",
+    "sort": {
+      "byDate": "Tarihe göre",
+      "byRequestTime": "Talep sırasına göre"
+    },
+    "detail": {
+      "dateTime": "Tarih ve saat",
+      "service": "Hizmet",
+      "durationAndFee": "Süre ve ücret",
+      "location": "Yer",
+      "rulesSection": "Kural kontrolü",
+      "historySection": "Bu hastayla geçmiş"
+    },
+    "history": {
+      "completed": "{} tamamlandı",
+      "lastVisit": "Son ziyaret: {}"
+    },
+    "rules": {
+      "withinAvailability": "Uygunluk aralığınızda ({})",
+      "outsideAvailability": "Uygunluk aralığınızın dışında",
+      "withinWorkingHours": "Şube çalışma saatleri içinde ({})",
+      "outsideWorkingHours": "Şube çalışma saatlerinin dışında",
+      "noStaffOverlap": "Bu saatte onaylı başka randevunuz yok",
+      "hasStaffOverlap": "Bu saatte onaylı başka bir randevunuz var",
+      "staffProvidesService": "Bu hizmeti veriyorsunuz",
+      "staffDoesNotProvideService": "Bu hizmeti vermiyorsunuz"
+    }
+  },
+  "staffAppointmentDialog": {
+    "complete": "Tamamlandı",
+    "noShow": "Gelmedi",
+    "cancelAction": "İptal et…",
+    "cancelTitle": "Randevuyu iptal et",
+    "cancel": "İptal et",
+    "completed": "Randevu tamamlandı olarak işaretlendi.",
+    "noShowMarked": "Randevu gelmedi olarak işaretlendi.",
+    "cancelled": "Randevu iptal edildi.",
+    "statusReason": "Gerekçe",
+    "completeTooEarly": "Randevu saati gelince işaretlenebilir.",
+    "noShowTooEarly": "\"Gelmedi\" {}'te açılır ({} dk tolerans)."
   },
   "availability": {
     "title": "Uygunluk",
@@ -542,6 +623,7 @@
       "serviceCaption": "{} · {}",
       "cancelledByPatient": "Sizin tarafınızdan iptal edildi",
       "cancelledByStaff": "Personel tarafından iptal edildi",
+      "reason": "Gerekçe: {}",
       "notesTitle": "Hazırlık notları",
       "noteHeading": "{} · {}",
       "fastingNote": "{} aç gelin. Su içebilirsiniz.",

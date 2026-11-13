@@ -78,9 +78,10 @@ final class AppointmentFixture {
   }
 
   /// Requests the example appointment with an optional acting identity.
-  Appointment request({AppointmentActor? by}) {
+  Appointment request({AppointmentActor? by, String patientName = 'Patient'}) {
     return Appointment.request(
       patientId: 'patient',
+      patientName: patientName,
       staffId: 'staff',
       branchId: 'branch',
       departmentId: 'department',
@@ -109,10 +110,12 @@ final class AppointmentFixture {
     AppointmentStatus status, {
     List<AppointmentStatusChange>? history,
     String id = 'appointment',
+    String patientName = 'Patient',
   }) {
     return Appointment.restore(
       id: id,
       patientId: 'patient',
+      patientName: patientName,
       staffId: 'staff',
       branchId: 'branch',
       departmentId: 'department',

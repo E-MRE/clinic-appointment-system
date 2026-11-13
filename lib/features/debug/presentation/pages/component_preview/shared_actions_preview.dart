@@ -24,6 +24,14 @@ final class _SharedActionsPreviewState extends State<_SharedActionsPreview> {
           ),
         ),
         AppAddFab(label: sample, onPressed: () {}),
+        OutlinedButton(
+          onPressed: () => AppointmentReasonDialog(
+            title: sample,
+            subtitle: sample,
+            confirmLabel: sample,
+          ).show(context),
+          child: AppText.label(sample),
+        ),
         AppCheckboxTile(
           label: sample,
           value: _selected,

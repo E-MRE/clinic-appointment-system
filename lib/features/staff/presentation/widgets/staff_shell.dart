@@ -1,8 +1,11 @@
+import 'package:clinic_appointment_system/core/di/app_dependency.dart';
 import 'package:clinic_appointment_system/core/localization/localization.dart';
 import 'package:clinic_appointment_system/core/widgets/navigation/app_navigation_shell.dart';
 import 'package:clinic_appointment_system/core/widgets/navigation/app_navigation_user_card.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_state.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_workspace_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/enums/staff_destination.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/extensions/staff_destination_navigation.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/extensions/staff_location_destination.dart';
@@ -13,9 +16,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+part 'staff_shell_content.dart';
 part 'staff_shell_user_card.dart';
 
 /// Responsive staff navigation shared by all staff destinations.
+///
+/// Provides [StaffAppointmentsCubit] and [StaffWorkspaceCubit] above the
+/// routed destination pages for the authenticated staff member.
 final class StaffShell extends StatelessWidget {
   /// Creates the staff shell around a routed page.
   const StaffShell({required this.child, super.key});
@@ -25,18 +32,30 @@ final class StaffShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final destination = GoRouterState.of(context).uri.path.staffDestination;
-    return AppNavigationShell(
-      logo: Assets.images.brand.clinicLogo,
-      selectedIndex: destination.index,
-      onDestinationSelected: (index) {
-        context.go(StaffDestination.values[index].route);
-      },
-      destinations: [
-        for (final item in StaffDestination.values) item.destination,
-      ],
-      footer: const _StaffShellUserCard(),
-      child: child,
-    );
+    final state = context.watch<AuthCubit>().state;
+    if (state is AuthSignedIn) {
+      final staff = state.user.staffProfile;
+      if (staff != null) {
+        return MultiBlocProvider(
+          key: ValueKey<String>(staff.id),
+          providers: [
+            BlocProvider<StaffAppointmentsCubit>(
+              create: (_) {
+                return AppDependency.injector.get<StaffAppointmentsCubit>()
+                  ..watch(staff.id);
+              },
+            ),
+            BlocProvider<StaffWorkspaceCubit>(
+              create: (_) {
+                return AppDependency.injector.get<StaffWorkspaceCubit>()
+                  ..watch(staff);
+              },
+            ),
+          ],
+          child: _StaffShellContent(child: child),
+        );
+      }
+    }
+    return child;
   }
 }

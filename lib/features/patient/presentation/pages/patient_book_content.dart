@@ -2,10 +2,15 @@ part of 'patient_book_page.dart';
 
 /// Header and the three booking columns; one column below desktop width.
 final class _PatientBookContent extends StatelessWidget {
-  const _PatientBookContent({required this.catalog, required this.patient});
+  const _PatientBookContent({
+    required this.catalog,
+    required this.patient,
+    required this.patientName,
+  });
 
   final PatientCatalog catalog;
   final PatientAppointmentActor patient;
+  final String patientName;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +34,11 @@ final class _PatientBookContent extends StatelessWidget {
               else ...[
                 _PatientBookChoiceColumn(catalog: catalog),
                 _PatientBookScheduleCard(catalog: catalog),
-                _PatientBookSummaryCard(catalog: catalog, patient: patient),
+                _PatientBookSummaryCard(
+                  catalog: catalog,
+                  patient: patient,
+                  patientName: patientName,
+                ),
               ],
             ],
           ),
@@ -53,7 +62,11 @@ final class _PatientBookContent extends StatelessWidget {
         ),
         Expanded(
           flex: PatientLayoutConstants.bookingSummaryFlex,
-          child: _PatientBookSummaryCard(catalog: catalog, patient: patient),
+          child: _PatientBookSummaryCard(
+            catalog: catalog,
+            patient: patient,
+            patientName: patientName,
+          ),
         ),
       ],
     );

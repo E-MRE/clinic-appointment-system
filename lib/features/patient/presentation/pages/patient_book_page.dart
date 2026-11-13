@@ -122,7 +122,10 @@ final class PatientBookPage extends StatelessWidget {
             },
           ),
         ],
-        child: _PatientBookView(patient: PatientAppointmentActor(id: user.id)),
+        child: _PatientBookView(
+          patient: PatientAppointmentActor(id: user.id),
+          patientName: user.fullName,
+        ),
       );
     }
     return const SizedBox.shrink();

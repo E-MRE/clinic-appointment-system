@@ -5,18 +5,26 @@ import 'package:flutter/material.dart';
 
 /// Navigation appearance and location matching for staff destinations.
 extension StaffDestinationNavigation on StaffDestination {
-  /// The localized shell navigation item.
-  AppNavigationDestination get destination {
+  /// The localized shell navigation item, optionally displaying [badgeCount].
+  AppNavigationDestination destination({int? badgeCount}) {
     return switch (this) {
+      StaffDestination.calendar => AppNavigationDestination(
+        label: LocaleKeys.staffCalendar_title.translate(),
+        icon: Icons.calendar_today_outlined,
+        selectedIcon: Icons.calendar_today,
+        badgeCount: badgeCount,
+      ),
       StaffDestination.requests => AppNavigationDestination(
         label: LocaleKeys.staffRequests_title.translate(),
         icon: Icons.inbox_outlined,
         selectedIcon: Icons.inbox,
+        badgeCount: badgeCount,
       ),
       StaffDestination.availability => AppNavigationDestination(
         label: LocaleKeys.availability_title.translate(),
         icon: Icons.schedule_outlined,
         selectedIcon: Icons.schedule,
+        badgeCount: badgeCount,
       ),
     };
   }
