@@ -27,8 +27,8 @@ final class _AdminAppointmentDateRangeField extends StatelessWidget {
       onTap: () async {
         final selected = await showDateRangePicker(
           context: context,
-          firstDate: DateTime(AdminAppointmentConstants.firstSelectableYear),
-          lastDate: DateTime(AdminAppointmentConstants.lastSelectableYear),
+          firstDate: DateTime(DatePickerConstants.firstSelectableYear),
+          lastDate: DateTime(DatePickerConstants.lastSelectableYear),
           initialDateRange: DateTimeRange(start: start, end: end),
         );
         if (selected == null || !context.mounted) return;

@@ -6,6 +6,33 @@ final class _AdminHomeStaffRow extends StatelessWidget {
 
   final AdminDashboardStaffRow row;
 
+  Widget get _identity {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        AppText.bodyStrong(
+          row.fullName,
+          maxLines: AdminLayoutConstants.overviewMinimumColumnCount,
+          overflow: TextOverflow.ellipsis,
+        ),
+        AppText.caption(
+          row.caption,
+          tone: TextTone.muted,
+          maxLines: AdminLayoutConstants.overviewMinimumColumnCount,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ],
+    );
+  }
+
+  Widget get _count {
+    return SizedBox(
+      width: AdminLayoutConstants.overviewBreakdownCountWidth,
+      child: AppText.bodyStrong(row.count.toString(), textAlign: TextAlign.end),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -13,25 +40,7 @@ final class _AdminHomeStaffRow extends StatelessWidget {
       child: Row(
         spacing: AppSizes.s8,
         children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                AppText.bodyStrong(
-                  row.fullName,
-                  maxLines: AdminLayoutConstants.overviewMinimumColumnCount,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                AppText.caption(
-                  row.caption,
-                  tone: TextTone.muted,
-                  maxLines: AdminLayoutConstants.overviewMinimumColumnCount,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          ),
+          Expanded(child: _identity),
           SizedBox(
             width: AdminLayoutConstants.overviewStaffProgressWidth,
             child: AppProgressBar(
@@ -39,13 +48,7 @@ final class _AdminHomeStaffRow extends StatelessWidget {
               semanticsLabel: row.fullName,
             ),
           ),
-          SizedBox(
-            width: AdminLayoutConstants.overviewBreakdownCountWidth,
-            child: AppText.bodyStrong(
-              row.count.toString(),
-              textAlign: TextAlign.end,
-            ),
-          ),
+          _count,
         ],
       ),
     );

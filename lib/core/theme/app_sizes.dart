@@ -36,14 +36,6 @@
 /// * patientContentMaxWidth → 1200
 /// * appointmentDateTileWidth → 84
 /// * patientAppointmentsTableMinWidth → 560
-/// * adminAppointmentsTableMinWidth → 1080
-/// * adminAppointmentDateColumnMaxWidth → 140
-/// * adminAppointmentPatientColumnMaxWidth → 110
-/// * adminAppointmentServiceColumnMaxWidth → 150
-/// * adminAppointmentStaffColumnMaxWidth → 120
-/// * adminAppointmentLocationColumnMaxWidth → 150
-/// * adminAppointmentStatusColumnMaxWidth → 160
-/// * adminAppointmentActionsColumnMaxWidth → 180
 /// * patientAppointmentsCaptionMaxWidth → 240
 /// * bookingDayCellMinHeight → 76
 /// * bookingWeekButton → 36
@@ -194,38 +186,6 @@ abstract final class AppSizes {
   /// Minimum width of the patient appointments table before it scrolls.
   /// value = 560
   static const double patientAppointmentsTableMinWidth = 560;
-
-  /// Minimum width of the administrator appointments table before it scrolls.
-  /// value = 1080
-  static const double adminAppointmentsTableMinWidth = 1080;
-
-  /// Maximum width of the date column in the administrator appointments table.
-  /// value = 140
-  static const double adminAppointmentDateColumnMaxWidth = 140;
-
-  /// Maximum width of the patient column in the administrator appointments table.
-  /// value = 110
-  static const double adminAppointmentPatientColumnMaxWidth = 110;
-
-  /// Maximum width of the service column in the administrator appointments table.
-  /// value = 150
-  static const double adminAppointmentServiceColumnMaxWidth = 150;
-
-  /// Maximum width of the staff column in the administrator appointments table.
-  /// value = 120
-  static const double adminAppointmentStaffColumnMaxWidth = 120;
-
-  /// Maximum width of the location column in the administrator appointments table.
-  /// value = 150
-  static const double adminAppointmentLocationColumnMaxWidth = 150;
-
-  /// Maximum width of the status column in the administrator appointments table.
-  /// value = 100
-  static const double adminAppointmentStatusColumnMaxWidth = 160;
-
-  /// Maximum width of the action column in the administrator appointments table.
-  /// value = 180
-  static const double adminAppointmentActionsColumnMaxWidth = 180;
 
   /// Maximum width of the service caption in the patient appointments table,
   /// so a long cancellation reason ellipsizes instead of widening the column.

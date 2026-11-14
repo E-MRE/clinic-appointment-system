@@ -12,6 +12,59 @@ final class _AdminAppointmentsDataState extends StatelessWidget {
   final TextEditingController searchController;
   final ValueChanged<BuildContext> onClearFilters;
 
+  Widget _catalogFailure(BuildContext context) {
+    return _AdminAppointmentsFailure(
+      title: LocaleKeys.admin_appointmentsPage_catalogFailureTitle.translate(),
+      message: LocaleKeys.admin_appointmentsPage_catalogFailureMessage
+          .translate(),
+      onRetry: context.read<ClinicCatalogCubit>().watch,
+    );
+  }
+
+  Widget _appointmentsFailure(
+    BuildContext context,
+    AdminAppointmentsFailure state,
+  ) {
+    return _AdminAppointmentsFailure(
+      title: LocaleKeys.admin_appointmentsPage_failureTitle.translate(),
+      message: state.errorCode.message,
+      onRetry: context.read<AdminAppointmentsCubit>().retry,
+    );
+  }
+
+  Widget get _loading {
+    return LoadingState(
+      variant: LoadingStateVariant.skeletonList,
+      label: LocaleKeys.admin_appointmentsPage_loading.translate(),
+    );
+  }
+
+  Widget _sessionFailure(BuildContext context) {
+    return _AdminAppointmentsFailure(
+      title: LocaleKeys.admin_appointmentsPage_sessionFailureTitle.translate(),
+      message: LocaleKeys.admin_appointmentsPage_sessionFailureMessage
+          .translate(),
+      onRetry: context.read<AdminAppointmentsCubit>().retry,
+    );
+  }
+
+  Widget _loadedContent(
+    BuildContext context,
+    AdminAppointmentsLoaded appointmentsState,
+    ClinicCatalogLoaded catalogState,
+  ) {
+    final actor = context.adminAppointmentActor;
+    if (actor == null) return _sessionFailure(context);
+    return _AdminAppointmentsLoadedContent(
+      clock: clock,
+      state: appointmentsState,
+      catalog: catalogState.catalog,
+      actor: actor,
+      searchController: searchController,
+      onClearFilters: onClearFilters,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AdminAppointmentsCubit, AdminAppointmentsState>(
@@ -19,83 +72,19 @@ final class _AdminAppointmentsDataState extends StatelessWidget {
         return BlocBuilder<ClinicCatalogCubit, ClinicCatalogState>(
           builder: (context, catalogState) {
             if (catalogState is ClinicCatalogFailure) {
-              return _AdminAppointmentsFailure(
-                title: LocaleKeys.admin_appointmentsPage_catalogFailureTitle
-                    .translate(),
-                message: LocaleKeys.admin_appointmentsPage_catalogFailureMessage
-                    .translate(),
-                onRetry: context.read<ClinicCatalogCubit>().watch,
-              );
+              return _catalogFailure(context);
             }
             if (appointmentsState is AdminAppointmentsFailure) {
-              return _AdminAppointmentsFailure(
-                title: LocaleKeys.admin_appointmentsPage_failureTitle
-                    .translate(),
-                message: appointmentsState.errorCode.message,
-                onRetry: context.read<AdminAppointmentsCubit>().retry,
-              );
+              return _appointmentsFailure(context, appointmentsState);
             }
             if (catalogState is! ClinicCatalogLoaded ||
                 appointmentsState is! AdminAppointmentsLoaded) {
-              return LoadingState(
-                variant: LoadingStateVariant.skeletonList,
-                label: LocaleKeys.admin_appointmentsPage_loading.translate(),
-              );
+              return _loading;
             }
-            final actor = context.adminAppointmentActor;
-            if (actor == null) {
-              return _AdminAppointmentsFailure(
-                title: LocaleKeys.admin_appointmentsPage_sessionFailureTitle
-                    .translate(),
-                message: LocaleKeys.admin_appointmentsPage_sessionFailureMessage
-                    .translate(),
-                onRetry: context.read<AdminAppointmentsCubit>().retry,
-              );
-            }
-            return _AdminAppointmentsLoadedContent(
-              clock: clock,
-              state: appointmentsState,
-              catalog: catalogState.catalog,
-              actor: actor,
-              searchController: searchController,
-              onClearFilters: onClearFilters,
-            );
+            return _loadedContent(context, appointmentsState, catalogState);
           },
         );
       },
-    );
-  }
-}
-
-/// Recoverable data failure with a retry for its owning observation.
-final class _AdminAppointmentsFailure extends StatelessWidget {
-  const _AdminAppointmentsFailure({
-    required this.title,
-    required this.message,
-    required this.onRetry,
-  });
-
-  final String title;
-  final String message;
-  final VoidCallback onRetry;
-
-  @override
-  Widget build(BuildContext context) {
-    return ErrorState(
-      title: title,
-      message: message,
-      icon: Icon(
-        Icons.error_outline,
-        color: context.colorScheme.onErrorContainer,
-      ),
-      iconBackground: context.colorScheme.errorContainer,
-      primaryAction: FilledButton(
-        onPressed: onRetry,
-        child: AppText.label(
-          LocaleKeys.admin_appointmentsPage_retry.translate(),
-          tone: TextTone.onPrimary,
-        ),
-      ),
     );
   }
 }

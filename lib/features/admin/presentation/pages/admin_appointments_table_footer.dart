@@ -6,6 +6,8 @@ final class _AdminAppointmentsTableFooter extends StatelessWidget {
 
   final AdminAppointmentsLoaded state;
 
+  int get _firstPage => 1;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -17,7 +19,7 @@ final class _AdminAppointmentsTableFooter extends StatelessWidget {
           IconButton(
             tooltip: LocaleKeys.admin_appointmentsPage_previousPage.translate(),
             style: _buttonStyle(context),
-            onPressed: state.currentPage > 1
+            onPressed: state.currentPage > _firstPage
                 ? context.read<AdminAppointmentsCubit>().previousPage
                 : null,
             icon: const Icon(Icons.chevron_left),

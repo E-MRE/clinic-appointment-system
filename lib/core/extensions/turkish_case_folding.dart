@@ -1,6 +1,6 @@
 /// Turkish-aware case folding for searching and ordering [String] values.
 extension TurkishCaseFolding on String {
-  /// This string in lower case under Turkish rules ("I" → "ı", "İ" → "i").
+  /// Converts this string to lower case using Turkish letter rules.
   String get turkishLowercase {
     return replaceAll('I', 'ı').replaceAll('İ', 'i').toLowerCase();
   }

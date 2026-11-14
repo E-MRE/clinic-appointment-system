@@ -7,25 +7,8 @@ final class _AdminHomeMetricCards extends StatelessWidget {
   final Clock clock;
   final AdminDashboardSummary summary;
 
-  int _columnCount(double width) {
-    const gap = AppSizes.s16;
-    final estimated =
-        ((width + gap) /
-                (AdminLayoutConstants.overviewMetricCardMinWidth + gap))
-            .floor();
-    if (estimated < AdminLayoutConstants.overviewMinimumColumnCount) {
-      return AdminLayoutConstants.overviewMinimumColumnCount;
-    }
-    if (estimated > AdminLayoutConstants.overviewMetricCardCount) {
-      return AdminLayoutConstants.overviewMetricCardCount;
-    }
-    return estimated;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final now = clock.now();
-    final oldestPending = summary.oldestPendingCreatedAt;
+  ({String? today, String? pending, String? completed, String? noShow})
+  _captions(DateTime now) {
     final todayCaption =
         summary.todayAppointmentCount == AdminLayoutConstants.overviewEmptyCount
         ? null
@@ -35,6 +18,7 @@ final class _AdminHomeMetricCards extends StatelessWidget {
               summary.distinctStaffCount.toString(),
             ],
           );
+    final oldestPending = summary.oldestPendingCreatedAt;
     final pendingCaption = oldestPending == null
         ? null
         : LocaleKeys.admin_overview_oldestPendingCaption.translate(
@@ -53,6 +37,65 @@ final class _AdminHomeMetricCards extends StatelessWidget {
         summary.noShowCount == AdminLayoutConstants.overviewEmptyCount
         ? null
         : LocaleKeys.admin_overview_noShowCaption.translate();
+
+    return (
+      today: todayCaption,
+      pending: pendingCaption,
+      completed: completedCaption,
+      noShow: noShowCaption,
+    );
+  }
+
+  List<(String, String, String?, AdminMetricTone)> _metricValues(
+    ({String? today, String? pending, String? completed, String? noShow})
+    captions,
+  ) {
+    return [
+      (
+        LocaleKeys.admin_overview_todayAppointments.translate(),
+        summary.todayAppointmentCount.toString(),
+        captions.today,
+        AdminMetricTone.primary,
+      ),
+      (
+        LocaleKeys.admin_overview_pendingAppointments.translate(),
+        summary.pendingCount.toString(),
+        captions.pending,
+        AdminMetricTone.pending,
+      ),
+      (
+        LocaleKeys.admin_overview_completedToday.translate(),
+        summary.completedCount.toString(),
+        captions.completed,
+        AdminMetricTone.neutral,
+      ),
+      (
+        LocaleKeys.admin_overview_noShowToday.translate(),
+        summary.noShowCount.toString(),
+        captions.noShow,
+        AdminMetricTone.neutral,
+      ),
+    ];
+  }
+
+  int _columnCount(double width) {
+    const gap = AppSizes.s16;
+    final estimated =
+        ((width + gap) /
+                (AdminLayoutConstants.overviewMetricCardMinWidth + gap))
+            .floor();
+    if (estimated < AdminLayoutConstants.overviewMinimumColumnCount) {
+      return AdminLayoutConstants.overviewMinimumColumnCount;
+    }
+    if (estimated > AdminLayoutConstants.overviewMetricCardCount) {
+      return AdminLayoutConstants.overviewMetricCardCount;
+    }
+    return estimated;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final captions = _captions(clock.now());
     return LayoutBuilder(
       builder: (context, constraints) {
         final columns = _columnCount(constraints.maxWidth);
@@ -64,43 +107,16 @@ final class _AdminHomeMetricCards extends StatelessWidget {
           spacing: AppSizes.s16,
           runSpacing: AppSizes.s16,
           children: [
-            SizedBox(
-              width: cardWidth,
-              child: _AdminHomeMetricCard(
-                title: LocaleKeys.admin_overview_todayAppointments.translate(),
-                value: summary.todayAppointmentCount.toString(),
-                caption: todayCaption,
-                tone: AdminMetricTone.primary,
+            for (final metric in _metricValues(captions))
+              SizedBox(
+                width: cardWidth,
+                child: _AdminHomeMetricCard(
+                  title: metric.$1,
+                  value: metric.$2,
+                  caption: metric.$3,
+                  tone: metric.$4,
+                ),
               ),
-            ),
-            SizedBox(
-              width: cardWidth,
-              child: _AdminHomeMetricCard(
-                title: LocaleKeys.admin_overview_pendingAppointments
-                    .translate(),
-                value: summary.pendingCount.toString(),
-                caption: pendingCaption,
-                tone: AdminMetricTone.pending,
-              ),
-            ),
-            SizedBox(
-              width: cardWidth,
-              child: _AdminHomeMetricCard(
-                title: LocaleKeys.admin_overview_completedToday.translate(),
-                value: summary.completedCount.toString(),
-                caption: completedCaption,
-                tone: AdminMetricTone.neutral,
-              ),
-            ),
-            SizedBox(
-              width: cardWidth,
-              child: _AdminHomeMetricCard(
-                title: LocaleKeys.admin_overview_noShowToday.translate(),
-                value: summary.noShowCount.toString(),
-                caption: noShowCaption,
-                tone: AdminMetricTone.neutral,
-              ),
-            ),
           ],
         );
       },

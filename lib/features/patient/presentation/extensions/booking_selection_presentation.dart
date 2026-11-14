@@ -10,8 +10,8 @@ import 'package:clinic_appointment_system/features/patient/presentation/models/b
 /// Localized week label and summary values of the booking choices.
 /// Values not chosen yet show [LocaleKeys.common_notAvailable].
 extension BookingSelectionPresentation on BookingSelection {
-  /// The listed days of the shown week (`26 – 31 Ekim`); Sunday is included
-  /// when the chosen staff member's branch opens on Sunday.
+  /// Returns the listed days of the shown week, including Sunday when the
+  /// chosen staff member's branch opens that day.
   String weekLabel(ClinicCatalog catalog) {
     final dates = scheduleRequest(catalog)?.dates;
     final end = dates?.last ?? weekStart.addDays(Weekday.saturday.index);
@@ -30,7 +30,7 @@ extension BookingSelectionPresentation on BookingSelection {
   /// The chosen staff member's full name.
   String get staffValue => staff?.fullName ?? _missing;
 
-  /// Branch and department of the chosen service (`Merkez Şube · Dahiliye`).
+  /// Returns the branch and department of the chosen service.
   String locationValue(ClinicCatalog catalog) {
     final service = this.service;
     if (service == null) return _missing;
@@ -42,7 +42,7 @@ extension BookingSelectionPresentation on BookingSelection {
     );
   }
 
-  /// The chosen day and slot (`Perşembe 29 Ekim · 11:20–11:40`).
+  /// Returns the chosen day and slot as a localized label.
   String get dateTimeValue {
     final date = this.date;
     final slot = this.slot;

@@ -97,4 +97,48 @@ abstract final class AdminLayoutConstants {
   /// Count used when a dashboard figure has no rows.
   /// value = 0
   static const int overviewEmptyCount = 0;
+
+  /// Minimum width of the administrator appointments table before it scrolls.
+  /// value = 1080
+  static const double appointmentsTableMinWidth = 1080;
+
+  /// Maximum width of the date column in the administrator appointments table.
+  /// value = 140
+  static const double appointmentDateColumnMaxWidth = 140;
+
+  /// Maximum width of the patient column in the administrator appointments table.
+  /// value = 110
+  static const double appointmentPatientColumnMaxWidth = 110;
+
+  /// Maximum width of the service column in the administrator appointments table.
+  /// value = 150
+  static const double appointmentServiceColumnMaxWidth = 150;
+
+  /// Maximum width of the staff column in the administrator appointments table.
+  /// value = 120
+  static const double appointmentStaffColumnMaxWidth = 120;
+
+  /// Maximum width of the location column in the administrator appointments table.
+  /// value = 150
+  static const double appointmentLocationColumnMaxWidth = 150;
+
+  /// Maximum width of the status column in the administrator appointments table.
+  /// value = 160
+  static const double appointmentStatusColumnMaxWidth = 160;
+
+  /// Maximum width of the action column in the administrator appointments table.
+  /// value = 180
+  static const double appointmentActionsColumnMaxWidth = 180;
+
+  /// Number of appointment filter columns on mobile.
+  /// value = 1
+  static const int appointmentsFilterMobileColumns = 1;
+
+  /// Number of appointment filter columns on tablet.
+  /// value = 2
+  static const int appointmentsFilterTabletColumns = 2;
+
+  /// Number of appointment filter columns on desktop.
+  /// value = 4
+  static const int appointmentsFilterDesktopColumns = 4;
 }

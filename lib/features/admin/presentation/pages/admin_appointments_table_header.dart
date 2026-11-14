@@ -10,9 +10,10 @@ final class _AdminAppointmentsTableHeader extends StatelessWidget {
   final AdminAppointmentsLoaded state;
   final TextEditingController searchController;
 
-  @override
-  Widget build(BuildContext context) {
-    final summary = Wrap(
+  int get _noAppointments => 0;
+
+  Widget get _summary {
+    return Wrap(
       spacing: AppSizes.s8,
       runSpacing: AppSizes.s4,
       crossAxisAlignment: WrapCrossAlignment.center,
@@ -21,14 +22,17 @@ final class _AdminAppointmentsTableHeader extends StatelessWidget {
           '${state.filteredAppointments.length} ${LocaleKeys.admin_appointmentsPage_appointmentCount.translate()}',
         ),
         for (final status in AdminStatusFilter.values)
-          if ((state.statusCounts[status] ?? 0) > 0)
+          if ((state.statusCounts[status] ?? _noAppointments) > _noAppointments)
             AppText.body(
               '· ${state.statusCounts[status]} ${status.label.toLowerCase()}',
               tone: TextTone.muted,
             ),
       ],
     );
-    final search = AppTextField(
+  }
+
+  Widget _searchField(BuildContext context) {
+    return AppTextField(
       label: LocaleKeys.admin_appointmentsPage_searchPatient.translate(),
       hint: LocaleKeys.admin_appointmentsPage_searchPatient.translate(),
       controller: searchController,
@@ -41,19 +45,26 @@ final class _AdminAppointmentsTableHeader extends StatelessWidget {
       ),
       onChanged: context.read<AdminAppointmentsCubit>().searchPatient,
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: const AppPadding.allLg(),
       child: context.screenSize.isMobile
           ? Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               spacing: AppSizes.s12,
-              children: [summary, search],
+              children: [_summary, _searchField(context)],
             )
           : Row(
               spacing: AppSizes.s20,
               children: [
-                Expanded(child: summary),
-                SizedBox(width: AppSizes.progressWidthMd, child: search),
+                Expanded(child: _summary),
+                SizedBox(
+                  width: AppSizes.progressWidthMd,
+                  child: _searchField(context),
+                ),
               ],
             ),
     );

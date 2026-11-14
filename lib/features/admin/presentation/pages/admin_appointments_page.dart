@@ -1,4 +1,5 @@
-import 'package:clinic_appointment_system/core/constants/admin_appointment_constants.dart';
+import 'package:clinic_appointment_system/core/constants/admin_layout_constants.dart';
+import 'package:clinic_appointment_system/core/constants/date_picker_constants.dart';
 import 'package:clinic_appointment_system/core/di/app_dependency.dart';
 import 'package:clinic_appointment_system/core/localization/localization.dart';
 import 'package:clinic_appointment_system/core/theme/theme.dart';
@@ -38,6 +39,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'admin_appointments_view.dart';
 part 'admin_appointments_data_state.dart';
+part 'admin_appointments_failure.dart';
 part 'admin_appointments_loaded_content.dart';
 part 'admin_appointments_filter_card.dart';
 part 'admin_appointments_filter_fields.dart';

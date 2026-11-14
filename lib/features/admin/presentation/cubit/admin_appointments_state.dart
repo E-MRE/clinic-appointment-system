@@ -34,12 +34,17 @@ final class AdminAppointmentsFailure extends AdminAppointmentsState {
 
 /// The observed appointments and all list data derived from the active filter.
 final class AdminAppointmentsLoaded extends AdminAppointmentsState {
+  int get _firstPage => 1;
+  int get _noItems => 0;
+
   /// Filters, sorts and pages [allAppointmentsInRange].
   factory AdminAppointmentsLoaded({
     required AdminAppointmentFilter filter,
     required List<Appointment> allAppointmentsInRange,
     required int currentPage,
   }) {
+    const int firstPage = 1;
+    const int noItems = 0;
     final allAppointments = List<Appointment>.unmodifiable(
       allAppointmentsInRange,
     );
@@ -49,14 +54,14 @@ final class AdminAppointmentsLoaded extends AdminAppointmentsState {
         (filteredAppointments.length / AdminAppointmentConstants.rowsPerPage)
             .ceil();
     final boundedPage = currentPage
-        .clamp(1, pageCount < 1 ? 1 : pageCount)
+        .clamp(firstPage, pageCount < firstPage ? firstPage : pageCount)
         .toInt();
     final counts = <AdminStatusFilter, int>{
-      for (final status in AdminStatusFilter.values) status: 0,
+      for (final status in AdminStatusFilter.values) status: noItems,
     };
     for (final appointment in filteredAppointments) {
       final status = appointment.status.adminFilter;
-      counts[status] = (counts[status] ?? 0) + 1;
+      counts[status] = (counts[status] ?? noItems) + firstPage;
     }
     return AdminAppointmentsLoaded._(
       filter: filter,
@@ -93,12 +98,12 @@ final class AdminAppointmentsLoaded extends AdminAppointmentsState {
 
   /// The first zero-based index represented by [currentPage].
   int get _startIndex =>
-      (currentPage - 1) * AdminAppointmentConstants.rowsPerPage;
+      (currentPage - _firstPage) * AdminAppointmentConstants.rowsPerPage;
 
   /// Appointments shown on the current page.
   List<Appointment> get currentPageAppointments {
     final endIndex = (_startIndex + AdminAppointmentConstants.rowsPerPage)
-        .clamp(0, filteredAppointments.length)
+        .clamp(_noItems, filteredAppointments.length)
         .toInt();
     return List<Appointment>.unmodifiable(
       filteredAppointments.sublist(_startIndex, endIndex),
@@ -106,15 +111,16 @@ final class AdminAppointmentsLoaded extends AdminAppointmentsState {
   }
 
   /// One-based first row number, or zero for an empty result.
-  int get rangeStart => filteredAppointments.isEmpty ? 0 : _startIndex + 1;
+  int get rangeStart =>
+      filteredAppointments.isEmpty ? _noItems : _startIndex + _firstPage;
 
   /// One-based last row number, or zero for an empty result.
   int get rangeEnd {
-    if (filteredAppointments.isEmpty) return 0;
+    if (filteredAppointments.isEmpty) return _noItems;
     return _startIndex + currentPageAppointments.length;
   }
 
-  /// Footer label such as `1–10 / 17`.
+  /// Label with the first row, last row and total result count.
   String get rangeLabel =>
       '$rangeStart–$rangeEnd / ${filteredAppointments.length}';
 
@@ -122,8 +128,9 @@ final class AdminAppointmentsLoaded extends AdminAppointmentsState {
   final Map<AdminStatusFilter, int> statusCounts;
 
   static int _compareAppointments(Appointment first, Appointment second) {
+    const int equalOrder = 0;
     final dateOrder = first.date.compareTo(second.date);
-    if (dateOrder != 0) return dateOrder;
+    if (dateOrder != equalOrder) return dateOrder;
     return first.range.start.compareTo(second.range.start);
   }
 }

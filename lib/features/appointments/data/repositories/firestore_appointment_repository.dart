@@ -242,10 +242,8 @@ final class FirestoreAppointmentRepository implements AppointmentRepository {
     Stream<S> Function() snapshots,
     R Function(S snapshot) read,
   ) {
-    final Stream<S> source;
-    try {
-      source = snapshots();
-    } on FirebaseException {
+    final source = _openSnapshotStream(snapshots);
+    if (source == null) {
       return Stream.value(
         const DataResult.error(errorCode: AppointmentErrorCode.unavailable),
       );
@@ -267,6 +265,14 @@ final class FirestoreAppointmentRepository implements AppointmentRepository {
             },
           ),
         );
+  }
+
+  Stream<S>? _openSnapshotStream<S>(Stream<S> Function() snapshots) {
+    try {
+      return snapshots();
+    } on FirebaseException {
+      return null;
+    }
   }
 
   DataResult<R> _decodeResult<R>(R Function() read) {

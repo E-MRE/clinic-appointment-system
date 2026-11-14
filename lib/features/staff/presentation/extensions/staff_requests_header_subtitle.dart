@@ -6,6 +6,8 @@ import 'package:clinic_appointment_system/generated/localization/lang/locale_key
 
 /// Subtitle text formatting for the staff requests header.
 extension StaffRequestsHeaderSubtitle on Iterable<Appointment> {
+  int get _noRequests => 0;
+
   /// The earliest creation instant among all request histories, or null when
   /// empty or histories contain no entries.
   DateTime? get oldestCreatedAt {
@@ -20,12 +22,11 @@ extension StaffRequestsHeaderSubtitle on Iterable<Appointment> {
     return oldest;
   }
 
-  /// Localized header subtitle: `{n} talep · en eskisi {relative} oluşturuldu`
-  /// or `{n} talep` when [oldestCreatedAt] is not applicable.
+  /// Builds a localized subtitle with the request count and oldest request age.
   String headerSubtitle(Clock clock) {
     final count = length;
     final oldest = oldestCreatedAt;
-    if (count == 0 || oldest == null) {
+    if (count == _noRequests || oldest == null) {
       return LocaleKeys.staffRequests_headerSubtitleCountOnly.translate(
         args: ['$count'],
       );

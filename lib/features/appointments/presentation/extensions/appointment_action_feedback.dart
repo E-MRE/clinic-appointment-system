@@ -5,19 +5,18 @@ import 'package:flutter/material.dart';
 
 /// Shows the shared success and failure SnackBar for an appointment action.
 extension AppointmentActionFeedback on BuildContext {
+  String? _messageFor(AppointmentActionState state, String successMessage) {
+    if (state is AppointmentActionSuccess) return successMessage;
+    if (state is AppointmentActionFailure) return state.errorCode.message;
+    return null;
+  }
+
   /// Shows [successMessage] after success or the localized domain error.
   void showAppointmentActionFeedback(
     AppointmentActionState state, {
     required String successMessage,
   }) {
-    final String? message;
-    if (state is AppointmentActionSuccess) {
-      message = successMessage;
-    } else if (state is AppointmentActionFailure) {
-      message = state.errorCode.message;
-    } else {
-      message = null;
-    }
+    final message = _messageFor(state, successMessage);
     if (message == null) return;
     ScaffoldMessenger.of(this).showSnackBar(
       SnackBar(

@@ -15,6 +15,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'admin_appointment_pending_actions.dart';
+part 'admin_appointment_pending_buttons.dart';
+part 'admin_appointment_pending_button_row.dart';
 part 'admin_appointment_cancel_action.dart';
 part 'admin_appointment_action_progress.dart';
 

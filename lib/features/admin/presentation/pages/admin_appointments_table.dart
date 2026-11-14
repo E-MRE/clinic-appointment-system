@@ -16,6 +16,8 @@ final class _AdminAppointmentsTable extends StatelessWidget {
   final AdminAppointmentActor actor;
   final TextEditingController searchController;
 
+  int get _singleLine => 1;
+
   @override
   Widget build(BuildContext context) {
     final now = clock.now();
@@ -38,7 +40,7 @@ final class _AdminAppointmentsTable extends StatelessWidget {
     }
     return AppDataTable<AdminAppointmentRowPresentation>(
       rows: rows,
-      minWidth: AppSizes.adminAppointmentsTableMinWidth,
+      minWidth: AdminLayoutConstants.appointmentsTableMinWidth,
       density: AppTableDensity.regular,
       rowVerticalPadding: AppSizes.s8,
       header: header,
@@ -52,59 +54,59 @@ final class _AdminAppointmentsTable extends StatelessWidget {
       AppTableColumn<AdminAppointmentRowPresentation>(
         label: LocaleKeys.admin_appointmentsPage_columnDate.translate(),
         noWrap: true,
-        maxWidth: AppSizes.adminAppointmentDateColumnMaxWidth,
+        maxWidth: AdminLayoutConstants.appointmentDateColumnMaxWidth,
         cellBuilder: (_, row) => AppText.bodyStrong(
           row.dateTimeLabel,
-          maxLines: 1,
+          maxLines: _singleLine,
           overflow: TextOverflow.ellipsis,
         ),
       ),
       AppTableColumn<AdminAppointmentRowPresentation>(
         label: LocaleKeys.admin_appointmentsPage_columnPatient.translate(),
         noWrap: true,
-        maxWidth: AppSizes.adminAppointmentPatientColumnMaxWidth,
+        maxWidth: AdminLayoutConstants.appointmentPatientColumnMaxWidth,
         cellBuilder: (_, row) => AppText.body(
           row.appointment.patientName,
-          maxLines: 1,
+          maxLines: _singleLine,
           overflow: TextOverflow.ellipsis,
         ),
       ),
       AppTableColumn<AdminAppointmentRowPresentation>(
         label: LocaleKeys.admin_appointmentsPage_columnService.translate(),
         noWrap: true,
-        maxWidth: AppSizes.adminAppointmentServiceColumnMaxWidth,
+        maxWidth: AdminLayoutConstants.appointmentServiceColumnMaxWidth,
         cellBuilder: (_, row) => AppText.body(
           row.appointment.serviceName,
-          maxLines: 1,
+          maxLines: _singleLine,
           overflow: TextOverflow.ellipsis,
         ),
       ),
       AppTableColumn<AdminAppointmentRowPresentation>(
         label: LocaleKeys.admin_appointmentsPage_columnStaff.translate(),
         noWrap: true,
-        maxWidth: AppSizes.adminAppointmentStaffColumnMaxWidth,
+        maxWidth: AdminLayoutConstants.appointmentStaffColumnMaxWidth,
         cellBuilder: (_, row) => AppText.body(
           row.staffName,
           tone: TextTone.muted,
-          maxLines: 1,
+          maxLines: _singleLine,
           overflow: TextOverflow.ellipsis,
         ),
       ),
       AppTableColumn<AdminAppointmentRowPresentation>(
         label: LocaleKeys.admin_appointmentsPage_columnLocation.translate(),
         noWrap: true,
-        maxWidth: AppSizes.adminAppointmentLocationColumnMaxWidth,
+        maxWidth: AdminLayoutConstants.appointmentLocationColumnMaxWidth,
         cellBuilder: (_, row) => AppText.body(
           row.departmentBranchLabel,
           tone: TextTone.muted,
-          maxLines: 1,
+          maxLines: _singleLine,
           overflow: TextOverflow.ellipsis,
         ),
       ),
       AppTableColumn<AdminAppointmentRowPresentation>(
         label: LocaleKeys.admin_appointmentsPage_columnStatus.translate(),
         noWrap: true,
-        maxWidth: AppSizes.adminAppointmentStatusColumnMaxWidth,
+        maxWidth: AdminLayoutConstants.appointmentStatusColumnMaxWidth,
         cellBuilder: (_, row) {
           return AppointmentStatusBadge(status: row.appointment.status);
         },
@@ -113,7 +115,7 @@ final class _AdminAppointmentsTable extends StatelessWidget {
         label: LocaleKeys.admin_appointmentsPage_columnActions.translate(),
         alignment: AppTableAlignment.end,
         noWrap: true,
-        maxWidth: AppSizes.adminAppointmentActionsColumnMaxWidth,
+        maxWidth: AdminLayoutConstants.appointmentActionsColumnMaxWidth,
         cellBuilder: (_, row) {
           return AdminAppointmentRowActions(
             appointment: row.appointment,

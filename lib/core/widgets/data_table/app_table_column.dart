@@ -3,6 +3,8 @@ import 'package:flutter/widgets.dart';
 
 /// Defines the heading and cell content of a table column.
 final class AppTableColumn<T> {
+  static const double _minimumMaximumWidth = 0;
+
   /// Creates a column; an empty visible label requires a semantic label.
   const AppTableColumn({
     required this.label,
@@ -12,7 +14,7 @@ final class AppTableColumn<T> {
     this.noWrap = false,
     this.maxWidth,
   }) : assert(label != '' || (semanticsLabel != null && semanticsLabel != '')),
-       assert(maxWidth == null || maxWidth > 0);
+       assert(maxWidth == null || maxWidth > _minimumMaximumWidth);
 
   /// Visible header text, empty for an icon-only column.
   final String label;

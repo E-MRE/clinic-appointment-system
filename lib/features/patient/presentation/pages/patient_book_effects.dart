@@ -77,7 +77,12 @@ final class _PatientBookEffects extends StatelessWidget {
   void _onRequest(BuildContext context, BookAppointmentState state) {
     if (state is BookAppointmentSuccess) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(LocaleKeys.patient_book_submitted.translate())),
+        SnackBar(
+          content: AppText.body(
+            LocaleKeys.patient_book_submitted.translate(),
+            tone: TextTone.onInverse,
+          ),
+        ),
       );
       context.go(AppRoutes.patientAppointments);
     } else if (state is BookAppointmentFailure && state.errorCode.clearsSlot) {

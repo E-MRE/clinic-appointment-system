@@ -6,6 +6,18 @@ final class _AdminAppointmentCancelAction extends StatelessWidget {
 
   final Appointment appointment;
 
+  Widget _label(AppointmentActionState state) {
+    if (state is AppointmentActionInProgress) {
+      return _AdminAppointmentActionProgress(
+        label: LocaleKeys.staffAppointmentDialog_cancelAction.translate(),
+      );
+    }
+    return AppText.label(
+      LocaleKeys.staffAppointmentDialog_cancel.translate(),
+      tone: TextTone.error,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<AppointmentStaffCancelCubit, AppointmentActionState>(
@@ -19,23 +31,12 @@ final class _AdminAppointmentCancelAction extends StatelessWidget {
       child: BlocBuilder<AppointmentStaffCancelCubit, AppointmentActionState>(
         builder: (context, state) {
           final isBusy = state is AppointmentActionInProgress;
-          final Widget label;
-          if (isBusy) {
-            label = _AdminAppointmentActionProgress(
-              label: LocaleKeys.staffAppointmentDialog_cancelAction.translate(),
-            );
-          } else {
-            label = AppText.label(
-              LocaleKeys.staffAppointmentDialog_cancel.translate(),
-              tone: TextTone.error,
-            );
-          }
           return OutlinedButton(
             style: OutlinedButton.styleFrom(
               foregroundColor: context.colorScheme.error,
             ),
             onPressed: isBusy ? null : () => _cancel(context),
-            child: label,
+            child: _label(state),
           );
         },
       ),

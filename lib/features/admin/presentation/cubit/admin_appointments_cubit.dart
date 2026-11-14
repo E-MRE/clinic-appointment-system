@@ -41,6 +41,8 @@ final class AdminAppointmentsCubit extends Cubit<AdminAppointmentsState> {
   bool _isClosing = false;
 
   bool get _isClosingOrClosed => _isClosing || isClosed;
+  int get _firstPage => 1;
+  int get _pageStep => 1;
 
   /// Replaces the filter and watches again only when its date range changes.
   void updateFilter(AdminAppointmentFilter filter) {
@@ -48,7 +50,7 @@ final class AdminAppointmentsCubit extends Cubit<AdminAppointmentsState> {
     final rangeChanged =
         filter.from != _filter.from || filter.through != _filter.through;
     _filter = filter;
-    _currentPage = 1;
+    _currentPage = _firstPage;
     if (rangeChanged) {
       watch();
       return;
@@ -95,8 +97,10 @@ final class AdminAppointmentsCubit extends Cubit<AdminAppointmentsState> {
   void goToPage(int page) {
     final currentState = state;
     if (currentState is! AdminAppointmentsLoaded) return;
-    final lastPage = currentState.pageCount < 1 ? 1 : currentState.pageCount;
-    final nextPage = page.clamp(1, lastPage).toInt();
+    final lastPage = currentState.pageCount < _firstPage
+        ? _firstPage
+        : currentState.pageCount;
+    final nextPage = page.clamp(_firstPage, lastPage).toInt();
     if (nextPage == _currentPage) return;
     _currentPage = nextPage;
     _emitLoaded(currentState.allAppointmentsInRange);
@@ -106,7 +110,7 @@ final class AdminAppointmentsCubit extends Cubit<AdminAppointmentsState> {
   void nextPage() {
     final currentState = state;
     if (currentState is AdminAppointmentsLoaded) {
-      goToPage(currentState.currentPage + 1);
+      goToPage(currentState.currentPage + _pageStep);
     }
   }
 
@@ -114,7 +118,7 @@ final class AdminAppointmentsCubit extends Cubit<AdminAppointmentsState> {
   void previousPage() {
     final currentState = state;
     if (currentState is AdminAppointmentsLoaded) {
-      goToPage(currentState.currentPage - 1);
+      goToPage(currentState.currentPage - _pageStep);
     }
   }
 

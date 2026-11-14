@@ -7,17 +7,17 @@ import 'package:clinic_appointment_system/features/patient/presentation/visitors
 
 /// Localized text of a service card on the booking page.
 extension BookingServicePresentation on MedicalService {
-  /// The length (`20 dk`).
+  /// The service duration as a localized label.
   String get durationLabel {
     return LocaleKeys.services_durationMinutes.translate(
       args: ['${duration.minutes}'],
     );
   }
 
-  /// The fee (`₺950`).
+  /// The service fee as a localized label.
   String get feeLabel => fee.formatted();
 
-  /// Kind, length and fee (`Muayene · 20 dk · ₺950`).
+  /// A localized summary with the service kind, duration and fee.
   String get bookingCaption {
     return LocaleKeys.patient_book_serviceCaption.translate(
       args: [kind.label, durationLabel, feeLabel],

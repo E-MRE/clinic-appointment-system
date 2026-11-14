@@ -155,16 +155,19 @@ final class AdminDashboardSummary extends Equatable {
   }
 
   static int _compareAppointmentStart(Appointment first, Appointment second) {
+    const int equalOrder = 0;
     final dateOrder = first.date.compareTo(second.date);
-    if (dateOrder != 0) return dateOrder;
+    if (dateOrder != equalOrder) return dateOrder;
     final timeOrder = first.range.start.compareTo(second.range.start);
-    if (timeOrder != 0) return timeOrder;
+    if (timeOrder != equalOrder) return timeOrder;
     return first.id.compareTo(second.id);
   }
 
   static List<AdminDashboardStatusCount> _statusCounts(
     List<Appointment> appointments,
   ) {
+    const int noCount = 0;
+    const int firstCount = 1;
     const displayOrder = [
       AdminStatusFilter.completed,
       AdminStatusFilter.approved,
@@ -176,12 +179,19 @@ final class AdminDashboardSummary extends Equatable {
     final counts = <AdminStatusFilter, int>{};
     for (final appointment in appointments) {
       final filter = appointment.status.adminFilter;
-      counts.update(filter, (int count) => count + 1, ifAbsent: () => 1);
+      counts.update(
+        filter,
+        (int count) => count + firstCount,
+        ifAbsent: () => firstCount,
+      );
     }
     return [
       for (final filter in displayOrder)
         if (counts.containsKey(filter))
-          AdminDashboardStatusCount(status: filter, count: counts[filter] ?? 0),
+          AdminDashboardStatusCount(
+            status: filter,
+            count: counts[filter] ?? noCount,
+          ),
     ];
   }
 
@@ -198,6 +208,7 @@ final class AdminDashboardSummary extends Equatable {
     List<Appointment> appointments,
     ClinicCatalog catalog,
   ) {
+    const int equalOrder = 0;
     final counts = _countBy(
       appointments,
       (Appointment appointment) => appointment.departmentId,
@@ -212,11 +223,11 @@ final class AdminDashboardSummary extends Equatable {
             ),
         ]..sort((first, second) {
           final countOrder = second.count.compareTo(first.count);
-          if (countOrder != 0) return countOrder;
+          if (countOrder != equalOrder) return countOrder;
           final nameOrder = first.name.compareTurkishAlphabetically(
             second.name,
           );
-          if (nameOrder != 0) return nameOrder;
+          if (nameOrder != equalOrder) return nameOrder;
           return first.id.compareTo(second.id);
         });
     final maximum = _maximumCount(rows.map((row) => row.count));
@@ -234,6 +245,7 @@ final class AdminDashboardSummary extends Equatable {
     List<Appointment> appointments,
     ClinicCatalog catalog,
   ) {
+    const int equalOrder = 0;
     final counts = _countBy(
       appointments,
       (Appointment appointment) => appointment.staffId,
@@ -249,11 +261,11 @@ final class AdminDashboardSummary extends Equatable {
             ),
         ]..sort((first, second) {
           final countOrder = second.count.compareTo(first.count);
-          if (countOrder != 0) return countOrder;
+          if (countOrder != equalOrder) return countOrder;
           final nameOrder = first.fullName.compareTurkishAlphabetically(
             second.fullName,
           );
-          if (nameOrder != 0) return nameOrder;
+          if (nameOrder != equalOrder) return nameOrder;
           return first.id.compareTo(second.id);
         });
     final maximum = _maximumCount(rows.map((row) => row.count));
@@ -279,19 +291,21 @@ final class AdminDashboardSummary extends Equatable {
     List<Appointment> appointments,
     String Function(Appointment appointment) keyOf,
   ) {
+    const int firstCount = 1;
     final counts = <String, int>{};
     for (final appointment in appointments) {
       counts.update(
         keyOf(appointment),
-        (int count) => count + 1,
-        ifAbsent: () => 1,
+        (int count) => count + firstCount,
+        ifAbsent: () => firstCount,
       );
     }
     return counts;
   }
 
   static int _maximumCount(Iterable<int> counts) {
-    int maximum = 0;
+    const int noCount = 0;
+    int maximum = noCount;
     for (final count in counts) {
       if (count > maximum) maximum = count;
     }

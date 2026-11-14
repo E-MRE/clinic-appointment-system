@@ -5,17 +5,17 @@ import 'package:clinic_appointment_system/features/appointments/domain/enums/app
 extension AppointmentStatusAdminActions on AppointmentStatus {
   /// Candidate actions, later checked against the real domain transition.
   List<AppointmentAction> get adminActions {
-    return switch (this) {
-      AppointmentStatus.pending => const [
-        AppointmentAction.approve,
-        AppointmentAction.reject,
-      ],
-      AppointmentStatus.approved => const [AppointmentAction.cancelByStaff],
-      AppointmentStatus.rejected ||
-      AppointmentStatus.cancelledByPatient ||
-      AppointmentStatus.cancelledByStaff ||
-      AppointmentStatus.completed ||
-      AppointmentStatus.noShow => const [],
-    };
+    switch (this) {
+      case AppointmentStatus.pending:
+        return const [AppointmentAction.approve, AppointmentAction.reject];
+      case AppointmentStatus.approved:
+        return const [AppointmentAction.cancelByStaff];
+      case AppointmentStatus.rejected:
+      case AppointmentStatus.cancelledByPatient:
+      case AppointmentStatus.cancelledByStaff:
+      case AppointmentStatus.completed:
+      case AppointmentStatus.noShow:
+        return const [];
+    }
   }
 }
