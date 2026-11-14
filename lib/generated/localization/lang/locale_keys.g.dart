@@ -58,6 +58,47 @@ abstract class LocaleKeys {
   static const home = 'home';
   static const admin_appointmentsTitle = 'admin.appointmentsTitle';
   static const admin_appointmentsSubtitle = 'admin.appointmentsSubtitle';
+  static const admin_overview_title = 'admin.overview.title';
+  static const admin_overview_todaySubtitle = 'admin.overview.todaySubtitle';
+  static const admin_overview_todayAppointments =
+      'admin.overview.todayAppointments';
+  static const admin_overview_todayAppointmentsCaption =
+      'admin.overview.todayAppointmentsCaption';
+  static const admin_overview_pendingAppointments =
+      'admin.overview.pendingAppointments';
+  static const admin_overview_oldestPendingCaption =
+      'admin.overview.oldestPendingCaption';
+  static const admin_overview_completedToday = 'admin.overview.completedToday';
+  static const admin_overview_completedCaption =
+      'admin.overview.completedCaption';
+  static const admin_overview_noShowToday = 'admin.overview.noShowToday';
+  static const admin_overview_noShowCaption = 'admin.overview.noShowCaption';
+  static const admin_overview_statusBreakdown =
+      'admin.overview.statusBreakdown';
+  static const admin_overview_departmentBreakdown =
+      'admin.overview.departmentBreakdown';
+  static const admin_overview_staffBreakdown = 'admin.overview.staffBreakdown';
+  static const admin_overview_emptyStatus = 'admin.overview.emptyStatus';
+  static const admin_overview_emptyDepartments =
+      'admin.overview.emptyDepartments';
+  static const admin_overview_emptyStaff = 'admin.overview.emptyStaff';
+  static const admin_overview_pendingTableTitle =
+      'admin.overview.pendingTableTitle';
+  static const admin_overview_seeAll = 'admin.overview.seeAll';
+  static const admin_overview_columnRequestAge =
+      'admin.overview.columnRequestAge';
+  static const admin_overview_emptyPending = 'admin.overview.emptyPending';
+  static const admin_overview_loading = 'admin.overview.loading';
+  static const admin_overview_failureTitle = 'admin.overview.failureTitle';
+  static const admin_overview_catalogFailureTitle =
+      'admin.overview.catalogFailureTitle';
+  static const admin_overview_catalogFailureMessage =
+      'admin.overview.catalogFailureMessage';
+  static const admin_overview_sessionFailureTitle =
+      'admin.overview.sessionFailureTitle';
+  static const admin_overview_sessionFailureMessage =
+      'admin.overview.sessionFailureMessage';
+  static const admin_overview = 'admin.overview';
   static const admin_appointmentsPage_loading =
       'admin.appointmentsPage.loading';
   static const admin_appointmentsPage_failureTitle =
@@ -354,6 +395,7 @@ abstract class LocaleKeys {
   static const componentPreview_states = 'componentPreview.states';
   static const componentPreview_loading = 'componentPreview.loading';
   static const componentPreview_list = 'componentPreview.list';
+  static const componentPreview_progressBar = 'componentPreview.progressBar';
   static const componentPreview_avatar = 'componentPreview.avatar';
   static const componentPreview_fields = 'componentPreview.fields';
   static const componentPreview_choices = 'componentPreview.choices';

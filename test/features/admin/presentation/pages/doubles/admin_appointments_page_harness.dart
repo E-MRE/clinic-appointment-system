@@ -2,16 +2,22 @@ import 'package:clinic_appointment_system/core/di/app_dependency.dart';
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
 import 'package:clinic_appointment_system/core/errors/result.dart';
 import 'package:clinic_appointment_system/core/localization/app_formatters.dart';
+import 'package:clinic_appointment_system/core/router/app_routes.dart';
 import 'package:clinic_appointment_system/core/theme/theme.dart'
     hide AppointmentStatus;
 import 'package:clinic_appointment_system/core/time/clock.dart';
 import 'package:clinic_appointment_system/features/admin/presentation/cubit/admin_appointments_cubit.dart';
+import 'package:clinic_appointment_system/features/admin/presentation/cubit/admin_dashboard_cubit.dart';
+import 'package:clinic_appointment_system/features/admin/presentation/extensions/admin_appointment_route_query.dart';
 import 'package:clinic_appointment_system/features/admin/presentation/pages/admin_appointments_page.dart';
+import 'package:clinic_appointment_system/features/admin/presentation/pages/admin_home_page.dart';
+import 'package:clinic_appointment_system/features/admin/presentation/widgets/admin_shell.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_error_code.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/change_appointment_status_use_case.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_admin_appointments_use_case.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_pending_appointments_use_case.dart';
 import 'package:clinic_appointment_system/features/auth/domain/entities/auth_session.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_state.dart';
@@ -29,6 +35,7 @@ import 'package:clinic_appointment_system/features/users/domain/entities/user.da
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../../../core/time/support/fixed_clock.dart';
@@ -53,6 +60,7 @@ final class AdminAppointmentsPageHarness {
   late final AuthCubit auth;
   ClinicCatalogCubit? catalogCubit;
   AdminAppointmentsCubit? adminAppointmentsCubit;
+  AdminDashboardCubit? adminDashboardCubit;
 
   /// Registers test dependencies and signs in an administrator.
   Future<void> initialize() async {
@@ -89,10 +97,7 @@ final class AdminAppointmentsPageHarness {
 
   /// Pumps the real page with one watched catalog Cubit.
   Future<void> pumpPage(WidgetTester tester, {Size size = desktop}) async {
-    tester.view.physicalSize = size;
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
+    _setSize(tester, size);
     final screenSize = BreakpointsConstants.resolve(size.width, size.height);
     final catalogWatch = AppDependency.injector.get<ClinicCatalogCubit>()
       ..watch();
@@ -101,15 +106,75 @@ final class AdminAppointmentsPageHarness {
       tester,
       theme: LightTheme(screenSize).themeData,
       settle: false,
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider<AuthCubit>.value(value: auth),
-          BlocProvider<ClinicCatalogCubit>.value(value: catalogWatch),
-        ],
-        child: const AdminAppointmentsPage(),
+      child: _withSessionAndCatalog(
+        catalogWatch,
+        const AdminAppointmentsPage(),
       ),
     );
     await tester.pump();
+  }
+
+  /// Pumps the overview with real Cubits backed by controllable streams.
+  Future<void> pumpHomePage(WidgetTester tester, {Size size = desktop}) async {
+    _setSize(tester, size);
+    final screenSize = BreakpointsConstants.resolve(size.width, size.height);
+    final catalogWatch = AppDependency.injector.get<ClinicCatalogCubit>()
+      ..watch();
+    catalogCubit = catalogWatch;
+    await loadTestTranslations(
+      tester,
+      theme: LightTheme(screenSize).themeData,
+      settle: false,
+      child: _withSessionAndCatalog(catalogWatch, const AdminHomePage()),
+    );
+    await tester.pump();
+  }
+
+  /// Pumps the overview in the admin shell with routable appointment targets.
+  Future<GoRouter> pumpRoutedHomePage(
+    WidgetTester tester, {
+    Size size = desktop,
+  }) async {
+    _setSize(tester, size);
+    final screenSize = BreakpointsConstants.resolve(size.width, size.height);
+    final catalogWatch = AppDependency.injector.get<ClinicCatalogCubit>()
+      ..watch();
+    catalogCubit = catalogWatch;
+    final router = GoRouter(
+      initialLocation: AppRoutes.adminHome,
+      routes: [
+        ShellRoute(
+          builder: (context, state, child) => AdminShell(child: child),
+          routes: [
+            GoRoute(
+              path: AppRoutes.adminHome,
+              builder: (context, state) => const AdminHomePage(),
+            ),
+            GoRoute(
+              path: AppRoutes.adminAppointments,
+              builder: (context, state) => AdminAppointmentsPage(
+                initialStatuses: state.uri.initialAdminAppointmentStatuses,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+    addTearDown(router.dispose);
+    await loadTestTranslations(
+      tester,
+      theme: LightTheme(screenSize).themeData,
+      settle: false,
+      child: _withSessionAndCatalog(
+        catalogWatch,
+        MaterialApp.router(
+          routerConfig: router,
+          theme: LightTheme(screenSize).themeData,
+        ),
+      ),
+    );
+    await tester.pump();
+    return router;
   }
 
   /// Emits every directory collection and the supplied appointment rows.
@@ -209,6 +274,15 @@ final class AdminAppointmentsPageHarness {
       adminAppointmentsCubit = cubit;
       return cubit;
     });
+    injector.registerFactory<AdminDashboardCubit>(() {
+      final cubit = AdminDashboardCubit(
+        WatchAdminAppointmentsUseCase(appointments),
+        WatchPendingAppointmentsUseCase(appointments),
+        clock,
+      );
+      adminDashboardCubit = cubit;
+      return cubit;
+    });
     injector.registerFactory<AppointmentApproveCubit>(
       () => AppointmentApproveCubit(
         ChangeAppointmentStatusUseCase(appointments, clock),
@@ -224,5 +298,25 @@ final class AdminAppointmentsPageHarness {
         ChangeAppointmentStatusUseCase(appointments, clock),
       ),
     );
+  }
+
+  MultiBlocProvider _withSessionAndCatalog(
+    ClinicCatalogCubit catalog,
+    Widget child,
+  ) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthCubit>.value(value: auth),
+        BlocProvider<ClinicCatalogCubit>.value(value: catalog),
+      ],
+      child: child,
+    );
+  }
+
+  void _setSize(WidgetTester tester, Size size) {
+    tester.view.physicalSize = size;
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
   }
 }

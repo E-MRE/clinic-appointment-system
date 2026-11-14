@@ -51,7 +51,10 @@ part 'admin_appointments_empty_state.dart';
 /// Lists, filters and manages the administrator's appointments.
 final class AdminAppointmentsPage extends StatefulWidget {
   /// Creates the routed administrator appointment page.
-  const AdminAppointmentsPage({super.key});
+  const AdminAppointmentsPage({this.initialStatuses = const {}, super.key});
+
+  /// Status groups selected when the route supplies a status query.
+  final Set<AdminStatusFilter> initialStatuses;
 
   @override
   State<AdminAppointmentsPage> createState() => _AdminAppointmentsPageState();
@@ -78,7 +81,13 @@ final class _AdminAppointmentsPageState extends State<AdminAppointmentsPage> {
   Widget build(BuildContext context) {
     return AppScaffold(
       child: BlocProvider<AdminAppointmentsCubit>(
-        create: (_) => AppDependency.injector.get<AdminAppointmentsCubit>(),
+        create: (_) {
+          final cubit = AppDependency.injector.get<AdminAppointmentsCubit>();
+          if (widget.initialStatuses.isNotEmpty) {
+            cubit.selectStatuses(widget.initialStatuses);
+          }
+          return cubit;
+        },
         child: _AdminAppointmentsView(
           clock: _clock,
           searchController: _searchController,

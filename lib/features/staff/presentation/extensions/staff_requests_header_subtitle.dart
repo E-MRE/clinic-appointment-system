@@ -1,7 +1,7 @@
+import 'package:clinic_appointment_system/core/extensions/relative_time_label.dart';
 import 'package:clinic_appointment_system/core/localization/localization_extension.dart';
 import 'package:clinic_appointment_system/core/time/clock.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
-import 'package:clinic_appointment_system/features/staff/presentation/extensions/relative_time_label.dart';
 import 'package:clinic_appointment_system/generated/localization/lang/locale_keys.g.dart';
 
 /// Subtitle text formatting for the staff requests header.

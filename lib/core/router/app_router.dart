@@ -2,6 +2,7 @@ import 'package:clinic_appointment_system/core/router/app_routes.dart';
 import 'package:clinic_appointment_system/core/router/fade_transition_page.dart';
 import 'package:clinic_appointment_system/core/router/home_page.dart';
 import 'package:clinic_appointment_system/core/router/not_found_page.dart';
+import 'package:clinic_appointment_system/features/admin/presentation/extensions/admin_appointment_route_query.dart';
 import 'package:clinic_appointment_system/features/admin/presentation/pages/admin_appointments_page.dart';
 import 'package:clinic_appointment_system/features/admin/presentation/pages/admin_home_page.dart';
 import 'package:clinic_appointment_system/features/admin/presentation/widgets/admin_route_scope.dart';
@@ -142,8 +143,14 @@ GoRouter createAppRouter({
           ),
           GoRoute(
             path: AppRoutes.adminAppointments,
-            pageBuilder: (_, state) =>
-                _fadePage(state, const AdminAppointmentsPage()),
+            pageBuilder: (_, state) {
+              return _fadePage(
+                state,
+                AdminAppointmentsPage(
+                  initialStatuses: state.uri.initialAdminAppointmentStatuses,
+                ),
+              );
+            },
           ),
           ShellRoute(
             builder: (_, state, child) => InstitutionRouteGuard(
