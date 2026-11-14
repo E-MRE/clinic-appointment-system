@@ -60,7 +60,6 @@ final class _PatientAppointmentsTable extends StatelessWidget {
                   appointmentId: entry.appointment.id,
                   initialEntry: entry,
                   appointmentsCubit: context.read<PatientAppointmentsCubit>(),
-                  catalogCubit: context.read<ClinicCatalogCubit>(),
                 ),
               );
             },

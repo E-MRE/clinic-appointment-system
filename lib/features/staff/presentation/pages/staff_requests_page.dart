@@ -40,6 +40,7 @@ import 'package:clinic_appointment_system/features/staff/presentation/extensions
 import 'package:clinic_appointment_system/features/staff/presentation/models/staff_patient_history.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/models/staff_rule_check_factory.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/models/staff_workspace.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/services/staff_patient_history_formatter.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/widgets/staff_appointment_detail_grid.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/widgets/staff_patient_header.dart';
 import 'package:flutter/material.dart';

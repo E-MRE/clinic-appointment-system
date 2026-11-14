@@ -20,7 +20,7 @@ final class _AdminAppointmentDateRangeField extends StatelessWidget {
     );
     return AppPickerField(
       label: LocaleKeys.admin_appointmentsPage_dateRange.translate(),
-      value: AppFormatters.formatShortDateRange(start, end, context: context),
+      value: start.shortDateRangeLabel(end, context: context),
       icon: Icons.keyboard_arrow_down,
       enabled: true,
       isSelected: true,

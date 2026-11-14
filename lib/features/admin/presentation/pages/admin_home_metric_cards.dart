@@ -7,95 +7,56 @@ final class _AdminHomeMetricCards extends StatelessWidget {
   final Clock clock;
   final AdminDashboardSummary summary;
 
-  ({String? today, String? pending, String? completed, String? noShow})
-  _captions(DateTime now) {
-    final todayCaption =
-        summary.todayAppointmentCount == AdminLayoutConstants.overviewEmptyCount
-        ? null
-        : LocaleKeys.admin_overview_todayAppointmentsCaption.translate(
-            args: [
-              summary.distinctBranchCount.toString(),
-              summary.distinctStaffCount.toString(),
-            ],
-          );
-    final oldestPending = summary.oldestPendingCreatedAt;
-    final pendingCaption = oldestPending == null
-        ? null
-        : LocaleKeys.admin_overview_oldestPendingCaption.translate(
-            args: [oldestPending.relativeLabel(now)],
-          );
-    final completedCaption =
-        summary.todayAppointmentCount == AdminLayoutConstants.overviewEmptyCount
-        ? null
-        : LocaleKeys.admin_overview_completedCaption.translate(
-            args: [
-              summary.todayAppointmentCount.toString(),
-              summary.completedCount.toString(),
-            ],
-          );
-    final noShowCaption =
-        summary.noShowCount == AdminLayoutConstants.overviewEmptyCount
-        ? null
-        : LocaleKeys.admin_overview_noShowCaption.translate();
+  double get _minWidthByGap =>
+      AdminLayoutConstants.overviewMetricCardMinWidth + AppSizes.s16;
 
-    return (
-      today: todayCaption,
-      pending: pendingCaption,
-      completed: completedCaption,
-      noShow: noShowCaption,
+  String? get _todayCaption {
+    if (summary.todayAppointmentCount ==
+        AdminLayoutConstants.overviewEmptyCount) {
+      return null;
+    }
+
+    return LocaleKeys.admin_overview_todayAppointmentsCaption.translate(
+      args: [
+        summary.distinctBranchCount.toString(),
+        summary.distinctStaffCount.toString(),
+      ],
     );
   }
 
-  List<(String, String, String?, AdminMetricTone)> _metricValues(
-    ({String? today, String? pending, String? completed, String? noShow})
-    captions,
-  ) {
-    return [
-      (
-        LocaleKeys.admin_overview_todayAppointments.translate(),
-        summary.todayAppointmentCount.toString(),
-        captions.today,
-        AdminMetricTone.primary,
-      ),
-      (
-        LocaleKeys.admin_overview_pendingAppointments.translate(),
-        summary.pendingCount.toString(),
-        captions.pending,
-        AdminMetricTone.pending,
-      ),
-      (
-        LocaleKeys.admin_overview_completedToday.translate(),
-        summary.completedCount.toString(),
-        captions.completed,
-        AdminMetricTone.neutral,
-      ),
-      (
-        LocaleKeys.admin_overview_noShowToday.translate(),
-        summary.noShowCount.toString(),
-        captions.noShow,
-        AdminMetricTone.neutral,
-      ),
-    ];
+  String? _pendingCaption(DateTime now) {
+    final oldestPending = summary.oldestPendingCreatedAt;
+    if (oldestPending == null) return null;
+
+    return LocaleKeys.admin_overview_oldestPendingCaption.translate(
+      args: [oldestPending.relativeLabel(now)],
+    );
   }
 
-  int _columnCount(double width) {
-    const gap = AppSizes.s16;
-    final estimated =
-        ((width + gap) /
-                (AdminLayoutConstants.overviewMetricCardMinWidth + gap))
-            .floor();
-    if (estimated < AdminLayoutConstants.overviewMinimumColumnCount) {
-      return AdminLayoutConstants.overviewMinimumColumnCount;
+  String? get _completedCaption {
+    if (summary.todayAppointmentCount ==
+        AdminLayoutConstants.overviewEmptyCount) {
+      return null;
     }
-    if (estimated > AdminLayoutConstants.overviewMetricCardCount) {
-      return AdminLayoutConstants.overviewMetricCardCount;
+
+    return LocaleKeys.admin_overview_completedCaption.translate(
+      args: [
+        summary.todayAppointmentCount.toString(),
+        summary.completedCount.toString(),
+      ],
+    );
+  }
+
+  String? get _noShowCaption {
+    if (summary.noShowCount == AdminLayoutConstants.overviewEmptyCount) {
+      return null;
     }
-    return estimated;
+
+    return LocaleKeys.admin_overview_noShowCaption.translate();
   }
 
   @override
   Widget build(BuildContext context) {
-    final captions = _captions(clock.now());
     return LayoutBuilder(
       builder: (context, constraints) {
         final columns = _columnCount(constraints.maxWidth);
@@ -103,23 +64,72 @@ final class _AdminHomeMetricCards extends StatelessWidget {
             columns - AdminLayoutConstants.overviewMinimumColumnCount;
         final cardWidth =
             (constraints.maxWidth - AppSizes.s16 * columnGaps) / columns;
+
         return Wrap(
           spacing: AppSizes.s16,
           runSpacing: AppSizes.s16,
           children: [
-            for (final metric in _metricValues(captions))
-              SizedBox(
-                width: cardWidth,
-                child: _AdminHomeMetricCard(
-                  title: metric.$1,
-                  value: metric.$2,
-                  caption: metric.$3,
-                  tone: metric.$4,
-                ),
-              ),
+            _buildCard(
+              cardWidth,
+              title: LocaleKeys.admin_overview_todayAppointments.translate(),
+              value: summary.todayAppointmentCount.toString(),
+              caption: _todayCaption,
+              tone: AdminMetricTone.primary,
+            ),
+            _buildCard(
+              cardWidth,
+              title: LocaleKeys.admin_overview_pendingAppointments.translate(),
+              value: summary.pendingCount.toString(),
+              caption: _pendingCaption(clock.now()),
+              tone: AdminMetricTone.pending,
+            ),
+            _buildCard(
+              cardWidth,
+              title: LocaleKeys.admin_overview_completedToday.translate(),
+              value: summary.completedCount.toString(),
+              caption: _completedCaption,
+              tone: AdminMetricTone.neutral,
+            ),
+            _buildCard(
+              cardWidth,
+              title: LocaleKeys.admin_overview_noShowToday.translate(),
+              value: summary.noShowCount.toString(),
+              caption: _noShowCaption,
+              tone: AdminMetricTone.neutral,
+            ),
           ],
         );
       },
     );
+  }
+
+  Widget _buildCard(
+    double width, {
+    required String title,
+    required String value,
+    required String? caption,
+    required AdminMetricTone tone,
+  }) {
+    return SizedBox(
+      width: width,
+      child: _AdminHomeMetricCard(
+        title: title,
+        value: value,
+        caption: caption,
+        tone: tone,
+      ),
+    );
+  }
+
+  int _columnCount(double width) {
+    final estimated = ((width + AppSizes.s16) / _minWidthByGap).floor();
+
+    if (estimated < AdminLayoutConstants.overviewMinimumColumnCount) {
+      return AdminLayoutConstants.overviewMinimumColumnCount;
+    }
+    if (estimated > AdminLayoutConstants.overviewMetricCardCount) {
+      return AdminLayoutConstants.overviewMetricCardCount;
+    }
+    return estimated;
   }
 }

@@ -1,5 +1,6 @@
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_error_code.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/models/staff_patient_history.dart';
 
 /// The closed set of states of the staff member's watched appointments.
 sealed class StaffAppointmentsState {
@@ -35,6 +36,8 @@ final class StaffAppointmentsLoaded extends StaffAppointmentsState {
   const StaffAppointmentsLoaded({
     required this.appointments,
     required this.pendingRequests,
+    required this.patientHistories,
+    required this.now,
   });
 
   @override
@@ -42,4 +45,10 @@ final class StaffAppointmentsLoaded extends StaffAppointmentsState {
 
   @override
   final List<Appointment> pendingRequests;
+
+  /// Completed visit summaries grouped by patient id.
+  final Map<String, StaffPatientHistory> patientHistories;
+
+  /// Clock instant used to derive this loaded state's time-based values.
+  final DateTime now;
 }

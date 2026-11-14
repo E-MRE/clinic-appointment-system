@@ -6,7 +6,30 @@ final class _AdminHomeStatusCard extends StatelessWidget {
 
   final AdminDashboardSummary summary;
 
-  Widget get _emptyState {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: AdminLayoutConstants.overviewBreakdownCardHeight,
+      child: AppSurface(
+        padding: AppSurfacePadding.spacious,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            AppText.cardTitle(
+              LocaleKeys.admin_overview_statusBreakdown.translate(),
+            ),
+            const EmptySize.s16Height(),
+            if (summary.statusCounts.isEmpty)
+              _buildEmptyState()
+            else
+              _buildDistribution(context),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
     return Expanded(
       child: Center(
         child: AppText.body(
@@ -18,17 +41,14 @@ final class _AdminHomeStatusCard extends StatelessWidget {
     );
   }
 
-  Widget _statusBar(
-    BuildContext context,
-    List<AdminDashboardStatusCount> statusCounts,
-  ) {
+  Widget _buildStatusBar(BuildContext context) {
     return SizedBox(
       height: AdminLayoutConstants.overviewStackedBarHeight,
       child: ClipRRect(
         borderRadius: const AppRadius.full(),
         child: Row(
           children: [
-            for (final row in statusCounts)
+            for (final row in summary.statusCounts)
               Expanded(
                 flex: row.count,
                 child: ColoredBox(color: row.status.color(context)),
@@ -39,12 +59,9 @@ final class _AdminHomeStatusCard extends StatelessWidget {
     );
   }
 
-  List<Widget> _legend(
-    BuildContext context,
-    List<AdminDashboardStatusCount> statusCounts,
-  ) {
+  List<Widget> _buildLegend(BuildContext context) {
     return [
-      for (final row in statusCounts)
+      for (final row in summary.statusCounts)
         Row(
           spacing: AppSizes.s8,
           children: [
@@ -70,47 +87,21 @@ final class _AdminHomeStatusCard extends StatelessWidget {
     ];
   }
 
-  Widget _distribution(
-    BuildContext context,
-    List<AdminDashboardStatusCount> statusCounts,
-  ) {
+  Widget _buildDistribution(BuildContext context) {
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _statusBar(context, statusCounts),
+          _buildStatusBar(context),
           const EmptySize.s16Height(),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               spacing: AdminLayoutConstants.overviewBreakdownRowGap,
-              children: _legend(context, statusCounts),
+              children: _buildLegend(context),
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: AdminLayoutConstants.overviewBreakdownCardHeight,
-      child: AppSurface(
-        padding: AppSurfacePadding.spacious,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            AppText.cardTitle(
-              LocaleKeys.admin_overview_statusBreakdown.translate(),
-            ),
-            const EmptySize.s16Height(),
-            if (summary.statusCounts.isEmpty)
-              _emptyState
-            else
-              _distribution(context, summary.statusCounts),
-          ],
-        ),
       ),
     );
   }

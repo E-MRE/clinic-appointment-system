@@ -5,6 +5,11 @@ extension TurkishCaseFolding on String {
     return replaceAll('I', 'ı').replaceAll('İ', 'i').toLowerCase();
   }
 
+  /// Converts this string to upper case using Turkish letter rules.
+  String get turkishUppercase {
+    return replaceAll('i', 'İ').replaceAll('ı', 'I').toUpperCase();
+  }
+
   /// Whether this string contains [query], ignoring case under Turkish rules.
   bool containsTurkishInsensitive(String query) {
     return turkishLowercase.contains(query.turkishLowercase);

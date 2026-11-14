@@ -1,7 +1,10 @@
 import 'package:clinic_appointment_system/core/time/calendar_date.dart';
+import 'package:clinic_appointment_system/features/availability/domain/services/slot_generator.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/booking_selection_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/models/staff_week_schedule.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/models/staff_week_schedule_request.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/services/staff_week_schedule_factory.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/services/staff_week_schedule_reader.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../core/time/support/fixed_clock.dart';
@@ -16,11 +19,16 @@ void main() {
   final thursday = CalendarDate(year: 2026, month: 10, day: 22);
   late BookingSelectionCubit cubit;
 
-  setUp(() => cubit = BookingSelectionCubit(FixedClock(fixtures.now)));
+  setUp(
+    () => cubit = BookingSelectionCubit(
+      FixedClock(fixtures.now),
+      const StaffWeekScheduleReader(),
+    ),
+  );
   tearDown(() => cubit.close());
 
   StaffWeekSchedule schedule({CalendarDate? weekStart, DateTime? now}) {
-    return StaffWeekSchedule(
+    return const StaffWeekScheduleFactory(SlotGenerator()).create(
       request: StaffWeekScheduleRequest(
         staff: murat,
         service: internal,
@@ -100,8 +108,10 @@ void main() {
       ..selectStaff(murat)
       ..applySchedule(schedule());
     expect(cubit.state.date, tuesday);
+    expect(cubit.state.scheduleDay?.date, tuesday);
     cubit.applySchedule(schedule(now: DateTime(2026, 10, 20, 12)));
     expect(cubit.state.date, tuesday);
+    expect(cubit.state.scheduleDay?.date, tuesday);
   });
 
   test('a fully booked week chooses no day', () {

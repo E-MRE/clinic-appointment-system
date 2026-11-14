@@ -1,8 +1,8 @@
+import 'package:clinic_appointment_system/core/extensions/date_time_formatting.dart';
 import 'package:clinic_appointment_system/core/extensions/date_time_weekday.dart';
 import 'package:clinic_appointment_system/core/extensions/person_name_parts.dart';
 import 'package:clinic_appointment_system/core/extensions/relative_time_label.dart';
 import 'package:clinic_appointment_system/core/extensions/time_range_label.dart';
-import 'package:clinic_appointment_system/core/localization/app_formatters.dart';
 import 'package:clinic_appointment_system/core/localization/localization_extension.dart';
 import 'package:clinic_appointment_system/core/localization/weekday_localization.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
@@ -25,8 +25,8 @@ extension StaffAppointmentPresentation on Appointment {
   /// Line describing the weekday, date, time and service name.
   String get scheduleAndServiceLabel {
     final weekday = startsAt.toWeekday().shortLabel;
-    final dayMonth = AppFormatters.formatDayShortMonth(startsAt);
-    final time = AppFormatters.formatTime(startsAt);
+    final dayMonth = startsAt.dayShortMonthLabel();
+    final time = startsAt.timeLabel();
     return '$weekday $dayMonth · $time · $serviceName';
   }
 
@@ -40,7 +40,7 @@ extension StaffAppointmentPresentation on Appointment {
   /// Formats the date and time range for the request detail panel.
   String get scheduleRangeLabel {
     final weekday = startsAt.toWeekday().shortLabel;
-    final dayMonth = AppFormatters.formatDayShortMonth(startsAt);
+    final dayMonth = startsAt.dayShortMonthLabel();
     return '$weekday $dayMonth · ${range.label}';
   }
 

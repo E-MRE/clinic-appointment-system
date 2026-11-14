@@ -53,6 +53,7 @@ import 'package:clinic_appointment_system/features/institution/presentation/cubi
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/department_list_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/department_save_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/working_hours_editor_cubit.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/services/working_hours_summary_formatter.dart';
 import 'package:clinic_appointment_system/features/medical_services/data/models/medical_service_model_factory.dart';
 import 'package:clinic_appointment_system/features/medical_services/data/repositories/firestore_medical_service_repository.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/repositories/medical_service_repository.dart';
@@ -270,6 +271,12 @@ void main() {
     expect(container.get<ClinicRepository>(), same(clinics));
     expect(container.get<BranchRepository>(), same(branches));
     expect(container.get<DepartmentRepository>(), same(departments));
+    final summaryFormatter = container.get<WorkingHoursSummaryFormatter>();
+    expect(summaryFormatter, isA<WorkingHoursSummaryFormatter>());
+    expect(
+      container.get<WorkingHoursSummaryFormatter>(),
+      same(summaryFormatter),
+    );
 
     expect(container.get<WatchClinicsUseCase>(), isA<WatchClinicsUseCase>());
     expect(container.get<CreateClinicUseCase>(), isA<CreateClinicUseCase>());

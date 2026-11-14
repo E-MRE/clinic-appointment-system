@@ -1,16 +1,19 @@
 import 'dart:async';
 
+import 'package:clinic_appointment_system/core/collections/count_ranking.dart';
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
 import 'package:clinic_appointment_system/core/time/calendar_date.dart';
 import 'package:clinic_appointment_system/core/time/clock.dart';
 import 'package:clinic_appointment_system/features/admin/presentation/cubit/admin_dashboard_cubit.dart';
 import 'package:clinic_appointment_system/features/admin/presentation/cubit/admin_dashboard_state.dart';
 import 'package:clinic_appointment_system/features/admin/presentation/models/admin_dashboard_summary.dart';
+import 'package:clinic_appointment_system/features/admin/presentation/services/admin_dashboard_calculator.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_error_code.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/repositories/appointment_repository.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/results/appointment_result.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/services/appointment_start_comparator.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_admin_appointments_use_case.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_pending_appointments_use_case.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/value_objects/booked_slot.dart';
@@ -41,6 +44,10 @@ void main() {
       WatchAdminAppointmentsUseCase(repository),
       WatchPendingAppointmentsUseCase(repository),
       clock,
+      const AdminDashboardCalculator(
+        CountRanking(),
+        AppointmentStartComparator(),
+      ),
     );
   });
 

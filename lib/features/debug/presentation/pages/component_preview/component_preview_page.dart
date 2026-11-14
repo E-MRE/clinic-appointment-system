@@ -1,3 +1,5 @@
+import 'package:clinic_appointment_system/core/extensions/currency_formatting.dart';
+import 'package:clinic_appointment_system/core/extensions/date_time_formatting.dart';
 import 'package:clinic_appointment_system/core/localization/localization.dart';
 import 'package:clinic_appointment_system/core/theme/theme.dart';
 import 'package:clinic_appointment_system/core/time/calendar_date.dart';

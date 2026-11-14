@@ -16,7 +16,6 @@ final class _PatientAppointmentsNextDetailsButton extends StatelessWidget {
             appointmentId: entry.appointment.id,
             initialEntry: entry,
             appointmentsCubit: context.read<PatientAppointmentsCubit>(),
-            catalogCubit: context.read<ClinicCatalogCubit>(),
           ),
         );
       },

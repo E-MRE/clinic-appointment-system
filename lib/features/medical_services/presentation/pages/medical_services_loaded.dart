@@ -2,37 +2,23 @@ part of 'medical_services_page.dart';
 
 /// Coordinates kind filtering and presents responsive table or grouped mobile cards.
 final class _MedicalServicesLoaded extends StatelessWidget {
-  const _MedicalServicesLoaded({required this.services});
-
-  final List<MedicalService> services;
+  const _MedicalServicesLoaded();
 
   @override
   Widget build(BuildContext context) {
-    final overview = MedicalServiceListOverview.from(
-      services: services,
-      departments: _resolveDepartments(context),
-    );
-    final filter = context.watch<MedicalServiceFilterCubit>().state;
-    final filteredServices = services.where(filter.matches).toList();
+    final state = context.watch<MedicalServiceListCubit>().state;
+    if (state is! MedicalServiceListLoaded) return const SizedBox.shrink();
 
     if (context.screenSize.isMobile) {
       return _MedicalServicesMobileView(
-        overview: overview,
-        services: filteredServices,
+        overview: state.overview,
+        groups: state.groups,
       );
     }
 
     return _MedicalServicesTablePanel(
-      services: filteredServices,
-      overview: overview,
+      services: state.filteredServices,
+      overview: state.overview,
     );
-  }
-
-  List<Department> _resolveDepartments(BuildContext context) {
-    final departmentState = context.watch<DepartmentListCubit>().state;
-    if (departmentState is InstitutionListLoaded<Department>) {
-      return departmentState.items;
-    }
-    return const <Department>[];
   }
 }

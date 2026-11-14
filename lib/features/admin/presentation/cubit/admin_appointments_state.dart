@@ -1,6 +1,5 @@
 import 'package:clinic_appointment_system/core/constants/admin_appointment_constants.dart';
 import 'package:clinic_appointment_system/features/admin/presentation/enums/admin_status_filter.dart';
-import 'package:clinic_appointment_system/features/admin/presentation/extensions/appointment_status_admin_filter.dart';
 import 'package:clinic_appointment_system/features/admin/presentation/models/admin_appointment_filter.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_error_code.dart';
@@ -32,49 +31,10 @@ final class AdminAppointmentsFailure extends AdminAppointmentsState {
   final AppointmentErrorCode errorCode;
 }
 
-/// The observed appointments and all list data derived from the active filter.
+/// The observed appointments and list data derived from the active filter.
 final class AdminAppointmentsLoaded extends AdminAppointmentsState {
-  int get _firstPage => 1;
-  int get _noItems => 0;
-
-  /// Filters, sorts and pages [allAppointmentsInRange].
-  factory AdminAppointmentsLoaded({
-    required AdminAppointmentFilter filter,
-    required List<Appointment> allAppointmentsInRange,
-    required int currentPage,
-  }) {
-    const int firstPage = 1;
-    const int noItems = 0;
-    final allAppointments = List<Appointment>.unmodifiable(
-      allAppointmentsInRange,
-    );
-    final filteredAppointments = allAppointments.where(filter.matches).toList();
-    filteredAppointments.sort(_compareAppointments);
-    final pageCount =
-        (filteredAppointments.length / AdminAppointmentConstants.rowsPerPage)
-            .ceil();
-    final boundedPage = currentPage
-        .clamp(firstPage, pageCount < firstPage ? firstPage : pageCount)
-        .toInt();
-    final counts = <AdminStatusFilter, int>{
-      for (final status in AdminStatusFilter.values) status: noItems,
-    };
-    for (final appointment in filteredAppointments) {
-      final status = appointment.status.adminFilter;
-      counts[status] = (counts[status] ?? noItems) + firstPage;
-    }
-    return AdminAppointmentsLoaded._(
-      filter: filter,
-      allAppointmentsInRange: allAppointments,
-      filteredAppointments: List<Appointment>.unmodifiable(
-        filteredAppointments,
-      ),
-      currentPage: boundedPage,
-      statusCounts: Map<AdminStatusFilter, int>.unmodifiable(counts),
-    );
-  }
-
-  const AdminAppointmentsLoaded._({
+  /// Creates a loaded state from already-calculated values.
+  const AdminAppointmentsLoaded({
     required AdminAppointmentFilter filter,
     required this.allAppointmentsInRange,
     required this.filteredAppointments,
@@ -82,10 +42,13 @@ final class AdminAppointmentsLoaded extends AdminAppointmentsState {
     required this.statusCounts,
   }) : super(filter);
 
+  int get _firstPage => 1;
+  int get _noItems => 0;
+
   /// Every appointment from the watched date range, before client filtering.
   final List<Appointment> allAppointmentsInRange;
 
-  /// Matching appointments sorted by date and start time ascending.
+  /// Matching appointments sorted by date, start time and identifier.
   final List<Appointment> filteredAppointments;
 
   /// The one-based current page number.
@@ -126,11 +89,4 @@ final class AdminAppointmentsLoaded extends AdminAppointmentsState {
 
   /// Counts for each admin status group, including zero-count groups.
   final Map<AdminStatusFilter, int> statusCounts;
-
-  static int _compareAppointments(Appointment first, Appointment second) {
-    const int equalOrder = 0;
-    final dateOrder = first.date.compareTo(second.date);
-    if (dateOrder != equalOrder) return dateOrder;
-    return first.range.start.compareTo(second.range.start);
-  }
 }

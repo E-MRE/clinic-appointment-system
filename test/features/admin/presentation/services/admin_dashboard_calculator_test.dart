@@ -1,12 +1,19 @@
+import 'package:clinic_appointment_system/core/collections/count_ranking.dart';
 import 'package:clinic_appointment_system/features/admin/presentation/enums/admin_status_filter.dart';
-import 'package:clinic_appointment_system/features/admin/presentation/models/admin_dashboard_summary.dart';
+import 'package:clinic_appointment_system/features/admin/presentation/models/admin_dashboard_scope.dart';
+import 'package:clinic_appointment_system/features/admin/presentation/services/admin_dashboard_calculator.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/services/appointment_start_comparator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../support/admin_dashboard_fixture.dart';
 
 void main() {
   const fixture = AdminDashboardFixture();
+  const calculator = AdminDashboardCalculator(
+    CountRanking(),
+    AppointmentStartComparator(),
+  );
 
   final todaysAppointments = [
     fixture.appointment(
@@ -99,10 +106,10 @@ void main() {
   ];
 
   test('computes all unfiltered today and pending figures', () {
-    final summary = AdminDashboardSummary.fromAppointments(
+    final summary = calculator.calculate(
       todayAppointments: todaysAppointments,
       pendingAppointments: pendingAppointments,
-      today: fixture.calendarDay,
+      scope: AdminDashboardScope(today: fixture.calendarDay),
       catalog: fixture.catalog,
     );
 
@@ -156,12 +163,14 @@ void main() {
   });
 
   test('filters every figure to the selected branch', () {
-    final summary = AdminDashboardSummary.fromAppointments(
+    final summary = calculator.calculate(
       todayAppointments: todaysAppointments,
       pendingAppointments: pendingAppointments,
-      today: fixture.calendarDay,
+      scope: AdminDashboardScope(
+        today: fixture.calendarDay,
+        branchId: 'branch-a',
+      ),
       catalog: fixture.catalog,
-      selectedBranchId: 'branch-a',
     );
 
     expect(summary.selectedBranchId, 'branch-a');
@@ -195,7 +204,7 @@ void main() {
   test(
     'sorts equal counts by Turkish name and gives maximum bars full length',
     () {
-      final summary = AdminDashboardSummary.fromAppointments(
+      final summary = calculator.calculate(
         todayAppointments: [
           fixture.appointment(
             id: 'zeynep',
@@ -211,7 +220,7 @@ void main() {
           ),
         ],
         pendingAppointments: const [],
-        today: fixture.calendarDay,
+        scope: AdminDashboardScope(today: fixture.calendarDay),
         catalog: fixture.catalog,
       );
 
@@ -232,7 +241,7 @@ void main() {
   );
 
   test('returns empty figures and null oldest request for an empty day', () {
-    final summary = AdminDashboardSummary.fromAppointments(
+    final summary = calculator.calculate(
       todayAppointments: const [],
       pendingAppointments: [
         fixture.appointment(
@@ -241,7 +250,7 @@ void main() {
           date: DateTime(2026, 11, 13),
         ),
       ],
-      today: fixture.calendarDay,
+      scope: AdminDashboardScope(today: fixture.calendarDay),
       catalog: fixture.catalog,
     );
 
@@ -259,7 +268,7 @@ void main() {
   });
 
   test('groups patient and staff cancellations into one status count', () {
-    final summary = AdminDashboardSummary.fromAppointments(
+    final summary = calculator.calculate(
       todayAppointments: [
         fixture.appointment(
           id: 'patient-cancel',
@@ -271,7 +280,7 @@ void main() {
         ),
       ],
       pendingAppointments: const [],
-      today: fixture.calendarDay,
+      scope: AdminDashboardScope(today: fixture.calendarDay),
       catalog: fixture.catalog,
     );
 
@@ -281,10 +290,10 @@ void main() {
   });
 
   test('exposes immutable summary collections', () {
-    final summary = AdminDashboardSummary.fromAppointments(
+    final summary = calculator.calculate(
       todayAppointments: todaysAppointments,
       pendingAppointments: pendingAppointments,
-      today: fixture.calendarDay,
+      scope: AdminDashboardScope(today: fixture.calendarDay),
       catalog: fixture.catalog,
     );
 

@@ -6,6 +6,7 @@ import 'package:clinic_appointment_system/core/time/clock.dart';
 import 'package:clinic_appointment_system/features/admin/presentation/cubit/admin_appointments_state.dart';
 import 'package:clinic_appointment_system/features/admin/presentation/enums/admin_status_filter.dart';
 import 'package:clinic_appointment_system/features/admin/presentation/models/admin_appointment_filter.dart';
+import 'package:clinic_appointment_system/features/admin/presentation/services/admin_appointment_list_calculator.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_error_code.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/models/admin_appointments_query.dart';
@@ -20,13 +21,15 @@ final class AdminAppointmentsCubit extends Cubit<AdminAppointmentsState> {
   factory AdminAppointmentsCubit(
     WatchAdminAppointmentsUseCase watchAppointments,
     Clock clock,
+    AdminAppointmentListCalculator calculator,
   ) {
     final filter = AdminAppointmentFilter.currentWeek(clock: clock);
-    return AdminAppointmentsCubit._(watchAppointments, filter);
+    return AdminAppointmentsCubit._(watchAppointments, calculator, filter);
   }
 
   AdminAppointmentsCubit._(
     this._watchAppointments,
+    this._calculator,
     AdminAppointmentFilter filter,
   ) : _filter = filter,
       super(AdminAppointmentsLoading(filter)) {
@@ -34,6 +37,7 @@ final class AdminAppointmentsCubit extends Cubit<AdminAppointmentsState> {
   }
 
   final WatchAdminAppointmentsUseCase _watchAppointments;
+  final AdminAppointmentListCalculator _calculator;
   StreamSubscription<DataResult<List<Appointment>>>? _subscription;
   AdminAppointmentFilter _filter;
   int _currentPage = 1;
@@ -189,7 +193,7 @@ final class AdminAppointmentsCubit extends Cubit<AdminAppointmentsState> {
 
   void _emitLoaded(List<Appointment> appointments) {
     if (_isClosingOrClosed) return;
-    final loaded = AdminAppointmentsLoaded(
+    final loaded = _calculator.calculate(
       filter: _filter,
       allAppointmentsInRange: appointments,
       currentPage: _currentPage,

@@ -2,14 +2,17 @@ part of 'patient_appointments_page.dart';
 
 /// Preparation notes and bookable departments; empty panels are hidden.
 final class _PatientAppointmentsSecondaryColumn extends StatelessWidget {
-  const _PatientAppointmentsSecondaryColumn({required this.overview});
+  const _PatientAppointmentsSecondaryColumn({
+    required this.overview,
+    required this.departments,
+  });
 
   final PatientAppointmentsOverview overview;
+  final List<PatientDepartmentSummary> departments;
 
   @override
   Widget build(BuildContext context) {
     final notes = overview.preparationNotes;
-    final departments = overview.catalog.departmentsWithServiceCounts;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: AppSizes.s16,

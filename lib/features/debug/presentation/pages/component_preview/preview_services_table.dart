@@ -34,11 +34,7 @@ final class _PreviewServicesTable extends StatelessWidget {
         label: LocaleKeys.componentPreview_table_fee.translate(),
         alignment: AppTableAlignment.end,
         cellBuilder: (context, row) => AppText.bodyStrong(
-          AppFormatters.formatCurrency(
-            row.fee,
-            decimalDigits: 0,
-            context: context,
-          ),
+          row.fee.currencyLabel(decimalDigits: 0, context: context),
         ),
       ),
       AppTableColumn(

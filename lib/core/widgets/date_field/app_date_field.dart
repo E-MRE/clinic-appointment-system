@@ -1,5 +1,5 @@
 import 'package:clinic_appointment_system/core/extensions/calendar_date_picking.dart';
-import 'package:clinic_appointment_system/core/localization/app_formatters.dart';
+import 'package:clinic_appointment_system/core/extensions/date_time_formatting.dart';
 import 'package:clinic_appointment_system/core/time/calendar_date.dart';
 import 'package:clinic_appointment_system/core/widgets/time_field/app_picker_field.dart';
 import 'package:flutter/material.dart';
@@ -29,10 +29,11 @@ final class AppDateField extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppPickerField(
       label: label,
-      value: AppFormatters.formatLongDate(
-        DateTime(value.year, value.month, value.day),
-        context: context,
-      ),
+      value: (DateTime(
+        value.year,
+        value.month,
+        value.day,
+      )).longDateLabel(context: context),
       icon: Icons.calendar_today_outlined,
       enabled: enabled,
       fieldKey: fieldKey,

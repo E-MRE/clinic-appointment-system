@@ -1,7 +1,7 @@
+import 'package:clinic_appointment_system/core/collections/count_ranking.dart';
 import 'package:clinic_appointment_system/core/di/app_dependency.dart';
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
 import 'package:clinic_appointment_system/core/errors/result.dart';
-import 'package:clinic_appointment_system/core/localization/app_formatters.dart';
 import 'package:clinic_appointment_system/core/router/app_routes.dart';
 import 'package:clinic_appointment_system/core/theme/theme.dart'
     hide AppointmentStatus;
@@ -11,10 +11,13 @@ import 'package:clinic_appointment_system/features/admin/presentation/cubit/admi
 import 'package:clinic_appointment_system/features/admin/presentation/extensions/admin_appointment_route_query.dart';
 import 'package:clinic_appointment_system/features/admin/presentation/pages/admin_appointments_page.dart';
 import 'package:clinic_appointment_system/features/admin/presentation/pages/admin_home_page.dart';
+import 'package:clinic_appointment_system/features/admin/presentation/services/admin_appointment_list_calculator.dart';
+import 'package:clinic_appointment_system/features/admin/presentation/services/admin_dashboard_calculator.dart';
 import 'package:clinic_appointment_system/features/admin/presentation/widgets/admin_shell.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_error_code.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/services/appointment_start_comparator.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/change_appointment_status_use_case.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_admin_appointments_use_case.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_pending_appointments_use_case.dart';
@@ -41,6 +44,7 @@ import 'package:mocktail/mocktail.dart';
 import '../../../../../core/time/support/fixed_clock.dart';
 import '../../../../../support/auth_cubit_factory.dart';
 import '../../../../../support/auth_repository_doubles.dart';
+import '../../../../../support/date_formatting_test_support.dart';
 import '../../../../../support/localization_test_app.dart';
 import '../../../../../support/user_repository_double.dart';
 import '../../../../appointments/presentation/doubles/staff_appointment_repository.dart';
@@ -65,7 +69,7 @@ final class AdminAppointmentsPageHarness {
   /// Registers test dependencies and signs in an administrator.
   Future<void> initialize() async {
     await AppDependency.injector.reset();
-    await AppFormatters.ensureInitialized();
+    await initializeDateFormattingForTests();
     when(() => authRepository.authStateChanges()).thenAnswer(
       (_) => Stream.value(
         const DataResult.success(
@@ -270,6 +274,7 @@ final class AdminAppointmentsPageHarness {
       final cubit = AdminAppointmentsCubit(
         WatchAdminAppointmentsUseCase(appointments),
         clock,
+        const AdminAppointmentListCalculator(AppointmentStartComparator()),
       );
       adminAppointmentsCubit = cubit;
       return cubit;
@@ -279,6 +284,10 @@ final class AdminAppointmentsPageHarness {
         WatchAdminAppointmentsUseCase(appointments),
         WatchPendingAppointmentsUseCase(appointments),
         clock,
+        const AdminDashboardCalculator(
+          CountRanking(),
+          AppointmentStartComparator(),
+        ),
       );
       adminDashboardCubit = cubit;
       return cubit;

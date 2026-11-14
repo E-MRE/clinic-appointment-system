@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:clinic_appointment_system/core/di/app_dependency.dart';
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
 import 'package:clinic_appointment_system/core/errors/result.dart';
-import 'package:clinic_appointment_system/core/localization/app_formatters.dart';
 import 'package:clinic_appointment_system/core/localization/localization_wrapper.dart';
 import 'package:clinic_appointment_system/core/theme/theme.dart';
 import 'package:clinic_appointment_system/core/time/clock.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/services/appointment_start_comparator.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/change_appointment_status_use_case.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_staff_appointments_use_case.dart';
 import 'package:clinic_appointment_system/features/auth/domain/entities/auth_session.dart';
@@ -30,8 +30,11 @@ import 'package:clinic_appointment_system/features/staff/presentation/cubit/appo
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_calendar_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_workspace_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/models/staff_calendar_layout_factory.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/pages/staff_calendar_page.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/pages/staff_requests_page.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/services/staff_patient_history_calculator.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/services/staff_patient_history_formatter.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/widgets/staff_appointment_dialog.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/doctor.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -44,6 +47,7 @@ import 'package:mocktail/mocktail.dart';
 import '../../../../../core/time/support/fixed_clock.dart';
 import '../../../../../support/auth_cubit_factory.dart';
 import '../../../../../support/auth_repository_doubles.dart';
+import '../../../../../support/date_formatting_test_support.dart';
 import '../../../../../support/localization_test_app.dart';
 import '../../../../../support/user_repository_double.dart';
 import '../../../../appointments/presentation/doubles/staff_appointment_repository.dart';
@@ -80,7 +84,7 @@ final class StaffRequestsPageHarness {
 
   /// Initializes a signed-in doctor and the page's screen-scoped cubits.
   Future<void> initialize() async {
-    await AppFormatters.ensureInitialized();
+    await initializeDateFormattingForTests();
     await AppDependency.injector.reset();
     staff = const Doctor(
       id: 'staff',
@@ -111,10 +115,28 @@ final class StaffRequestsPageHarness {
     );
     await auth.stream.firstWhere((state) => state is AuthSignedIn);
     AppDependency.injector.registerSingleton<Clock>(clock);
+    AppDependency.injector.registerSingleton<AppointmentStartComparator>(
+      const AppointmentStartComparator(),
+    );
+    AppDependency.injector.registerSingleton<StaffPatientHistoryCalculator>(
+      StaffPatientHistoryCalculator(
+        AppDependency.injector.get<AppointmentStartComparator>(),
+      ),
+    );
+    AppDependency.injector.registerSingleton<StaffPatientHistoryFormatter>(
+      const StaffPatientHistoryFormatter(),
+    );
+    AppDependency.injector.registerSingleton<StaffCalendarLayoutFactory>(
+      StaffCalendarLayoutFactory(
+        AppDependency.injector.get<AppointmentStartComparator>(),
+      ),
+    );
     AppDependency.injector.registerFactory<StaffAppointmentsCubit>(
       () => StaffAppointmentsCubit(
         WatchStaffAppointmentsUseCase(repository),
         clock,
+        AppDependency.injector.get<AppointmentStartComparator>(),
+        AppDependency.injector.get<StaffPatientHistoryCalculator>(),
       ),
     );
     AppDependency.injector.registerFactory<AppointmentApproveCubit>(
@@ -175,7 +197,10 @@ final class StaffRequestsPageHarness {
             ),
           ).asBroadcastStream();
     AppDependency.injector.registerFactory<StaffCalendarCubit>(
-      () => StaffCalendarCubit(clock: clock),
+      () => StaffCalendarCubit(
+        clock: clock,
+        layoutFactory: AppDependency.injector.get<StaffCalendarLayoutFactory>(),
+      ),
     );
     AppDependency.injector.registerFactory<StaffWorkspaceCubit>(
       () => StaffWorkspaceCubit(

@@ -22,6 +22,7 @@ import 'package:clinic_appointment_system/features/institution/presentation/page
 import 'package:clinic_appointment_system/features/medical_services/domain/usecases/watch_medical_services_use_case.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/usecases/watch_services_of_branches_use_case.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_list_cubit.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/services/medical_service_overview_calculator.dart';
 import 'package:clinic_appointment_system/features/staff_management/domain/usecases/create_staff_use_case.dart';
 import 'package:clinic_appointment_system/features/staff_management/domain/usecases/update_staff_use_case.dart';
 import 'package:clinic_appointment_system/features/staff_management/domain/usecases/watch_staff_use_case.dart';
@@ -177,6 +178,7 @@ final class StaffPageHarness {
     AppDependency.injector.registerFactory<MedicalServiceListCubit>(
       () => MedicalServiceListCubit(
         WatchMedicalServicesUseCase(serviceRepository),
+        const MedicalServiceOverviewCalculator(),
       ),
     );
   }

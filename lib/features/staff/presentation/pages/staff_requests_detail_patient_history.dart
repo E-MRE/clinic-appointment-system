@@ -8,7 +8,10 @@ final class _StaffRequestDetailPatientHistory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final lastVisit = history.lastVisitLabel;
+    final formatter = AppDependency.injector
+        .get<StaffPatientHistoryFormatter>();
+    final completedLabel = formatter.completedLabel(history);
+    final lastVisit = formatter.lastVisitLabel(history);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -21,7 +24,7 @@ final class _StaffRequestDetailPatientHistory extends StatelessWidget {
           spacing: AppSizes.s12,
           children: [
             StatusBadge(
-              label: history.completedLabel,
+              label: completedLabel,
               variant: StatusBadgeVariant.completed,
             ),
             if (lastVisit != null)

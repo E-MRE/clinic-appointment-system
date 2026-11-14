@@ -3,6 +3,7 @@ import 'package:clinic_appointment_system/core/enums/weekday.dart';
 import 'package:clinic_appointment_system/core/time/calendar_date.dart';
 import 'package:clinic_appointment_system/core/time/time_range.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/services/appointment_start_comparator.dart';
 import 'package:clinic_appointment_system/features/availability/domain/entities/staff_availability.dart';
 import 'package:clinic_appointment_system/features/institution/domain/value_objects/working_hours.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/models/staff_calendar_day.dart';
@@ -11,8 +12,14 @@ import 'package:clinic_appointment_system/features/staff/presentation/models/sta
 /// Factory that builds [StaffCalendarLayout] instances from visible dates,
 /// appointments, availability, and branch hours.
 final class StaffCalendarLayoutFactory {
-  /// Creates the factory.
-  const StaffCalendarLayoutFactory();
+  /// Injects the shared appointment start ordering policy.
+  const StaffCalendarLayoutFactory(this._startComparator);
+
+  final AppointmentStartComparator _startComparator;
+
+  int get _zeroMinute => 0;
+
+  int get _hourIncrement => 1;
 
   /// Computes the calendar layout from visible dates, schedule data, and the current time.
   StaffCalendarLayout create({
@@ -52,7 +59,11 @@ final class StaffCalendarLayoutFactory {
           .reduce((first, second) => first.isAfter(second) ? first : second);
 
       startHour = earliestStart.hour;
-      endHour = latestEnd.minute == 0 ? latestEnd.hour : latestEnd.hour + 1;
+      if (latestEnd.minute == _zeroMinute) {
+        endHour = latestEnd.hour;
+      } else {
+        endHour = latestEnd.hour + _hourIncrement;
+      }
     }
 
     return StaffCalendarLayout(
@@ -63,7 +74,7 @@ final class StaffCalendarLayoutFactory {
     );
   }
 
-  static List<CalendarDate> _filterVisibleDates(
+  List<CalendarDate> _filterVisibleDates(
     List<CalendarDate> dates,
     WorkingHours branchHours,
   ) {
@@ -78,7 +89,7 @@ final class StaffCalendarLayoutFactory {
         .toList(growable: false);
   }
 
-  static StaffCalendarDay _mapCalendarDate(
+  StaffCalendarDay _mapCalendarDate(
     WorkingHours branchHours,
     CalendarDate date,
     StaffAvailability availability,
@@ -91,7 +102,7 @@ final class StaffCalendarLayoutFactory {
         .toList();
     final dayAppointments =
         appointments.where((appointment) => appointment.date == date).toList()
-          ..sort((a, b) => a.range.start.compareTo(b.range.start));
+          ..sort(_startComparator.compareByStartTime);
 
     return StaffCalendarDay(
       date: date,

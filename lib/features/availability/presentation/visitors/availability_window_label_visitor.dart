@@ -1,5 +1,5 @@
+import 'package:clinic_appointment_system/core/extensions/date_time_formatting.dart';
 import 'package:clinic_appointment_system/core/extensions/time_range_label.dart';
-import 'package:clinic_appointment_system/core/localization/app_formatters.dart';
 import 'package:clinic_appointment_system/core/localization/weekday_localization.dart';
 import 'package:clinic_appointment_system/features/availability/domain/entities/availability_window_visitor.dart';
 import 'package:clinic_appointment_system/features/availability/domain/entities/one_off_window.dart';
@@ -20,9 +20,11 @@ final class AvailabilityWindowLabelVisitor
   @override
   String visitOneOff(OneOffWindow window) {
     final date = window.date;
-    final dayMonth = AppFormatters.formatDayMonth(
-      DateTime(date.year, date.month, date.day),
-    );
+    final dayMonth = (DateTime(
+      date.year,
+      date.month,
+      date.day,
+    )).dayMonthLabel();
     return '$dayMonth ${window.weekday.label} · ${window.range.label}';
   }
 }

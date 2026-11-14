@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   test('lowercases dotted and dotless I under Turkish rules', () {
     expect('IŞIK İLAÇ'.turkishLowercase, 'ışık ilaç');
+    expect('ekim'.turkishUppercase, 'EKİM');
   });
 
   test('contains ignores Turkish case', () {

@@ -28,7 +28,7 @@ final class _PatientAppointmentsView extends StatelessWidget {
 
     if (catalogState is ClinicCatalogLoaded &&
         appointmentsState is PatientAppointmentsLoaded) {
-      return _loadedContent(appointmentsState, catalogState);
+      return _loadedContent(appointmentsState);
     }
 
     return LoadingState(
@@ -41,18 +41,11 @@ final class _PatientAppointmentsView extends StatelessWidget {
     return _PatientAppointmentsFailure(errorCode: errorCode);
   }
 
-  Widget _loadedContent(
-    PatientAppointmentsLoaded appointmentsState,
-    ClinicCatalogLoaded catalogState,
-  ) {
+  Widget _loadedContent(PatientAppointmentsLoaded appointmentsState) {
     return _PatientAppointmentsContent(
       firstName: user.firstName,
-      overview: PatientAppointmentsOverview(
-        appointments: appointmentsState.appointments,
-        catalog: catalogState.catalog,
-        now: AppDependency.injector.get<Clock>().now(),
-        patient: PatientAppointmentActor(id: user.id),
-      ),
+      overview: appointmentsState.overview,
+      bookableDepartments: appointmentsState.bookableDepartments,
     );
   }
 }

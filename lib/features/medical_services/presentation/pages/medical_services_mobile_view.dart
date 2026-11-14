@@ -4,11 +4,11 @@ part of 'medical_services_page.dart';
 final class _MedicalServicesMobileView extends StatelessWidget {
   const _MedicalServicesMobileView({
     required this.overview,
-    required this.services,
+    required this.groups,
   });
 
   final MedicalServiceListOverview overview;
-  final List<MedicalService> services;
+  final List<DepartmentServiceGroup> groups;
 
   @override
   Widget build(BuildContext context) {
@@ -18,12 +18,9 @@ final class _MedicalServicesMobileView extends StatelessWidget {
         _MedicalServicesFilterChipsRow(overview: overview),
         const EmptySize.s16Height(),
         Expanded(
-          child: services.isEmpty
+          child: groups.isEmpty
               ? AppMutedMessage(message: LocaleKeys.services_filterEmpty.tr())
-              : _MedicalServicesMobileList(
-                  services: services,
-                  overview: overview,
-                ),
+              : _MedicalServicesMobileList(groups: groups),
         ),
       ],
     );

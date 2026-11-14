@@ -1,8 +1,8 @@
 import 'package:clinic_appointment_system/core/enums/weekday.dart';
-import 'package:clinic_appointment_system/core/localization/app_formatters.dart';
 import 'package:clinic_appointment_system/features/availability/presentation/visitors/availability_window_label_visitor.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../../../support/date_formatting_test_support.dart';
 import '../../../../support/localization_test_app.dart';
 import '../../domain/support/availability_fixture.dart';
 
@@ -11,7 +11,7 @@ void main() {
     tester,
   ) async {
     await loadTestTranslations(tester);
-    await AppFormatters.ensureInitialized();
+    await initializeDateFormattingForTests();
     const fixture = AvailabilityFixture();
     const visitor = AvailabilityWindowLabelVisitor();
     expect(

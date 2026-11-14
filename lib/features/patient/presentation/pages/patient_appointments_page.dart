@@ -3,7 +3,6 @@ import 'package:clinic_appointment_system/core/di/app_dependency.dart';
 import 'package:clinic_appointment_system/core/localization/localization.dart';
 import 'package:clinic_appointment_system/core/router/app_routes.dart';
 import 'package:clinic_appointment_system/core/theme/theme.dart';
-import 'package:clinic_appointment_system/core/time/clock.dart';
 import 'package:clinic_appointment_system/core/widgets/app_scaffold.dart';
 import 'package:clinic_appointment_system/core/widgets/app_text.dart';
 import 'package:clinic_appointment_system/core/widgets/choice/app_choice.dart';
@@ -38,7 +37,6 @@ import 'package:clinic_appointment_system/features/patient/presentation/enums/pa
 import 'package:clinic_appointment_system/features/patient/presentation/extensions/patient_appointment_entry_presentation.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/extensions/patient_appointments_overview_presentation.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/extensions/patient_appointments_tab_selection.dart';
-import 'package:clinic_appointment_system/features/patient/presentation/extensions/patient_catalog_views.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/extensions/patient_department_summary_presentation.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/models/patient_appointment_entry.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/models/patient_appointments_overview.dart';
@@ -91,9 +89,14 @@ final class PatientAppointmentsPage extends StatelessWidget {
         key: ValueKey<String>(user.id),
         providers: [
           BlocProvider<PatientAppointmentsCubit>(
-            create: (_) {
-              return AppDependency.injector.get<PatientAppointmentsCubit>()
-                ..watch(user.id);
+            create: (context) {
+              final cubit = AppDependency.injector
+                  .get<PatientAppointmentsCubit>();
+              final catalogState = context.read<ClinicCatalogCubit>().state;
+              if (catalogState is ClinicCatalogLoaded) {
+                cubit.updateCatalog(catalogState.catalog);
+              }
+              return cubit..watch(user.id);
             },
           ),
           BlocProvider<PatientAppointmentsTabCubit>(
@@ -102,7 +105,16 @@ final class PatientAppointmentsPage extends StatelessWidget {
             },
           ),
         ],
-        child: _PatientAppointmentsView(user: user),
+        child: BlocListener<ClinicCatalogCubit, ClinicCatalogState>(
+          listener: (context, catalogState) {
+            if (catalogState is ClinicCatalogLoaded) {
+              context.read<PatientAppointmentsCubit>().updateCatalog(
+                catalogState.catalog,
+              );
+            }
+          },
+          child: _PatientAppointmentsView(user: user),
+        ),
       );
     }
     return const SizedBox.shrink();

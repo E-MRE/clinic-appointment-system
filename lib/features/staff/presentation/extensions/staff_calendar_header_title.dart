@@ -1,4 +1,4 @@
-import 'package:clinic_appointment_system/core/localization/app_formatters.dart';
+import 'package:clinic_appointment_system/core/extensions/date_time_formatting.dart';
 import 'package:clinic_appointment_system/core/localization/weekday_localization.dart';
 import 'package:clinic_appointment_system/core/time/calendar_date.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/extensions/staff_calendar_date_range.dart';
@@ -19,18 +19,18 @@ extension StaffCalendarHeaderTitle on StaffCalendarLayout {
 
   /// Formats a single day title.
   String _dayTitle(CalendarDate date) {
-    final dayMonth = AppFormatters.formatDayMonth(date.startOfDay);
+    final dayMonth = date.startOfDay.dayMonthLabel();
     return '${date.weekday.label}, $dayMonth';
   }
 
   /// Formats an inclusive week title.
   String _weekTitle(CalendarDate start, CalendarDate end) {
     if (start.year == end.year && start.month == end.month) {
-      final endDayMonth = AppFormatters.formatDayMonth(end.startOfDay);
+      final endDayMonth = end.startOfDay.dayMonthLabel();
       return '${start.day} – $endDayMonth';
     }
-    final startShort = AppFormatters.formatDayShortMonth(start.startOfDay);
-    final endShort = AppFormatters.formatDayShortMonth(end.startOfDay);
+    final startShort = start.startOfDay.dayShortMonthLabel();
+    final endShort = end.startOfDay.dayShortMonthLabel();
     return '$startShort – $endShort';
   }
 }

@@ -23,9 +23,8 @@ final class _PreviewAppointmentsTable extends StatelessWidget {
       AppTableColumn(
         label: LocaleKeys.componentPreview_table_date.translate(),
         noWrap: true,
-        cellBuilder: (context, row) => AppText.body(
-          AppFormatters.formatDateTime(row.dateTime, context: context),
-        ),
+        cellBuilder: (context, row) =>
+            AppText.body(row.dateTime.dateTimeLabel(context: context)),
       ),
       AppTableColumn(
         label: LocaleKeys.componentPreview_table_patient.translate(),

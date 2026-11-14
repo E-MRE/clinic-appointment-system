@@ -1,8 +1,9 @@
+import 'package:clinic_appointment_system/core/di/app_dependency.dart';
 import 'package:clinic_appointment_system/core/theme/theme.dart';
 import 'package:clinic_appointment_system/core/widgets/app_text.dart';
 import 'package:clinic_appointment_system/core/widgets/surface/app_surface.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/branch.dart';
-import 'package:clinic_appointment_system/features/institution/presentation/extensions/working_hours_summary.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/services/working_hours_summary_formatter.dart';
 import 'package:flutter/material.dart';
 
 /// Mobile branch summary with location and weekly hours.
@@ -17,6 +18,8 @@ final class InstitutionBranchCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final summaryFormatter = AppDependency.injector
+        .get<WorkingHoursSummaryFormatter>();
     return AppSurface(
       child: InkWell(
         onTap: onTap,
@@ -27,7 +30,7 @@ final class InstitutionBranchCard extends StatelessWidget {
             const EmptySize.s4Height(),
             AppText.body(branch.address, tone: TextTone.muted),
             const EmptySize.s8Height(),
-            AppText.caption(branch.workingHours.localizedSummary),
+            AppText.caption(summaryFormatter.format(branch.workingHours)),
           ],
         ),
       ),

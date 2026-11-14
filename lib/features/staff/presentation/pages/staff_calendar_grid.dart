@@ -1,37 +1,18 @@
 part of 'staff_calendar_page.dart';
 
-/// The scrollable calendar grid updating the current-time indicator every minute.
-final class _StaffCalendarGrid extends StatefulWidget {
-  const _StaffCalendarGrid({
-    required this.visibleDates,
-    required this.appointments,
-    required this.availability,
-    required this.branchHours,
-  });
+/// The scrollable calendar grid for the layout calculated by the calendar cubit.
+final class _StaffCalendarGrid extends StatelessWidget {
+  const _StaffCalendarGrid({required this.layout});
 
-  final List<CalendarDate> visibleDates;
-  final Iterable<Appointment> appointments;
-  final StaffAvailability availability;
-  final WorkingHours branchHours;
+  final StaffCalendarLayout layout;
 
-  @override
-  State<_StaffCalendarGrid> createState() => _StaffCalendarGridState();
-}
+  int get _firstIndex => 0;
 
-final class _StaffCalendarGridState extends State<_StaffCalendarGrid>
-    with _StaffCalendarGridMixin {
+  int get _lastIndexOffset => 1;
+
   @override
   Widget build(BuildContext context) {
-    final now = _clock.now();
-    final today = CalendarDate.fromDateTime(now);
-    final layout = const StaffCalendarLayoutFactory().create(
-      visibleDates: widget.visibleDates,
-      appointments: widget.appointments,
-      availability: widget.availability,
-      branchHours: widget.branchHours,
-      now: now,
-    );
-
+    final today = CalendarDate.fromDateTime(layout.now);
     final totalHeight =
         (layout.endHour - layout.startHour) * AppSizes.staffCalendarHourHeight;
 
@@ -73,15 +54,15 @@ final class _StaffCalendarGridState extends State<_StaffCalendarGrid>
           endHour: layout.endHour,
           hourHeight: AppSizes.staffCalendarHourHeight,
         ),
-        for (int i = 0; i < layout.days.length; i++)
+        for (int index = _firstIndex; index < layout.days.length; index++)
           Expanded(
             child: _StaffCalendarDayColumn(
-              day: layout.days[i],
+              day: layout.days[index],
               layout: layout,
               today: today,
               totalHeight: totalHeight,
               hourHeight: AppSizes.staffCalendarHourHeight,
-              showsRightBorder: i < layout.days.length - _lastIndexOffset,
+              showsRightBorder: index < layout.days.length - _lastIndexOffset,
             ),
           ),
       ],
@@ -97,30 +78,5 @@ final class _StaffCalendarGridState extends State<_StaffCalendarGrid>
         width: AppSizes.borderThin,
       ),
     );
-  }
-}
-
-mixin _StaffCalendarGridMixin on State<_StaffCalendarGrid> {
-  Duration get _nowUpdateInterval => const Duration(minutes: 1);
-  int get _lastIndexOffset => 1;
-
-  late final Clock _clock;
-  Timer? _timer;
-
-  @override
-  void initState() {
-    super.initState();
-    _clock = AppDependency.injector.get<Clock>();
-    _timer = Timer.periodic(_nowUpdateInterval, (_) {
-      if (mounted) {
-        setState(() {});
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
   }
 }

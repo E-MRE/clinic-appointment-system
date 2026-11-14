@@ -1,11 +1,13 @@
 import 'package:clinic_appointment_system/features/appointments/domain/actors/patient_appointment_actor.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/services/appointment_start_comparator.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/models/clinic_catalog.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/enums/patient_appointments_tab.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/extensions/patient_appointments_tab_selection.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/models/patient_appointment_entry.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/models/patient_appointments_overview.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/services/patient_appointments_overview_factory.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../support/localization_test_app.dart';
@@ -14,13 +16,16 @@ import '../doubles/patient_fixtures.dart';
 void main() {
   const fixtures = PatientFixtures();
   final patient = PatientAppointmentActor(id: fixtures.patient.id);
+  const overviewFactory = PatientAppointmentsOverviewFactory(
+    AppointmentStartComparator(),
+  );
 
   PatientAppointmentsOverview overview({
     List<Appointment>? appointments,
     ClinicCatalog? catalog,
     DateTime? now,
   }) {
-    return PatientAppointmentsOverview(
+    return overviewFactory.create(
       appointments: appointments ?? fixtures.appointments,
       catalog: catalog ?? fixtures.catalog,
       now: now ?? fixtures.now,

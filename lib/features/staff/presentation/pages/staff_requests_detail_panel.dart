@@ -8,10 +8,11 @@ final class _StaffRequestsDetailPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appointments = context
-        .watch<StaffAppointmentsCubit>()
-        .state
-        .appointments;
+    final appointmentsState = context.watch<StaffAppointmentsCubit>().state;
+    if (appointmentsState is! StaffAppointmentsLoaded) {
+      return const SizedBox.shrink();
+    }
+    final appointments = appointmentsState.appointments;
 
     final workspaceState = context.watch<StaffWorkspaceCubit>().state;
     final workspace = workspaceState is StaffWorkspaceLoaded
@@ -20,10 +21,9 @@ final class _StaffRequestsDetailPanel extends StatelessWidget {
 
     final service = workspace?.serviceById(request.serviceId);
     final String location = _getLocation(workspaceState);
-    final history = StaffPatientHistory.fromAppointments(
-      patientId: request.patientId,
-      appointments: appointments,
-    );
+    final history =
+        appointmentsState.patientHistories[request.patientId] ??
+        const StaffPatientHistory.empty();
 
     return AppSurface(
       padding: AppSurfacePadding.comfortable,
@@ -35,9 +35,7 @@ final class _StaffRequestsDetailPanel extends StatelessWidget {
           children: [
             StaffPatientHeader(
               appointment: request,
-              subtitle: request.requestedAgoLabel(
-                AppDependency.injector.get<Clock>().now(),
-              ),
+              subtitle: request.requestedAgoLabel(appointmentsState.now),
             ),
             StaffAppointmentDetailGrid(
               appointment: request,
@@ -50,7 +48,7 @@ final class _StaffRequestsDetailPanel extends StatelessWidget {
                 service: service,
                 appointments: appointments,
               ),
-            if (history.hasHistory)
+            if (history.completedCount > _noCompletedVisits)
               _StaffRequestDetailPatientHistory(history: history),
             const Divider(),
             _StaffRequestsDetailActions(request: request),
@@ -67,4 +65,6 @@ final class _StaffRequestsDetailPanel extends StatelessWidget {
 
     return LocaleKeys.common_notAvailable.translate();
   }
+
+  int get _noCompletedVisits => 0;
 }

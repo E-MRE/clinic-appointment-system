@@ -1,4 +1,4 @@
-export 'package:clinic_appointment_system/core/localization/app_formatters.dart';
+export 'package:clinic_appointment_system/core/localization/locale_resolver.dart';
 export 'package:clinic_appointment_system/core/localization/localization_config.dart';
 export 'package:clinic_appointment_system/core/localization/localization_extension.dart';
 export 'package:clinic_appointment_system/core/localization/localization_wrapper.dart';

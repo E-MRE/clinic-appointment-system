@@ -23,21 +23,15 @@ final class _MedicalServicesHeader extends StatelessWidget {
 
   String? _resolveSubtitle(BuildContext context) {
     final serviceState = context.watch<MedicalServiceListCubit>().state;
-    if (serviceState is! InstitutionListLoaded<MedicalService>) {
+    if (serviceState is! MedicalServiceListLoaded) {
       return null;
     }
-    final departmentState = context.watch<DepartmentListCubit>().state;
-    final departments = departmentState is InstitutionListLoaded<Department>
-        ? departmentState.items
-        : const <Department>[];
-    final overview = MedicalServiceListOverview.from(
-      services: serviceState.items,
-      departments: departments,
-    );
+    final formatter = AppDependency.injector
+        .get<MedicalServiceOverviewFormatter>();
     return context.screenSize.select(
-      mobile: overview.mobileSubtitle,
-      tablet: overview.tabletSubtitle,
-      desktop: overview.desktopSubtitle,
+      mobile: formatter.mobileSubtitle(serviceState.overview),
+      tablet: formatter.tabletSubtitle(serviceState.overview),
+      desktop: formatter.desktopSubtitle(serviceState.overview),
     );
   }
 }

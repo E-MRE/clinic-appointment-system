@@ -1,5 +1,5 @@
 import 'package:clinic_appointment_system/core/constants/appointment_constants.dart';
-import 'package:clinic_appointment_system/core/localization/app_formatters.dart';
+import 'package:clinic_appointment_system/core/extensions/date_time_formatting.dart';
 import 'package:clinic_appointment_system/core/localization/localization_extension.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_action.dart';
@@ -16,13 +16,11 @@ extension AppointmentActionTooEarlyHint on AppointmentAction {
       case AppointmentAction.markNoShow:
         return LocaleKeys.staffAppointmentDialog_noShowTooEarly.translate(
           args: [
-            AppFormatters.formatTime(
-              appointment.startsAt.add(
-                const Duration(
-                  minutes: AppointmentConstants.noShowToleranceMinutes,
-                ),
+            (appointment.startsAt.add(
+              const Duration(
+                minutes: AppointmentConstants.noShowToleranceMinutes,
               ),
-            ),
+            )).timeLabel(),
             '${AppointmentConstants.noShowToleranceMinutes}',
           ],
         );

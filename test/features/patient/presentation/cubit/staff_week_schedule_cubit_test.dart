@@ -8,6 +8,8 @@ import 'package:clinic_appointment_system/features/patient/presentation/cubit/st
 import 'package:clinic_appointment_system/features/patient/presentation/enums/booking_day_status.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/extensions/calendar_date_week.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/models/staff_week_schedule_request.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/services/staff_week_schedule_factory.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/services/staff_week_schedule_reader.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/staff.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -24,6 +26,7 @@ void main() {
   late PatientAppointmentRepository appointments;
   late PatientAvailabilityRepository availability;
   late StaffWeekScheduleCubit cubit;
+  const reader = StaffWeekScheduleReader();
 
   setUp(() {
     appointments = PatientAppointmentRepository();
@@ -32,7 +35,7 @@ void main() {
       WatchStaffAvailabilityUseCase(availability),
       WatchStaffBookedSlotsUseCase(appointments),
       FixedClock(fixtures.now),
-      const SlotGenerator(),
+      const StaffWeekScheduleFactory(SlotGenerator()),
     );
   });
 
@@ -88,7 +91,7 @@ void main() {
     expect(state, isA<StaffWeekScheduleLoaded>());
     final schedule = (state as StaffWeekScheduleLoaded).schedule;
     expect(schedule.request, same(week));
-    expect(schedule.firstAvailableDay?.freeCount, 3);
+    expect(reader.firstAvailableDay(schedule)?.freeCount, 3);
   });
 
   test('a booked slot update marks the slot taken', () async {
@@ -102,7 +105,7 @@ void main() {
     ]);
     await Future<void>.delayed(Duration.zero);
     final schedule = (cubit.state as StaffWeekScheduleLoaded).schedule;
-    expect(schedule.dayOn(tuesday)?.status, BookingDayStatus.full);
+    expect(reader.dayOn(schedule, tuesday)?.status, BookingDayStatus.full);
   });
 
   test('watching another staff member or week replaces every stream', () {

@@ -8,12 +8,15 @@ import 'package:clinic_appointment_system/features/medical_services/domain/enums
 import 'package:clinic_appointment_system/features/medical_services/domain/value_objects/money.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/value_objects/service_duration.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/enums/medical_service_kind_filter.dart';
-import 'package:clinic_appointment_system/features/medical_services/presentation/models/medical_service_list_overview.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/services/medical_service_overview_calculator.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/services/medical_service_overview_formatter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../support/localization_test_app.dart';
 
 void main() {
+  const calculator = MedicalServiceOverviewCalculator();
+  const formatter = MedicalServiceOverviewFormatter();
   const departmentCardiology = Department(
     id: 'd-cardio',
     branchId: 'b1',
@@ -178,7 +181,7 @@ void main() {
     tester,
   ) async {
     await loadTestTranslations(tester);
-    final overview = MedicalServiceListOverview.from(
+    final overview = calculator.calculate(
       services: allServices,
       departments: departments,
     );
@@ -190,22 +193,31 @@ void main() {
     expect(overview.distinctDepartmentsCount, 4);
 
     expect(
-      overview.desktopSubtitle,
+      formatter.desktopSubtitle(overview),
       '13 hizmet · süre ve ücret randevu ekranında hastaya gösterilir',
     );
-    expect(overview.tabletSubtitle, '3 muayene · 4 radyoloji · 6 laboratuvar');
-    expect(overview.mobileSubtitle, '13 hizmet · 4 bölüm');
-
-    expect(overview.chipLabel(MedicalServiceKindFilter.all), 'Tümü · 13');
     expect(
-      overview.chipLabel(MedicalServiceKindFilter.examination),
+      formatter.tabletSubtitle(overview),
+      '3 muayene · 4 radyoloji · 6 laboratuvar',
+    );
+    expect(formatter.mobileSubtitle(overview), '13 hizmet · 4 bölüm');
+
+    expect(
+      formatter.chipLabel(overview, MedicalServiceKindFilter.all),
+      'Tümü · 13',
+    );
+    expect(
+      formatter.chipLabel(overview, MedicalServiceKindFilter.examination),
       'Muayene · 3',
     );
     expect(
-      overview.chipLabel(MedicalServiceKindFilter.radiology),
+      formatter.chipLabel(overview, MedicalServiceKindFilter.radiology),
       'Radyoloji · 4',
     );
-    expect(overview.chipLabel(MedicalServiceKindFilter.lab), 'Laboratuvar · 6');
+    expect(
+      formatter.chipLabel(overview, MedicalServiceKindFilter.lab),
+      'Laboratuvar · 6',
+    );
   });
 
   testWidgets(
@@ -227,12 +239,15 @@ void main() {
         examination3,
         radiology1,
       ];
-      final overview = MedicalServiceListOverview.from(
+      final overview = calculator.calculate(
         services: mixedServices,
         departments: departments,
       );
 
-      final groups = overview.groupServices(mixedServices);
+      final groups = calculator.groupServices(
+        services: mixedServices,
+        overview: overview,
+      );
 
       // Alphabetical order: Dahiliye, Kardiyoloji, Radyoloji, then Diğer
       expect(groups.length, 4);
@@ -242,19 +257,20 @@ void main() {
       expect(groups[1].services, [examination1]);
       expect(groups[2].departmentName, 'Radyoloji');
       expect(groups[2].services, [radiology1]);
-      expect(groups[3].departmentName, 'Diğer');
+      expect(groups[3].departmentName, isNull);
+      expect(formatter.otherDepartmentName, 'Diğer');
       expect(groups[3].services, [unknownService]);
     },
   );
 
   testWidgets('resolves known and unknown department names', (tester) async {
     await loadTestTranslations(tester);
-    final overview = MedicalServiceListOverview.from(
+    final overview = calculator.calculate(
       services: allServices,
       departments: departments,
     );
 
-    expect(overview.departmentName('d-cardio'), 'Kardiyoloji');
-    expect(overview.departmentName('non-existent-id'), '—');
+    expect(formatter.departmentName(overview, 'd-cardio'), 'Kardiyoloji');
+    expect(formatter.departmentName(overview, 'non-existent-id'), '—');
   });
 }

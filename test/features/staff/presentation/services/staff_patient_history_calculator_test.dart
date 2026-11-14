@@ -3,9 +3,12 @@ import 'package:clinic_appointment_system/core/time/clock_time.dart';
 import 'package:clinic_appointment_system/core/time/time_range.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/services/appointment_start_comparator.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/value_objects/appointment_status_change.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/value_objects/money.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/models/staff_patient_history.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/services/staff_patient_history_calculator.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/services/staff_patient_history_formatter.dart';
 import 'package:clinic_appointment_system/features/users/domain/enums/user_role.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -44,21 +47,25 @@ Appointment _makeAppointment({
 }
 
 void main() {
-  group('StaffPatientHistory', () {
+  const calculator = StaffPatientHistoryCalculator(
+    AppointmentStartComparator(),
+  );
+  const formatter = StaffPatientHistoryFormatter();
+
+  group('StaffPatientHistoryCalculator', () {
     final range = TimeRange(
       start: ClockTime(hour: 10, minute: 0),
       end: ClockTime(hour: 10, minute: 30),
     );
 
     test('is empty when given no appointments', () {
-      final history = StaffPatientHistory.fromAppointments(
+      final history = calculator.calculate(
         patientId: 'p1',
         appointments: const [],
       );
-      expect(history.hasHistory, isFalse);
       expect(history.completedCount, 0);
       expect(history.latestVisitDate, isNull);
-      expect(history.lastVisitLabel, isNull);
+      expect(formatter.lastVisitLabel(history), isNull);
     });
 
     test(
@@ -124,14 +131,18 @@ void main() {
           ),
         ];
 
-        final history = StaffPatientHistory.fromAppointments(
+        final history = calculator.calculate(
           patientId: 'p1',
           appointments: appts,
         );
 
         expect(history.completedCount, 2);
-        expect(history.hasHistory, isTrue);
         expect(history.latestVisitDate, DateTime(2026, 9, 14, 10, 0));
+
+        final histories = calculator.calculateAll(appts);
+        expect(histories['p1']?.completedCount, 2);
+        expect(histories['p1']?.latestVisitDate, DateTime(2026, 9, 14, 10, 0));
+        expect(histories['p2']?.completedCount, 1);
       },
     );
 
@@ -143,8 +154,8 @@ void main() {
         latestVisitDate: DateTime(2026, 9, 14, 10, 0),
       );
 
-      expect(history.completedLabel, '3 tamamlandı');
-      expect(history.lastVisitLabel, 'Son ziyaret: 14 Eylül');
+      expect(formatter.completedLabel(history), '3 tamamlandı');
+      expect(formatter.lastVisitLabel(history), 'Son ziyaret: 14 Eylül');
     });
   });
 }

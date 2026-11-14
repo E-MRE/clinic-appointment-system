@@ -12,7 +12,7 @@ final class _AdminHomeHeader extends StatelessWidget {
     final subtitle = LocaleKeys.admin_overview_todaySubtitle.translate(
       args: [
         today.toWeekday().label,
-        AppFormatters.formatLongDate(today, context: context),
+        today.longDateLabel(context: context),
       ],
     );
     return LayoutBuilder(

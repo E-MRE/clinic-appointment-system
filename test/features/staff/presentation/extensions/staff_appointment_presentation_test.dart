@@ -1,10 +1,10 @@
-import 'package:clinic_appointment_system/core/localization/app_formatters.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/value_objects/appointment_status_change.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/extensions/staff_appointment_presentation.dart';
 import 'package:clinic_appointment_system/features/users/domain/enums/user_role.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../../../support/date_formatting_test_support.dart';
 import '../../../../support/localization_test_app.dart';
 import '../../../appointments/domain/support/appointment_fixture.dart';
 
@@ -12,7 +12,7 @@ void main() {
   const fixture = AppointmentFixture();
 
   setUpAll(() async {
-    await AppFormatters.ensureInitialized();
+    await initializeDateFormattingForTests();
   });
 
   testWidgets('derives displayPatientName and initials with fallback', (

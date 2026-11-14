@@ -3,13 +3,17 @@ import 'package:clinic_appointment_system/core/time/calendar_date.dart';
 import 'package:clinic_appointment_system/core/time/clock_time.dart';
 import 'package:clinic_appointment_system/features/availability/domain/entities/staff_availability.dart';
 import 'package:clinic_appointment_system/features/availability/domain/entities/weekly_window.dart';
+import 'package:clinic_appointment_system/features/availability/domain/services/slot_generator.dart';
 import 'package:clinic_appointment_system/features/institution/domain/value_objects/working_hours.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/enums/booking_day_status.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/enums/day_period.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/extensions/clock_time_day_period.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/models/staff_schedule_day.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/models/staff_slot.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/models/staff_week_schedule.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/models/staff_week_schedule_request.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/services/staff_week_schedule_factory.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/services/staff_week_schedule_reader.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../doubles/patient_fixtures.dart';
@@ -21,6 +25,8 @@ void main() {
   final tuesday = CalendarDate(year: 2026, month: 10, day: 20);
   final wednesday = CalendarDate(year: 2026, month: 10, day: 21);
   final thursday = CalendarDate(year: 2026, month: 10, day: 22);
+  const reader = StaffWeekScheduleReader();
+  const scheduleFactory = StaffWeekScheduleFactory(SlotGenerator());
 
   StaffWeekScheduleRequest request({WorkingHours? hours}) {
     return StaffWeekScheduleRequest(
@@ -36,7 +42,7 @@ void main() {
     WorkingHours? hours,
     StaffAvailability? availability,
   }) {
-    return StaffWeekSchedule(
+    return scheduleFactory.create(
       request: request(hours: hours),
       availability: availability ?? fixtures.muratAvailability,
       bookedSlots: [
@@ -45,6 +51,10 @@ void main() {
       ],
       now: now ?? fixtures.now,
     );
+  }
+
+  StaffScheduleDay? dayOn(StaffWeekSchedule schedule, CalendarDate date) {
+    return reader.dayOn(schedule, date);
   }
 
   List<String> starts(Iterable<StaffSlot> slots) {
@@ -77,35 +87,41 @@ void main() {
       BookingDayStatus.closed,
       BookingDayStatus.closed,
     ]);
-    expect(schedule().dayOn(tuesday)?.freeCount, 2);
-    expect(schedule().dayOn(thursday)?.freeCount, 12);
-    expect(schedule().firstAvailableDay?.date, tuesday);
+    expect(dayOn(schedule(), tuesday)?.freeCount, 2);
+    expect(dayOn(schedule(), thursday)?.freeCount, 12);
+    expect(reader.firstAvailableDay(schedule())?.date, tuesday);
   });
 
   test('marks slots overlapping a booked slot as taken', () {
-    final slots = schedule().dayOn(tuesday)?.slots.toList() ?? [];
+    final slots = dayOn(schedule(), tuesday)?.slots.toList() ?? [];
     expect(starts(slots), ['09:00', '09:20', '09:40']);
     expect([for (final slot in slots) slot.isTaken], [false, true, false]);
-    expect(schedule().isFree(tuesday, fixtures.range(9, 20, 20)), isFalse);
-    expect(schedule().isFree(tuesday, fixtures.range(9, 40, 20)), isTrue);
+    expect(
+      reader.isFree(schedule(), tuesday, fixtures.range(9, 20, 20)),
+      isFalse,
+    );
+    expect(
+      reader.isFree(schedule(), tuesday, fixtures.range(9, 40, 20)),
+      isTrue,
+    );
   });
 
   test('keeps a slot starting at now and drops earlier ones', () {
     final atStart = schedule(now: DateTime(2026, 10, 20, 9));
-    expect(starts(atStart.dayOn(tuesday)?.slots ?? []).first, '09:00');
+    expect(starts(dayOn(atStart, tuesday)?.slots ?? []).first, '09:00');
     final justAfter = schedule(now: DateTime(2026, 10, 20, 9, 0, 1));
-    expect(starts(justAfter.dayOn(tuesday)?.slots ?? []), ['09:20', '09:40']);
+    expect(starts(dayOn(justAfter, tuesday)?.slots ?? []), ['09:20', '09:40']);
   });
 
   test('a day whose slots are all past counts as closed', () {
     final late = schedule(now: DateTime(2026, 10, 20, 9, 41));
-    expect(late.dayOn(tuesday)?.status, BookingDayStatus.closed);
-    expect(late.dayOn(tuesday)?.groups, isEmpty);
-    expect(late.firstAvailableDay?.date, thursday);
+    expect(dayOn(late, tuesday)?.status, BookingDayStatus.closed);
+    expect(dayOn(late, tuesday)?.groups, isEmpty);
+    expect(reader.firstAvailableDay(late)?.date, thursday);
   });
 
   test('groups slots by availability window with its period', () {
-    final groups = schedule().dayOn(thursday)?.groups ?? [];
+    final groups = dayOn(schedule(), thursday)?.groups ?? [];
     expect(
       [for (final group in groups) group.window],
       [fixtures.range(9, 0, 180), fixtures.range(13, 30, 60)],
@@ -128,7 +144,7 @@ void main() {
         ),
       ],
     );
-    final day = schedule(availability: availability).dayOn(thursday);
+    final day = dayOn(schedule(availability: availability), thursday);
     expect(day?.status, BookingDayStatus.closed);
   });
 

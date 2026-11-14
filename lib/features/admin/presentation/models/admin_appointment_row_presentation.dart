@@ -1,11 +1,10 @@
-import 'package:clinic_appointment_system/core/extensions/date_time_weekday.dart';
 import 'package:clinic_appointment_system/core/localization/localization.dart';
-import 'package:clinic_appointment_system/core/localization/weekday_localization.dart';
 import 'package:clinic_appointment_system/features/admin/presentation/extensions/appointment_status_admin_actions.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/actors/admin_appointment_actor.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_action.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_action_transition.dart';
+import 'package:clinic_appointment_system/features/appointments/presentation/extensions/appointment_schedule_label.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/models/clinic_catalog.dart';
 
 /// Display values and lifecycle actions offered for one administrator row.
@@ -17,7 +16,7 @@ final class AdminAppointmentRowPresentation {
     required AdminAppointmentActor actor,
     required DateTime at,
   }) {
-    final scheduleLabel = _scheduleLabel(appointment);
+    final scheduleLabel = appointment.weekdayDateTimeLabel;
     final offeredActions = <AppointmentAction>[];
     for (final action in appointment.status.adminActions) {
       final result = action.apply(appointment, by: actor, at: at);
@@ -64,11 +63,4 @@ final class AdminAppointmentRowPresentation {
 
   /// Actions accepted by the domain's dry-run transition for this row.
   final List<AppointmentAction> actions;
-
-  static String _scheduleLabel(Appointment appointment) {
-    final weekday = appointment.startsAt.toWeekday().shortLabel;
-    final dayMonth = AppFormatters.formatDayShortMonth(appointment.startsAt);
-    final time = AppFormatters.formatTime(appointment.startsAt);
-    return '$weekday $dayMonth · $time';
-  }
 }

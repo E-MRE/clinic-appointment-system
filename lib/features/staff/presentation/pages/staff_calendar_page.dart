@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:clinic_appointment_system/core/constants/widget_key.dart';
 import 'package:clinic_appointment_system/core/di/app_dependency.dart';
+import 'package:clinic_appointment_system/core/extensions/date_time_formatting.dart';
 import 'package:clinic_appointment_system/core/localization/localization.dart';
 import 'package:clinic_appointment_system/core/localization/weekday_localization.dart';
 import 'package:clinic_appointment_system/core/theme/theme.dart';
 import 'package:clinic_appointment_system/core/time/calendar_date.dart';
-import 'package:clinic_appointment_system/core/time/clock.dart';
 import 'package:clinic_appointment_system/core/time/time_range.dart';
 import 'package:clinic_appointment_system/core/widgets/app_scaffold.dart';
 import 'package:clinic_appointment_system/core/widgets/app_text.dart';
@@ -19,8 +19,6 @@ import 'package:clinic_appointment_system/core/widgets/page_header/page_header.d
 import 'package:clinic_appointment_system/core/widgets/state/error_state.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
 import 'package:clinic_appointment_system/features/appointments/presentation/extensions/appointment_error_code_localization.dart';
-import 'package:clinic_appointment_system/features/availability/domain/entities/staff_availability.dart';
-import 'package:clinic_appointment_system/features/institution/domain/value_objects/working_hours.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_state.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_calendar_cubit.dart';
@@ -32,7 +30,6 @@ import 'package:clinic_appointment_system/features/staff/presentation/extensions
 import 'package:clinic_appointment_system/features/staff/presentation/extensions/staff_calendar_header_title.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/models/staff_calendar_day.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/models/staff_calendar_layout.dart';
-import 'package:clinic_appointment_system/features/staff/presentation/models/staff_calendar_layout_factory.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/widgets/staff_appointment_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -64,7 +61,18 @@ final class StaffCalendarPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<StaffCalendarCubit>(
-      create: (_) => AppDependency.injector.get<StaffCalendarCubit>(),
+      create: (context) {
+        final cubit = AppDependency.injector.get<StaffCalendarCubit>();
+        final appointmentsState = context.read<StaffAppointmentsCubit>().state;
+        if (appointmentsState is StaffAppointmentsLoaded) {
+          cubit.updateAppointments(appointmentsState.appointments);
+        }
+        final workspaceState = context.read<StaffWorkspaceCubit>().state;
+        if (workspaceState is StaffWorkspaceLoaded) {
+          cubit.updateWorkspace(workspaceState.workspace);
+        }
+        return cubit;
+      },
       child: _StaffCalendarScope(
         onAppointmentTap: onAppointmentTap,
         child: const _StaffCalendarViewContent(),

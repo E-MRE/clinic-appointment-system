@@ -6,23 +6,27 @@ import 'package:clinic_appointment_system/core/time/time_range.dart';
 import 'package:clinic_appointment_system/features/institution/domain/value_objects/working_hours.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-/// Presents adjacent days with equal hours as one localized range.
-extension WorkingHoursSummary on WorkingHours {
-  String get localizedSummary {
+/// Groups and localizes a branch's weekly working hours for display.
+final class WorkingHoursSummaryFormatter {
+  /// Creates a formatter for weekly working hours.
+  const WorkingHoursSummaryFormatter();
+
+  /// Formats open-day ranges and closed days into one localized summary.
+  String format(WorkingHours hours) {
     final sections = <String>[];
     final closed = <Weekday>[];
-    int index = 0;
+    int index = _firstIndex;
     while (index < Weekday.values.length) {
       final day = Weekday.values[index];
-      if (isClosedOn(day)) {
+      if (hours.isClosedOn(day)) {
         closed.add(day);
         index++;
         continue;
       }
-      final ranges = rangesOn(day);
-      final end = _lastMatchingDay(index, ranges);
+      final ranges = hours.rangesOn(day);
+      final end = _lastMatchingDay(hours, index, ranges);
       sections.add('${_dayLabel(index, end)} ${_formatRanges(ranges)}');
-      index = end + 1;
+      index = end + _nextIndex;
     }
     if (closed.length == Weekday.values.length) {
       return LocaleKeys.institution_allDaysClosed.tr();
@@ -31,10 +35,19 @@ extension WorkingHoursSummary on WorkingHours {
     return sections.join(' · ');
   }
 
-  int _lastMatchingDay(int first, List<TimeRange> ranges) {
+  /// value = 0
+  int get _firstIndex => 0;
+
+  /// value = 1
+  int get _nextIndex => 1;
+
+  int _lastMatchingDay(WorkingHours hours, int first, List<TimeRange> ranges) {
     int last = first;
-    while (last + 1 < Weekday.values.length &&
-        _sameRanges(ranges, rangesOn(Weekday.values[last + 1]))) {
+    while (last + _nextIndex < Weekday.values.length &&
+        _sameRanges(
+          ranges,
+          hours.rangesOn(Weekday.values[last + _nextIndex]),
+        )) {
       last++;
     }
     return last;
@@ -53,12 +66,13 @@ extension WorkingHoursSummary on WorkingHours {
 
   bool _sameRanges(List<TimeRange> first, List<TimeRange> second) {
     if (first.length != second.length) return false;
-    for (int index = 0; index < first.length; index++) {
+    for (int index = _firstIndex; index < first.length; index++) {
       if (first[index] != second[index]) return false;
     }
     return true;
   }
 
-  String _formatRanges(List<TimeRange> ranges) =>
-      ranges.map((range) => range.label).join(', ');
+  String _formatRanges(List<TimeRange> ranges) {
+    return ranges.map((range) => range.label).join(', ');
+  }
 }

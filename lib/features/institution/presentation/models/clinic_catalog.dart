@@ -2,7 +2,7 @@ import 'package:clinic_appointment_system/core/extensions/turkish_alphabetical_c
 import 'package:clinic_appointment_system/features/institution/domain/entities/branch.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/clinic.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/department.dart';
-import 'package:clinic_appointment_system/features/institution/domain/entities/institution_record.dart';
+import 'package:clinic_appointment_system/features/institution/domain/extensions/institution_record_name_ordering.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/medical_service.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/staff.dart';
 
@@ -24,10 +24,10 @@ final class ClinicCatalog {
     final servicesById = {for (final service in services) service.id: service};
     final staffById = {for (final member in staff) member.id: member};
 
-    final sortedClinics = <Clinic>[...clinics]..sort(_byName);
-    final sortedBranches = <Branch>[...branches]..sort(_byName);
-    final sortedDepartments = <Department>[...departments]..sort(_byName);
-    final sortedServices = <MedicalService>[...services]..sort(_byName);
+    final sortedClinics = clinics.sortedByName();
+    final sortedBranches = branches.sortedByName();
+    final sortedDepartments = departments.sortedByName();
+    final sortedServices = services.sortedByName();
     final sortedStaff = <Staff>[...staff]
       ..sort(
         (Staff first, Staff second) =>
@@ -100,8 +100,4 @@ final class ClinicCatalog {
 
   /// The staff member identified by [id], or null when unknown.
   Staff? staffById(String id) => _staff[id];
-
-  static int _byName(InstitutionRecord first, InstitutionRecord second) {
-    return first.name.compareTurkishAlphabetically(second.name);
-  }
 }

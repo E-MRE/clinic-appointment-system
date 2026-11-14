@@ -1,4 +1,5 @@
 import 'package:clinic_appointment_system/core/enums/weekday.dart';
+import 'package:clinic_appointment_system/core/extensions/date_time_formatting.dart';
 import 'package:clinic_appointment_system/core/extensions/time_range_label.dart';
 import 'package:clinic_appointment_system/core/localization/localization.dart';
 import 'package:clinic_appointment_system/core/localization/weekday_localization.dart';
@@ -15,7 +16,7 @@ extension BookingSelectionPresentation on BookingSelection {
   String weekLabel(ClinicCatalog catalog) {
     final dates = scheduleRequest(catalog)?.dates;
     final end = dates?.last ?? weekStart.addDays(Weekday.saturday.index);
-    return AppFormatters.formatDayRange(weekStart.startOfDay, end.startOfDay);
+    return weekStart.startOfDay.dayRangeLabel(end.startOfDay);
   }
 
   /// The chosen service's name.
@@ -48,11 +49,7 @@ extension BookingSelectionPresentation on BookingSelection {
     final slot = this.slot;
     if (date == null || slot == null) return _missing;
     return LocaleKeys.patient_book_dateTimeValue.translate(
-      args: [
-        date.weekday.label,
-        AppFormatters.formatDayMonth(date.startOfDay),
-        slot.label,
-      ],
+      args: [date.weekday.label, date.startOfDay.dayMonthLabel(), slot.label],
     );
   }
 

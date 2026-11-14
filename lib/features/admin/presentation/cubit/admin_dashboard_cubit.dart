@@ -5,7 +5,8 @@ import 'package:clinic_appointment_system/core/time/calendar_date.dart';
 import 'package:clinic_appointment_system/core/time/clock.dart';
 import 'package:clinic_appointment_system/core/usecases/no_params.dart';
 import 'package:clinic_appointment_system/features/admin/presentation/cubit/admin_dashboard_state.dart';
-import 'package:clinic_appointment_system/features/admin/presentation/models/admin_dashboard_summary.dart';
+import 'package:clinic_appointment_system/features/admin/presentation/models/admin_dashboard_scope.dart';
+import 'package:clinic_appointment_system/features/admin/presentation/services/admin_dashboard_calculator.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_error_code.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/models/admin_appointments_query.dart';
@@ -23,6 +24,7 @@ final class AdminDashboardCubit extends Cubit<AdminDashboardState> {
     this._watchAdminAppointments,
     this._watchPendingAppointments,
     this._clock,
+    this._calculator,
   ) : super(const AdminDashboardLoading()) {
     _watch();
   }
@@ -30,6 +32,7 @@ final class AdminDashboardCubit extends Cubit<AdminDashboardState> {
   final WatchAdminAppointmentsUseCase _watchAdminAppointments;
   final WatchPendingAppointmentsUseCase _watchPendingAppointments;
   final Clock _clock;
+  final AdminDashboardCalculator _calculator;
   StreamSubscription<DataResult<List<Appointment>>>? _todaySubscription;
   StreamSubscription<DataResult<List<Appointment>>>? _pendingSubscription;
   List<Appointment>? _todayAppointments;
@@ -147,14 +150,17 @@ final class AdminDashboardCubit extends Cubit<AdminDashboardState> {
         catalog == null) {
       return;
     }
+    final scope = AdminDashboardScope(
+      today: today,
+      branchId: _selectedBranchId,
+    );
     emit(
       AdminDashboardLoaded(
-        AdminDashboardSummary.fromAppointments(
+        _calculator.calculate(
           todayAppointments: todayAppointments,
           pendingAppointments: pendingAppointments,
-          today: today,
+          scope: scope,
           catalog: catalog,
-          selectedBranchId: _selectedBranchId,
         ),
       ),
     );

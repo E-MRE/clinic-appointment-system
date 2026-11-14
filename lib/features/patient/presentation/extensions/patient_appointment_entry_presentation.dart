@@ -1,3 +1,4 @@
+import 'package:clinic_appointment_system/core/extensions/date_time_formatting.dart';
 import 'package:clinic_appointment_system/core/extensions/time_range_label.dart';
 import 'package:clinic_appointment_system/core/localization/localization.dart';
 import 'package:clinic_appointment_system/core/localization/weekday_localization.dart';
@@ -37,7 +38,7 @@ extension PatientAppointmentEntryPresentation on PatientAppointmentEntry {
   String get dateTimeLabel {
     return LocaleKeys.patient_appointments_dateTime.translate(
       args: [
-        AppFormatters.formatDayShortMonth(appointment.startsAt),
+        appointment.startsAt.dayShortMonthLabel(),
         '${appointment.range.start}',
       ],
     );
@@ -46,16 +47,13 @@ extension PatientAppointmentEntryPresentation on PatientAppointmentEntry {
   /// Full date and booked range for the details dialog.
   String get longDateTimeLabel {
     return LocaleKeys.patient_appointments_dialog_dateTimeValue.translate(
-      args: [
-        AppFormatters.formatLongDate(appointment.startsAt),
-        appointment.range.label,
-      ],
+      args: [appointment.startsAt.longDateLabel(), appointment.range.label],
     );
   }
 
   /// Upper-case abbreviated month of the date tile (`EKİ`).
   String get monthLabel {
-    return AppFormatters.formatShortMonthUpper(appointment.startsAt);
+    return appointment.startsAt.shortMonthUpperLabel();
   }
 
   /// Day of the month of the date tile (`26`).
@@ -106,10 +104,7 @@ extension PatientAppointmentEntryPresentation on PatientAppointmentEntry {
   /// Heading of a preparation note (`Lipid Paneli · 28 Eki`).
   String get noteHeading {
     return LocaleKeys.patient_appointments_noteHeading.translate(
-      args: [
-        serviceName,
-        AppFormatters.formatDayShortMonth(appointment.startsAt),
-      ],
+      args: [serviceName, appointment.startsAt.dayShortMonthLabel()],
     );
   }
 

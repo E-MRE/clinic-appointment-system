@@ -27,6 +27,9 @@ final class StaffCalendarLayout extends Equatable {
 
   final DateTime _now;
 
+  /// The clock instant used to calculate this layout.
+  DateTime get now => _now;
+
   /// Position (0..1) of the current time on today's column, or null when
   /// today is not visible or the time is outside [startHour]..[endHour].
   double? get nowFraction {

@@ -11,9 +11,7 @@ final class _StaffCalendarHeader extends StatelessWidget {
     final effectiveView = isDesktop
         ? calendarState.view
         : StaffCalendarView.day;
-    final visibleDates = isDesktop
-        ? calendarState.visibleDates
-        : [calendarState.anchor];
+    final layout = isDesktop ? calendarState.layout : calendarState.dayLayout;
 
     final appointmentsState = context.watch<StaffAppointmentsCubit>().state;
     final workspaceState = context.watch<StaffWorkspaceCubit>().state;
@@ -21,8 +19,8 @@ final class _StaffCalendarHeader extends StatelessWidget {
     final (title, subtitle) = _getTitles(
       appointmentsState: appointmentsState,
       workspaceState: workspaceState,
-      visibleDates: visibleDates,
       effectiveView: effectiveView,
+      layout: layout,
     );
 
     if (isDesktop) {
@@ -46,20 +44,12 @@ final class _StaffCalendarHeader extends StatelessWidget {
   (String title, String? subtitle) _getTitles({
     required StaffAppointmentsState appointmentsState,
     required StaffWorkspaceState workspaceState,
-    required List<CalendarDate> visibleDates,
     required StaffCalendarView effectiveView,
+    required StaffCalendarLayout? layout,
   }) {
     if (appointmentsState is StaffAppointmentsLoaded &&
-        workspaceState is StaffWorkspaceLoaded) {
-      final clock = AppDependency.injector.get<Clock>();
-      final layout = const StaffCalendarLayoutFactory().create(
-        visibleDates: visibleDates,
-        appointments: appointmentsState.appointments,
-        availability: workspaceState.workspace.availability,
-        branchHours: workspaceState.workspace.branch.workingHours,
-        now: clock.now(),
-      );
-
+        workspaceState is StaffWorkspaceLoaded &&
+        layout != null) {
       final title = LocaleKeys.staffCalendar_headerTitle.translate(
         args: [layout.headerTitle],
       );

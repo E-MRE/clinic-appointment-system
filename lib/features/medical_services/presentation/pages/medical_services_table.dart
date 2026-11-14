@@ -25,6 +25,8 @@ final class _MedicalServicesTable extends StatelessWidget {
   }
 
   List<AppTableColumn<MedicalService>> _columns(BuildContext context) {
+    final formatter = AppDependency.injector
+        .get<MedicalServiceOverviewFormatter>();
     return [
       AppTableColumn<MedicalService>(
         label: LocaleKeys.services_columns_service.tr(),
@@ -35,7 +37,9 @@ final class _MedicalServicesTable extends StatelessWidget {
       AppTableColumn<MedicalService>(
         label: LocaleKeys.services_columns_department.tr(),
         cellBuilder: (context, service) {
-          return AppText.body(overview.departmentName(service.departmentId));
+          return AppText.body(
+            formatter.departmentName(overview, service.departmentId),
+          );
         },
       ),
       AppTableColumn<MedicalService>(

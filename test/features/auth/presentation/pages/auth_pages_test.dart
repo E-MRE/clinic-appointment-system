@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:clinic_appointment_system/app.dart';
+import 'package:clinic_appointment_system/core/collections/count_ranking.dart';
 import 'package:clinic_appointment_system/core/constants/widget_key.dart';
 import 'package:clinic_appointment_system/core/di/app_dependency.dart';
 import 'package:clinic_appointment_system/core/enums/auth_error_code.dart';
@@ -13,6 +14,8 @@ import 'package:clinic_appointment_system/core/states/theme_cubit.dart';
 import 'package:clinic_appointment_system/core/time/clock.dart';
 import 'package:clinic_appointment_system/core/widgets/page_header/page_header.dart';
 import 'package:clinic_appointment_system/features/admin/presentation/cubit/admin_dashboard_cubit.dart';
+import 'package:clinic_appointment_system/features/admin/presentation/services/admin_dashboard_calculator.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/services/appointment_start_comparator.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_admin_appointments_use_case.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_pending_appointments_use_case.dart';
 import 'package:clinic_appointment_system/features/auth/domain/entities/auth_session.dart';
@@ -621,6 +624,10 @@ final class _AuthTestApp {
         WatchAdminAppointmentsUseCase(appointmentRepository),
         WatchPendingAppointmentsUseCase(appointmentRepository),
         AppDependency.injector.get<Clock>(),
+        const AdminDashboardCalculator(
+          CountRanking(),
+          AppointmentStartComparator(),
+        ),
       ),
     );
     availability.registerCubits();
