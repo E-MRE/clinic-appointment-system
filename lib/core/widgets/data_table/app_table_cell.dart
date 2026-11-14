@@ -7,11 +7,13 @@ final class _AppTableCell extends StatelessWidget {
     required this.alignment,
     required this.noWrap,
     required this.child,
+    this.maxWidth,
   });
   final EdgeInsetsGeometry padding;
   final AlignmentGeometry alignment;
   final bool noWrap;
   final Widget child;
+  final double? maxWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,10 @@ final class _AppTableCell extends StatelessWidget {
       padding: padding,
       child: Align(
         alignment: alignment,
-        child: DefaultTextStyle.merge(softWrap: !noWrap, child: child),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: maxWidth ?? double.infinity),
+          child: DefaultTextStyle.merge(softWrap: !noWrap, child: child),
+        ),
       ),
     );
   }

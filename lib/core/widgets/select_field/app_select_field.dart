@@ -17,6 +17,7 @@ final class AppSelectField<T> extends StatelessWidget {
     this.value,
     this.hint,
     this.enabled = true,
+    this.highlightSelection = false,
     this.validator,
     this.fieldKey,
     super.key,
@@ -40,6 +41,9 @@ final class AppSelectField<T> extends StatelessWidget {
   /// Whether the field accepts input.
   final bool enabled;
 
+  /// Whether a selected value gets the theme's primary outline.
+  final bool highlightSelection;
+
   /// Optional form validation behavior.
   final String? Function(T?)? validator;
 
@@ -60,6 +64,7 @@ final class AppSelectField<T> extends StatelessWidget {
           value: value,
           hint: hint,
           enabled: enabled,
+          highlightSelection: highlightSelection,
           validator: validator,
           fieldKey: fieldKey,
         ),

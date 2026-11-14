@@ -58,6 +58,61 @@ abstract class LocaleKeys {
   static const home = 'home';
   static const admin_appointmentsTitle = 'admin.appointmentsTitle';
   static const admin_appointmentsSubtitle = 'admin.appointmentsSubtitle';
+  static const admin_appointmentsPage_loading =
+      'admin.appointmentsPage.loading';
+  static const admin_appointmentsPage_failureTitle =
+      'admin.appointmentsPage.failureTitle';
+  static const admin_appointmentsPage_catalogFailureTitle =
+      'admin.appointmentsPage.catalogFailureTitle';
+  static const admin_appointmentsPage_catalogFailureMessage =
+      'admin.appointmentsPage.catalogFailureMessage';
+  static const admin_appointmentsPage_sessionFailureTitle =
+      'admin.appointmentsPage.sessionFailureTitle';
+  static const admin_appointmentsPage_sessionFailureMessage =
+      'admin.appointmentsPage.sessionFailureMessage';
+  static const admin_appointmentsPage_retry = 'admin.appointmentsPage.retry';
+  static const admin_appointmentsPage_dateRange =
+      'admin.appointmentsPage.dateRange';
+  static const admin_appointmentsPage_branch = 'admin.appointmentsPage.branch';
+  static const admin_appointmentsPage_allBranches =
+      'admin.appointmentsPage.allBranches';
+  static const admin_appointmentsPage_department =
+      'admin.appointmentsPage.department';
+  static const admin_appointmentsPage_allDepartments =
+      'admin.appointmentsPage.allDepartments';
+  static const admin_appointmentsPage_staff = 'admin.appointmentsPage.staff';
+  static const admin_appointmentsPage_allStaff =
+      'admin.appointmentsPage.allStaff';
+  static const admin_appointmentsPage_status = 'admin.appointmentsPage.status';
+  static const admin_appointmentsPage_clearFilters =
+      'admin.appointmentsPage.clearFilters';
+  static const admin_appointmentsPage_searchPatient =
+      'admin.appointmentsPage.searchPatient';
+  static const admin_appointmentsPage_appointmentCount =
+      'admin.appointmentsPage.appointmentCount';
+  static const admin_appointmentsPage_columnDate =
+      'admin.appointmentsPage.columnDate';
+  static const admin_appointmentsPage_columnPatient =
+      'admin.appointmentsPage.columnPatient';
+  static const admin_appointmentsPage_columnService =
+      'admin.appointmentsPage.columnService';
+  static const admin_appointmentsPage_columnStaff =
+      'admin.appointmentsPage.columnStaff';
+  static const admin_appointmentsPage_columnLocation =
+      'admin.appointmentsPage.columnLocation';
+  static const admin_appointmentsPage_columnStatus =
+      'admin.appointmentsPage.columnStatus';
+  static const admin_appointmentsPage_columnActions =
+      'admin.appointmentsPage.columnActions';
+  static const admin_appointmentsPage_previousPage =
+      'admin.appointmentsPage.previousPage';
+  static const admin_appointmentsPage_nextPage =
+      'admin.appointmentsPage.nextPage';
+  static const admin_appointmentsPage_emptyTitle =
+      'admin.appointmentsPage.emptyTitle';
+  static const admin_appointmentsPage_emptyMessage =
+      'admin.appointmentsPage.emptyMessage';
+  static const admin_appointmentsPage = 'admin.appointmentsPage';
   static const admin = 'admin';
   static const appointment_title = 'appointment.title';
   static const appointment_dateTime = 'appointment.dateTime';

@@ -9,10 +9,20 @@ final class _StaffRequestsView extends StatelessWidget {
     return MultiBlocListener(
       listeners: [
         BlocListener<AppointmentApproveCubit, AppointmentActionState>(
-          listener: _onApproval,
+          listener: (context, state) {
+            context.showAppointmentActionFeedback(
+              state,
+              successMessage: LocaleKeys.staffRequests_approved.translate(),
+            );
+          },
         ),
         BlocListener<AppointmentRejectCubit, AppointmentActionState>(
-          listener: _onRejection,
+          listener: (context, state) {
+            context.showAppointmentActionFeedback(
+              state,
+              successMessage: LocaleKeys.staffRequests_rejected.translate(),
+            );
+          },
         ),
         BlocListener<StaffAppointmentsCubit, StaffAppointmentsState>(
           listener: (context, state) {
@@ -33,41 +43,5 @@ final class _StaffRequestsView extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void _onApproval(BuildContext context, AppointmentActionState state) {
-    _showFeedback(
-      context,
-      state,
-      successMessage: LocaleKeys.staffRequests_approved.translate(),
-    );
-  }
-
-  void _onRejection(BuildContext context, AppointmentActionState state) {
-    _showFeedback(
-      context,
-      state,
-      successMessage: LocaleKeys.staffRequests_rejected.translate(),
-    );
-  }
-
-  void _showFeedback(
-    BuildContext context,
-    AppointmentActionState state, {
-    required String successMessage,
-  }) {
-    final String? message;
-    if (state is AppointmentActionSuccess) {
-      message = successMessage;
-    } else if (state is AppointmentActionFailure) {
-      message = state.errorCode.message;
-    } else {
-      message = null;
-    }
-
-    if (message == null) return;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
   }
 }

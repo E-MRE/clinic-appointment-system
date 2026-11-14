@@ -13,6 +13,7 @@ final class AppPickerField extends StatelessWidget {
     required this.icon,
     required this.onTap,
     required this.enabled,
+    this.isSelected = false,
     this.hasError = false,
     this.isHint = false,
     this.fieldKey,
@@ -23,6 +24,9 @@ final class AppPickerField extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
   final bool enabled;
+
+  /// Whether this field shows a selected value with a primary outline.
+  final bool isSelected;
   final bool hasError;
   final bool isHint;
   final Key? fieldKey;

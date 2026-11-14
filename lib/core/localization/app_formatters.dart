@@ -39,6 +39,22 @@ final class AppFormatters {
     return DateFormat.MMMd(_resolveLocale(locale: locale)).format(dateTime);
   }
 
+  /// Formats an inclusive short day range and includes its ending year.
+  static String formatShortDateRange(
+    DateTime start,
+    DateTime end, {
+    String? locale,
+    BuildContext? context,
+  }) {
+    final resolvedLocale = _resolveLocale(locale: locale, context: context);
+    final startLabel = DateFormat.MMMd(resolvedLocale).format(start);
+    final endLabel = DateFormat.MMMd(resolvedLocale).format(end);
+    if (start.year == end.year) {
+      return '$startLabel – $endLabel ${end.year}';
+    }
+    return '$startLabel ${start.year} – $endLabel ${end.year}';
+  }
+
   /// Formats the abbreviated month in upper case (`EKİ`), using Turkish
   /// casing rules for dotted and dotless `i` in Turkish locales.
   static String formatShortMonthUpper(DateTime dateTime, {String? locale}) {

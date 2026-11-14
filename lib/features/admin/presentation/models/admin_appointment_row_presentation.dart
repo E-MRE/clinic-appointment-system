@@ -59,6 +59,9 @@ final class AdminAppointmentRowPresentation {
   /// Current branch name, or the localized not-available label.
   final String branchName;
 
+  /// Department and branch names separated for the table location column.
+  String get departmentBranchLabel => '$departmentName · $branchName';
+
   /// Actions accepted by the domain's dry-run transition for this row.
   final List<AppointmentAction> actions;
 

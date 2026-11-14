@@ -63,6 +63,14 @@ final class AdminAppointmentFilter extends Equatable {
   /// Trimmed patient-name search text.
   final String patientQuery;
 
+  /// Whether any criterion besides the default date range is active.
+  bool get hasNonDateFilters =>
+      branchId != null ||
+      departmentId != null ||
+      staffId != null ||
+      statuses.isNotEmpty ||
+      patientQuery.isNotEmpty;
+
   /// Copies this filter while retaining values whose arguments are omitted.
   /// Use [withBranch] and [withDepartment] for catalog-aware selections.
   AdminAppointmentFilter copyWith({

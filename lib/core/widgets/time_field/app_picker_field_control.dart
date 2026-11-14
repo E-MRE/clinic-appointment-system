@@ -35,6 +35,14 @@ final class _AppPickerFieldControl extends StatelessWidget {
                           color: context.colorScheme.error,
                         ),
                       )
+                    : field.isSelected
+                    ? OutlineInputBorder(
+                        borderRadius: const AppRadius.medium(),
+                        borderSide: BorderSide(
+                          color: context.colorScheme.primary,
+                          width: AppSizes.borderThin,
+                        ),
+                      )
                     : null,
                 suffixIcon: Icon(field.icon),
               ),
