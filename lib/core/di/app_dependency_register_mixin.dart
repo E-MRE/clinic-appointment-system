@@ -6,6 +6,7 @@ import 'package:clinic_appointment_system/core/states/theme_cubit.dart';
 import 'package:clinic_appointment_system/core/time/clock.dart';
 import 'package:clinic_appointment_system/core/time/system_clock.dart';
 import 'package:clinic_appointment_system/features/admin/presentation/cubit/admin_appointments_cubit.dart';
+import 'package:clinic_appointment_system/features/admin/presentation/cubit/admin_dashboard_cubit.dart';
 import 'package:clinic_appointment_system/features/appointments/data/repositories/firestore_appointment_repository.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/repositories/appointment_repository.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/book_appointment_use_case.dart';
@@ -474,6 +475,13 @@ mixin AppDependencyRegisterMixin {
     injector.registerFactory<AdminAppointmentsCubit>(
       () => AdminAppointmentsCubit(
         injector.get<WatchAdminAppointmentsUseCase>(),
+        injector.get<Clock>(),
+      ),
+    );
+    injector.registerFactory<AdminDashboardCubit>(
+      () => AdminDashboardCubit(
+        injector.get<WatchAdminAppointmentsUseCase>(),
+        injector.get<WatchPendingAppointmentsUseCase>(),
         injector.get<Clock>(),
       ),
     );

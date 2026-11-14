@@ -4,6 +4,7 @@ import 'package:clinic_appointment_system/core/di/injector/dependency_injector.d
 import 'package:clinic_appointment_system/core/errors/unexpected_exception.dart';
 import 'package:clinic_appointment_system/core/states/theme_cubit.dart';
 import 'package:clinic_appointment_system/core/time/clock.dart';
+import 'package:clinic_appointment_system/features/admin/presentation/cubit/admin_dashboard_cubit.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_admin_appointments_use_case.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_pending_appointments_use_case.dart';
 import 'package:clinic_appointment_system/features/auth/data/mappers/firebase_auth_exception_mapper.dart';
@@ -189,6 +190,14 @@ void main() {
       ]);
     },
   );
+
+  test('admin dashboard cubits resolve as screen-owned factories', () async {
+    final first = container.get<AdminDashboardCubit>();
+    final second = container.get<AdminDashboardCubit>();
+
+    expect(first, isNot(same(second)));
+    await Future.wait([first.close(), second.close()]);
+  });
 
   test(
     'factory registrations create separate instances and can be removed',
