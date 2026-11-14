@@ -10,6 +10,31 @@ final class _AdminAppointmentsFilterFields extends StatelessWidget {
   final AdminAppointmentFilter filter;
   final ClinicCatalog catalog;
 
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final columns = context.screenSize.select(
+          mobile: AdminLayoutConstants.appointmentsFilterMobileColumns,
+          tablet: AdminLayoutConstants.appointmentsFilterTabletColumns,
+          desktop: AdminLayoutConstants.appointmentsFilterDesktopColumns,
+        );
+        final fieldWidth =
+            (constraints.maxWidth - AppSizes.s12 * columns) / columns;
+        return Wrap(
+          spacing: AppSizes.s12,
+          runSpacing: AppSizes.s12,
+          children: [
+            _field(fieldWidth, _AdminAppointmentDateRangeField(filter: filter)),
+            _field(fieldWidth, _branchField(context)),
+            _field(fieldWidth, _departmentField(context)),
+            _field(fieldWidth, _staffField(context)),
+          ],
+        );
+      },
+    );
+  }
+
   Widget _field(double width, Widget child) {
     return SizedBox(width: width, child: child);
   }
@@ -75,31 +100,6 @@ final class _AdminAppointmentsFilterFields extends StatelessWidget {
           AppSelectOption<String?>(value: staff.id, label: staff.fullName),
       ],
       onChanged: context.read<AdminAppointmentsCubit>().selectStaff,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final columns = context.screenSize.select(
-          mobile: AdminLayoutConstants.appointmentsFilterMobileColumns,
-          tablet: AdminLayoutConstants.appointmentsFilterTabletColumns,
-          desktop: AdminLayoutConstants.appointmentsFilterDesktopColumns,
-        );
-        final fieldWidth =
-            (constraints.maxWidth - AppSizes.s12 * columns) / columns;
-        return Wrap(
-          spacing: AppSizes.s12,
-          runSpacing: AppSizes.s12,
-          children: [
-            _field(fieldWidth, _AdminAppointmentDateRangeField(filter: filter)),
-            _field(fieldWidth, _branchField(context)),
-            _field(fieldWidth, _departmentField(context)),
-            _field(fieldWidth, _staffField(context)),
-          ],
-        );
-      },
     );
   }
 }

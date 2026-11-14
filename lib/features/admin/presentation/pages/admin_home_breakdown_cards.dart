@@ -6,20 +6,8 @@ final class _AdminHomeBreakdownCards extends StatelessWidget {
 
   final AdminDashboardSummary summary;
 
-  int _columnCount(double width) {
-    const gap = AppSizes.s16;
-    final estimated =
-        ((width + gap) /
-                (AdminLayoutConstants.overviewBreakdownCardMinWidth + gap))
-            .floor();
-    if (estimated < AdminLayoutConstants.overviewMinimumColumnCount) {
-      return AdminLayoutConstants.overviewMinimumColumnCount;
-    }
-    if (estimated > AdminLayoutConstants.overviewBreakdownCardCount) {
-      return AdminLayoutConstants.overviewBreakdownCardCount;
-    }
-    return estimated;
-  }
+  double get _minWidthByGap =>
+      AdminLayoutConstants.overviewBreakdownCardMinWidth + AppSizes.s16;
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +18,7 @@ final class _AdminHomeBreakdownCards extends StatelessWidget {
             columns - AdminLayoutConstants.overviewMinimumColumnCount;
         final cardWidth =
             (constraints.maxWidth - AppSizes.s16 * columnGaps) / columns;
+
         return Wrap(
           spacing: AppSizes.s16,
           runSpacing: AppSizes.s16,
@@ -50,5 +39,17 @@ final class _AdminHomeBreakdownCards extends StatelessWidget {
         );
       },
     );
+  }
+
+  int _columnCount(double width) {
+    final estimated = ((width + AppSizes.s16) / _minWidthByGap).floor();
+
+    if (estimated < AdminLayoutConstants.overviewMinimumColumnCount) {
+      return AdminLayoutConstants.overviewMinimumColumnCount;
+    }
+    if (estimated > AdminLayoutConstants.overviewBreakdownCardCount) {
+      return AdminLayoutConstants.overviewBreakdownCardCount;
+    }
+    return estimated;
   }
 }

@@ -30,26 +30,32 @@ final class _AdminAppointmentsTable extends StatelessWidget {
           at: now,
         ),
     ];
-    final header = _AdminAppointmentsTableHeader(
-      state: state,
-      searchController: searchController,
-    );
-    final footer = _AdminAppointmentsTableFooter(state: state);
+
     if (rows.isEmpty) {
-      return _AdminAppointmentsEmptyTable(header: header, footer: footer);
+      return _AdminAppointmentsEmptyTable(
+        footer: _AdminAppointmentsTableFooter(state: state),
+        header: _AdminAppointmentsTableHeader(
+          state: state,
+          searchController: searchController,
+        ),
+      );
     }
+
     return AppDataTable<AdminAppointmentRowPresentation>(
       rows: rows,
       minWidth: AdminLayoutConstants.appointmentsTableMinWidth,
+      footer: _AdminAppointmentsTableFooter(state: state),
       density: AppTableDensity.regular,
       rowVerticalPadding: AppSizes.s8,
-      header: header,
-      footer: footer,
-      columns: _columns,
+      columns: _buildColumns(),
+      header: _AdminAppointmentsTableHeader(
+        state: state,
+        searchController: searchController,
+      ),
     );
   }
 
-  List<AppTableColumn<AdminAppointmentRowPresentation>> get _columns {
+  List<AppTableColumn<AdminAppointmentRowPresentation>> _buildColumns() {
     return [
       AppTableColumn<AdminAppointmentRowPresentation>(
         label: LocaleKeys.admin_appointmentsPage_columnDate.translate(),

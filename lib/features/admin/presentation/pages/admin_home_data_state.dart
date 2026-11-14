@@ -6,6 +6,29 @@ final class _AdminHomeDataState extends StatelessWidget {
 
   final Clock clock;
 
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<AdminDashboardCubit, AdminDashboardState>(
+      builder: (context, dashboardState) {
+        return BlocBuilder<ClinicCatalogCubit, ClinicCatalogState>(
+          builder: (context, catalogState) {
+            if (catalogState is ClinicCatalogFailure) {
+              return _catalogFailure(context);
+            }
+            if (dashboardState is AdminDashboardFailure) {
+              return _dashboardFailure(context, dashboardState);
+            }
+            if (catalogState is! ClinicCatalogLoaded ||
+                dashboardState is! AdminDashboardLoaded) {
+              return _loading;
+            }
+            return _loadedContent(context, dashboardState, catalogState);
+          },
+        );
+      },
+    );
+  }
+
   Widget _catalogFailure(BuildContext context) {
     return _AdminHomeFailureState(
       title: LocaleKeys.admin_overview_catalogFailureTitle.translate(),
@@ -49,29 +72,6 @@ final class _AdminHomeDataState extends StatelessWidget {
       summary: dashboardState.summary,
       catalog: catalogState.catalog,
       actor: actor,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<AdminDashboardCubit, AdminDashboardState>(
-      builder: (context, dashboardState) {
-        return BlocBuilder<ClinicCatalogCubit, ClinicCatalogState>(
-          builder: (context, catalogState) {
-            if (catalogState is ClinicCatalogFailure) {
-              return _catalogFailure(context);
-            }
-            if (dashboardState is AdminDashboardFailure) {
-              return _dashboardFailure(context, dashboardState);
-            }
-            if (catalogState is! ClinicCatalogLoaded ||
-                dashboardState is! AdminDashboardLoaded) {
-              return _loading;
-            }
-            return _loadedContent(context, dashboardState, catalogState);
-          },
-        );
-      },
     );
   }
 }

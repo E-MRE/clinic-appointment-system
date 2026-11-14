@@ -8,7 +8,6 @@ final class _AdminHomeDepartmentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final rows = summary.departmentRows;
     return SizedBox(
       height: AdminLayoutConstants.overviewBreakdownCardHeight,
       child: AppSurface(
@@ -20,28 +19,32 @@ final class _AdminHomeDepartmentCard extends StatelessWidget {
               LocaleKeys.admin_overview_departmentBreakdown.translate(),
             ),
             const EmptySize.s16Height(),
-            Expanded(
-              child: rows.isEmpty
-                  ? Center(
-                      child: AppText.body(
-                        LocaleKeys.admin_overview_emptyDepartments.translate(),
-                        tone: TextTone.muted,
-                        textAlign: TextAlign.center,
-                      ),
-                    )
-                  : SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        spacing: AdminLayoutConstants.overviewBreakdownRowGap,
-                        children: [
-                          for (final row in rows)
-                            _AdminHomeDepartmentRow(row: row),
-                        ],
-                      ),
-                    ),
-            ),
+            Expanded(child: _buildBody()),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildBody() {
+    if (summary.departmentRows.isEmpty) {
+      return Center(
+        child: AppText.body(
+          LocaleKeys.admin_overview_emptyDepartments.translate(),
+          tone: TextTone.muted,
+          textAlign: TextAlign.center,
+        ),
+      );
+    }
+
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: AdminLayoutConstants.overviewBreakdownRowGap,
+        children: [
+          for (final row in summary.departmentRows)
+            _AdminHomeDepartmentRow(row: row),
+        ],
       ),
     );
   }

@@ -5,32 +5,6 @@ final class _AppPickerFieldControl extends StatelessWidget {
   const _AppPickerFieldControl({required this.field});
   final AppPickerField field;
 
-  InputDecoration _decoration(BuildContext context) {
-    return InputDecoration(
-      enabled: field.enabled,
-      fillColor: context.screenSize.select(
-        mobile: context.colorScheme.surfaceContainerLow,
-        tablet: context.colorScheme.surface,
-        desktop: context.colorScheme.surface,
-      ),
-      enabledBorder: field.hasError
-          ? OutlineInputBorder(
-              borderRadius: const AppRadius.medium(),
-              borderSide: BorderSide(color: context.colorScheme.error),
-            )
-          : field.isSelected
-          ? OutlineInputBorder(
-              borderRadius: const AppRadius.medium(),
-              borderSide: BorderSide(
-                color: context.colorScheme.primary,
-                width: AppSizes.borderThin,
-              ),
-            )
-          : null,
-      suffixIcon: Icon(field.icon),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Semantics(
@@ -55,6 +29,38 @@ final class _AppPickerFieldControl extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  InputDecoration _decoration(BuildContext context) {
+    return InputDecoration(
+      enabled: field.enabled,
+      suffixIcon: Icon(field.icon),
+      enabledBorder: _getBorder(context),
+      fillColor: context.screenSize.select(
+        mobile: context.colorScheme.surfaceContainerLow,
+        tablet: context.colorScheme.surface,
+        desktop: context.colorScheme.surface,
+      ),
+    );
+  }
+
+  InputBorder? _getBorder(BuildContext context) {
+    if (field.hasError) {
+      return OutlineInputBorder(
+        borderRadius: const AppRadius.medium(),
+        borderSide: BorderSide(color: context.colorScheme.error),
+      );
+    }
+
+    if (!field.isSelected) return null;
+
+    return OutlineInputBorder(
+      borderRadius: const AppRadius.medium(),
+      borderSide: BorderSide(
+        color: context.colorScheme.primary,
+        width: AppSizes.borderThin,
       ),
     );
   }

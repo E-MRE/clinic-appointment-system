@@ -12,41 +12,44 @@ final class _AdminAppointmentsFilterStatuses extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final label = AppText.label(
-      LocaleKeys.admin_appointmentsPage_status.translate(),
+    if (!context.screenSize.isMobile) {
+      return Row(
+        spacing: AppSizes.s12,
+        children: [
+          AppText.label(LocaleKeys.admin_appointmentsPage_status.translate()),
+          Expanded(child: _buildChips(context)),
+          _clearButton(context),
+        ],
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: AppSizes.s8,
+      children: [
+        Row(
+          spacing: AppSizes.s12,
+          children: [
+            AppText.label(LocaleKeys.admin_appointmentsPage_status.translate()),
+            Expanded(child: _buildChips(context)),
+          ],
+        ),
+        Align(
+          alignment: AlignmentDirectional.centerEnd,
+          child: _clearButton(context),
+        ),
+      ],
     );
-    final chips = AppMultiFilterChips<AdminStatusFilter>(
+  }
+
+  Widget _buildChips(BuildContext context) {
+    return AppMultiFilterChips<AdminStatusFilter>(
       choices: [
         for (final status in AdminStatusFilter.values)
           AppChoice<AdminStatusFilter>(value: status, label: status.label),
       ],
       selected: filter.statuses,
       onSelectionChanged: context.read<AdminAppointmentsCubit>().selectStatuses,
-    );
-    final clearButton = _clearButton(context);
-    if (context.screenSize.isMobile) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        spacing: AppSizes.s8,
-        children: [
-          Row(
-            spacing: AppSizes.s12,
-            children: [
-              label,
-              Expanded(child: chips),
-            ],
-          ),
-          Align(alignment: AlignmentDirectional.centerEnd, child: clearButton),
-        ],
-      );
-    }
-    return Row(
-      spacing: AppSizes.s12,
-      children: [
-        label,
-        Expanded(child: chips),
-        clearButton,
-      ],
     );
   }
 

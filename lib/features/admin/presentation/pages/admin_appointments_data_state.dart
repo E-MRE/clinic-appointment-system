@@ -12,12 +12,35 @@ final class _AdminAppointmentsDataState extends StatelessWidget {
   final TextEditingController searchController;
   final ValueChanged<BuildContext> onClearFilters;
 
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<AdminAppointmentsCubit, AdminAppointmentsState>(
+      builder: (context, appointmentsState) {
+        return BlocBuilder<ClinicCatalogCubit, ClinicCatalogState>(
+          builder: (context, catalogState) {
+            if (catalogState is ClinicCatalogFailure) {
+              return _catalogFailure(context);
+            }
+            if (appointmentsState is AdminAppointmentsFailure) {
+              return _appointmentsFailure(context, appointmentsState);
+            }
+            if (catalogState is! ClinicCatalogLoaded ||
+                appointmentsState is! AdminAppointmentsLoaded) {
+              return _loading;
+            }
+            return _loadedContent(context, appointmentsState, catalogState);
+          },
+        );
+      },
+    );
+  }
+
   Widget _catalogFailure(BuildContext context) {
     return _AdminAppointmentsFailure(
+      onRetry: context.read<ClinicCatalogCubit>().watch,
       title: LocaleKeys.admin_appointmentsPage_catalogFailureTitle.translate(),
       message: LocaleKeys.admin_appointmentsPage_catalogFailureMessage
           .translate(),
-      onRetry: context.read<ClinicCatalogCubit>().watch,
     );
   }
 
@@ -62,29 +85,6 @@ final class _AdminAppointmentsDataState extends StatelessWidget {
       actor: actor,
       searchController: searchController,
       onClearFilters: onClearFilters,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<AdminAppointmentsCubit, AdminAppointmentsState>(
-      builder: (context, appointmentsState) {
-        return BlocBuilder<ClinicCatalogCubit, ClinicCatalogState>(
-          builder: (context, catalogState) {
-            if (catalogState is ClinicCatalogFailure) {
-              return _catalogFailure(context);
-            }
-            if (appointmentsState is AdminAppointmentsFailure) {
-              return _appointmentsFailure(context, appointmentsState);
-            }
-            if (catalogState is! ClinicCatalogLoaded ||
-                appointmentsState is! AdminAppointmentsLoaded) {
-              return _loading;
-            }
-            return _loadedContent(context, appointmentsState, catalogState);
-          },
-        );
-      },
     );
   }
 }

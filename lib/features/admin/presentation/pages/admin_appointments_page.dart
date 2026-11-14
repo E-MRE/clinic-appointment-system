@@ -62,23 +62,8 @@ final class AdminAppointmentsPage extends StatefulWidget {
   State<AdminAppointmentsPage> createState() => _AdminAppointmentsPageState();
 }
 
-final class _AdminAppointmentsPageState extends State<AdminAppointmentsPage> {
-  late final Clock _clock;
-  late final TextEditingController _searchController;
-
-  @override
-  void initState() {
-    super.initState();
-    _clock = AppDependency.injector.get<Clock>();
-    _searchController = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
-
+final class _AdminAppointmentsPageState extends State<AdminAppointmentsPage>
+    with _AdminAppointmentsPageMixin {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
@@ -97,6 +82,24 @@ final class _AdminAppointmentsPageState extends State<AdminAppointmentsPage> {
         ),
       ),
     );
+  }
+}
+
+mixin _AdminAppointmentsPageMixin on State<AdminAppointmentsPage> {
+  late final Clock _clock;
+  late final TextEditingController _searchController;
+
+  @override
+  void initState() {
+    super.initState();
+    _clock = AppDependency.injector.get<Clock>();
+    _searchController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   void _clearFilters(BuildContext context) {

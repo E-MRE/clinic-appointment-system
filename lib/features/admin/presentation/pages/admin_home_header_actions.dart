@@ -4,6 +4,24 @@ part of 'admin_home_page.dart';
 final class _AdminHomeHeaderActions extends StatelessWidget {
   const _AdminHomeHeaderActions();
 
+  @override
+  Widget build(BuildContext context) {
+    final catalogState = context.watch<ClinicCatalogCubit>().state;
+    final dashboardState = context.watch<AdminDashboardCubit>().state;
+    final selectedBranchId = dashboardState is AdminDashboardLoaded
+        ? dashboardState.summary.selectedBranchId
+        : null;
+    return Wrap(
+      spacing: AppSizes.s12,
+      runSpacing: AppSizes.s8,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        _branchSelector(context, catalogState, selectedBranchId),
+        _appointmentsButton(context),
+      ],
+    );
+  }
+
   String? _branchId(String? value) {
     if (value == _allBranchesValue) return null;
     return value;
@@ -48,24 +66,6 @@ final class _AdminHomeHeaderActions extends StatelessWidget {
         LocaleKeys.admin_appointmentsTitle.translate(),
         tone: TextTone.onPrimary,
       ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final catalogState = context.watch<ClinicCatalogCubit>().state;
-    final dashboardState = context.watch<AdminDashboardCubit>().state;
-    final selectedBranchId = dashboardState is AdminDashboardLoaded
-        ? dashboardState.summary.selectedBranchId
-        : null;
-    return Wrap(
-      spacing: AppSizes.s12,
-      runSpacing: AppSizes.s8,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      children: [
-        _branchSelector(context, catalogState, selectedBranchId),
-        _appointmentsButton(context),
-      ],
     );
   }
 }

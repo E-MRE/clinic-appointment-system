@@ -12,7 +12,30 @@ final class _AdminAppointmentsTableHeader extends StatelessWidget {
 
   int get _noAppointments => 0;
 
-  Widget get _summary {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const AppPadding.allLg(),
+      child: context.screenSize.isMobile
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: AppSizes.s12,
+              children: [_buildSummary(), _searchField(context)],
+            )
+          : Row(
+              spacing: AppSizes.s20,
+              children: [
+                Expanded(child: _buildSummary()),
+                SizedBox(
+                  width: AppSizes.progressWidthMd,
+                  child: _searchField(context),
+                ),
+              ],
+            ),
+    );
+  }
+
+  Widget _buildSummary() {
     return Wrap(
       spacing: AppSizes.s8,
       runSpacing: AppSizes.s4,
@@ -44,29 +67,6 @@ final class _AdminAppointmentsTableHeader extends StatelessWidget {
         size: AppSizes.s20,
       ),
       onChanged: context.read<AdminAppointmentsCubit>().searchPatient,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const AppPadding.allLg(),
-      child: context.screenSize.isMobile
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: AppSizes.s12,
-              children: [_summary, _searchField(context)],
-            )
-          : Row(
-              spacing: AppSizes.s20,
-              children: [
-                Expanded(child: _summary),
-                SizedBox(
-                  width: AppSizes.progressWidthMd,
-                  child: _searchField(context),
-                ),
-              ],
-            ),
     );
   }
 }

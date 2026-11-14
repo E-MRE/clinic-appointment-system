@@ -16,25 +16,33 @@ final class _AdminAppointmentsTableFooter extends StatelessWidget {
         children: [
           AppText.caption(state.rangeLabel, tone: TextTone.muted),
           const Spacer(),
-          IconButton(
-            tooltip: LocaleKeys.admin_appointmentsPage_previousPage.translate(),
-            style: _buttonStyle(context),
-            onPressed: state.currentPage > _firstPage
-                ? context.read<AdminAppointmentsCubit>().previousPage
-                : null,
-            icon: const Icon(Icons.chevron_left),
-          ),
+          _buildPreviousPageButton(context),
           const EmptySize.s8Width(),
-          IconButton(
-            tooltip: LocaleKeys.admin_appointmentsPage_nextPage.translate(),
-            style: _buttonStyle(context),
-            onPressed: state.currentPage < state.pageCount
-                ? context.read<AdminAppointmentsCubit>().nextPage
-                : null,
-            icon: const Icon(Icons.chevron_right),
-          ),
+          _buildNextPageButton(context),
         ],
       ),
+    );
+  }
+
+  IconButton _buildPreviousPageButton(BuildContext context) {
+    return IconButton(
+      tooltip: LocaleKeys.admin_appointmentsPage_previousPage.translate(),
+      style: _buttonStyle(context),
+      onPressed: state.currentPage > _firstPage
+          ? context.read<AdminAppointmentsCubit>().previousPage
+          : null,
+      icon: const Icon(Icons.chevron_left),
+    );
+  }
+
+  IconButton _buildNextPageButton(BuildContext context) {
+    return IconButton(
+      tooltip: LocaleKeys.admin_appointmentsPage_nextPage.translate(),
+      style: _buttonStyle(context),
+      onPressed: state.currentPage < state.pageCount
+          ? context.read<AdminAppointmentsCubit>().nextPage
+          : null,
+      icon: const Icon(Icons.chevron_right),
     );
   }
 

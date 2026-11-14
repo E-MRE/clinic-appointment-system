@@ -8,7 +8,6 @@ final class _AdminHomeStaffCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final rows = summary.staffRows;
     return SizedBox(
       height: AdminLayoutConstants.overviewBreakdownCardHeight,
       child: AppSurface(
@@ -20,27 +19,31 @@ final class _AdminHomeStaffCard extends StatelessWidget {
               LocaleKeys.admin_overview_staffBreakdown.translate(),
             ),
             const EmptySize.s16Height(),
-            Expanded(
-              child: rows.isEmpty
-                  ? Center(
-                      child: AppText.body(
-                        LocaleKeys.admin_overview_emptyStaff.translate(),
-                        tone: TextTone.muted,
-                        textAlign: TextAlign.center,
-                      ),
-                    )
-                  : SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        spacing: AppSizes.s8,
-                        children: [
-                          for (final row in rows) _AdminHomeStaffRow(row: row),
-                        ],
-                      ),
-                    ),
-            ),
+            Expanded(child: _buildBody()),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildBody() {
+    if (summary.staffRows.isEmpty) {
+      return Center(
+        child: AppText.body(
+          LocaleKeys.admin_overview_emptyStaff.translate(),
+          tone: TextTone.muted,
+          textAlign: TextAlign.center,
+        ),
+      );
+    }
+
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: AdminLayoutConstants.overviewBreakdownRowGap,
+        children: [
+          for (final row in summary.staffRows) _AdminHomeStaffRow(row: row),
+        ],
       ),
     );
   }
