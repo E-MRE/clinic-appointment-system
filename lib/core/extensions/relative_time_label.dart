@@ -2,9 +2,12 @@ import 'package:clinic_appointment_system/core/constants/clock_constants.dart';
 import 'package:clinic_appointment_system/core/localization/localization_extension.dart';
 import 'package:clinic_appointment_system/generated/localization/lang/locale_keys.g.dart';
 
-/// Describes how long ago.
+/// Converts an instant into a localized elapsed-time label.
 extension RelativeTimeLabel on DateTime {
+  /// value = 2
   int get _daysCountedFrom => 2;
+
+  /// value = 1
   int get _relativeLimit => 1;
 
   /// The localized distance from this instant back from [now]:

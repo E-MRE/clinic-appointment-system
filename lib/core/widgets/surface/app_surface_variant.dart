@@ -10,7 +10,10 @@ enum AppSurfaceVariant {
   plain(borderWidth: AppSizes.borderThin),
 
   /// Highlighted surface using the primary container.
-  highlighted(borderWidth: AppSizes.borderThick);
+  highlighted(borderWidth: AppSizes.borderThick),
+
+  /// Pending-action surface using the appointment status color.
+  pending(borderWidth: AppSizes.borderThin);
 
   const AppSurfaceVariant({required this.borderWidth});
 

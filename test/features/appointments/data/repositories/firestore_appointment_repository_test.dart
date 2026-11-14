@@ -120,6 +120,13 @@ void main() {
     return saved;
   }
 
+  Future<Appointment> store(Appointment candidate) async {
+    final result = await repository.book(candidate, (_, _) => []);
+    final saved = result.data;
+    if (saved == null) fail('Expected query fixture to be stored.');
+    return saved;
+  }
+
   final otherEntries = [
     {'appointmentId': 'earlier', 'start': '09:00', 'end': '09:30'},
     {'appointmentId': 'later', 'start': '11:00', 'end': '11:30'},
@@ -419,6 +426,69 @@ void main() {
   );
 
   test(
+    'administrator date range includes both bounds across all staff',
+    () async {
+      final before = await store(
+        f.appointment(date: CalendarDate(year: 2026, month: 10, day: 31)),
+      );
+      final from = await store(f.appointment());
+      final inside = await store(
+        f.appointment(date: CalendarDate(year: 2026, month: 11, day: 2)),
+      );
+      final through = await store(
+        f.appointment(
+          staffId: 'other-staff',
+          patientId: 'other-patient',
+          date: CalendarDate(year: 2026, month: 11, day: 3),
+        ),
+      );
+      final after = await store(
+        f.appointment(date: CalendarDate(year: 2026, month: 11, day: 4)),
+      );
+
+      final result = await repository
+          .watchAdminAppointments(
+            CalendarDate(year: 2026, month: 11, day: 1),
+            CalendarDate(year: 2026, month: 11, day: 3),
+          )
+          .first;
+
+      expect(result.data, unorderedEquals([from, inside, through]));
+      expect(result.data, isNot(contains(before)));
+      expect(result.data, isNot(contains(after)));
+    },
+  );
+
+  test(
+    'pending query returns pending appointments across dates and staff',
+    () async {
+      final firstPending = await store(f.lifecycle.request());
+      final secondPending = await store(
+        f.appointment(
+          patientId: 'other-patient',
+          staffId: 'other-staff',
+          date: CalendarDate(year: 2026, month: 12, day: 1),
+        ),
+      );
+      final approved = await store(
+        f.appointment(patientId: 'approved-patient'),
+      );
+      final transition = await repository.changeStatus(
+        approved.id,
+        (current) => current.approve(
+          by: f.lifecycle.actor(UserRole.doctor, approved.staffId),
+          at: f.lifecycle.requestedAt,
+        ),
+      );
+      expect(transition.isSuccess, isTrue);
+
+      final result = await repository.watchPendingAppointments().first;
+
+      expect(result.data, unorderedEquals([firstPending, secondPending]));
+    },
+  );
+
+  test(
     'staff slots use owner and day document id, and missing days are empty',
     () async {
       await seedDays();
@@ -473,6 +543,7 @@ void main() {
         'staffId': 'staff',
         'date': '2026-11-01',
         'start': '10:00',
+        'status': AppointmentStatus.pending.name,
       });
       final before = await storedDocuments();
       final result = await repository.changeStatus(
@@ -487,7 +558,11 @@ void main() {
       final staff = await repository
           .watchStaffAppointments('staff', f.date, f.date)
           .first;
-      for (final result in [patient, staff]) {
+      final admin = await repository
+          .watchAdminAppointments(f.date, f.date)
+          .first;
+      final pending = await repository.watchPendingAppointments().first;
+      for (final result in [patient, staff, admin, pending]) {
         expect(result.isNotSuccess, isTrue);
         expect(result.errorCode, AppointmentErrorCode.invalidRecord);
       }
@@ -554,6 +629,8 @@ void main() {
         await failingRepository
             .watchStaffAppointments('staff', f.date, f.date)
             .first,
+        await failingRepository.watchAdminAppointments(f.date, f.date).first,
+        await failingRepository.watchPendingAppointments().first,
         await failingRepository.watchStaffBookedSlots('staff', f.date).first,
       ];
       for (final result in results) {
@@ -577,6 +654,15 @@ void main() {
       ).thenReturn(query);
       when(
         () => collection.where('staffId', isEqualTo: 'staff'),
+      ).thenReturn(query);
+      when(
+        () => collection.where(
+          'status',
+          isEqualTo: AppointmentStatus.pending.name,
+        ),
+      ).thenReturn(query);
+      when(
+        () => collection.where('date', isGreaterThanOrEqualTo: '2026-11-01'),
       ).thenReturn(query);
       when(
         () => query.where('date', isGreaterThanOrEqualTo: '2026-11-01'),
@@ -604,6 +690,8 @@ void main() {
         await failingRepository
             .watchStaffAppointments('staff', f.date, f.date)
             .first,
+        await failingRepository.watchAdminAppointments(f.date, f.date).first,
+        await failingRepository.watchPendingAppointments().first,
         await failingRepository.watchStaffBookedSlots('staff', f.date).first,
       ];
       for (final result in results) {

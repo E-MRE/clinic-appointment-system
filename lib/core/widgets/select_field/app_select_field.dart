@@ -17,6 +17,8 @@ final class AppSelectField<T> extends StatelessWidget {
     this.value,
     this.hint,
     this.enabled = true,
+    this.highlightSelection = false,
+    this.showLabel = true,
     this.validator,
     this.fieldKey,
     super.key,
@@ -40,6 +42,12 @@ final class AppSelectField<T> extends StatelessWidget {
   /// Whether the field accepts input.
   final bool enabled;
 
+  /// Whether a selected value gets the theme's primary outline.
+  final bool highlightSelection;
+
+  /// Whether the visible field label appears above the dropdown control.
+  final bool showLabel;
+
   /// Optional form validation behavior.
   final String? Function(T?)? validator;
 
@@ -48,6 +56,19 @@ final class AppSelectField<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (!showLabel) {
+      return _AppSelectDropdown<T>(
+        label: label,
+        options: options,
+        onChanged: onChanged,
+        value: value,
+        hint: hint,
+        enabled: enabled,
+        highlightSelection: highlightSelection,
+        validator: validator,
+        fieldKey: fieldKey,
+      );
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -60,6 +81,7 @@ final class AppSelectField<T> extends StatelessWidget {
           value: value,
           hint: hint,
           enabled: enabled,
+          highlightSelection: highlightSelection,
           validator: validator,
           fieldKey: fieldKey,
         ),

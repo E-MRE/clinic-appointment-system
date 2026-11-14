@@ -97,6 +97,28 @@ describe('appointments read', () => {
     });
   }
   it('allows an admin to list appointments', async () => { await seed(); await assertSucceeds(getDocs(collection(signedIn('admin'), 'appointments'))); });
+  it('allows an admin to query appointments within a date range', async () => {
+    await seed();
+    const appointments = collection(signedIn('admin'), 'appointments');
+    const dateRange = query(appointments,
+      where('date', '>=', '2026-11-01'), where('date', '<=', '2026-12-01'));
+    await assertSucceeds(getDocs(dateRange));
+  });
+  it('allows an admin to query pending appointments', async () => {
+    await seed();
+    const pending = query(collection(signedIn('admin'), 'appointments'),
+      where('status', '==', 'pending'));
+    await assertSucceeds(getDocs(pending));
+  });
+  for (const uid of ['patient', 'doctor']) {
+    it(`denies ${uid} an unfiltered date-range appointment query`, async () => {
+      await seed();
+      const appointments = collection(signedIn(uid), 'appointments');
+      const dateRange = query(appointments,
+        where('date', '>=', '2026-11-01'), where('date', '<=', '2026-12-01'));
+      await assertFails(getDocs(dateRange));
+    });
+  }
   it('denies signed-out reads', async () => { await seed(); await assertFails(getDoc(ref(env.unauthenticatedContext().firestore()))); });
 });
 

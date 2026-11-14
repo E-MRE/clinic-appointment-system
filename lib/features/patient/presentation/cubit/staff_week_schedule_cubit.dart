@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
+import 'package:clinic_appointment_system/core/states/keyed_list_watch.dart';
 import 'package:clinic_appointment_system/core/time/calendar_date.dart';
 import 'package:clinic_appointment_system/core/time/clock.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/models/staff_booked_slots_query.dart';
@@ -10,7 +11,6 @@ import 'package:clinic_appointment_system/features/availability/domain/entities/
 import 'package:clinic_appointment_system/features/availability/domain/models/availability_subject.dart';
 import 'package:clinic_appointment_system/features/availability/domain/services/slot_generator.dart';
 import 'package:clinic_appointment_system/features/availability/domain/usecases/watch_staff_availability_use_case.dart';
-import 'package:clinic_appointment_system/features/patient/presentation/cubit/keyed_list_watch.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/staff_week_schedule_state.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/models/staff_week_schedule.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/models/staff_week_schedule_request.dart';

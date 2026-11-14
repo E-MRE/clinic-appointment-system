@@ -15,7 +15,7 @@ final class _PatientBookFailure extends StatelessWidget {
       ),
       iconBackground: context.colorScheme.errorContainer,
       primaryAction: FilledButton(
-        onPressed: () => context.read<PatientCatalogCubit>().watch(),
+        onPressed: () => context.read<ClinicCatalogCubit>().watch(),
         child: AppText.label(
           LocaleKeys.patient_book_retry.translate(),
           tone: TextTone.onPrimary,

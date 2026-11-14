@@ -10,6 +10,11 @@ import 'package:clinic_appointment_system/core/errors/result.dart';
 import 'package:clinic_appointment_system/core/errors/user_exception.dart';
 import 'package:clinic_appointment_system/core/router/app_router.dart';
 import 'package:clinic_appointment_system/core/states/theme_cubit.dart';
+import 'package:clinic_appointment_system/core/time/clock.dart';
+import 'package:clinic_appointment_system/core/widgets/page_header/page_header.dart';
+import 'package:clinic_appointment_system/features/admin/presentation/cubit/admin_dashboard_cubit.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_admin_appointments_use_case.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_pending_appointments_use_case.dart';
 import 'package:clinic_appointment_system/features/auth/domain/entities/auth_session.dart';
 import 'package:clinic_appointment_system/features/auth/domain/models/auth_credentials.dart';
 import 'package:clinic_appointment_system/features/auth/domain/models/auth_registration.dart';
@@ -48,6 +53,7 @@ import '../../../../support/auth_cubit_factory.dart';
 import '../../../../support/auth_repository_doubles.dart';
 import '../../../../support/localization_test_app.dart';
 import '../../../../support/user_repository_double.dart';
+import '../../../appointments/presentation/doubles/staff_appointment_repository.dart';
 import '../../../availability/presentation/pages/doubles/availability_page_harness.dart';
 import '../../../institution/domain/doubles/fake_branch_repository.dart';
 import '../../../institution/domain/doubles/fake_clinic_repository.dart';
@@ -99,7 +105,7 @@ void main() {
     (
       Admin(id: 'patient-1', fullName: 'A', email: 'patient@example.com'),
       '/admin',
-      'Yönetici ana sayfası',
+      'Genel bakış',
     ),
   ];
   for (final (user, home, title) in roles) {
@@ -107,6 +113,12 @@ void main() {
       tester,
     ) async {
       final app = await _pump(tester);
+      final titleFinder = user is Admin
+          ? find.descendant(
+              of: find.byType(PageHeader),
+              matching: find.text(title),
+            )
+          : find.text(title);
       app.users.getResult = DataResult.success(data: user);
       when(
         () => app.repository.signIn(any()),
@@ -116,11 +128,11 @@ void main() {
       app.sessions.add(const DataResult.success(data: _session));
       await tester.pumpAndSettle();
       expect(app.router.routeInformationProvider.value.uri.path, home);
-      expect(find.text(title), findsOneWidget);
+      expect(titleFinder, findsOneWidget);
       app.router.go(home == '/admin' ? '/patient' : '/admin');
       await tester.pumpAndSettle();
       expect(app.router.routeInformationProvider.value.uri.path, home);
-      expect(find.text(title), findsOneWidget);
+      expect(titleFinder, findsOneWidget);
     });
   }
 
@@ -604,6 +616,13 @@ final class _AuthTestApp {
         WatchDepartmentsUseCase(FakeDepartmentRepository()),
       ),
     );
+    AppDependency.injector.registerFactory<AdminDashboardCubit>(
+      () => AdminDashboardCubit(
+        WatchAdminAppointmentsUseCase(appointmentRepository),
+        WatchPendingAppointmentsUseCase(appointmentRepository),
+        AppDependency.injector.get<Clock>(),
+      ),
+    );
     availability.registerCubits();
     patient.registerCubits();
     router = createAppRouter(initialLocation: route, authGuard: configuration);
@@ -611,6 +630,7 @@ final class _AuthTestApp {
   }
   final availability = AvailabilityPageHarness();
   final patient = PatientPageHarness();
+  final appointmentRepository = StaffAppointmentRepository();
   final users = TestUserRepository();
   final repository = MockAuthRepository();
   final sessions = StreamController<DataResult<AuthSession>>();
@@ -628,6 +648,7 @@ final class _AuthTestApp {
     await sessions.close();
     await availability.disposeRepositories();
     await patient.disposeRepositories();
+    await appointmentRepository.events.close();
     await AppDependency.injector.reset();
   }
 }

@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 
 part 'filter_chip_item.dart';
 part 'filter_chip_label.dart';
+part 'app_multi_filter_chips.dart';
 
 /// Horizontally scrollable single-select filter chips.
 final class AppFilterChips<T> extends StatelessWidget {

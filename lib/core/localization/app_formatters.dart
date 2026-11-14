@@ -24,7 +24,7 @@ final class AppFormatters {
   }
 
   /// Formats an inclusive day range, naming the month once when both days
-  /// share it (`26 – 31 Ekim`, `28 Eylül – 3 Ekim`).
+  /// share it.
   static String formatDayRange(DateTime start, DateTime end, {String? locale}) {
     final loc = _resolveLocale(locale: locale);
     final isSameMonth = start.year == end.year && start.month == end.month;
@@ -34,13 +34,29 @@ final class AppFormatters {
     return '$first – ${DateFormat.MMMMd(loc).format(end)}';
   }
 
-  /// Formats a day and abbreviated month in the active locale (`26 Eki`).
+  /// Formats a day and abbreviated month in the active locale.
   static String formatDayShortMonth(DateTime dateTime, {String? locale}) {
     return DateFormat.MMMd(_resolveLocale(locale: locale)).format(dateTime);
   }
 
-  /// Formats the abbreviated month in upper case (`EKİ`), using Turkish
-  /// casing rules for dotted and dotless `i` in Turkish locales.
+  /// Formats an inclusive short day range and includes its ending year.
+  static String formatShortDateRange(
+    DateTime start,
+    DateTime end, {
+    String? locale,
+    BuildContext? context,
+  }) {
+    final resolvedLocale = _resolveLocale(locale: locale, context: context);
+    final startLabel = DateFormat.MMMd(resolvedLocale).format(start);
+    final endLabel = DateFormat.MMMd(resolvedLocale).format(end);
+    if (start.year == end.year) {
+      return '$startLabel – $endLabel ${end.year}';
+    }
+    return '$startLabel ${start.year} – $endLabel ${end.year}';
+  }
+
+  /// Formats the abbreviated month in upper case, using Turkish casing rules
+  /// for dotted and dotless letters in Turkish locales.
   static String formatShortMonthUpper(DateTime dateTime, {String? locale}) {
     final loc = _resolveLocale(locale: locale);
     final month = DateFormat.MMM(loc).format(dateTime);
@@ -70,10 +86,7 @@ final class AppFormatters {
     return Intl.defaultLocale ?? LocalizationConfig.fallbackLocale.toString();
   }
 
-  /// Formats [dateTime] into a locale-aware appointment date and time string.
-  ///
-  /// For Turkish: `12.10.2026 14:30`
-  /// For English: `10/12/2026 2:30 PM`
+  /// Formats [dateTime] with locale-specific date and time patterns.
   static String formatDateTime(
     DateTime dateTime, {
     String? locale,
@@ -87,10 +100,7 @@ final class AppFormatters {
     return pattern.format(dateTime).replaceAll('\u202f', ' ');
   }
 
-  /// Formats [dateTime] into a locale-aware date string.
-  ///
-  /// For Turkish: `12.10.2026`
-  /// For English: `10/12/2026`
+  /// Formats [dateTime] with the active locale's short date pattern.
   static String formatDate(
     DateTime dateTime, {
     String? locale,
@@ -100,10 +110,8 @@ final class AppFormatters {
     return DateFormat.yMd(loc).format(dateTime);
   }
 
-  /// Formats [dateTime] into a locale-aware time string.
-  ///
-  /// For Turkish: `14:30`
-  /// For English: `2:30 PM`
+  /// Formats [dateTime] with a 24-hour Turkish clock or the active locale's
+  /// time pattern.
   static String formatTime(
     DateTime dateTime, {
     String? locale,
@@ -115,10 +123,8 @@ final class AppFormatters {
     return pattern.format(dateTime).replaceAll('\u202f', ' ');
   }
 
-  /// Formats [amount] into a locale-aware currency string for service fees.
-  ///
-  /// For Turkish: `₺1.250,00` (default symbol `₺`)
-  /// For English: `$1,250.00` (default symbol `$`)
+  /// Formats [amount] with locale-specific currency conventions, defaulting
+  /// to Turkish lira for Turkish locales and dollars otherwise.
   static String formatCurrency(
     num amount, {
     String? locale,

@@ -23,6 +23,9 @@ enum _PreviewSection {
   /// List samples.
   list(label: LocaleKeys.componentPreview_list),
 
+  /// Progress bar samples.
+  progressBar(label: LocaleKeys.componentPreview_progressBar),
+
   /// Data table samples.
   dataTable(label: LocaleKeys.componentPreview_dataTable),
 

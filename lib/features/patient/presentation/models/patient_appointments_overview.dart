@@ -1,8 +1,8 @@
 import 'package:clinic_appointment_system/features/appointments/domain/actors/patient_appointment_actor.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/models/clinic_catalog.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/models/patient_appointment_entry.dart';
-import 'package:clinic_appointment_system/features/patient/presentation/models/patient_catalog.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/models/patient_preparation_note.dart';
 
 /// The patient's appointments split, ordered and joined with the catalog.
@@ -12,7 +12,7 @@ final class PatientAppointmentsOverview {
   /// [patient] decides through the domain whether each one may be cancelled.
   factory PatientAppointmentsOverview({
     required List<Appointment> appointments,
-    required PatientCatalog catalog,
+    required ClinicCatalog catalog,
     required DateTime now,
     required PatientAppointmentActor patient,
   }) {
@@ -50,7 +50,7 @@ final class PatientAppointmentsOverview {
   }) : all = List<PatientAppointmentEntry>.unmodifiable([...upcoming, ...past]);
 
   /// The catalog the entries were joined with.
-  final PatientCatalog catalog;
+  final ClinicCatalog catalog;
 
   /// Pending or approved appointments not yet started, earliest first.
   final List<PatientAppointmentEntry> upcoming;

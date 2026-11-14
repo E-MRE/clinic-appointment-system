@@ -5,11 +5,15 @@ import 'package:clinic_appointment_system/core/router/app_router.dart';
 import 'package:clinic_appointment_system/core/states/theme_cubit.dart';
 import 'package:clinic_appointment_system/core/time/clock.dart';
 import 'package:clinic_appointment_system/core/time/system_clock.dart';
+import 'package:clinic_appointment_system/features/admin/presentation/cubit/admin_appointments_cubit.dart';
+import 'package:clinic_appointment_system/features/admin/presentation/cubit/admin_dashboard_cubit.dart';
 import 'package:clinic_appointment_system/features/appointments/data/repositories/firestore_appointment_repository.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/repositories/appointment_repository.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/book_appointment_use_case.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/change_appointment_status_use_case.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_admin_appointments_use_case.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_patient_appointments_use_case.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_pending_appointments_use_case.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_staff_appointments_use_case.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_staff_booked_slots_use_case.dart';
 import 'package:clinic_appointment_system/features/auth/data/mappers/firebase_auth_exception_mapper.dart';
@@ -60,6 +64,7 @@ import 'package:clinic_appointment_system/features/institution/domain/usecases/w
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_departments_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/branch_list_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/branch_save_cubit.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_catalog_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_list_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_save_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/department_list_cubit.dart';
@@ -82,7 +87,6 @@ import 'package:clinic_appointment_system/features/patient/presentation/cubit/bo
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_appointment_cancel_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_appointments_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_appointments_tab_cubit.dart';
-import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_catalog_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/staff_week_schedule_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_approve_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_complete_cubit.dart';
@@ -190,6 +194,15 @@ mixin AppDependencyRegisterMixin {
     injector.registerLazySingleton<WatchStaffAppointmentsUseCase>(
       () =>
           WatchStaffAppointmentsUseCase(injector.get<AppointmentRepository>()),
+    );
+    injector.registerLazySingleton<WatchAdminAppointmentsUseCase>(
+      () =>
+          WatchAdminAppointmentsUseCase(injector.get<AppointmentRepository>()),
+    );
+    injector.registerLazySingleton<WatchPendingAppointmentsUseCase>(
+      () => WatchPendingAppointmentsUseCase(
+        injector.get<AppointmentRepository>(),
+      ),
     );
     injector.registerLazySingleton<WatchStaffBookedSlotsUseCase>(
       () => WatchStaffBookedSlotsUseCase(injector.get<AppointmentRepository>()),
@@ -445,8 +458,8 @@ mixin AppDependencyRegisterMixin {
         injector.get<RemoveAvailabilityWindowUseCase>(),
       ),
     );
-    injector.registerFactory<PatientCatalogCubit>(
-      () => PatientCatalogCubit(
+    injector.registerFactory<ClinicCatalogCubit>(
+      () => ClinicCatalogCubit(
         injector.get<WatchClinicsUseCase>(),
         injector.get<WatchBranchesUseCase>(),
         injector.get<WatchDepartmentsOfBranchesUseCase>(),
@@ -457,6 +470,19 @@ mixin AppDependencyRegisterMixin {
     injector.registerFactory<PatientAppointmentsCubit>(
       () => PatientAppointmentsCubit(
         injector.get<WatchPatientAppointmentsUseCase>(),
+      ),
+    );
+    injector.registerFactory<AdminAppointmentsCubit>(
+      () => AdminAppointmentsCubit(
+        injector.get<WatchAdminAppointmentsUseCase>(),
+        injector.get<Clock>(),
+      ),
+    );
+    injector.registerFactory<AdminDashboardCubit>(
+      () => AdminDashboardCubit(
+        injector.get<WatchAdminAppointmentsUseCase>(),
+        injector.get<WatchPendingAppointmentsUseCase>(),
+        injector.get<Clock>(),
       ),
     );
     injector.registerFactory<PatientAppointmentsTabCubit>(

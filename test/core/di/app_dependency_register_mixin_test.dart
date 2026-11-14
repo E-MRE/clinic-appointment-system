@@ -4,6 +4,9 @@ import 'package:clinic_appointment_system/core/di/injector/dependency_injector.d
 import 'package:clinic_appointment_system/core/errors/unexpected_exception.dart';
 import 'package:clinic_appointment_system/core/states/theme_cubit.dart';
 import 'package:clinic_appointment_system/core/time/clock.dart';
+import 'package:clinic_appointment_system/features/admin/presentation/cubit/admin_dashboard_cubit.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_admin_appointments_use_case.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_pending_appointments_use_case.dart';
 import 'package:clinic_appointment_system/features/auth/data/mappers/firebase_auth_exception_mapper.dart';
 import 'package:clinic_appointment_system/features/auth/data/repositories/firebase_auth_repository.dart';
 import 'package:clinic_appointment_system/features/auth/domain/mappers/auth_exception_mapper.dart';
@@ -44,6 +47,7 @@ import 'package:clinic_appointment_system/features/institution/domain/usecases/w
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_departments_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/branch_list_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/branch_save_cubit.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_catalog_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_list_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_save_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/department_list_cubit.dart';
@@ -110,6 +114,13 @@ void main() {
     expect(container.get<AddAvailabilityWindowUseCase>(), same(add));
     expect(container.get<RemoveAvailabilityWindowUseCase>(), same(remove));
     expect(container.get<WatchStaffServiceDurationsUseCase>(), same(durations));
+  });
+
+  test('appointment admin watch use cases resolve as lazy singletons', () {
+    final admin = container.get<WatchAdminAppointmentsUseCase>();
+    final pending = container.get<WatchPendingAppointmentsUseCase>();
+    expect(container.get<WatchAdminAppointmentsUseCase>(), same(admin));
+    expect(container.get<WatchPendingAppointmentsUseCase>(), same(pending));
   });
 
   test('availability cubits resolve as independent screen-owned factories', () {
@@ -179,6 +190,14 @@ void main() {
       ]);
     },
   );
+
+  test('admin dashboard cubits resolve as screen-owned factories', () async {
+    final first = container.get<AdminDashboardCubit>();
+    final second = container.get<AdminDashboardCubit>();
+
+    expect(first, isNot(same(second)));
+    await Future.wait([first.close(), second.close()]);
+  });
 
   test(
     'factory registrations create separate instances and can be removed',
@@ -299,6 +318,7 @@ void main() {
     () async {
       final first = <Object>[
         container.get<ClinicListCubit>(),
+        container.get<ClinicCatalogCubit>(),
         container.get<BranchListCubit>(),
         container.get<DepartmentListCubit>(),
         container.get<ClinicSaveCubit>(),
@@ -308,6 +328,7 @@ void main() {
       ];
       final second = <Object>[
         container.get<ClinicListCubit>(),
+        container.get<ClinicCatalogCubit>(),
         container.get<BranchListCubit>(),
         container.get<DepartmentListCubit>(),
         container.get<ClinicSaveCubit>(),
@@ -321,19 +342,21 @@ void main() {
       }
       await Future.wait([
         (first[0] as ClinicListCubit).close(),
-        (first[1] as BranchListCubit).close(),
-        (first[2] as DepartmentListCubit).close(),
-        (first[3] as ClinicSaveCubit).close(),
-        (first[4] as BranchSaveCubit).close(),
-        (first[5] as DepartmentSaveCubit).close(),
-        (first[6] as WorkingHoursEditorCubit).close(),
+        (first[1] as ClinicCatalogCubit).close(),
+        (first[2] as BranchListCubit).close(),
+        (first[3] as DepartmentListCubit).close(),
+        (first[4] as ClinicSaveCubit).close(),
+        (first[5] as BranchSaveCubit).close(),
+        (first[6] as DepartmentSaveCubit).close(),
+        (first[7] as WorkingHoursEditorCubit).close(),
         (second[0] as ClinicListCubit).close(),
-        (second[1] as BranchListCubit).close(),
-        (second[2] as DepartmentListCubit).close(),
-        (second[3] as ClinicSaveCubit).close(),
-        (second[4] as BranchSaveCubit).close(),
-        (second[5] as DepartmentSaveCubit).close(),
-        (second[6] as WorkingHoursEditorCubit).close(),
+        (second[1] as ClinicCatalogCubit).close(),
+        (second[2] as BranchListCubit).close(),
+        (second[3] as DepartmentListCubit).close(),
+        (second[4] as ClinicSaveCubit).close(),
+        (second[5] as BranchSaveCubit).close(),
+        (second[6] as DepartmentSaveCubit).close(),
+        (second[7] as WorkingHoursEditorCubit).close(),
       ]);
     },
   );

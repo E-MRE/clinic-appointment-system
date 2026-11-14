@@ -9,7 +9,7 @@ final class _PatientBookServiceCard extends StatelessWidget {
   });
 
   final MedicalService service;
-  final PatientCatalog catalog;
+  final ClinicCatalog catalog;
   final bool isSelected;
 
   @override

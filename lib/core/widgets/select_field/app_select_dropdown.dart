@@ -9,6 +9,7 @@ final class _AppSelectDropdown<T> extends StatelessWidget {
     required this.value,
     required this.hint,
     required this.enabled,
+    required this.highlightSelection,
     required this.validator,
     required this.fieldKey,
   });
@@ -19,6 +20,7 @@ final class _AppSelectDropdown<T> extends StatelessWidget {
   final T? value;
   final String? hint;
   final bool enabled;
+  final bool highlightSelection;
   final String? Function(T?)? validator;
   final Key? fieldKey;
 
@@ -39,7 +41,17 @@ final class _AppSelectDropdown<T> extends StatelessWidget {
           items: _items,
           onChanged: enabled ? onChanged : null,
           validator: validator,
-          decoration: const InputDecoration(),
+          decoration: highlightSelection && value != null
+              ? InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: const AppRadius.medium(),
+                    borderSide: BorderSide(
+                      color: context.colorScheme.primary,
+                      width: AppSizes.borderThin,
+                    ),
+                  ),
+                )
+              : const InputDecoration(),
         ),
       ),
     );

@@ -26,6 +26,7 @@ import 'package:clinic_appointment_system/core/widgets/message_banner/app_messag
 import 'package:clinic_appointment_system/core/widgets/navigation/app_navigation_shell.dart';
 import 'package:clinic_appointment_system/core/widgets/navigation/app_navigation_user_card.dart';
 import 'package:clinic_appointment_system/core/widgets/page_header/page_header.dart';
+import 'package:clinic_appointment_system/core/widgets/progress_bar/app_progress_bar.dart';
 import 'package:clinic_appointment_system/core/widgets/select_field/app_select_field.dart';
 import 'package:clinic_appointment_system/core/widgets/side_panel/app_side_panel.dart';
 import 'package:clinic_appointment_system/core/widgets/side_panel/app_side_panel_layout.dart';
@@ -68,6 +69,7 @@ part 'header_section.dart';
 part 'states_section.dart';
 part 'loading_section.dart';
 part 'list_section.dart';
+part 'progress_bar_section.dart';
 part 'data_table_section.dart';
 part 'preview_appointment.dart';
 part 'preview_appointments_table.dart';

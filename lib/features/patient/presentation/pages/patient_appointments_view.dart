@@ -8,7 +8,7 @@ final class _PatientAppointmentsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final catalogState = context.watch<PatientCatalogCubit>().state;
+    final catalogState = context.watch<ClinicCatalogCubit>().state;
     final appointmentsState = context.watch<PatientAppointmentsCubit>().state;
 
     return AppScaffold(child: _buildChild(appointmentsState, catalogState));
@@ -16,36 +16,43 @@ final class _PatientAppointmentsView extends StatelessWidget {
 
   Widget _buildChild(
     PatientAppointmentsState appointmentsState,
-    PatientCatalogState catalogState,
+    ClinicCatalogState catalogState,
   ) {
     if (appointmentsState is PatientAppointmentsFailure) {
-      return _PatientAppointmentsFailure(
-        errorCode: appointmentsState.errorCode,
-      );
+      return _failure(appointmentsState.errorCode);
     }
 
-    if (catalogState is PatientCatalogFailure) {
-      return const _PatientAppointmentsFailure(
-        errorCode: AppointmentErrorCode.unavailable,
-      );
+    if (catalogState is ClinicCatalogFailure) {
+      return _failure(AppointmentErrorCode.unavailable);
     }
 
-    if (catalogState is PatientCatalogLoaded &&
+    if (catalogState is ClinicCatalogLoaded &&
         appointmentsState is PatientAppointmentsLoaded) {
-      return _PatientAppointmentsContent(
-        firstName: user.firstName,
-        overview: PatientAppointmentsOverview(
-          appointments: appointmentsState.appointments,
-          catalog: catalogState.catalog,
-          now: AppDependency.injector.get<Clock>().now(),
-          patient: PatientAppointmentActor(id: user.id),
-        ),
-      );
+      return _loadedContent(appointmentsState, catalogState);
     }
 
     return LoadingState(
       variant: LoadingStateVariant.skeletonList,
       label: LocaleKeys.patient_appointments_loading.translate(),
+    );
+  }
+
+  Widget _failure(AppointmentErrorCode errorCode) {
+    return _PatientAppointmentsFailure(errorCode: errorCode);
+  }
+
+  Widget _loadedContent(
+    PatientAppointmentsLoaded appointmentsState,
+    ClinicCatalogLoaded catalogState,
+  ) {
+    return _PatientAppointmentsContent(
+      firstName: user.firstName,
+      overview: PatientAppointmentsOverview(
+        appointments: appointmentsState.appointments,
+        catalog: catalogState.catalog,
+        now: AppDependency.injector.get<Clock>().now(),
+        patient: PatientAppointmentActor(id: user.id),
+      ),
     );
   }
 }
