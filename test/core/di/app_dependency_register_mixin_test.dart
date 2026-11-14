@@ -4,6 +4,8 @@ import 'package:clinic_appointment_system/core/di/injector/dependency_injector.d
 import 'package:clinic_appointment_system/core/errors/unexpected_exception.dart';
 import 'package:clinic_appointment_system/core/states/theme_cubit.dart';
 import 'package:clinic_appointment_system/core/time/clock.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_admin_appointments_use_case.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_pending_appointments_use_case.dart';
 import 'package:clinic_appointment_system/features/auth/data/mappers/firebase_auth_exception_mapper.dart';
 import 'package:clinic_appointment_system/features/auth/data/repositories/firebase_auth_repository.dart';
 import 'package:clinic_appointment_system/features/auth/domain/mappers/auth_exception_mapper.dart';
@@ -110,6 +112,13 @@ void main() {
     expect(container.get<AddAvailabilityWindowUseCase>(), same(add));
     expect(container.get<RemoveAvailabilityWindowUseCase>(), same(remove));
     expect(container.get<WatchStaffServiceDurationsUseCase>(), same(durations));
+  });
+
+  test('appointment admin watch use cases resolve as lazy singletons', () {
+    final admin = container.get<WatchAdminAppointmentsUseCase>();
+    final pending = container.get<WatchPendingAppointmentsUseCase>();
+    expect(container.get<WatchAdminAppointmentsUseCase>(), same(admin));
+    expect(container.get<WatchPendingAppointmentsUseCase>(), same(pending));
   });
 
   test('availability cubits resolve as independent screen-owned factories', () {

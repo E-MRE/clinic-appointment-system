@@ -153,10 +153,10 @@ final class FirestoreAppointmentRepository implements AppointmentRepository {
     String patientId,
   ) {
     return _watchAppointments(
-      () => _appointments.where(
-        FirestoreConstants.patientId,
-        isEqualTo: patientId,
-      ),
+      () => _appointments
+          .where(FirestoreConstants.patientId, isEqualTo: patientId)
+          .orderBy(FirestoreConstants.date)
+          .orderBy(FirestoreConstants.start),
     );
   }
 
@@ -176,7 +176,37 @@ final class FirestoreAppointmentRepository implements AppointmentRepository {
           .where(
             FirestoreConstants.date,
             isLessThanOrEqualTo: const CalendarDateConverter().toJson(through),
+          )
+          .orderBy(FirestoreConstants.date)
+          .orderBy(FirestoreConstants.start),
+    );
+  }
+
+  @override
+  Stream<DataResult<List<Appointment>>> watchAdminAppointments(
+    CalendarDate from,
+    CalendarDate through,
+  ) {
+    return _watchAppointments(
+      () => _appointments
+          .where(
+            FirestoreConstants.date,
+            isGreaterThanOrEqualTo: const CalendarDateConverter().toJson(from),
+          )
+          .where(
+            FirestoreConstants.date,
+            isLessThanOrEqualTo: const CalendarDateConverter().toJson(through),
           ),
+    );
+  }
+
+  @override
+  Stream<DataResult<List<Appointment>>> watchPendingAppointments() {
+    return _watchAppointments(
+      () => _appointments.where(
+        FirestoreConstants.status,
+        isEqualTo: AppointmentStatus.pending.name,
+      ),
     );
   }
 
@@ -196,10 +226,7 @@ final class FirestoreAppointmentRepository implements AppointmentRepository {
     Query<Map<String, dynamic>> Function() query,
   ) {
     return _results(
-      () => query()
-          .orderBy(FirestoreConstants.date)
-          .orderBy(FirestoreConstants.start)
-          .snapshots(),
+      () => query().snapshots(),
       (snapshot) => List<Appointment>.unmodifiable(
         snapshot.docs.map(
           (doc) => AppointmentModel.fromJson(doc.id, doc.data()).appointment,

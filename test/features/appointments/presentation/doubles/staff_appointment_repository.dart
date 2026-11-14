@@ -23,6 +23,9 @@ final class StaffAppointmentRepository implements AppointmentRepository {
   /// Queries requested by staff list subscribers.
   final List<(String, CalendarDate, CalendarDate)> watchedQueries = [];
 
+  /// Date ranges requested by administrator list subscribers.
+  final List<(CalendarDate, CalendarDate)> watchedAdminQueries = [];
+
   /// Appointment ids passed to lifecycle transitions.
   final List<String> changedIds = [];
 
@@ -81,6 +84,20 @@ final class StaffAppointmentRepository implements AppointmentRepository {
     CalendarDate through,
   ) {
     watchedQueries.add((staffId, from, through));
+    return events.stream;
+  }
+
+  @override
+  Stream<DataResult<List<Appointment>>> watchAdminAppointments(
+    CalendarDate from,
+    CalendarDate through,
+  ) {
+    watchedAdminQueries.add((from, through));
+    return events.stream;
+  }
+
+  @override
+  Stream<DataResult<List<Appointment>>> watchPendingAppointments() {
     return events.stream;
   }
 

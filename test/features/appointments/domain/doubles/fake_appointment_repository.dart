@@ -16,6 +16,9 @@ final class FakeAppointmentRepository implements AppointmentRepository {
   String? watchedOwner;
   CalendarDate? watchedFrom;
   CalendarDate? watchedThrough;
+  CalendarDate? watchedAdminFrom;
+  CalendarDate? watchedAdminThrough;
+  bool watchedPendingAppointments = false;
 
   @override
   Future<DataResult<Appointment>> book(
@@ -58,6 +61,22 @@ final class FakeAppointmentRepository implements AppointmentRepository {
     watchedOwner = staffId;
     watchedFrom = from;
     watchedThrough = through;
+    return appointments;
+  }
+
+  @override
+  Stream<DataResult<List<Appointment>>> watchAdminAppointments(
+    CalendarDate from,
+    CalendarDate through,
+  ) {
+    watchedAdminFrom = from;
+    watchedAdminThrough = through;
+    return appointments;
+  }
+
+  @override
+  Stream<DataResult<List<Appointment>>> watchPendingAppointments() {
+    watchedPendingAppointments = true;
     return appointments;
   }
 

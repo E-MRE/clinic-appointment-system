@@ -122,6 +122,16 @@ final class PatientAppointmentRepository implements AppointmentRepository {
   ) => throw UnimplementedError();
 
   @override
+  Stream<DataResult<List<Appointment>>> watchAdminAppointments(
+    CalendarDate from,
+    CalendarDate through,
+  ) => throw UnimplementedError();
+
+  @override
+  Stream<DataResult<List<Appointment>>> watchPendingAppointments() =>
+      throw UnimplementedError();
+
+  @override
   Stream<DataResult<List<BookedSlot>>> watchStaffBookedSlots(
     String staffId,
     CalendarDate date,
