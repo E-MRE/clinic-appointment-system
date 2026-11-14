@@ -1,3 +1,5 @@
+import 'package:clinic_appointment_system/core/extensions/turkish_case_folding.dart';
+
 /// Provides Turkish alphabetical ordering for [String] values.
 extension TurkishAlphabeticalComparison on String {
   /// Compares this string with [other] using the Turkish alphabet.
@@ -8,8 +10,8 @@ extension TurkishAlphabeticalComparison on String {
   /// code point. Prefixes sort first, and names equal under this ordering use
   /// [String.compareTo] as a deterministic tie-breaker.
   int compareTurkishAlphabetically(String other) {
-    final firstCharacters = _turkishLowercase.runes.iterator;
-    final secondCharacters = other._turkishLowercase.runes.iterator;
+    final firstCharacters = turkishLowercase.runes.iterator;
+    final secondCharacters = other.turkishLowercase.runes.iterator;
 
     while (true) {
       final hasFirstCharacter = firstCharacters.moveNext();
@@ -29,9 +31,6 @@ extension TurkishAlphabeticalComparison on String {
       }
     }
   }
-
-  String get _turkishLowercase =>
-      replaceAll('I', 'ı').replaceAll('İ', 'i').toLowerCase();
 
   static const String _turkishAlphabet = 'abcçdefgğhıijklmnoöprsştuüvyz';
   static const int _firstLetter = 0x61;

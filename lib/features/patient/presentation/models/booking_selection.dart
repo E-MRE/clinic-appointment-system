@@ -1,4 +1,5 @@
 import 'package:clinic_appointment_system/core/constants/booking_constants.dart';
+import 'package:clinic_appointment_system/core/extensions/turkish_case_folding.dart';
 import 'package:clinic_appointment_system/core/time/calendar_date.dart';
 import 'package:clinic_appointment_system/core/time/time_range.dart';
 import 'package:clinic_appointment_system/features/institution/domain/value_objects/working_hours.dart';
@@ -133,11 +134,11 @@ final class BookingSelection {
   /// contains the search text, ignoring case with Turkish dotted and
   /// dotless `i` rules.
   List<MedicalService> servicesIn(ClinicCatalog catalog) {
-    final needle = _folded(query.trim());
+    final needle = query.trim();
     return [
       for (final item in catalog.services)
         if ((departmentId == null || item.departmentId == departmentId) &&
-            _folded(item.name).contains(needle) &&
+            item.name.containsTurkishInsensitive(needle) &&
             catalog.staffFor(item).isNotEmpty)
           item,
     ];
@@ -183,10 +184,6 @@ final class BookingSelection {
   BookingSelection withPreviousWeek() {
     if (!canShowPreviousWeek) return this;
     return withWeek(weekStart.addDays(-BookingConstants.daysPerWeek));
-  }
-
-  static String _folded(String text) {
-    return text.replaceAll('İ', 'i').replaceAll('I', 'ı').toLowerCase();
   }
 
   BookingSelection _copy({
