@@ -1,5 +1,6 @@
 import 'package:clinic_appointment_system/core/time/calendar_date.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_staff_booked_slots_use_case.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/value_objects/booked_slot.dart';
 import 'package:clinic_appointment_system/features/availability/domain/services/slot_generator.dart';
 import 'package:clinic_appointment_system/features/availability/domain/usecases/watch_staff_availability_use_case.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/staff_week_schedule_cubit.dart';
@@ -57,7 +58,10 @@ void main() {
 
   Future<void> emitWeek(StaffWeekScheduleRequest request) async {
     for (final date in request.dates) {
-      appointments.bookedSlots.emit(key(request.staff, date), const []);
+      appointments.bookedSlots.emit(
+        key(request.staff, date),
+        const <BookedSlot>[],
+      );
     }
     await Future<void>.delayed(Duration.zero);
   }

@@ -8,7 +8,7 @@ import 'package:clinic_appointment_system/features/appointments/domain/repositor
 import 'package:clinic_appointment_system/features/appointments/domain/results/appointment_result.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/value_objects/booked_slot.dart';
 
-import 'keyed_streams.dart';
+import '../../../../support/keyed_streams.dart';
 
 /// Patient appointment streams plus a status change that runs the real
 /// domain transition on [stored] unless a failure or a pending completer

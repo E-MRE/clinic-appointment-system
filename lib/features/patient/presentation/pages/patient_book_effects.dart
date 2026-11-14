@@ -6,7 +6,7 @@ part of 'patient_book_page.dart';
 final class _PatientBookEffects extends StatelessWidget {
   const _PatientBookEffects({required this.catalog, required this.child});
 
-  final PatientCatalog catalog;
+  final ClinicCatalog catalog;
   final Widget child;
 
   @override

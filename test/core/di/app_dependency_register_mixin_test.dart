@@ -46,6 +46,7 @@ import 'package:clinic_appointment_system/features/institution/domain/usecases/w
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_departments_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/branch_list_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/branch_save_cubit.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_catalog_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_list_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_save_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/department_list_cubit.dart';
@@ -308,6 +309,7 @@ void main() {
     () async {
       final first = <Object>[
         container.get<ClinicListCubit>(),
+        container.get<ClinicCatalogCubit>(),
         container.get<BranchListCubit>(),
         container.get<DepartmentListCubit>(),
         container.get<ClinicSaveCubit>(),
@@ -317,6 +319,7 @@ void main() {
       ];
       final second = <Object>[
         container.get<ClinicListCubit>(),
+        container.get<ClinicCatalogCubit>(),
         container.get<BranchListCubit>(),
         container.get<DepartmentListCubit>(),
         container.get<ClinicSaveCubit>(),
@@ -330,19 +333,21 @@ void main() {
       }
       await Future.wait([
         (first[0] as ClinicListCubit).close(),
-        (first[1] as BranchListCubit).close(),
-        (first[2] as DepartmentListCubit).close(),
-        (first[3] as ClinicSaveCubit).close(),
-        (first[4] as BranchSaveCubit).close(),
-        (first[5] as DepartmentSaveCubit).close(),
-        (first[6] as WorkingHoursEditorCubit).close(),
+        (first[1] as ClinicCatalogCubit).close(),
+        (first[2] as BranchListCubit).close(),
+        (first[3] as DepartmentListCubit).close(),
+        (first[4] as ClinicSaveCubit).close(),
+        (first[5] as BranchSaveCubit).close(),
+        (first[6] as DepartmentSaveCubit).close(),
+        (first[7] as WorkingHoursEditorCubit).close(),
         (second[0] as ClinicListCubit).close(),
-        (second[1] as BranchListCubit).close(),
-        (second[2] as DepartmentListCubit).close(),
-        (second[3] as ClinicSaveCubit).close(),
-        (second[4] as BranchSaveCubit).close(),
-        (second[5] as DepartmentSaveCubit).close(),
-        (second[6] as WorkingHoursEditorCubit).close(),
+        (second[1] as ClinicCatalogCubit).close(),
+        (second[2] as BranchListCubit).close(),
+        (second[3] as DepartmentListCubit).close(),
+        (second[4] as ClinicSaveCubit).close(),
+        (second[5] as BranchSaveCubit).close(),
+        (second[6] as DepartmentSaveCubit).close(),
+        (second[7] as WorkingHoursEditorCubit).close(),
       ]);
     },
   );

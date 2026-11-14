@@ -8,7 +8,7 @@ final class _PatientBookSummaryValues extends StatelessWidget {
   });
 
   final BookingSelection selection;
-  final PatientCatalog catalog;
+  final ClinicCatalog catalog;
 
   @override
   Widget build(BuildContext context) {

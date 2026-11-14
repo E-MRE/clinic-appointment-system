@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:clinic_appointment_system/core/constants/firestore_constants.dart';
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
+import 'package:clinic_appointment_system/core/states/keyed_list_watch.dart';
 import 'package:clinic_appointment_system/core/usecases/no_params.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/branch.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/clinic.dart';
@@ -9,30 +10,27 @@ import 'package:clinic_appointment_system/features/institution/domain/entities/d
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_branches_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_clinics_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_departments_of_branches_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_catalog_state.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/models/clinic_catalog.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/medical_service.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/usecases/watch_services_of_branches_use_case.dart';
-import 'package:clinic_appointment_system/features/patient/presentation/cubit/keyed_list_watch.dart';
-import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_catalog_state.dart';
-import 'package:clinic_appointment_system/features/patient/presentation/models/patient_catalog.dart';
 import 'package:clinic_appointment_system/features/staff_management/domain/usecases/watch_staff_use_case.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/staff.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-/// Observes every clinic, their branches, the departments and services of
-/// those branches and all staff, and emits them as one [PatientCatalog].
-/// Branch, department and service streams are replaced only when the parent
-/// id set changes. Any failure, reported as a stream error or as a failed
-/// result, cancels every observation until [watch] runs again.
-final class PatientCatalogCubit extends Cubit<PatientCatalogState> {
-  /// Injects the catalog observation use cases.
-  PatientCatalogCubit(
+/// Observes clinics, their branches, branch departments and services, and all
+/// staff as one [ClinicCatalog]. Dependent streams are replaced only when the
+/// parent id set changes. Any failure cancels all observations until [watch].
+final class ClinicCatalogCubit extends Cubit<ClinicCatalogState> {
+  /// Injects the use cases that observe each clinic directory collection.
+  ClinicCatalogCubit(
     this._watchClinics,
     this._watchBranches,
     this._watchDepartments,
     this._watchServices,
     this._watchStaff,
-  ) : super(const PatientCatalogLoading()) {
+  ) : super(const ClinicCatalogLoading()) {
     _branchWatch = KeyedListWatch<String, Branch>(
       onChanged: _onBranches,
       onFailure: _fail,
@@ -67,6 +65,7 @@ final class PatientCatalogCubit extends Cubit<PatientCatalogState> {
 
   List<String>? _clinicIds;
   List<String>? _branchIds;
+  List<Clinic>? _clinics;
   List<Branch>? _branches;
   List<Department>? _departments;
   List<MedicalService>? _services;
@@ -75,11 +74,11 @@ final class PatientCatalogCubit extends Cubit<PatientCatalogState> {
 
   bool get _isClosingOrClosed => _isClosing || isClosed;
 
-  /// Starts, or restarts after a failure, every catalog observation.
+  /// Starts, or restarts after a failure, every clinic directory observation.
   void watch() {
     if (_isClosingOrClosed) return;
     _cancelAll();
-    emit(const PatientCatalogLoading());
+    emit(const ClinicCatalogLoading());
     try {
       _clinicSubscription = _watchClinics.call(const NoParams()).listen((
         DataResult<List<Clinic>> result,
@@ -109,11 +108,14 @@ final class PatientCatalogCubit extends Cubit<PatientCatalogState> {
   }
 
   void _onClinics(List<Clinic> clinics) {
+    _clinics = clinics;
     final ids = _sortedIds(clinics.map((Clinic clinic) => clinic.id));
-    if (listEquals(ids, _clinicIds)) return;
-    _clinicIds = ids;
-    _branches = null;
-    _branchWatch.watch(ids, _watchBranches.call);
+    if (!listEquals(ids, _clinicIds)) {
+      _clinicIds = ids;
+      _branches = null;
+      _branchWatch.watch(ids, _watchBranches.call);
+    }
+    _emitIfComplete();
   }
 
   void _onBranches(List<Branch> branches) {
@@ -132,19 +134,22 @@ final class PatientCatalogCubit extends Cubit<PatientCatalogState> {
 
   void _emitIfComplete() {
     if (_isClosingOrClosed) return;
+    final clinics = _clinics;
     final branches = _branches;
     final departments = _departments;
     final services = _services;
     final staff = _staff;
-    if (branches == null ||
+    if (clinics == null ||
+        branches == null ||
         departments == null ||
         services == null ||
         staff == null) {
       return;
     }
     emit(
-      PatientCatalogLoaded(
-        PatientCatalog(
+      ClinicCatalogLoaded(
+        ClinicCatalog(
+          clinics: clinics,
           branches: branches,
           departments: departments,
           services: services,
@@ -157,7 +162,7 @@ final class PatientCatalogCubit extends Cubit<PatientCatalogState> {
   void _fail() {
     if (_isClosingOrClosed) return;
     _cancelAll();
-    emit(const PatientCatalogFailure());
+    emit(const ClinicCatalogFailure());
   }
 
   List<String> _sortedIds(Iterable<String> ids) => ids.toSet().toList()..sort();
@@ -183,6 +188,7 @@ final class PatientCatalogCubit extends Cubit<PatientCatalogState> {
     _serviceWatch.cancel();
     _clinicIds = null;
     _branchIds = null;
+    _clinics = null;
     _branches = null;
     _departments = null;
     _services = null;

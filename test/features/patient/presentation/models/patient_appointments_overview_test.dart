@@ -1,11 +1,11 @@
 import 'package:clinic_appointment_system/features/appointments/domain/actors/patient_appointment_actor.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/models/clinic_catalog.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/enums/patient_appointments_tab.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/extensions/patient_appointments_tab_selection.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/models/patient_appointment_entry.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/models/patient_appointments_overview.dart';
-import 'package:clinic_appointment_system/features/patient/presentation/models/patient_catalog.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../support/localization_test_app.dart';
@@ -17,7 +17,7 @@ void main() {
 
   PatientAppointmentsOverview overview({
     List<Appointment>? appointments,
-    PatientCatalog? catalog,
+    ClinicCatalog? catalog,
     DateTime? now,
   }) {
     return PatientAppointmentsOverview(
@@ -97,7 +97,8 @@ void main() {
 
   test('missing catalog records stay null instead of failing', () {
     final result = overview(
-      catalog: PatientCatalog(
+      catalog: ClinicCatalog(
+        clinics: const [],
         branches: const [],
         departments: const [],
         services: const [],

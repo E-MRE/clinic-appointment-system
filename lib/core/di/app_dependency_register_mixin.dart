@@ -62,6 +62,7 @@ import 'package:clinic_appointment_system/features/institution/domain/usecases/w
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_departments_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/branch_list_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/branch_save_cubit.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_catalog_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_list_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_save_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/department_list_cubit.dart';
@@ -84,7 +85,6 @@ import 'package:clinic_appointment_system/features/patient/presentation/cubit/bo
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_appointment_cancel_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_appointments_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_appointments_tab_cubit.dart';
-import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_catalog_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/staff_week_schedule_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_approve_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_complete_cubit.dart';
@@ -456,8 +456,8 @@ mixin AppDependencyRegisterMixin {
         injector.get<RemoveAvailabilityWindowUseCase>(),
       ),
     );
-    injector.registerFactory<PatientCatalogCubit>(
-      () => PatientCatalogCubit(
+    injector.registerFactory<ClinicCatalogCubit>(
+      () => ClinicCatalogCubit(
         injector.get<WatchClinicsUseCase>(),
         injector.get<WatchBranchesUseCase>(),
         injector.get<WatchDepartmentsOfBranchesUseCase>(),

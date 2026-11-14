@@ -4,7 +4,7 @@ import 'package:clinic_appointment_system/core/widgets/navigation/app_navigation
 import 'package:clinic_appointment_system/core/widgets/navigation/app_navigation_user_card.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_state.dart';
-import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_catalog_cubit.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_catalog_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/enums/patient_destination.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/extensions/patient_destination_navigation.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/extensions/patient_location_destination.dart';
@@ -28,8 +28,8 @@ final class PatientShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final destination = GoRouterState.of(context).uri.path.patientDestination;
-    return BlocProvider<PatientCatalogCubit>(
-      create: (_) => AppDependency.injector.get<PatientCatalogCubit>()..watch(),
+    return BlocProvider<ClinicCatalogCubit>(
+      create: (_) => AppDependency.injector.get<ClinicCatalogCubit>()..watch(),
       child: AppNavigationShell(
         logo: Assets.images.brand.clinicLogo,
         selectedIndex: destination.index,

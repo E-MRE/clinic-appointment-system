@@ -18,7 +18,7 @@ final class _PatientAppointmentsFailure extends StatelessWidget {
       iconBackground: context.colorScheme.errorContainer,
       primaryAction: FilledButton(
         onPressed: () {
-          context.read<PatientCatalogCubit>().watch();
+          context.read<ClinicCatalogCubit>().watch();
           context.read<PatientAppointmentsCubit>().retry();
         },
         child: AppText.label(

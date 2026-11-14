@@ -15,14 +15,14 @@ final class _PatientAppointmentsDetailsDialog extends StatelessWidget {
   final String appointmentId;
   final PatientAppointmentEntry initialEntry;
   final PatientAppointmentsCubit appointmentsCubit;
-  final PatientCatalogCubit catalogCubit;
+  final ClinicCatalogCubit catalogCubit;
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider<PatientAppointmentsCubit>.value(value: appointmentsCubit),
-        BlocProvider<PatientCatalogCubit>.value(value: catalogCubit),
+        BlocProvider<ClinicCatalogCubit>.value(value: catalogCubit),
       ],
       child: BlocProvider<PatientAppointmentCancelCubit>(
         create: (_) {
@@ -38,7 +38,7 @@ final class _PatientAppointmentsDetailsDialog extends StatelessWidget {
                   >(
                     builder: (context, appointmentsState) {
                       final catalogState = context
-                          .watch<PatientCatalogCubit>()
+                          .watch<ClinicCatalogCubit>()
                           .state;
                       final entry = _currentEntry(
                         appointmentsState,
@@ -107,10 +107,10 @@ final class _PatientAppointmentsDetailsDialog extends StatelessWidget {
 
   PatientAppointmentEntry _currentEntry(
     PatientAppointmentsState appointmentsState,
-    PatientCatalogState catalogState,
+    ClinicCatalogState catalogState,
   ) {
     if (appointmentsState is PatientAppointmentsLoaded) {
-      if (catalogState is PatientCatalogLoaded) {
+      if (catalogState is ClinicCatalogLoaded) {
         final overview = PatientAppointmentsOverview(
           appointments: appointmentsState.appointments,
           catalog: catalogState.catalog,

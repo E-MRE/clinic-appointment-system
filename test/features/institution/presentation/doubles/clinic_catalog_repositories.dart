@@ -13,15 +13,15 @@ import 'package:clinic_appointment_system/features/medical_services/domain/repos
 import 'package:clinic_appointment_system/features/staff_management/domain/repositories/staff_repository.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/staff.dart';
 
-import 'keyed_streams.dart';
+import '../../../../support/keyed_streams.dart';
 
 /// Key of the single clinic and staff streams.
-const String catalogAllKey = 'all';
+const String clinicCatalogAllKey = 'all';
 
 /// Catalog repositories whose streams are keyed by their parameters:
 /// clinic id for branches, comma-joined branch ids for departments and
-/// services, [catalogAllKey] for clinics and staff.
-final class PatientCatalogRepositories
+/// services, [clinicCatalogAllKey] for clinics and staff.
+final class ClinicCatalogRepositories
     implements
         ClinicRepository,
         BranchRepository,
@@ -39,7 +39,7 @@ final class PatientCatalogRepositories
 
   @override
   Stream<DataResult<List<Clinic>>> watchClinics() =>
-      clinics.watch(catalogAllKey);
+      clinics.watch(clinicCatalogAllKey);
 
   @override
   Stream<DataResult<List<Branch>>> watchBranches(String clinicId) =>
@@ -58,7 +58,7 @@ final class PatientCatalogRepositories
   @override
   Stream<DataResult<List<Staff>>> watchStaff() {
     if (staffSetupError case final Exception error) throw error;
-    return staff.watch(catalogAllKey);
+    return staff.watch(clinicCatalogAllKey);
   }
 
   Future<void> close() async {

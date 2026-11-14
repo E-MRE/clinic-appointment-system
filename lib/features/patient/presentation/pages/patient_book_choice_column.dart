@@ -4,7 +4,7 @@ part of 'patient_book_page.dart';
 final class _PatientBookChoiceColumn extends StatelessWidget {
   const _PatientBookChoiceColumn({required this.catalog});
 
-  final PatientCatalog catalog;
+  final ClinicCatalog catalog;
 
   @override
   Widget build(BuildContext context) {

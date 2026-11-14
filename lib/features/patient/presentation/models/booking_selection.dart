@@ -2,9 +2,10 @@ import 'package:clinic_appointment_system/core/constants/booking_constants.dart'
 import 'package:clinic_appointment_system/core/time/calendar_date.dart';
 import 'package:clinic_appointment_system/core/time/time_range.dart';
 import 'package:clinic_appointment_system/features/institution/domain/value_objects/working_hours.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/models/clinic_catalog.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/medical_service.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/extensions/calendar_date_week.dart';
-import 'package:clinic_appointment_system/features/patient/presentation/models/patient_catalog.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/extensions/patient_catalog_views.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/models/staff_week_schedule_request.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/staff.dart';
 
@@ -131,7 +132,7 @@ final class BookingSelection {
   /// Bookable services of [catalog] in the department limit whose name
   /// contains the search text, ignoring case with Turkish dotted and
   /// dotless `i` rules.
-  List<MedicalService> servicesIn(PatientCatalog catalog) {
+  List<MedicalService> servicesIn(ClinicCatalog catalog) {
     final needle = _folded(query.trim());
     return [
       for (final item in catalog.services)
@@ -145,7 +146,7 @@ final class BookingSelection {
   /// The schedule to observe for the chosen staff member and service in the
   /// shown week, or null before both are chosen. An unknown branch counts
   /// as closed every day.
-  StaffWeekScheduleRequest? scheduleRequest(PatientCatalog catalog) {
+  StaffWeekScheduleRequest? scheduleRequest(ClinicCatalog catalog) {
     final service = this.service;
     final staff = this.staff;
     if (service == null || staff == null) return null;

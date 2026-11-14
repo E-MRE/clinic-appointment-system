@@ -9,7 +9,7 @@ final class _PatientBookStaffCard extends StatelessWidget {
   });
 
   final Staff staff;
-  final PatientCatalog catalog;
+  final ClinicCatalog catalog;
   final bool isSelected;
 
   @override
