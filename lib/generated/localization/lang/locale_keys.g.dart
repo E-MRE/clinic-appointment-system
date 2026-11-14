@@ -56,6 +56,9 @@ abstract class LocaleKeys {
   static const home_staff = 'home.staff';
   static const home_admin = 'home.admin';
   static const home = 'home';
+  static const admin_appointmentsTitle = 'admin.appointmentsTitle';
+  static const admin_appointmentsSubtitle = 'admin.appointmentsSubtitle';
+  static const admin = 'admin';
   static const appointment_title = 'appointment.title';
   static const appointment_dateTime = 'appointment.dateTime';
   static const appointment_appointments = 'appointment.appointments';

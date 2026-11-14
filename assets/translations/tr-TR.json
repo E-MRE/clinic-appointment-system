@@ -56,6 +56,10 @@
     "staff": "Personel ana sayfası",
     "admin": "Yönetici ana sayfası"
   },
+  "admin": {
+    "appointmentsTitle": "Tüm randevular",
+    "appointmentsSubtitle": "Filtreleri birleştirerek daraltın; her randevuyu onaylayabilir ya da iptal edebilirsiniz."
+  },
   "appointment": {
     "title": "Randevu",
     "dateTime": "{}, {}",

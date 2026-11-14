@@ -14,8 +14,13 @@ extension AdminDestinationNavigation on AdminDestination {
         icon: Icons.dashboard_outlined,
         selectedIcon: Icons.dashboard,
       ),
+      AdminDestination.appointments => AppNavigationDestination(
+        label: LocaleKeys.appointment_appointments.tr(),
+        icon: Icons.calendar_month_outlined,
+        selectedIcon: Icons.calendar_month,
+      ),
       AdminDestination.institution => AppNavigationDestination(
-        label: LocaleKeys.institution_clinic.tr(),
+        label: LocaleKeys.institution_title.tr(),
         icon: Icons.business_outlined,
         selectedIcon: Icons.business,
       ),

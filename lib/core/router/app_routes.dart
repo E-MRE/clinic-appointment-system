@@ -56,6 +56,9 @@ abstract final class AppRoutes {
   /// Administrator home location.
   static const String adminHome = '/admin';
 
+  /// Administrator appointment list location.
+  static const String adminAppointments = '/admin/appointments';
+
   /// Institution overview and its branch routes.
   static const String institution = '/admin/institution';
   static const String branchNewSegment = 'clinics/:clinicId/branches/new';

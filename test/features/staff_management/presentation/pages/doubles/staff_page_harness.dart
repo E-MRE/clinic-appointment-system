@@ -5,6 +5,7 @@ import 'package:clinic_appointment_system/core/errors/data_result.dart';
 import 'package:clinic_appointment_system/core/localization/localization_wrapper.dart';
 import 'package:clinic_appointment_system/core/states/theme_cubit.dart';
 import 'package:clinic_appointment_system/core/theme/theme.dart';
+import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/branch.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/clinic.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/department.dart';
@@ -38,8 +39,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mocktail/mocktail.dart';
 
+import '../../../../../support/auth_cubit_factory.dart';
+import '../../../../../support/auth_repository_doubles.dart';
 import '../../../../../support/localization_test_app.dart';
+import '../../../../../support/user_repository_double.dart';
 import '../../../../institution/domain/doubles/fake_branch_repository.dart';
 import '../../../../institution/domain/doubles/fake_clinic_repository.dart';
 import '../../../../institution/domain/doubles/fake_department_repository.dart';
@@ -62,6 +67,8 @@ final class StaffPageHarness {
   final StreamController<DataResult<List<Branch>>> branchStream =
       StreamController.broadcast();
   final InstitutionSelection selection = InstitutionSelection();
+  final MockAuthRepository authRepository = MockAuthRepository();
+  late AuthCubit auth;
   late final BranchListCubit branches;
   late StaffListCubit staff;
   late StaffDepartmentListCubit departments;
@@ -115,6 +122,10 @@ final class StaffPageHarness {
   ];
 
   Future<void> initialize() async {
+    when(
+      () => authRepository.authStateChanges(),
+    ).thenAnswer((_) => const Stream.empty());
+    auth = createAuthCubit(authRepository, TestUserRepository());
     repository.staffStream = staffStream.stream;
     branchRepository.branchesStream = branchStream.stream;
     departmentRepository.departmentsStream = Stream.multi((sink) {
@@ -230,12 +241,15 @@ final class StaffPageHarness {
           builder: (context) {
             return BlocProvider(
               create: (_) => ThemeCubit(),
-              child: MaterialApp.router(
-                locale: context.locale,
-                supportedLocales: context.supportedLocales,
-                localizationsDelegates: context.localizationDelegates,
-                theme: LightTheme(screenSize).themeData,
-                routerConfig: router,
+              child: BlocProvider<AuthCubit>.value(
+                value: auth,
+                child: MaterialApp.router(
+                  locale: context.locale,
+                  supportedLocales: context.supportedLocales,
+                  localizationsDelegates: context.localizationDelegates,
+                  theme: LightTheme(screenSize).themeData,
+                  routerConfig: router,
+                ),
               ),
             );
           },
@@ -278,6 +292,7 @@ final class StaffPageHarness {
 
   Future<void> dispose(WidgetTester tester) async {
     await tester.pumpWidget(const SizedBox());
+    await auth.close();
     await branches.close();
     await staffStream.close();
     await branchStream.close();

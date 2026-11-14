@@ -15,6 +15,21 @@ void main() {
       );
 
       expect(
+        AdminDestination.appointments.matches(AppRoutes.adminAppointments),
+        isTrue,
+      );
+      expect(
+        AdminDestination.appointments.matches(
+          '${AppRoutes.adminAppointments}/pending',
+        ),
+        isTrue,
+      );
+      expect(
+        AdminDestination.appointments.matches('/admin/appointments-old'),
+        isFalse,
+      );
+
+      expect(
         AdminDestination.institution.matches(AppRoutes.institution),
         isTrue,
       );
@@ -47,6 +62,11 @@ void main() {
       expect('/admin/staff/new'.adminDestination, AdminDestination.staff);
       expect('/admin/staff/ada/edit'.adminDestination, AdminDestination.staff);
       expect('/staff'.adminDestination, AdminDestination.overview);
+
+      expect(
+        '${AppRoutes.adminAppointments}/pending'.adminDestination,
+        AdminDestination.appointments,
+      );
 
       expect('/admin'.adminDestination, AdminDestination.overview);
       expect(

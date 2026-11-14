@@ -5,6 +5,9 @@ enum AdminDestination {
   /// Dashboard and summary cards.
   overview(AppRoutes.adminHome),
 
+  /// All appointments across the administrator's clinic.
+  appointments(AppRoutes.adminAppointments),
+
   /// Institution hierarchy: clinics, branches and departments.
   institution(AppRoutes.institution),
 
