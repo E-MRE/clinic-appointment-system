@@ -130,7 +130,7 @@ final class AdminAppointmentsPageHarness {
       settle: false,
       child: _withSessionAndCatalog(
         catalogWatch,
-        const AdminAppointmentsPage(),
+        AdminAppointmentsPage(clock: clock),
       ),
     );
     await tester.pump();
@@ -147,7 +147,7 @@ final class AdminAppointmentsPageHarness {
       tester,
       theme: LightTheme(screenSize).themeData,
       settle: false,
-      child: _withSessionAndCatalog(catalogWatch, const AdminHomePage()),
+      child: _withSessionAndCatalog(catalogWatch, AdminHomePage(clock: clock)),
     );
     await tester.pump();
   }
@@ -170,11 +170,12 @@ final class AdminAppointmentsPageHarness {
           routes: [
             GoRoute(
               path: AppRoutes.adminHome,
-              builder: (context, state) => const AdminHomePage(),
+              builder: (context, state) => AdminHomePage(clock: clock),
             ),
             GoRoute(
               path: AppRoutes.adminAppointments,
               builder: (context, state) => AdminAppointmentsPage(
+                clock: clock,
                 initialStatuses: state.uri.initialAdminAppointmentStatuses,
               ),
             ),

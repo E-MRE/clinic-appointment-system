@@ -66,24 +66,12 @@ part 'admin_home_pending_empty.dart';
 part 'admin_home_failure_state.dart';
 
 /// Presents the administrator's daily appointment overview.
-final class AdminHomePage extends StatefulWidget {
+final class AdminHomePage extends StatelessWidget {
   /// Creates the administrator overview page.
-  const AdminHomePage({super.key});
+  const AdminHomePage({required this.clock, super.key});
 
-  @override
-  State<AdminHomePage> createState() {
-    return _AdminHomePageState();
-  }
-}
-
-final class _AdminHomePageState extends State<AdminHomePage> {
-  late final Clock _clock;
-
-  @override
-  void initState() {
-    super.initState();
-    _clock = AppDependency.injector.get<Clock>();
-  }
+  /// Time source used to display current time and relative intervals.
+  final Clock clock;
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +93,7 @@ final class _AdminHomePageState extends State<AdminHomePage> {
           },
           child: BlocProvider<DemoDataCubit>(
             create: (_) => AppDependency.injector.get<DemoDataCubit>(),
-            child: _AdminHomeView(clock: _clock),
+            child: _AdminHomeView(clock: clock),
           ),
         ),
       ),

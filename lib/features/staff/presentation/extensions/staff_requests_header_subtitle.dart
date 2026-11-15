@@ -1,6 +1,5 @@
 import 'package:clinic_appointment_system/core/extensions/relative_time_label.dart';
 import 'package:clinic_appointment_system/core/localization/localization_extension.dart';
-import 'package:clinic_appointment_system/core/time/clock.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
 import 'package:clinic_appointment_system/features/appointments/presentation/extensions/appointment_oldest_request.dart';
 import 'package:clinic_appointment_system/generated/localization/lang/locale_keys.g.dart';
@@ -9,8 +8,8 @@ import 'package:clinic_appointment_system/generated/localization/lang/locale_key
 extension StaffRequestsHeaderSubtitle on Iterable<Appointment> {
   int get _noRequests => 0;
 
-  /// Builds a localized subtitle with the request count and oldest request age.
-  String headerSubtitle(Clock clock) {
+  /// Builds a localized subtitle with the request count and oldest request age at [now].
+  String headerSubtitle(DateTime now) {
     final count = length;
     final oldest = oldestRequestedAt;
     if (count == _noRequests || oldest == null) {
@@ -18,7 +17,7 @@ extension StaffRequestsHeaderSubtitle on Iterable<Appointment> {
         args: ['$count'],
       );
     }
-    final relative = oldest.relativeLabel(clock.now());
+    final relative = oldest.relativeLabel(now);
     return LocaleKeys.staffRequests_headerSubtitle.translate(
       args: ['$count', relative],
     );

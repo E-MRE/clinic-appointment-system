@@ -84,14 +84,18 @@ final class _StaffCalendarAppointmentBlock extends StatelessWidget {
   /// Calls the page's tap hook when one is set; otherwise opens the staff
   /// appointment dialog.
   void _open(BuildContext context) {
-    final onAppointmentTap = _StaffCalendarScope.maybeOf(
-      context,
-    )?.onAppointmentTap;
+    final scope = _StaffCalendarScope.maybeOf(context);
+    final onAppointmentTap = scope?.onAppointmentTap;
 
     if (onAppointmentTap != null) {
       onAppointmentTap(appointment);
       return;
     }
-    unawaited(StaffAppointmentDialog.show(context, appointment));
+    final clock = scope?.clock;
+    if (clock != null) {
+      unawaited(
+        StaffAppointmentDialog.show(context, appointment, clock: clock),
+      );
+    }
   }
 }

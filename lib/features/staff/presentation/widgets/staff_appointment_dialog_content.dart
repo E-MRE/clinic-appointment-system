@@ -2,9 +2,13 @@ part of 'staff_appointment_dialog.dart';
 
 /// Renders the patient's identity, appointment details and available actions.
 final class _StaffAppointmentDialogContent extends StatelessWidget {
-  const _StaffAppointmentDialogContent({required this.appointment});
+  const _StaffAppointmentDialogContent({
+    required this.appointment,
+    required this.clock,
+  });
 
   final Appointment appointment;
+  final Clock clock;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +20,7 @@ final class _StaffAppointmentDialogContent extends StatelessWidget {
     final offers = StaffAppointmentActionOffers(
       appointment: appointment,
       actor: context.staffAppointmentActor,
-      at: AppDependency.injector.get<Clock>().now(),
+      at: clock.now(),
     ).offers;
 
     return SizedBox(

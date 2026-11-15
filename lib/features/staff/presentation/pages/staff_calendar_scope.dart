@@ -3,9 +3,13 @@ part of 'staff_calendar_page.dart';
 /// Supplies calendar callbacks down the tree.
 final class _StaffCalendarScope extends InheritedWidget {
   const _StaffCalendarScope({
+    required this.clock,
     required this.onAppointmentTap,
     required super.child,
   });
+
+  /// Time boundary supplied down the tree.
+  final Clock clock;
 
   /// Hook invoked when a scheduled appointment block is tapped.
   final ValueChanged<Appointment>? onAppointmentTap;
@@ -17,6 +21,7 @@ final class _StaffCalendarScope extends InheritedWidget {
 
   @override
   bool updateShouldNotify(_StaffCalendarScope oldWidget) {
-    return onAppointmentTap != oldWidget.onAppointmentTap;
+    return clock != oldWidget.clock ||
+        onAppointmentTap != oldWidget.onAppointmentTap;
   }
 }

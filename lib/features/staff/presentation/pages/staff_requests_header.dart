@@ -32,8 +32,7 @@ final class _StaffRequestsHeader extends StatelessWidget {
 
   String? _getSubtitle(StaffAppointmentsState state) {
     if (state is StaffAppointmentsLoaded) {
-      final clock = AppDependency.injector.get<Clock>();
-      return state.pendingRequests.headerSubtitle(clock);
+      return state.pendingRequests.headerSubtitle(state.now);
     }
 
     return null;

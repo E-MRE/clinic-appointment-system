@@ -265,7 +265,10 @@ final class StaffRequestsPageHarness {
           BlocProvider<StaffAppointmentsCubit>.value(value: appointmentsCubit),
           BlocProvider<StaffWorkspaceCubit>.value(value: workspaceCubit),
         ],
-        child: StaffCalendarPage(onAppointmentTap: onAppointmentTap),
+        child: StaffCalendarPage(
+          clock: clock,
+          onAppointmentTap: onAppointmentTap,
+        ),
       ),
     );
   }
@@ -295,8 +298,9 @@ final class StaffRequestsPageHarness {
         child: Scaffold(
           body: Builder(
             builder: (context) => TextButton(
-              onPressed: () =>
-                  unawaited(StaffAppointmentDialog.show(context, appointment)),
+              onPressed: () => unawaited(
+                StaffAppointmentDialog.show(context, appointment, clock: clock),
+              ),
               child: const Text('Open appointment'),
             ),
           ),

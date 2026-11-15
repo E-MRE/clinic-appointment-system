@@ -39,16 +39,23 @@ part 'staff_appointment_dialog_progress.dart';
 
 /// Displays appointment details and the lifecycle actions currently allowed to staff.
 final class StaffAppointmentDialog extends StatelessWidget {
-  const StaffAppointmentDialog._({required this.appointment});
+  const StaffAppointmentDialog._({
+    required this.appointment,
+    required this.clock,
+  });
 
   /// Appointment snapshot to display and act on.
   final Appointment appointment;
 
+  /// Time boundary used to evaluate action availability.
+  final Clock clock;
+
   /// Opens [appointment] with screen-owned lifecycle cubits.
   static Future<void> show(
     BuildContext context,
-    Appointment appointment,
-  ) async {
+    Appointment appointment, {
+    required Clock clock,
+  }) async {
     final auth = context.read<AuthCubit>();
     final workspace = context.read<StaffWorkspaceCubit>();
     await showDialog<void>(
@@ -79,7 +86,10 @@ final class StaffAppointmentDialog extends StatelessWidget {
                   AppDependency.injector.get<AppointmentStaffCancelCubit>(),
             ),
           ],
-          child: StaffAppointmentDialog._(appointment: appointment),
+          child: StaffAppointmentDialog._(
+            appointment: appointment,
+            clock: clock,
+          ),
         );
       },
     );
@@ -126,7 +136,10 @@ final class StaffAppointmentDialog extends StatelessWidget {
         ),
       ],
       child: AlertDialog(
-        content: _StaffAppointmentDialogContent(appointment: appointment),
+        content: _StaffAppointmentDialogContent(
+          appointment: appointment,
+          clock: clock,
+        ),
       ),
     );
   }

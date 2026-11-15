@@ -7,8 +7,6 @@ import 'package:clinic_appointment_system/core/localization/weekday_localization
 import 'package:clinic_appointment_system/core/states/watch_state.dart';
 import 'package:clinic_appointment_system/core/theme/theme.dart';
 import 'package:clinic_appointment_system/core/time/calendar_date.dart';
-import 'package:clinic_appointment_system/core/time/clock.dart';
-import 'package:clinic_appointment_system/core/time/clock_today.dart';
 import 'package:clinic_appointment_system/core/widgets/add_action/app_add_button.dart';
 import 'package:clinic_appointment_system/core/widgets/app_scaffold.dart';
 import 'package:clinic_appointment_system/core/widgets/app_text.dart';

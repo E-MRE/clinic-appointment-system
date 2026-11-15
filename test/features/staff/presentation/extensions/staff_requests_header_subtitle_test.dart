@@ -47,7 +47,7 @@ void main() {
     final list = <Appointment>[newer, older];
     expect(list.oldestRequestedAt, DateTime(2026, 10, 20, 9, 20));
     expect(
-      list.headerSubtitle(clock),
+      list.headerSubtitle(clock.now()),
       '2 talep · en eskisi 2 saat önce oluşturuldu',
     );
   });
@@ -57,7 +57,7 @@ void main() {
   ) async {
     await loadTestTranslations(tester);
 
-    expect(<Appointment>[].headerSubtitle(clock), '0 talep');
+    expect(<Appointment>[].headerSubtitle(clock.now()), '0 talep');
 
     // Invalid history with no items cannot be created with Appointment.restore
     // because assert/check throws invalidHistory, so count only applies to empty.

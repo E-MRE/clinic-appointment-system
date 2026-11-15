@@ -7,6 +7,7 @@ import 'package:clinic_appointment_system/core/localization/localization.dart';
 import 'package:clinic_appointment_system/core/localization/weekday_localization.dart';
 import 'package:clinic_appointment_system/core/theme/theme.dart';
 import 'package:clinic_appointment_system/core/time/calendar_date.dart';
+import 'package:clinic_appointment_system/core/time/clock.dart';
 import 'package:clinic_appointment_system/core/time/time_range.dart';
 import 'package:clinic_appointment_system/core/widgets/app_scaffold.dart';
 import 'package:clinic_appointment_system/core/widgets/app_text.dart';
@@ -52,7 +53,14 @@ part 'staff_calendar_view_content.dart';
 /// The doctor and technician calendar page with day/week navigation and grid.
 final class StaffCalendarPage extends StatelessWidget {
   /// Creates the staff calendar page with an optional appointment tap hook.
-  const StaffCalendarPage({this.onAppointmentTap, super.key});
+  const StaffCalendarPage({
+    required this.clock,
+    this.onAppointmentTap,
+    super.key,
+  });
+
+  /// Time boundary used by the calendar and its dialogs.
+  final Clock clock;
 
   /// Replaces the default tap behavior (opening the staff appointment
   /// dialog) when set; used by tests and embedding pages.
@@ -74,6 +82,7 @@ final class StaffCalendarPage extends StatelessWidget {
         return cubit;
       },
       child: _StaffCalendarScope(
+        clock: clock,
         onAppointmentTap: onAppointmentTap,
         child: const _StaffCalendarViewContent(),
       ),

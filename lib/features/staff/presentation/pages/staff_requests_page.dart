@@ -1,7 +1,6 @@
 import 'package:clinic_appointment_system/core/di/app_dependency.dart';
 import 'package:clinic_appointment_system/core/localization/localization.dart';
 import 'package:clinic_appointment_system/core/theme/theme.dart';
-import 'package:clinic_appointment_system/core/time/clock.dart';
 import 'package:clinic_appointment_system/core/widgets/announced_semantics.dart';
 import 'package:clinic_appointment_system/core/widgets/app_scaffold.dart';
 import 'package:clinic_appointment_system/core/widgets/app_text.dart';

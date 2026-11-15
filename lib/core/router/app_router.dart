@@ -1,7 +1,9 @@
+import 'package:clinic_appointment_system/core/di/app_dependency.dart';
 import 'package:clinic_appointment_system/core/router/app_routes.dart';
 import 'package:clinic_appointment_system/core/router/fade_transition_page.dart';
 import 'package:clinic_appointment_system/core/router/home_page.dart';
 import 'package:clinic_appointment_system/core/router/not_found_page.dart';
+import 'package:clinic_appointment_system/core/time/clock.dart';
 import 'package:clinic_appointment_system/features/admin/presentation/extensions/admin_appointment_route_query.dart';
 import 'package:clinic_appointment_system/features/admin/presentation/pages/admin_appointments_page.dart';
 import 'package:clinic_appointment_system/features/admin/presentation/pages/admin_home_page.dart';
@@ -111,8 +113,10 @@ GoRouter createAppRouter({
             routes: [
               GoRoute(
                 path: AppRoutes.staffCalendarSegment,
-                pageBuilder: (_, state) =>
-                    _fadePage(state, const StaffCalendarPage()),
+                pageBuilder: (_, state) => _fadePage(
+                  state,
+                  StaffCalendarPage(clock: AppDependency.injector.get<Clock>()),
+                ),
               ),
               GoRoute(
                 path: AppRoutes.staffRequestsSegment,
@@ -139,7 +143,10 @@ GoRouter createAppRouter({
         routes: [
           GoRoute(
             path: AppRoutes.adminHome,
-            pageBuilder: (_, state) => _fadePage(state, const AdminHomePage()),
+            pageBuilder: (_, state) => _fadePage(
+              state,
+              AdminHomePage(clock: AppDependency.injector.get<Clock>()),
+            ),
           ),
           GoRoute(
             path: AppRoutes.adminAppointments,
@@ -147,6 +154,7 @@ GoRouter createAppRouter({
               return _fadePage(
                 state,
                 AdminAppointmentsPage(
+                  clock: AppDependency.injector.get<Clock>(),
                   initialStatuses: state.uri.initialAdminAppointmentStatuses,
                 ),
               );

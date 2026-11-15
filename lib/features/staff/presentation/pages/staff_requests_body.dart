@@ -41,12 +41,14 @@ final class _StaffRequestsBody extends StatelessWidget {
       return _StaffRequestsDesktopLayout(
         requests: sortedRequests,
         selectedId: selectedId,
+        now: appointmentsState.now,
       );
     }
 
     return _StaffRequestsNarrowLayout(
       requests: sortedRequests,
       selectedId: selectedId,
+      now: appointmentsState.now,
     );
   }
 }
