@@ -49,6 +49,8 @@ part 'staff_request_card.dart';
 part 'staff_requests_body.dart';
 part 'staff_requests_desktop_layout.dart';
 part 'staff_requests_detail_actions.dart';
+part 'staff_requests_detail_approve_label.dart';
+part 'staff_requests_detail_reject_button.dart';
 part 'staff_requests_detail_panel.dart';
 part 'staff_requests_detail_patient_history.dart';
 part 'staff_requests_detail_rule_checks.dart';
