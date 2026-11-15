@@ -46,30 +46,10 @@ final class _BranchFormState extends State<_BranchForm> {
               child: _BranchFormFields(name: name, address: address),
             ),
             const EmptySize.s12Height(),
-            _buildActions(context),
+            _BranchFormActions(onSave: _save),
           ],
         ),
       ),
-    );
-  }
-
-  /// Builds the cancel and save controls for this form.
-  Widget _buildActions(BuildContext context) {
-    return Row(
-      children: [
-        TextButton(
-          onPressed: () => context.go(AppRoutes.institution),
-          child: AppText.label(LocaleKeys.institution_cancel.tr()),
-        ),
-        const Spacer(),
-        FilledButton(
-          onPressed: _save,
-          child: AppText.label(
-            LocaleKeys.institution_saveBranch.tr(),
-            tone: TextTone.onPrimary,
-          ),
-        ),
-      ],
     );
   }
 

@@ -24,7 +24,7 @@ final class _AvailabilityBodyContent extends StatelessWidget {
     return context.screenSize.select(
       mobile: _buildMobileLayout(context),
       tablet: const _AvailabilityTabletLayout(),
-      desktop: _buildDesktopViewport(),
+      desktop: const _AvailabilityDesktopViewport(),
     );
   }
 
@@ -58,24 +58,6 @@ final class _AvailabilityBodyContent extends StatelessWidget {
         ),
       ),
       child: _AvailabilityDayContent(day: day),
-    );
-  }
-
-  /// Builds the horizontally scrollable desktop minimum-width viewport.
-  Widget _buildDesktopViewport() {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: ConstrainedBox(
-            constraints: BoxConstraints(minWidth: constraints.maxWidth),
-            child: const SizedBox(
-              width: AppSizes.availabilityDesktopMinWidth,
-              child: _AvailabilityDesktopLayout(),
-            ),
-          ),
-        );
-      },
     );
   }
 }

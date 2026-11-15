@@ -24,6 +24,8 @@ import 'package:go_router/go_router.dart';
 
 part 'branch_form_fields.dart';
 part 'branch_form.dart';
+part 'branch_form_actions.dart';
+part 'branch_form_provider.dart';
 
 /// Creates or edits a branch after resolving route ids from the shared list.
 final class BranchFormPage extends StatelessWidget {
@@ -33,7 +35,7 @@ final class BranchFormPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (branchId == null) {
-      return _buildFormProvider();
+      return const _BranchFormProvider();
     }
     return InstitutionListView<Branch, BranchListCubit>(
       emptyTitle: LocaleKeys.institution_notFound.tr(),
@@ -42,28 +44,10 @@ final class BranchFormPage extends StatelessWidget {
       loadedBuilder: (items) {
         final matches = items.where((item) => item.id == branchId);
         if (matches.isNotEmpty) {
-          return _buildFormProvider(branch: matches.first);
+          return _BranchFormProvider(branch: matches.first);
         }
         return const InstitutionNotFound();
       },
-    );
-  }
-
-  /// Provides the editor Cubits for a new or selected branch.
-  Widget _buildFormProvider({Branch? branch}) {
-    return MultiBlocProvider(
-      key: ValueKey(branch?.id),
-      providers: [
-        BlocProvider<WorkingHoursEditorCubit>(
-          create: (_) =>
-              AppDependency.injector.get<WorkingHoursEditorCubit>()
-                ..initialize(branch?.workingHours),
-        ),
-        BlocProvider<BranchSaveCubit>(
-          create: (_) => AppDependency.injector.get<BranchSaveCubit>(),
-        ),
-      ],
-      child: _BranchForm(branch: branch),
     );
   }
 }
