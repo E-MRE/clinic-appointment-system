@@ -49,6 +49,34 @@ void main() {
     ];
   }
 
+  testWidgets('loads demo data only after confirming the dialog', (
+    tester,
+  ) async {
+    final harness = AdminAppointmentsPageHarness();
+    await harness.initialize();
+    addTearDown(() => harness.dispose(tester));
+    await harness.pumpHomePage(tester);
+
+    final demoButton = find.widgetWithText(FilledButton, 'Demo verisini yükle');
+    await tester.tap(demoButton);
+    await tester.pumpAndSettle();
+    expect(find.text('Demo verisi yüklensin mi?'), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(TextButton, 'İptal'));
+    await tester.pumpAndSettle();
+    expect(harness.demoDependencies.replaceCalls, 0);
+
+    await tester.tap(demoButton);
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.widgetWithText(FilledButton, 'Demo verisini yükle').last,
+    );
+    await tester.pumpAndSettle();
+
+    expect(harness.demoDependencies.replaceCalls, 1);
+    expect(find.text('Demo verisi başarıyla yüklendi.'), findsOneWidget);
+  });
+
   testWidgets('renders KPI values, breakdown rows and pending actions', (
     tester,
   ) async {

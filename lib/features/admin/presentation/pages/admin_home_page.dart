@@ -11,8 +11,10 @@ import 'package:clinic_appointment_system/core/time/clock.dart';
 import 'package:clinic_appointment_system/core/widgets/app_scaffold.dart';
 import 'package:clinic_appointment_system/core/widgets/app_text.dart';
 import 'package:clinic_appointment_system/core/widgets/data_table/app_data_table.dart';
+import 'package:clinic_appointment_system/core/widgets/form_dialog/app_form_dialog.dart';
 import 'package:clinic_appointment_system/core/widgets/loading/loading_state.dart';
 import 'package:clinic_appointment_system/core/widgets/loading/loading_state_variant.dart';
+import 'package:clinic_appointment_system/core/widgets/message_banner/app_message_banner.dart';
 import 'package:clinic_appointment_system/core/widgets/page_header/page_header.dart';
 import 'package:clinic_appointment_system/core/widgets/progress_bar/app_progress_bar.dart';
 import 'package:clinic_appointment_system/core/widgets/select_field/app_select_field.dart';
@@ -33,6 +35,9 @@ import 'package:clinic_appointment_system/features/admin/presentation/widgets/ad
 import 'package:clinic_appointment_system/features/admin/presentation/widgets/admin_metric_tone_colors.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/actors/admin_appointment_actor.dart';
 import 'package:clinic_appointment_system/features/appointments/presentation/extensions/appointment_error_code_localization.dart';
+import 'package:clinic_appointment_system/features/demo/presentation/cubit/demo_data_cubit.dart';
+import 'package:clinic_appointment_system/features/demo/presentation/cubit/demo_data_state.dart';
+import 'package:clinic_appointment_system/features/demo/presentation/extensions/demo_error_code_localization.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_catalog_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_catalog_state.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/models/clinic_catalog.dart';
@@ -45,6 +50,7 @@ part 'admin_home_data_state.dart';
 part 'admin_home_loaded_content.dart';
 part 'admin_home_header.dart';
 part 'admin_home_header_actions.dart';
+part 'admin_home_demo_data_dialog.dart';
 part 'admin_home_metric_cards.dart';
 part 'admin_home_metric_card.dart';
 part 'admin_home_breakdown_cards.dart';
@@ -96,7 +102,10 @@ final class _AdminHomePageState extends State<AdminHomePage> {
               context.read<AdminDashboardCubit>().updateCatalog(state.catalog);
             }
           },
-          child: _AdminHomeView(clock: _clock),
+          child: BlocProvider<DemoDataCubit>(
+            create: (_) => AppDependency.injector.get<DemoDataCubit>(),
+            child: _AdminHomeView(clock: _clock),
+          ),
         ),
       ),
     );

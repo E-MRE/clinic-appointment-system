@@ -34,6 +34,9 @@ import 'package:clinic_appointment_system/features/auth/presentation/pages/auth_
 import 'package:clinic_appointment_system/features/auth/presentation/pages/password_reset_page.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/pages/sign_in_page.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/pages/sign_up_page.dart';
+import 'package:clinic_appointment_system/features/demo/domain/models/demo_accounts.dart';
+import 'package:clinic_appointment_system/features/demo/domain/usecases/load_demo_data_use_case.dart';
+import 'package:clinic_appointment_system/features/demo/presentation/cubit/demo_data_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_branches_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_clinics_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_departments_use_case.dart';
@@ -58,6 +61,7 @@ import '../../../../support/localization_test_app.dart';
 import '../../../../support/user_repository_double.dart';
 import '../../../appointments/presentation/doubles/staff_appointment_repository.dart';
 import '../../../availability/presentation/pages/doubles/availability_page_harness.dart';
+import '../../../demo/domain/doubles/demo_use_case_fake_dependencies.dart';
 import '../../../institution/domain/doubles/fake_branch_repository.dart';
 import '../../../institution/domain/doubles/fake_clinic_repository.dart';
 import '../../../institution/domain/doubles/fake_department_repository.dart';
@@ -630,6 +634,15 @@ final class _AuthTestApp {
         ),
       ),
     );
+    AppDependency.injector.registerFactory<DemoDataCubit>(
+      () => DemoDataCubit(
+        LoadDemoDataUseCase(
+          demoDependencies,
+          demoDependencies,
+          AppDependency.injector.get<Clock>(),
+        ),
+      ),
+    );
     availability.registerCubits();
     patient.registerCubits();
     router = createAppRouter(initialLocation: route, authGuard: configuration);
@@ -638,6 +651,19 @@ final class _AuthTestApp {
   final availability = AvailabilityPageHarness();
   final patient = PatientPageHarness();
   final appointmentRepository = StaffAppointmentRepository();
+  final DemoUseCaseFakeDependencies demoDependencies =
+      DemoUseCaseFakeDependencies(
+        accountResult: const DataResult.success(
+          data: DemoAccounts(
+            doctorUid: 'doctor-uid',
+            doctorFullName: 'Dr. Servet',
+            doctorEmail: 'servet@doktor.com',
+            patientUid: 'patient-uid',
+            patientFullName: 'Remzi Pala',
+            patientEmail: 'remzi@pala.com',
+          ),
+        ),
+      );
   final users = TestUserRepository();
   final repository = MockAuthRepository();
   final sessions = StreamController<DataResult<AuthSession>>();

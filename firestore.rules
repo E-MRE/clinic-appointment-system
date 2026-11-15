@@ -23,6 +23,31 @@ service cloud.firestore {
       return isSignedIn() && hasAdminProfile();
     }
 
+    // Demo data is disposable only while it keeps its explicit marker.
+    function isDemoCreate(data) {
+      return isAdmin() && data != null && data.get('isDemo', false) == true;
+    }
+
+    function isDemoUpdate(oldData, nextData) {
+      return isAdmin()
+        && oldData != null
+        && nextData != null
+        && oldData.get('isDemo', false) == true
+        && nextData.get('isDemo', false) == true;
+    }
+
+    function isDemoDelete(data) {
+      return isAdmin() && data != null && data.get('isDemo', false) == true;
+    }
+
+    function hasNoDemoMarker(data) {
+      return data != null && !('isDemo' in data);
+    }
+
+    function isNotDemo(data) {
+      return data != null && data.get('isDemo', false) != true;
+    }
+
     function isFilledString(value) {
       return value is string && value.trim().size() > 0;
     }
@@ -31,8 +56,11 @@ service cloud.firestore {
     function isDepartmentOfBranch(data) {
       let department =
         /databases/$(database)/documents/departments/$(data.departmentId);
-      return exists(department)
-        && get(department).data.branchId == data.branchId;
+      return data.get('isDemo', false) == true
+        ? (existsAfter(department)
+          && getAfter(department).data.branchId == data.branchId)
+        : (exists(department)
+          && get(department).data.branchId == data.branchId);
     }
 
     // users/{uid}: profiles keyed by the authentication uid.
@@ -45,11 +73,15 @@ service cloud.firestore {
 
       // Registration creates an own patient profile or an admin-managed staff profile.
       allow create: if isOwnPatientProfile()
-        || (isAdmin() && isValidStaffProfile(request.resource.data));
+        || (isAdmin() && isValidStaffProfile(request.resource.data))
+        || (isDemoCreate(request.resource.data)
+          && isValidDemoUserProfile(request.resource.data, true));
 
       // Owners change their name; admins manage staff assignments.
       allow update: if isOwnNameChange()
-        || (isAdmin() && isStaffAssignmentChange());
+        || (isAdmin() && isStaffAssignmentChange())
+        || (isDemoUpdate(resource.data, request.resource.data)
+          && isValidDemoUserProfile(request.resource.data, false));
 
       allow delete: if isAdmin();
 
@@ -88,8 +120,20 @@ service cloud.firestore {
       function isStaffAssignmentChange() {
         return resource.data.role in ['doctor', 'technician']
           && request.resource.data.diff(resource.data).affectedKeys()
-            .hasOnly(['fullName', 'specialty', 'serviceIds'])
-          && isValidStaffAssignment(request.resource.data);
+            .hasOnly([
+              'fullName', 'specialty', 'serviceIds', 'branchId', 'departmentId'
+            ])
+          && isValidStaffAssignment(request.resource.data)
+          && (!request.resource.data.diff(resource.data).affectedKeys()
+                .hasAny(['branchId', 'departmentId'])
+            || isDepartmentOfBranchAfter(request.resource.data));
+      }
+
+      function isDepartmentOfBranchAfter(data) {
+        let department =
+          /databases/$(database)/documents/departments/$(data.departmentId);
+        return existsAfter(department)
+          && getAfter(department).data.branchId == data.branchId;
       }
 
       function isOwnPatientProfile() {
@@ -105,9 +149,50 @@ service cloud.firestore {
 
       function isOwnNameChange() {
         return isUser(uid)
+          && isNotDemo(resource.data)
+          && isNotDemo(request.resource.data)
           && request.resource.data.diff(resource.data).affectedKeys()
             .hasOnly(['fullName'])
           && isFilledString(request.resource.data.fullName);
+      }
+
+      function isValidDemoUserProfile(data, isCreate) {
+        return data.role == 'patient'
+          ? isValidDemoPatientProfileForWrite(data, isCreate)
+          : isValidDemoStaffProfile(data, isCreate);
+      }
+
+      function isValidDemoPatientProfileForWrite(data, isCreate) {
+        return data.get('isDemo', false) == true
+          && data.keys().hasOnly([
+            'role', 'fullName', 'email', 'createdAt', 'isDemo'
+          ])
+          && data.keys().hasAll(['role', 'fullName', 'email', 'createdAt'])
+          && data.role == 'patient'
+          && isFilledString(data.fullName)
+          && data.email is string
+          && data.email.matches('^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$')
+          && data.createdAt is timestamp
+          && (!isCreate || data.createdAt == request.time);
+      }
+
+      function isValidDemoStaffProfile(data, isCreate) {
+        let keys = data.role == 'doctor'
+          ? staffKeys().concat(['specialty', 'isDemo'])
+          : staffKeys().concat(['isDemo']);
+        return data.get('isDemo', false) == true
+          && data.role in ['doctor', 'technician']
+          && data.keys().hasOnly(keys)
+          && data.keys().hasAll(keys)
+          && isFilledString(data.fullName)
+          && data.email is string
+          && data.email.matches('^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$')
+          && isFilledString(data.branchId)
+          && isFilledString(data.departmentId)
+          && isDepartmentOfBranch(data)
+          && isValidStaffAssignment(data)
+          && data.createdAt is timestamp
+          && (!isCreate || data.createdAt == request.time);
       }
     }
 
@@ -184,26 +269,95 @@ service cloud.firestore {
 
     match /staffBookings/{staffId}/days/{date} {
       allow read: if isSignedIn();
-      allow create, update: if isSignedIn() && validDayWrite(staffId, date, 'staffId');
-      allow delete: if false;
+      allow create: if (isSignedIn()
+          && hasNoDemoMarker(request.resource.data)
+          && validDayWrite(staffId, date, 'staffId'))
+        || (isDemoCreate(request.resource.data)
+          && isValidDemoDayWrite(staffId, date, 'staffId'));
+      allow update: if resource != null && request.resource != null
+        && ((isSignedIn()
+            && hasNoDemoMarker(resource.data)
+            && hasNoDemoMarker(request.resource.data)
+            && validDayWrite(staffId, date, 'staffId'))
+          || (isDemoUpdate(resource.data, request.resource.data)
+            && isValidDemoDayWrite(staffId, date, 'staffId')));
+      allow delete: if resource != null && isDemoDelete(resource.data);
     }
 
     match /patientBookings/{patientId}/days/{date} {
       allow read: if isUser(patientId) || isAdmin();
-      allow create, update: if isSignedIn() && validDayWrite(patientId, date, 'patientId');
-      allow delete: if false;
+      allow create: if (isSignedIn()
+          && hasNoDemoMarker(request.resource.data)
+          && validDayWrite(patientId, date, 'patientId'))
+        || (isDemoCreate(request.resource.data)
+          && isValidDemoDayWrite(patientId, date, 'patientId'));
+      allow update: if resource != null && request.resource != null
+        && ((isSignedIn()
+            && hasNoDemoMarker(resource.data)
+            && hasNoDemoMarker(request.resource.data)
+            && validDayWrite(patientId, date, 'patientId'))
+          || (isDemoUpdate(resource.data, request.resource.data)
+            && isValidDemoDayWrite(patientId, date, 'patientId')));
+      allow delete: if resource != null && isDemoDelete(resource.data);
+    }
+
+    function isValidDemoDayWrite(ownerId, date, ownerField) {
+      let next = request.resource.data;
+      let keys = ['slots', 'lastAppointmentId', 'updatedAt', 'isDemo'];
+      return next.keys().hasOnly(keys) && next.keys().hasAll(keys)
+        && next.get('isDemo', false) == true
+        && next.slots is list && next.slots.size() > 0
+        && isFilledString(next.lastAppointmentId)
+        && next.updatedAt == request.time
+        && pairedDemoAppointment(ownerId, date, ownerField, next);
+    }
+
+    function pairedDemoAppointment(ownerId, date, ownerField, next) {
+      let path = /databases/$(database)/documents/appointments/$(next.lastAppointmentId);
+      return existsAfter(path)
+        ? matchesDemoProjectionAppointment(
+            getAfter(path).data, ownerId, date, ownerField, next
+          )
+        : false;
+    }
+
+    function matchesDemoProjectionAppointment(
+      appointment, ownerId, date, ownerField, next
+    ) {
+      let lastSlotIndex = next.slots.size() - 1;
+      return appointment.get('isDemo', false) == true
+        && appointment[ownerField] == ownerId
+        && appointment.date == date
+        && occupiesSlot(appointment.status)
+        && next.slots[lastSlotIndex]
+          == bookingSlot(next.lastAppointmentId, appointment);
     }
 
     // appointments/{appointmentId}: lifecycle changes append an audit entry.
     match /appointments/{appointmentId} {
       allow read: if resource != null && (isAdmin()
         || isUser(resource.data.patientId) || isUser(resource.data.staffId));
-      allow create: if isSignedIn() && callerRole() == 'patient'
-        && isValidAppointment(request.resource.data)
-        && validBookingProjection(appointmentId, request.resource.data);
-      allow update: if isSignedIn() && isValidUpdate()
-        && validTransitionProjection(appointmentId, resource.data, request.resource.data);
-      allow delete: if false;
+      // Demo appointments keep the shared field, fee, date/time format, status,
+      // final-history-entry and staff/profile checks below. They bypass live
+      // patient caller ownership, pending-only and single-entry booking
+      // checks, request-time timestamp/actor checks, full history iteration,
+      // and paired booking projections because the admin writes profile-only
+      // actors and precomputed histories in one seed batch.
+      allow create: if (isSignedIn() && callerRole() == 'patient'
+          && isValidAppointment(request.resource.data)
+          && validBookingProjection(appointmentId, request.resource.data))
+        || (isDemoCreate(request.resource.data)
+          && isValidDemoAppointment(request.resource.data));
+      allow update: if resource != null && request.resource != null
+        && ((isDemoUpdate(resource.data, request.resource.data)
+          && isValidDemoAppointment(request.resource.data))
+        || (isNotDemo(resource.data)
+          && isNotDemo(request.resource.data)
+          && isSignedIn() && isValidUpdate()
+          && validTransitionProjection(
+            appointmentId, resource.data, request.resource.data
+          )));
+      allow delete: if resource != null && isDemoDelete(resource.data);
 
       function callerRole() {
         return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
@@ -252,6 +406,78 @@ service cloud.firestore {
           && validStaff(data);
       }
 
+      function isValidDemoAppointment(data) {
+        let keys = ['patientId', 'patientName', 'staffId', 'branchId',
+          'departmentId', 'serviceId', 'serviceName', 'feeMinorUnits',
+          'date', 'start', 'end', 'status', 'history', 'createdAt',
+          'updatedAt', 'isDemo'];
+        return data.get('isDemo', false) == true
+          && data.keys().hasOnly(keys) && data.keys().hasAll(keys)
+          && isFilledString(data.patientId)
+          && isFilledString(data.patientName)
+          && isFilledString(data.staffId)
+          && isFilledString(data.branchId)
+          && isFilledString(data.departmentId)
+          && isFilledString(data.serviceId)
+          && isFilledString(data.serviceName)
+          && data.feeMinorUnits is int && data.feeMinorUnits > 0
+          && data.date is string
+          && data.date.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+          && data.start is string && data.start.matches('^[0-9]{2}:[0-9]{2}$')
+          && data.end is string && data.end.matches('^[0-9]{2}:[0-9]{2}$')
+          && data.status in [
+            'pending', 'approved', 'rejected', 'cancelledByPatient',
+            'cancelledByStaff', 'completed', 'noShow'
+          ]
+          && data.history is list && data.history.size() > 0
+          && hasValidFinalDemoHistoryEntry(data.history, data.status)
+          && data.createdAt is timestamp && data.updatedAt is timestamp
+          && validDemoPatient(data.patientId, data.patientName)
+          && validDemoStaff(data);
+      }
+
+      function hasValidFinalDemoHistoryEntry(history, status) {
+        let lastEntry = history[history.size() - 1];
+        return isValidDemoHistoryEntry(lastEntry) && lastEntry.status == status;
+      }
+
+      function isValidDemoHistoryEntry(entry) {
+        return entry is map
+          && entry.keys().hasOnly([
+            'status', 'byUserId', 'byRole', 'at', 'reason'
+          ])
+          && entry.keys().hasAll(['status', 'byUserId', 'byRole', 'at'])
+          && entry.status in [
+            'pending', 'approved', 'rejected', 'cancelledByPatient',
+            'cancelledByStaff', 'completed', 'noShow'
+          ]
+          && isFilledString(entry.byUserId)
+          && entry.byRole in ['patient', 'doctor', 'technician', 'admin']
+          && entry.at is timestamp
+          && (!('reason' in entry)
+            || (entry.status in ['rejected', 'cancelledByStaff']
+              && entry.reason is string
+              && entry.reason.size() >= 1
+              && entry.reason.size() <= 500));
+      }
+
+      function validDemoPatient(patientId, patientName) {
+        let profile = /databases/$(database)/documents/users/$(patientId);
+        return existsAfter(profile)
+          ? (getAfter(profile).data.role == 'patient'
+            && getAfter(profile).data.fullName == patientName)
+          : (exists(profile)
+            && get(profile).data.role == 'patient'
+            && get(profile).data.fullName == patientName);
+      }
+
+      function validDemoStaff(data) {
+        let profile = /databases/$(database)/documents/users/$(data.staffId);
+        return existsAfter(profile)
+          ? staffMatchesAppointment(getAfter(profile).data, data)
+          : (exists(profile) && staffMatchesAppointment(get(profile).data, data));
+      }
+
       function validStaff(data) {
         let profile = /databases/$(database)/documents/users/$(data.staffId);
         return exists(profile) && staffMatchesAppointment(get(profile).data, data);
@@ -295,20 +521,45 @@ service cloud.firestore {
       // Patients read availability to request appointments (#17).
       allow read: if isSignedIn();
       // Staff write their own document; admins write any staff member's.
-      allow create, update: if (isUser(staffId) || isAdmin())
-        && isValidAvailability(staffId, request.resource.data);
-      allow delete: if false;
+      allow create: if (isDemoCreate(request.resource.data)
+          && isValidAvailability(staffId, request.resource.data))
+        || (hasNoDemoMarker(request.resource.data)
+          && (isUser(staffId) || isAdmin())
+          && isValidAvailability(staffId, request.resource.data));
+      allow update: if resource != null && request.resource != null
+        && ((isDemoUpdate(resource.data, request.resource.data)
+          && isValidAvailability(staffId, request.resource.data))
+        || (hasNoDemoMarker(resource.data)
+          && hasNoDemoMarker(request.resource.data)
+          && (isUser(staffId) || isAdmin())
+          && isValidAvailability(staffId, request.resource.data)));
+      allow delete: if resource != null && isDemoDelete(resource.data);
 
       function isValidAvailability(staffId, data) {
         let profile = /databases/$(database)/documents/users/$(staffId);
-        return exists(profile)
-          && get(profile).data.role in ['doctor', 'technician']
-          && data.keys().hasOnly(['branchId', 'weekly', 'oneOff', 'updatedAt'])
+        return (data.get('isDemo', false) == true
+            ? demoAvailabilityProfileMatches(profile, data)
+            : normalAvailabilityProfileMatches(profile, data))
+          && data.keys().hasOnly([
+            'branchId', 'weekly', 'oneOff', 'updatedAt', 'isDemo'
+          ])
           && data.keys().hasAll(['branchId', 'weekly', 'oneOff', 'updatedAt'])
-          && data.branchId == get(profile).data.branchId
+          && (!('isDemo' in data) || data.get('isDemo', false) == true)
           && isValidWeekly(data.weekly)
           && data.oneOff is list && data.oneOff.size() <= 60
           && data.updatedAt == request.time;
+      }
+
+      function demoAvailabilityProfileMatches(profile, data) {
+        return existsAfter(profile)
+          && getAfter(profile).data.role in ['doctor', 'technician']
+          && data.branchId == getAfter(profile).data.branchId;
+      }
+
+      function normalAvailabilityProfileMatches(profile, data) {
+        return existsAfter(profile)
+          && getAfter(profile).data.role in ['doctor', 'technician']
+          && data.branchId == getAfter(profile).data.branchId;
       }
 
       // Rules cannot loop over elements; the domain validates their contents.
@@ -340,12 +591,20 @@ service cloud.firestore {
     // clinics/{clinicId}: named institutions that own physical branches.
     match /clinics/{clinicId} {
       allow read: if isSignedIn();
-      allow create, update: if isAdmin() && isValidClinic(request.resource.data);
-      allow delete: if false;
+      allow create: if isAdmin() && isValidClinic(request.resource.data);
+      allow update: if resource != null && request.resource != null
+        && ((isAdmin()
+          && hasNoDemoMarker(resource.data)
+          && hasNoDemoMarker(request.resource.data)
+          && isValidClinic(request.resource.data))
+        || (isDemoUpdate(resource.data, request.resource.data)
+          && isValidClinic(request.resource.data)));
+      allow delete: if resource != null && isAdmin();
 
       function isValidClinic(data) {
-        return data.keys().hasOnly(['name'])
+        return data.keys().hasOnly(['name', 'isDemo'])
           && data.keys().hasAll(['name'])
+          && (!('isDemo' in data) || data.get('isDemo', false) == true)
           && isFilledString(data.name);
       }
     }
@@ -354,18 +613,27 @@ service cloud.firestore {
     match /branches/{branchId} {
       allow read: if isSignedIn();
       allow create: if isAdmin() && isValidBranch(request.resource.data);
-      allow update: if isAdmin() && isValidBranchUpdate(request.resource.data);
-      allow delete: if false;
+      allow update: if resource != null && request.resource != null
+        && ((isAdmin()
+          && hasNoDemoMarker(resource.data)
+          && hasNoDemoMarker(request.resource.data)
+          && isValidBranchUpdate(request.resource.data))
+        || (isDemoUpdate(resource.data, request.resource.data)
+          && isValidBranch(request.resource.data)));
+      allow delete: if resource != null && isAdmin();
 
       function isValidBranch(data) {
+        let clinic = /databases/$(database)/documents/clinics/$(data.clinicId);
         return data.keys().hasOnly([
-            'clinicId', 'name', 'address', 'workingHours'
+            'clinicId', 'name', 'address', 'workingHours', 'isDemo'
           ])
           && data.keys().hasAll([
             'clinicId', 'name', 'address', 'workingHours'
           ])
+          && (!('isDemo' in data) || data.get('isDemo', false) == true)
           && data.clinicId is string
-          && exists(/databases/$(database)/documents/clinics/$(data.clinicId))
+          && (data.get('isDemo', false) == true
+            ? existsAfter(clinic) : exists(clinic))
           && isFilledString(data.name)
           && isFilledString(data.address)
           && isValidWorkingHours(data.workingHours);
@@ -400,16 +668,24 @@ service cloud.firestore {
     match /departments/{departmentId} {
       allow read: if isSignedIn();
       allow create: if isAdmin() && isValidDepartment(request.resource.data);
-      allow update: if isAdmin()
-        && isValidDepartment(request.resource.data)
-        && request.resource.data.branchId == resource.data.branchId;
-      allow delete: if false;
+      allow update: if resource != null && request.resource != null
+        && ((isAdmin()
+          && hasNoDemoMarker(resource.data)
+          && hasNoDemoMarker(request.resource.data)
+          && isValidDepartment(request.resource.data)
+          && request.resource.data.branchId == resource.data.branchId)
+        || (isDemoUpdate(resource.data, request.resource.data)
+          && isValidDepartment(request.resource.data)));
+      allow delete: if resource != null && isAdmin();
 
       function isValidDepartment(data) {
-        return data.keys().hasOnly(['branchId', 'name'])
+        let branch = /databases/$(database)/documents/branches/$(data.branchId);
+        return data.keys().hasOnly(['branchId', 'name', 'isDemo'])
           && data.keys().hasAll(['branchId', 'name'])
+          && (!('isDemo' in data) || data.get('isDemo', false) == true)
           && data.branchId is string
-          && exists(/databases/$(database)/documents/branches/$(data.branchId))
+          && (data.get('isDemo', false) == true
+            ? existsAfter(branch) : exists(branch))
           && isFilledString(data.name);
       }
     }
@@ -420,12 +696,17 @@ service cloud.firestore {
     match /services/{serviceId} {
       allow read: if isSignedIn();
       allow create: if isAdmin() && isValidService(request.resource.data);
-      allow update: if isAdmin()
-        && isValidService(request.resource.data)
-        && request.resource.data.kind == resource.data.kind
-        && request.resource.data.branchId == resource.data.branchId
-        && request.resource.data.departmentId == resource.data.departmentId;
-      allow delete: if false;
+      allow update: if resource != null && request.resource != null
+        && ((isAdmin()
+          && hasNoDemoMarker(resource.data)
+          && hasNoDemoMarker(request.resource.data)
+          && isValidService(request.resource.data)
+          && request.resource.data.kind == resource.data.kind
+          && request.resource.data.branchId == resource.data.branchId
+          && request.resource.data.departmentId == resource.data.departmentId)
+        || (isDemoUpdate(resource.data, request.resource.data)
+          && isValidService(request.resource.data)));
+      allow delete: if resource != null && isAdmin();
 
       function commonKeys() {
         return [
@@ -436,6 +717,7 @@ service cloud.firestore {
 
       function isValidService(data) {
         return data.keys().hasAll(commonKeys())
+          && (!('isDemo' in data) || data.get('isDemo', false) == true)
           && isValidCommonFields(data)
           && isDepartmentOfBranch(data)
           && (isValidExamination(data)
@@ -458,12 +740,13 @@ service cloud.firestore {
 
       function isValidExamination(data) {
         return data.kind == 'examination'
-          && data.keys().hasOnly(commonKeys());
+          && data.keys().hasOnly(commonKeys().concat(['isDemo']));
       }
 
       function isValidRadiology(data) {
         return data.kind == 'radiology'
           && data.keys().hasOnly(commonKeys().concat([
+            'isDemo',
             'modality', 'preparationNote'
           ]))
           && data.keys().hasAll(['modality'])
@@ -479,6 +762,7 @@ service cloud.firestore {
       function isValidLabTest(data) {
         return data.kind == 'lab'
           && data.keys().hasOnly(commonKeys().concat([
+            'isDemo',
             'requiresFasting', 'fastingHours', 'resultTime'
           ]))
           && data.keys().hasAll(['requiresFasting', 'resultTime'])

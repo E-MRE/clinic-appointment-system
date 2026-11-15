@@ -11,6 +11,15 @@ class TestUserRepository implements UserRepository {
   Patient? created;
 
   @override
+  Future<DataResult<User>> findUserByEmail(String email) async {
+    final profile = getResult?.data;
+    if (profile != null && profile.email == email) {
+      return DataResult.success(data: profile);
+    }
+    return const DataResult.error();
+  }
+
+  @override
   Future<DataResult<Patient>> createPatient(Patient patient) async {
     created = patient;
     if (pendingCreate case final creation?) return creation;

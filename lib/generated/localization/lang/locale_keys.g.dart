@@ -56,6 +56,29 @@ abstract class LocaleKeys {
   static const home_staff = 'home.staff';
   static const home_admin = 'home.admin';
   static const home = 'home';
+  static const demoData_loadButton = 'demoData.loadButton';
+  static const demoData_confirmTitle = 'demoData.confirmTitle';
+  static const demoData_confirmMessage = 'demoData.confirmMessage';
+  static const demoData_confirmAction = 'demoData.confirmAction';
+  static const demoData_loading = 'demoData.loading';
+  static const demoData_success = 'demoData.success';
+  static const demoData_errors_doctorAccountMissing =
+      'demoData.errors.doctorAccountMissing';
+  static const demoData_errors_patientAccountMissing =
+      'demoData.errors.patientAccountMissing';
+  static const demoData_errors_linkedAccountRoleMismatch =
+      'demoData.errors.linkedAccountRoleMismatch';
+  static const demoData_errors_linkedAccountAmbiguous =
+      'demoData.errors.linkedAccountAmbiguous';
+  static const demoData_errors_invalidAccountProfile =
+      'demoData.errors.invalidAccountProfile';
+  static const demoData_errors_recordIdConflict =
+      'demoData.errors.recordIdConflict';
+  static const demoData_errors_unavailable = 'demoData.errors.unavailable';
+  static const demoData_errors_invalidScenario =
+      'demoData.errors.invalidScenario';
+  static const demoData_errors = 'demoData.errors';
+  static const demoData = 'demoData';
   static const admin_appointmentsTitle = 'admin.appointmentsTitle';
   static const admin_appointmentsSubtitle = 'admin.appointmentsSubtitle';
   static const admin_overview_title = 'admin.overview.title';

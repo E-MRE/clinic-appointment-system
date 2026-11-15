@@ -49,6 +49,13 @@ import 'package:clinic_appointment_system/features/availability/presentation/cub
 import 'package:clinic_appointment_system/features/availability/presentation/cubit/availability_window_remove_cubit.dart';
 import 'package:clinic_appointment_system/features/availability/presentation/cubit/staff_availability_cubit.dart';
 import 'package:clinic_appointment_system/features/availability/presentation/cubit/staff_service_durations_cubit.dart';
+import 'package:clinic_appointment_system/features/demo/data/models/demo_account_emails.dart';
+import 'package:clinic_appointment_system/features/demo/data/repositories/firestore_demo_data_repository.dart';
+import 'package:clinic_appointment_system/features/demo/data/services/firestore_demo_account_resolver.dart';
+import 'package:clinic_appointment_system/features/demo/domain/repositories/demo_account_resolver.dart';
+import 'package:clinic_appointment_system/features/demo/domain/repositories/demo_data_repository.dart';
+import 'package:clinic_appointment_system/features/demo/domain/usecases/load_demo_data_use_case.dart';
+import 'package:clinic_appointment_system/features/demo/presentation/cubit/demo_data_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/data/repositories/firestore_branch_repository.dart';
 import 'package:clinic_appointment_system/features/institution/data/repositories/firestore_clinic_repository.dart';
 import 'package:clinic_appointment_system/features/institution/data/repositories/firestore_department_repository.dart';
@@ -185,6 +192,29 @@ mixin AppDependencyRegisterMixin {
       ),
     );
     injector.registerLazySingleton<Clock>(() => const SystemClock());
+    injector.registerLazySingleton<DemoAccountEmails>(
+      () => const DemoAccountEmails.demo(),
+    );
+    injector.registerLazySingleton<DemoAccountResolver>(
+      () => FirestoreDemoAccountResolver(
+        injector.get<StaffRepository>(),
+        injector.get<UserRepository>(),
+        injector.get<DemoAccountEmails>(),
+      ),
+    );
+    injector.registerLazySingleton<DemoDataRepository>(
+      () => FirestoreDemoDataRepository(
+        injector.get<FirebaseFirestore>(),
+        injector.get<MedicalServiceModelFactory>(),
+      ),
+    );
+    injector.registerLazySingleton<LoadDemoDataUseCase>(
+      () => LoadDemoDataUseCase(
+        injector.get<DemoAccountResolver>(),
+        injector.get<DemoDataRepository>(),
+        injector.get<Clock>(),
+      ),
+    );
     injector.registerLazySingleton<AppointmentRepository>(
       () => FirestoreAppointmentRepository(injector.get<FirebaseFirestore>()),
     );
@@ -556,6 +586,9 @@ mixin AppDependencyRegisterMixin {
         injector.get<Clock>(),
         injector.get<AdminDashboardCalculator>(),
       ),
+    );
+    injector.registerFactory<DemoDataCubit>(
+      () => DemoDataCubit(injector.get<LoadDemoDataUseCase>()),
     );
     injector.registerFactory<PatientAppointmentsTabCubit>(
       PatientAppointmentsTabCubit.new,

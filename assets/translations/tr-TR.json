@@ -56,6 +56,24 @@
     "staff": "Personel ana sayfası",
     "admin": "Yönetici ana sayfası"
   },
+  "demoData": {
+    "loadButton": "Demo verisini yükle",
+    "confirmTitle": "Demo verisi yüklensin mi?",
+    "confirmMessage": "Klinik, şube, bölüm, hizmet ve demo kayıtları yenilenir. Demo dışı kullanıcılar ve randevular korunur; eski kurum kimliklerine bağlı kayıtlar konsoldan düzeltilmelidir.",
+    "confirmAction": "Demo verisini yükle",
+    "loading": "Demo verisi yükleniyor.",
+    "success": "Demo verisi başarıyla yüklendi.",
+    "errors": {
+      "doctorAccountMissing": "Servet doktor hesabı bulunamadı. Hesabı oluşturup tekrar deneyin.",
+      "patientAccountMissing": "Remzi hasta hesabı bulunamadı. Hesabı oluşturup tekrar deneyin.",
+      "linkedAccountRoleMismatch": "Bağlı e-posta beklenen kullanıcı rolüne ait değil.",
+      "linkedAccountAmbiguous": "Bağlı e-posta birden fazla kullanıcı profiline ait.",
+      "invalidAccountProfile": "Bağlı hesap profili okunamadı veya geçersiz.",
+      "recordIdConflict": "Demo kaydı için ayrılan bir kimlik demo dışı veriler tarafından kullanılıyor.",
+      "unavailable": "Demo verisi yüklenemedi. Bağlantıyı kontrol edip tekrar deneyin.",
+      "invalidScenario": "Demo senaryosu hazırlanamadı. Hesap profillerini kontrol edin."
+    }
+  },
   "admin": {
     "appointmentsTitle": "Tüm randevular",
     "appointmentsSubtitle": "Filtreleri birleştirerek daraltın; her randevuyu onaylayabilir ya da iptal edebilirsiniz.",
