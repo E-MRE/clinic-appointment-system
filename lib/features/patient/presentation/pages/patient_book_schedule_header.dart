@@ -21,7 +21,7 @@ final class _PatientBookScheduleHeader extends StatelessWidget {
             title: LocaleKeys.patient_book_scheduleTitle.translate(),
           ),
         ),
-        _PatientBookWeekButton(
+        _buildWeekButton(
           icon: Icons.chevron_left,
           tooltip: LocaleKeys.patient_book_previousWeek.translate(),
           onPressed: selection.canShowPreviousWeek
@@ -29,12 +29,31 @@ final class _PatientBookScheduleHeader extends StatelessWidget {
               : null,
         ),
         AppText.bodyStrong(selection.weekLabel(catalog)),
-        _PatientBookWeekButton(
+        _buildWeekButton(
           icon: Icons.chevron_right,
           tooltip: LocaleKeys.patient_book_nextWeek.translate(),
           onPressed: cubit.showNextWeek,
         ),
       ],
+    );
+  }
+
+  /// Builds an outlined button for changing the displayed week.
+  IconButton _buildWeekButton({
+    required IconData icon,
+    required String tooltip,
+    required VoidCallback? onPressed,
+  }) {
+    return IconButton.outlined(
+      tooltip: tooltip,
+      onPressed: onPressed,
+      padding: EdgeInsets.zero,
+      constraints: const BoxConstraints.tightFor(
+        width: AppSizes.bookingWeekButton,
+        height: AppSizes.bookingWeekButton,
+      ),
+      iconSize: AppSizes.s20,
+      icon: Icon(icon),
     );
   }
 }

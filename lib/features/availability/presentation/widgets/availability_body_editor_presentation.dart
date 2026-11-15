@@ -20,7 +20,7 @@ extension _AvailabilityEditorPresentation on BuildContext {
       staff: read<Staff>(),
       child: screenSize.isMobile
           ? _AvailabilityWindowSheet(showsWeekdaySelect: showsWeekdaySelect)
-          : const _AvailabilityWindowDialog(),
+          : _buildWindowDialog(),
     );
     try {
       if (screenSize.isMobile) {
@@ -53,6 +53,24 @@ extension _AvailabilityEditorPresentation on BuildContext {
     read<AvailabilityWindowAddCubit>().submit(
       read<AvailabilitySubject>(),
       window,
+    );
+  }
+
+  /// Builds the tablet editor dialog without an extra widget declaration.
+  Widget _buildWindowDialog() {
+    return _AvailabilityWindowSaveScope(
+      child: AppFormDialog(
+        title: LocaleKeys.availability_addWindow.translate(),
+        child: const Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: AppSizes.s16,
+          children: [
+            _AvailabilityWindowForm(showsWeekdaySelect: true),
+            _AvailabilityDialogActions(),
+          ],
+        ),
+      ),
     );
   }
 }

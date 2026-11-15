@@ -19,6 +19,7 @@ final class _PatientAppointmentsDetailsContent extends StatelessWidget {
     );
   }
 
+  /// Builds the appointment details and cancel action content.
   Widget _buildDialog(PatientAppointmentEntry entry) {
     return AppFormDialog(
       title: entry.serviceName,
@@ -51,17 +52,35 @@ final class _PatientAppointmentsDetailsContent extends StatelessWidget {
               LocaleKeys.patient_appointments_dialog_note.translate(),
               AppText.bodyStrong(entry.cancellationNote ?? ''),
             ),
-          const _PatientAppointmentsCancelError(),
+          _buildCancelError(),
           _PatientAppointmentsDialogActions(entry: entry),
         ],
       ),
     );
   }
 
+  /// Builds the localized cancel failure banner within the dialog.
+  BlocBuilder<PatientAppointmentCancelCubit, AppointmentActionState>
+  _buildCancelError() {
+    return BlocBuilder<PatientAppointmentCancelCubit, AppointmentActionState>(
+      builder: (context, state) {
+        if (state is AppointmentActionFailure) {
+          return AppMessageBanner(
+            message: state.errorCode.message,
+            variant: AppMessageBannerVariant.error,
+          );
+        }
+        return const SizedBox.shrink();
+      },
+    );
+  }
+
+  /// Builds one labeled appointment detail row.
   AppDefinitionRow _buildRow(String label, Widget child) {
     return AppDefinitionRow(label: label, child: child);
   }
 
+  /// Finds the latest entry while retaining the dialog's initial fallback.
   PatientAppointmentEntry _currentEntry(
     PatientAppointmentsState appointmentsState,
   ) {

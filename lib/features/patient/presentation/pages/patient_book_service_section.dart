@@ -19,9 +19,10 @@ final class _PatientBookServiceSection extends StatelessWidget {
             _PatientBookSectionTitle(
               title: LocaleKeys.patient_book_serviceTitle.translate(),
             ),
-            const _PatientBookSearchField(),
+            _buildSearchField(context),
             if (departmentId != null)
-              _PatientBookDepartmentChip(
+              _buildDepartmentChip(
+                context,
                 name:
                     catalog.departmentById(departmentId)?.name ??
                     LocaleKeys.common_notAvailable.translate(),
@@ -31,13 +32,57 @@ final class _PatientBookServiceSection extends StatelessWidget {
                 message: LocaleKeys.patient_book_noServices.translate(),
               ),
             for (final service in services)
-              _PatientBookServiceCard(
+              _buildServiceCard(
+                context,
                 service: service,
                 catalog: catalog,
                 isSelected: service.id == selection.service?.id,
               ),
           ],
         );
+      },
+    );
+  }
+
+  /// Builds the localized search field for the services.
+  AppTextField _buildSearchField(BuildContext context) {
+    final label = LocaleKeys.patient_book_search.translate();
+    return AppTextField(
+      label: label,
+      hint: label,
+      isLabelVisible: false,
+      textInputAction: TextInputAction.search,
+      prefix: Icon(Icons.search, color: context.colorScheme.onSurfaceVariant),
+      onChanged: context.read<BookingSelectionCubit>().search,
+    );
+  }
+
+  /// Builds the removable department filter when the page is limited.
+  Align _buildDepartmentChip(BuildContext context, {required String name}) {
+    return Align(
+      alignment: AlignmentDirectional.centerStart,
+      child: AppTimeRangeChip(
+        label: name,
+        removeTooltip: LocaleKeys.patient_book_removeDepartment.translate(),
+        onRemove: context.read<BookingSelectionCubit>().removeDepartmentLimit,
+      ),
+    );
+  }
+
+  /// Builds a service card with its selected state and booking captions.
+  _PatientBookOptionCard _buildServiceCard(
+    BuildContext context, {
+    required MedicalService service,
+    required ClinicCatalog catalog,
+    required bool isSelected,
+  }) {
+    return _PatientBookOptionCard(
+      leading: AppIconTile(icon: service.kind.icon),
+      title: service.name,
+      captions: [service.bookingCaption, service.bookingDetail(catalog)],
+      isSelected: isSelected,
+      onTap: () {
+        context.read<BookingSelectionCubit>().selectService(service);
       },
     );
   }

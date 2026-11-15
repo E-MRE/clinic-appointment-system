@@ -21,11 +21,49 @@ final class _PatientBookScheduleCard extends StatelessWidget {
                 selection: selection,
                 catalog: catalog,
               ),
-              _PatientBookScheduleBody(selection: selection),
+              _buildScheduleBody(selection),
             ],
           );
         },
       ),
+    );
+  }
+
+  /// Builds the hint or the selected staff member's schedule state.
+  Widget _buildScheduleBody(BookingSelection selection) {
+    if (selection.staff == null) {
+      return AppText.body(
+        LocaleKeys.patient_book_scheduleHint.translate(),
+        tone: TextTone.muted,
+      );
+    }
+    return BlocBuilder<StaffWeekScheduleCubit, StaffWeekScheduleState>(
+      builder: (context, state) {
+        return _buildScheduleState(state, selection);
+      },
+    );
+  }
+
+  /// Builds the schedule content for the current selection.
+  Widget _buildScheduleState(
+    StaffWeekScheduleState state,
+    BookingSelection selection,
+  ) {
+    if (state is StaffWeekScheduleLoaded &&
+        selection.isScheduledBy(state.schedule.request)) {
+      return _PatientBookWeekSlots(
+        schedule: state.schedule,
+        selection: selection,
+      );
+    }
+
+    if (state is StaffWeekScheduleFailure) {
+      return const _PatientBookScheduleFailure();
+    }
+
+    return LoadingState(
+      variant: LoadingStateVariant.centeredIndicator,
+      label: LocaleKeys.patient_book_scheduleLoading.translate(),
     );
   }
 }

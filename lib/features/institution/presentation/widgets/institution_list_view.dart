@@ -11,9 +11,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-part 'institution_list_failure.dart';
-part 'institution_list_empty.dart';
-
 /// Applies the same loading, failure and empty views to institution lists.
 final class InstitutionListView<
   T,
@@ -40,25 +37,19 @@ final class InstitutionListView<
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<C, InstitutionListState<T>>(
-      builder: (context, state) => _buildChild(state),
+      builder: (context, state) => _buildChild(context, state),
     );
   }
 
-  Widget _buildChild(InstitutionListState<T> state) {
+  /// Selects the matching list state inside the Cubit's rebuild scope.
+  Widget _buildChild(BuildContext context, InstitutionListState<T> state) {
     if (state is InstitutionListFailure<T>) {
-      return _InstitutionListFailure(
-        message: state.code.message,
-        onRetry: onRetry,
-      );
+      return _buildFailure(context, state.code.message);
     }
 
     if (state is InstitutionListLoaded<T>) {
       if (state.items.isEmpty) {
-        return _InstitutionListEmpty(
-          title: emptyTitle,
-          message: emptyMessage,
-          action: emptyAction,
-        );
+        return _buildEmpty(context);
       }
       return loadedBuilder(state.items);
     }
@@ -66,6 +57,34 @@ final class InstitutionListView<
     return LoadingState(
       variant: loadingVariant,
       label: LocaleKeys.institution_loading.tr(),
+    );
+  }
+
+  /// Builds the shared failure presentation and retry action.
+  Widget _buildFailure(BuildContext context, String message) {
+    return ErrorState(
+      title: LocaleKeys.institution_errors_unavailable.tr(),
+      message: message,
+      icon: const Icon(Icons.error_outline),
+      iconBackground: context.colorScheme.errorContainer,
+      primaryAction: FilledButton(
+        onPressed: onRetry,
+        child: AppText.label(
+          LocaleKeys.institution_retry.tr(),
+          tone: TextTone.onPrimary,
+        ),
+      ),
+    );
+  }
+
+  /// Builds the shared no-content presentation.
+  Widget _buildEmpty(BuildContext context) {
+    return EmptyState(
+      title: emptyTitle,
+      message: emptyMessage,
+      icon: const Icon(Icons.inbox_outlined),
+      iconBackground: context.colorScheme.surfaceContainerHighest,
+      primaryAction: emptyAction,
     );
   }
 }

@@ -24,9 +24,21 @@ final class _BranchFormFields extends StatelessWidget {
           ),
           const EmptySize.s16Height(),
           const WorkingHoursEditor(),
-          const _BranchFormSaveError(),
+          _buildSaveError(),
         ],
       ),
+    );
+  }
+
+  /// Keeps save failures rebuilt by their request Cubit.
+  Widget _buildSaveError() {
+    return BlocBuilder<BranchSaveCubit, InstitutionSaveState<Branch>>(
+      builder: (context, state) {
+        if (state is InstitutionSaveFailure<Branch>) {
+          return AppText.caption(state.code.message, tone: TextTone.error);
+        }
+        return const SizedBox.shrink();
+      },
     );
   }
 }

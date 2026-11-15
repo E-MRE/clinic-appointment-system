@@ -32,7 +32,7 @@ final class _PatientBookContent extends StatelessWidget {
               if (context.screenSize.isDesktop)
                 _buildDesktop()
               else ...[
-                _PatientBookChoiceColumn(catalog: catalog),
+                _buildChoiceColumn(),
                 _PatientBookScheduleCard(catalog: catalog),
                 _PatientBookSummaryCard(
                   catalog: catalog,
@@ -47,6 +47,7 @@ final class _PatientBookContent extends StatelessWidget {
     );
   }
 
+  /// Builds the three booking steps side by side on desktop.
   Row _buildDesktop() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,7 +55,7 @@ final class _PatientBookContent extends StatelessWidget {
       children: [
         Expanded(
           flex: PatientLayoutConstants.bookingChoiceFlex,
-          child: _PatientBookChoiceColumn(catalog: catalog),
+          child: _buildChoiceColumn(),
         ),
         Expanded(
           flex: PatientLayoutConstants.bookingScheduleFlex,
@@ -68,6 +69,18 @@ final class _PatientBookContent extends StatelessWidget {
             patientName: patientName,
           ),
         ),
+      ],
+    );
+  }
+
+  /// Builds the service and staff selection steps.
+  Column _buildChoiceColumn() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: AppSizes.s20,
+      children: [
+        _PatientBookServiceSection(catalog: catalog),
+        _PatientBookStaffSection(catalog: catalog),
       ],
     );
   }

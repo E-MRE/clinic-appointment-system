@@ -60,33 +60,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 part 'patient_book_choice_cell.dart';
-part 'patient_book_choice_column.dart';
 part 'patient_book_content.dart';
 part 'patient_book_day_cell.dart';
-part 'patient_book_day_strip.dart';
-part 'patient_book_department_chip.dart';
 part 'patient_book_effects.dart';
 part 'patient_book_failure.dart';
 part 'patient_book_option_card.dart';
-part 'patient_book_schedule_body.dart';
 part 'patient_book_schedule_card.dart';
 part 'patient_book_schedule_failure.dart';
 part 'patient_book_schedule_header.dart';
-part 'patient_book_search_field.dart';
 part 'patient_book_section_title.dart';
-part 'patient_book_service_card.dart';
 part 'patient_book_service_section.dart';
-part 'patient_book_slot_cell.dart';
 part 'patient_book_slot_group.dart';
-part 'patient_book_staff_card.dart';
 part 'patient_book_staff_section.dart';
 part 'patient_book_submit_area.dart';
 part 'patient_book_submit_button.dart';
-part 'patient_book_submit_progress.dart';
 part 'patient_book_summary_card.dart';
 part 'patient_book_summary_values.dart';
 part 'patient_book_view.dart';
-part 'patient_book_week_button.dart';
 part 'patient_book_week_slots.dart';
 
 /// The signed-in patient's booking page: choose a service, a staff member,

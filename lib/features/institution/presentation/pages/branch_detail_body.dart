@@ -11,8 +11,25 @@ final class _BranchDetailBody extends StatelessWidget {
     return Column(
       children: [
         PageHeader(title: branch.name, subtitle: branch.address),
-        Expanded(child: _BranchDetailSections(branch: branch)),
+        Expanded(child: _buildSections(context)),
       ],
+    );
+  }
+
+  /// Builds the branch's hours and department sections.
+  Widget _buildSections(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          WorkingHoursSection(
+            hours: branch.workingHours,
+            onEdit: () =>
+                context.go(AppRoutes.branchEdit(branch.clinicId, branch.id)),
+          ),
+          const EmptySize.s16Height(),
+          DepartmentSection(key: ValueKey(branch.id), branchId: branch.id),
+        ],
+      ),
     );
   }
 }

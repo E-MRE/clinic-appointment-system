@@ -18,7 +18,7 @@ final class _PatientBookWeekSlots extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: AppSizes.s20,
       children: [
-        _PatientBookDayStrip(days: schedule.days, selectedDate: date),
+        _buildDayStrip(date),
         if (day == null)
           AppText.body(
             LocaleKeys.patient_book_noFreeDay.translate(),
@@ -28,6 +28,23 @@ final class _PatientBookWeekSlots extends StatelessWidget {
           for (final group in day.groups)
             _PatientBookSlotGroup(group: group, selectedSlot: selection.slot),
         AppText.caption(selection.footnote, tone: TextTone.muted),
+      ],
+    );
+  }
+
+  /// Builds equal-width cells for each day in the schedule.
+  Row _buildDayStrip(CalendarDate? selectedDate) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: AppSizes.s8,
+      children: [
+        for (final day in schedule.days)
+          Expanded(
+            child: _PatientBookDayCell(
+              day: day,
+              isSelected: day.date == selectedDate,
+            ),
+          ),
       ],
     );
   }
