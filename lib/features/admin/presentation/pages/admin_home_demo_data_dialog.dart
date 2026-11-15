@@ -27,31 +27,13 @@ final class _AdminHomeDemoDataDialog extends StatelessWidget {
         children: [
           AppText.body(message),
           const EmptySize.s16Height(),
-          _buildActions(context),
+          _AdminHomeDemoDataDialogActions(
+            actionLabel: actionLabel,
+            actionTone: actionTone,
+            actionStyle: actionStyle,
+          ),
         ],
       ),
-    );
-  }
-
-  Widget _buildActions(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      spacing: AppSizes.s8,
-      children: [
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop(false);
-          },
-          child: AppText.label(LocaleKeys.common_cancel.translate()),
-        ),
-        FilledButton(
-          style: actionStyle,
-          onPressed: () {
-            Navigator.of(context).pop(true);
-          },
-          child: AppText.label(actionLabel, tone: actionTone),
-        ),
-      ],
     );
   }
 }

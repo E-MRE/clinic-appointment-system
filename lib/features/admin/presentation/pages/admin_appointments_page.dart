@@ -40,14 +40,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'admin_appointments_view.dart';
 part 'admin_appointments_data_state.dart';
+part 'admin_appointments_data_state_loaded_content.dart';
 part 'admin_appointments_failure.dart';
 part 'admin_appointments_loaded_content.dart';
 part 'admin_appointments_filter_card.dart';
 part 'admin_appointments_filter_fields.dart';
+part 'admin_appointments_filter_branch_field.dart';
+part 'admin_appointments_filter_department_field.dart';
+part 'admin_appointments_filter_staff_field.dart';
 part 'admin_appointments_filter_statuses.dart';
 part 'admin_appointments_date_range_field.dart';
 part 'admin_appointments_table.dart';
 part 'admin_appointments_table_header.dart';
+part 'admin_appointments_table_header_summary.dart';
 part 'admin_appointments_table_footer.dart';
 part 'admin_appointments_empty_state.dart';
 

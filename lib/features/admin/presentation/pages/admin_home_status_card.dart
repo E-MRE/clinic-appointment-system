@@ -22,7 +22,7 @@ final class _AdminHomeStatusCard extends StatelessWidget {
             if (summary.statusCounts.isEmpty)
               _buildEmptyState()
             else
-              _buildDistribution(context),
+              _AdminHomeStatusDistribution(summary: summary),
           ],
         ),
       ),
@@ -37,71 +37,6 @@ final class _AdminHomeStatusCard extends StatelessWidget {
           tone: TextTone.muted,
           textAlign: TextAlign.center,
         ),
-      ),
-    );
-  }
-
-  Widget _buildStatusBar(BuildContext context) {
-    return SizedBox(
-      height: AdminLayoutConstants.overviewStackedBarHeight,
-      child: ClipRRect(
-        borderRadius: const AppRadius.full(),
-        child: Row(
-          children: [
-            for (final row in summary.statusCounts)
-              Expanded(
-                flex: row.count,
-                child: ColoredBox(color: row.status.color(context)),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  List<Widget> _buildLegend(BuildContext context) {
-    return [
-      for (final row in summary.statusCounts)
-        Row(
-          spacing: AppSizes.s8,
-          children: [
-            Container(
-              width: AdminLayoutConstants.overviewLegendDotSize,
-              height: AdminLayoutConstants.overviewLegendDotSize,
-              decoration: BoxDecoration(
-                color: row.status.color(context),
-                shape: BoxShape.circle,
-              ),
-            ),
-            Expanded(
-              child: AppText.body(
-                row.status.label,
-                tone: TextTone.muted,
-                maxLines: AdminLayoutConstants.overviewMinimumColumnCount,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            AppText.bodyStrong(row.count.toString()),
-          ],
-        ),
-    ];
-  }
-
-  Widget _buildDistribution(BuildContext context) {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          _buildStatusBar(context),
-          const EmptySize.s16Height(),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: AdminLayoutConstants.overviewBreakdownRowGap,
-              children: _buildLegend(context),
-            ),
-          ),
-        ],
       ),
     );
   }
