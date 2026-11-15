@@ -38,6 +38,7 @@ final class StaffAppointmentsLoaded extends StaffAppointmentsState {
     required this.pendingRequests,
     required this.patientHistories,
     required this.now,
+    required this.headerSubtitle,
   });
 
   @override
@@ -51,4 +52,7 @@ final class StaffAppointmentsLoaded extends StaffAppointmentsState {
 
   /// Clock instant used to derive this loaded state's time-based values.
   final DateTime now;
+
+  /// Formatted request count and oldest request age for the staff header.
+  final String headerSubtitle;
 }

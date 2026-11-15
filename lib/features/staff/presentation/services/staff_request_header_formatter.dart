@@ -4,14 +4,17 @@ import 'package:clinic_appointment_system/features/appointments/domain/entities/
 import 'package:clinic_appointment_system/features/appointments/presentation/extensions/appointment_oldest_request.dart';
 import 'package:clinic_appointment_system/generated/localization/lang/locale_keys.g.dart';
 
-/// Subtitle text formatting for the staff requests header.
-extension StaffRequestsHeaderSubtitle on Iterable<Appointment> {
+/// Formats the request count and oldest request age shown in the staff header.
+final class StaffRequestHeaderFormatter {
+  /// Creates the staff request header formatter.
+  const StaffRequestHeaderFormatter();
+
   int get _noRequests => 0;
 
-  /// Builds a localized subtitle with the request count and oldest request age at [now].
-  String headerSubtitle(DateTime now) {
-    final count = length;
-    final oldest = oldestRequestedAt;
+  /// Formats [requests] relative to [now] using the current locale.
+  String format(Iterable<Appointment> requests, {required DateTime now}) {
+    final count = requests.length;
+    final oldest = requests.oldestRequestedAt;
     if (count == _noRequests || oldest == null) {
       return LocaleKeys.staffRequests_headerSubtitleCountOnly.translate(
         args: ['$count'],

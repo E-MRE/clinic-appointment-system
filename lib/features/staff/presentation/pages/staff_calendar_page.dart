@@ -31,6 +31,7 @@ import 'package:clinic_appointment_system/features/staff/presentation/extensions
 import 'package:clinic_appointment_system/features/staff/presentation/extensions/staff_calendar_header_title.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/models/staff_calendar_day.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/models/staff_calendar_layout.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/services/staff_appointment_action_offer_policy.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/widgets/staff_appointment_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -55,12 +56,16 @@ final class StaffCalendarPage extends StatelessWidget {
   /// Creates the staff calendar page with an optional appointment tap hook.
   const StaffCalendarPage({
     required this.clock,
+    required this.actionOfferPolicy,
     this.onAppointmentTap,
     super.key,
   });
 
   /// Time boundary used by the calendar and its dialogs.
   final Clock clock;
+
+  /// Policy used to classify lifecycle actions displayed by appointment dialogs.
+  final StaffAppointmentActionOfferPolicy actionOfferPolicy;
 
   /// Replaces the default tap behavior (opening the staff appointment
   /// dialog) when set; used by tests and embedding pages.
@@ -83,6 +88,7 @@ final class StaffCalendarPage extends StatelessWidget {
       },
       child: _StaffCalendarScope(
         clock: clock,
+        actionOfferPolicy: actionOfferPolicy,
         onAppointmentTap: onAppointmentTap,
         child: const _StaffCalendarViewContent(),
       ),

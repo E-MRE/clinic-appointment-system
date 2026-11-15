@@ -29,6 +29,7 @@ import 'package:clinic_appointment_system/features/patient/presentation/pages/pa
 import 'package:clinic_appointment_system/features/patient/presentation/widgets/patient_shell.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/pages/staff_calendar_page.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/pages/staff_requests_page.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/services/staff_appointment_action_offer_policy.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/widgets/staff_shell.dart';
 import 'package:clinic_appointment_system/features/staff_management/presentation/pages/staff_availability_page.dart';
 import 'package:clinic_appointment_system/features/staff_management/presentation/pages/staff_form_page.dart';
@@ -115,7 +116,11 @@ GoRouter createAppRouter({
                 path: AppRoutes.staffCalendarSegment,
                 pageBuilder: (_, state) => _fadePage(
                   state,
-                  StaffCalendarPage(clock: AppDependency.injector.get<Clock>()),
+                  StaffCalendarPage(
+                    clock: AppDependency.injector.get<Clock>(),
+                    actionOfferPolicy: AppDependency.injector
+                        .get<StaffAppointmentActionOfferPolicy>(),
+                  ),
                 ),
               ),
               GoRoute(

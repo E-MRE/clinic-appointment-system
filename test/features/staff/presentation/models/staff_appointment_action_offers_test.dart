@@ -4,6 +4,7 @@ import 'package:clinic_appointment_system/features/appointments/domain/enums/app
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/models/staff_appointment_action_offer.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/models/staff_appointment_action_offers.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/services/staff_appointment_action_offer_policy.dart';
 import 'package:clinic_appointment_system/features/users/domain/enums/user_role.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -12,6 +13,7 @@ import '../../../appointments/domain/support/appointment_fixture.dart';
 
 void main() {
   const fixture = AppointmentFixture();
+  const policy = StaffAppointmentActionOfferPolicy();
   final staff = fixture.actor(UserRole.doctor, 'staff');
 
   Appointment approvedAppointment() {
@@ -26,6 +28,7 @@ void main() {
     DateTime at,
   ) {
     return StaffAppointmentActionOffers(
+      policy: policy,
       appointment: appointment,
       actor: actor,
       at: at,

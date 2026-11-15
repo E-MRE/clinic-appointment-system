@@ -34,7 +34,6 @@ import 'package:clinic_appointment_system/features/patient/presentation/cubit/pa
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_appointments_state.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_appointments_tab_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/enums/patient_appointments_tab.dart';
-import 'package:clinic_appointment_system/features/patient/presentation/extensions/patient_appointment_entry_presentation.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/extensions/patient_appointments_overview_presentation.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/extensions/patient_appointments_tab_selection.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/extensions/patient_department_summary_presentation.dart';

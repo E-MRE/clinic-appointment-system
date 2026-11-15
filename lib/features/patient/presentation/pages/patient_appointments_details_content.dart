@@ -22,35 +22,35 @@ final class _PatientAppointmentsDetailsContent extends StatelessWidget {
   /// Builds the appointment details and cancel action content.
   Widget _buildDialog(PatientAppointmentEntry entry) {
     return AppFormDialog(
-      title: entry.serviceName,
+      title: entry.presentation.serviceName,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         spacing: AppSizes.s16,
         children: [
           _buildRow(
             LocaleKeys.patient_appointments_dialog_dateTime.translate(),
-            AppText.bodyStrong(entry.longDateTimeLabel),
+            AppText.bodyStrong(entry.presentation.longDateTimeLabel),
           ),
           _buildRow(
             LocaleKeys.patient_appointments_dialog_staff.translate(),
-            AppText.bodyStrong(entry.staffName),
+            AppText.bodyStrong(entry.presentation.staffName),
           ),
           _buildRow(
             LocaleKeys.patient_appointments_dialog_location.translate(),
-            AppText.bodyStrong(entry.location),
+            AppText.bodyStrong(entry.presentation.location),
           ),
           _buildRow(
             LocaleKeys.patient_appointments_dialog_fee.translate(),
-            AppText.bodyStrong(entry.fee),
+            AppText.bodyStrong(entry.presentation.fee),
           ),
           _buildRow(
             LocaleKeys.patient_appointments_dialog_status.translate(),
             AppointmentStatusBadge(status: entry.appointment.status),
           ),
-          if (entry.cancellationNote != null)
+          if (entry.presentation.cancellationNote != null)
             _buildRow(
               LocaleKeys.patient_appointments_dialog_note.translate(),
-              AppText.bodyStrong(entry.cancellationNote ?? ''),
+              AppText.bodyStrong(entry.presentation.cancellationNote ?? ''),
             ),
           _buildCancelError(),
           _PatientAppointmentsDialogActions(entry: entry),

@@ -24,7 +24,11 @@ final class _PatientBookStaffSection extends StatelessWidget {
                 tone: TextTone.muted,
               )
             else
-              for (final staff in catalog.staffFor(service))
+              for (final staff
+                  in context.read<BookingSelectionCubit>().staffFor(
+                    catalog,
+                    service,
+                  ))
                 _buildStaffCard(
                   context,
                   staff,

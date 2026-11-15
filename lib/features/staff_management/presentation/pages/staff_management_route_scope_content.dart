@@ -16,6 +16,37 @@ final class _StaffManagementRouteScopeContentState
     with _StaffManagementRouteScopeStateMixin {
   @override
   Widget build(BuildContext context) {
-    return widget.child;
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<BranchListCubit, InstitutionListState<Branch>>(
+          listener: (context, _) {
+            _syncBranches();
+            _refreshOverview(context);
+          },
+        ),
+        BlocListener<StaffListCubit, InstitutionListState<Staff>>(
+          listener: (context, _) {
+            _refreshOverview(context);
+          },
+        ),
+        BlocListener<
+          StaffDepartmentListCubit,
+          InstitutionListState<Department>
+        >(
+          listener: (context, _) {
+            _refreshOverview(context);
+          },
+        ),
+        BlocListener<
+          StaffServiceListCubit,
+          InstitutionListState<MedicalService>
+        >(
+          listener: (context, _) {
+            _refreshOverview(context);
+          },
+        ),
+      ],
+      child: widget.child,
+    );
   }
 }

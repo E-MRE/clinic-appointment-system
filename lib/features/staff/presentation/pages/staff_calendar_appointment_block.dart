@@ -92,9 +92,15 @@ final class _StaffCalendarAppointmentBlock extends StatelessWidget {
       return;
     }
     final clock = scope?.clock;
-    if (clock != null) {
+    final actionOfferPolicy = scope?.actionOfferPolicy;
+    if (clock != null && actionOfferPolicy != null) {
       unawaited(
-        StaffAppointmentDialog.show(context, appointment, clock: clock),
+        StaffAppointmentDialog.show(
+          context,
+          appointment,
+          clock: clock,
+          actionOfferPolicy: actionOfferPolicy,
+        ),
       );
     }
   }

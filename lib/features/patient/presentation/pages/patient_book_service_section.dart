@@ -10,7 +10,9 @@ final class _PatientBookServiceSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<BookingSelectionCubit, BookingSelection>(
       builder: (context, selection) {
-        final services = selection.servicesIn(catalog);
+        final services = context.read<BookingSelectionCubit>().servicesIn(
+          catalog,
+        );
         final departmentId = selection.departmentId;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

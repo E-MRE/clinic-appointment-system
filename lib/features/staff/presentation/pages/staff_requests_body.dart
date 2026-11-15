@@ -28,13 +28,12 @@ final class _StaffRequestsBody extends StatelessWidget {
       );
     }
 
-    final requests = appointmentsState.pendingRequests;
-    if (requests.isEmpty) {
+    final selectionState = context.watch<StaffRequestSelectionCubit>().state;
+    final sortedRequests = selectionState.sortedRequests;
+    if (sortedRequests.isEmpty) {
       return const _StaffRequestsEmpty();
     }
 
-    final selectionState = context.watch<StaffRequestSelectionCubit>().state;
-    final sortedRequests = selectionState.sort.sort(requests);
     final selectedId = selectionState.selectedRequestId;
 
     if (context.screenSize.isDesktop) {

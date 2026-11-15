@@ -1,7 +1,9 @@
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/results/appointment_result.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/branch.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/department.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/medical_service.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/models/patient_appointment_entry_presentation.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/visitors/patient_preparation_note_visitor.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/staff.dart';
 
@@ -16,7 +18,8 @@ final class PatientAppointmentEntry {
     required this.branch,
     required this.department,
     required this.isUpcoming,
-    required this.canCancel,
+    required this.cancellationResult,
+    required this.presentation,
   });
 
   /// The stored appointment.
@@ -37,8 +40,14 @@ final class PatientAppointmentEntry {
   /// Whether the appointment is pending or approved and has not started.
   final bool isUpcoming;
 
+  /// The domain cancellation decision, including its failure reason.
+  final AppointmentResult cancellationResult;
+
+  /// The localized labels and icon calculated for this entry.
+  final PatientAppointmentEntryPresentation presentation;
+
   /// Whether the domain allows the patient to cancel it now.
-  final bool canCancel;
+  bool get canCancel => cancellationResult.isSuccess;
 
   /// The localized preparation the service needs, or null when none.
   String? get preparationNote {

@@ -2,7 +2,7 @@ import 'package:clinic_appointment_system/features/institution/presentation/mode
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/examination.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/value_objects/money.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/value_objects/service_duration.dart';
-import 'package:clinic_appointment_system/features/patient/presentation/extensions/patient_catalog_views.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/services/patient_booking_staff_selector.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/doctor.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -10,6 +10,7 @@ import '../doubles/patient_fixtures.dart';
 
 void main() {
   const fixtures = PatientFixtures();
+  const selector = PatientBookingStaffSelector();
 
   test('staffFor requires the assigned service and the same branch', () {
     final otherBranch = Examination(
@@ -38,7 +39,12 @@ void main() {
     );
     final cardiology = catalog.serviceById('cardio-exam');
     if (cardiology == null) fail('Fixture service is missing.');
-    expect(catalog.staffFor(cardiology).map((member) => member.id), ['ayse']);
-    expect(catalog.staffFor(otherBranch), isEmpty);
+    expect(
+      selector
+          .select(catalog: catalog, service: cardiology)
+          .map((member) => member.id),
+      ['ayse'],
+    );
+    expect(selector.select(catalog: catalog, service: otherBranch), isEmpty);
   });
 }

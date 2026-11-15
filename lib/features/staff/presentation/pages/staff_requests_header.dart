@@ -7,7 +7,9 @@ final class _StaffRequestsHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<StaffAppointmentsCubit>().state;
-    final String? subtitle = _getSubtitle(state);
+    final String? subtitle = state is StaffAppointmentsLoaded
+        ? state.headerSubtitle
+        : null;
 
     if (context.screenSize.isDesktop) {
       return PageHeader(
@@ -28,13 +30,5 @@ final class _StaffRequestsHeader extends StatelessWidget {
         const _StaffRequestsSortToggle(),
       ],
     );
-  }
-
-  String? _getSubtitle(StaffAppointmentsState state) {
-    if (state is StaffAppointmentsLoaded) {
-      return state.pendingRequests.headerSubtitle(state.now);
-    }
-
-    return null;
   }
 }

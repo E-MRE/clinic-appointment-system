@@ -25,6 +25,7 @@ import 'package:clinic_appointment_system/features/staff/presentation/extensions
 import 'package:clinic_appointment_system/features/staff/presentation/extensions/staff_appointment_presentation.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/models/staff_appointment_action_offer.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/models/staff_appointment_action_offers.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/services/staff_appointment_action_offer_policy.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/widgets/staff_appointment_detail_grid.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/widgets/staff_patient_header.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -42,6 +43,7 @@ final class StaffAppointmentDialog extends StatelessWidget {
   const StaffAppointmentDialog._({
     required this.appointment,
     required this.clock,
+    required this.actionOfferPolicy,
   });
 
   /// Appointment snapshot to display and act on.
@@ -50,11 +52,14 @@ final class StaffAppointmentDialog extends StatelessWidget {
   /// Time boundary used to evaluate action availability.
   final Clock clock;
 
+  final StaffAppointmentActionOfferPolicy actionOfferPolicy;
+
   /// Opens [appointment] with screen-owned lifecycle cubits.
   static Future<void> show(
     BuildContext context,
     Appointment appointment, {
     required Clock clock,
+    required StaffAppointmentActionOfferPolicy actionOfferPolicy,
   }) async {
     final auth = context.read<AuthCubit>();
     final workspace = context.read<StaffWorkspaceCubit>();
@@ -89,6 +94,7 @@ final class StaffAppointmentDialog extends StatelessWidget {
           child: StaffAppointmentDialog._(
             appointment: appointment,
             clock: clock,
+            actionOfferPolicy: actionOfferPolicy,
           ),
         );
       },
@@ -139,6 +145,7 @@ final class StaffAppointmentDialog extends StatelessWidget {
         content: _StaffAppointmentDialogContent(
           appointment: appointment,
           clock: clock,
+          actionOfferPolicy: actionOfferPolicy,
         ),
       ),
     );

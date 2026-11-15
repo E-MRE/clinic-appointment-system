@@ -6,23 +6,31 @@ import 'package:clinic_appointment_system/features/appointments/domain/enums/app
 import 'package:clinic_appointment_system/features/staff/presentation/extensions/appointment_action_too_early_hint.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/models/staff_appointment_action_offer.dart';
 
-/// Projects an appointment action result into a staff-facing offer.
-extension AppointmentActionOffer on AppointmentAction {
-  /// Returns the staff offer, or null when the action is refused for [actor].
+/// Maps domain lifecycle transitions to enabled, refused, or time-limited staff offers.
+final class StaffAppointmentActionOfferPolicy {
+  /// Creates the stateless staff action offer policy.
+  const StaffAppointmentActionOfferPolicy();
+
+  /// Applies [action] for [actor] at [at] and maps its result to a staff offer.
+  ///
+  /// Returns null for refused transitions, an enabled offer for successful
+  /// transitions, and a disabled offer with a hint when the transition is too
+  /// early.
   StaffAppointmentActionOffer? offerFor(
+    AppointmentAction action,
     Appointment appointment, {
     required AppointmentActor actor,
     required DateTime at,
   }) {
-    final result = apply(appointment, by: actor, at: at);
+    final result = action.apply(appointment, by: actor, at: at);
     if (result.isSuccess) {
-      return StaffAppointmentActionOffer(action: this, isEnabled: true);
+      return StaffAppointmentActionOffer(action: action, isEnabled: true);
     }
     if (result.errorCode != AppointmentErrorCode.tooEarly) return null;
     return StaffAppointmentActionOffer(
-      action: this,
+      action: action,
       isEnabled: false,
-      hint: tooEarlyHint(appointment),
+      hint: action.tooEarlyHint(appointment),
     );
   }
 }

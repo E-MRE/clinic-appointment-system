@@ -6,13 +6,21 @@ import 'package:clinic_appointment_system/features/institution/presentation/mode
 import 'package:clinic_appointment_system/features/patient/presentation/models/patient_appointment_entry.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/models/patient_appointments_overview.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/models/patient_preparation_note.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/services/patient_appointment_cancellation_policy.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/services/patient_appointment_entry_formatter.dart';
 
 /// Joins, partitions and orders a patient's appointments for presentation.
 final class PatientAppointmentsOverviewFactory {
-  /// Injects the shared time-only appointment ordering policy.
-  const PatientAppointmentsOverviewFactory(this._startComparator);
+  /// Injects ordering, cancellation, and entry presentation policies.
+  const PatientAppointmentsOverviewFactory(
+    this._startComparator,
+    this._cancellationPolicy,
+    this._entryFormatter,
+  );
 
   final AppointmentStartComparator _startComparator;
+  final PatientAppointmentCancellationPolicy _cancellationPolicy;
+  final PatientAppointmentEntryFormatter _entryFormatter;
 
   /// Creates the joined, ordered overview from the latest appointments and catalog.
   PatientAppointmentsOverview create({
@@ -24,14 +32,29 @@ final class PatientAppointmentsOverviewFactory {
     final upcoming = <PatientAppointmentEntry>[];
     final past = <PatientAppointmentEntry>[];
     for (final appointment in appointments) {
+      final service = catalog.serviceById(appointment.serviceId);
+      final staff = catalog.staffById(appointment.staffId);
+      final branch = catalog.branchById(appointment.branchId);
+      final department = catalog.departmentById(appointment.departmentId);
       final entry = PatientAppointmentEntry(
         appointment: appointment,
-        service: catalog.serviceById(appointment.serviceId),
-        staff: catalog.staffById(appointment.staffId),
-        branch: catalog.branchById(appointment.branchId),
-        department: catalog.departmentById(appointment.departmentId),
+        service: service,
+        staff: staff,
+        branch: branch,
+        department: department,
         isUpcoming: _isUpcoming(appointment, now),
-        canCancel: appointment.cancelByPatient(by: patient, at: now).isSuccess,
+        cancellationResult: _cancellationPolicy.evaluate(
+          appointment: appointment,
+          patient: patient,
+          at: now,
+        ),
+        presentation: _entryFormatter.format(
+          appointment: appointment,
+          service: service,
+          staff: staff,
+          branch: branch,
+          department: department,
+        ),
       );
       if (entry.isUpcoming) {
         upcoming.add(entry);

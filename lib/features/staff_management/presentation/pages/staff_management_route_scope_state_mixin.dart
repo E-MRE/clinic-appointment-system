@@ -7,7 +7,6 @@ mixin _StaffManagementRouteScopeStateMixin
   late final StaffDepartmentListCubit _departments;
   late final StaffServiceListCubit _services;
   late final InstitutionSelection _selection;
-  late final StreamSubscription<InstitutionListState<Branch>> _subscription;
   List<String>? _watchedBranchIds;
 
   @override
@@ -17,16 +16,20 @@ mixin _StaffManagementRouteScopeStateMixin
     _departments = context.read<StaffDepartmentListCubit>();
     _services = context.read<StaffServiceListCubit>();
     _selection = InstitutionSelectionScope.read(context);
-    _subscription = _branches.stream.listen((_) => _syncBranches());
-    _selection.addListener(_syncBranches);
+    _selection.addListener(_handleSelectionChanged);
     _syncBranches();
+    _refreshOverview(context);
   }
 
   @override
   void dispose() {
-    _selection.removeListener(_syncBranches);
-    _subscription.cancel();
+    _selection.removeListener(_handleSelectionChanged);
     super.dispose();
+  }
+
+  void _handleSelectionChanged() {
+    _syncBranches();
+    _refreshOverview(context);
   }
 
   void _syncBranches() {
@@ -46,5 +49,27 @@ mixin _StaffManagementRouteScopeStateMixin
       _departments.watch(branchIds);
       _services.watch(branchIds);
     }
+  }
+
+  void _refreshOverview(BuildContext context) {
+    final branchState = context.read<BranchListCubit>().state;
+    final staffState = context.read<StaffListCubit>().state;
+    final departmentState = context.read<StaffDepartmentListCubit>().state;
+    final serviceState = context.read<StaffServiceListCubit>().state;
+    context.read<StaffListOverviewCubit>().update(
+      clinicId: _selection.clinicId,
+      staff: staffState is InstitutionListLoaded<Staff>
+          ? staffState.items
+          : const [],
+      branches: branchState is InstitutionListLoaded<Branch>
+          ? branchState.items
+          : const [],
+      departments: departmentState is InstitutionListLoaded<Department>
+          ? departmentState.items
+          : const [],
+      services: serviceState is InstitutionListLoaded<MedicalService>
+          ? serviceState.items
+          : const [],
+    );
   }
 }

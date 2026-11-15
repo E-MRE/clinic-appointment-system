@@ -24,7 +24,7 @@ final class _StaffManagementTable extends StatelessWidget {
   }
 
   List<AppTableColumn<Staff>> _columns(BuildContext context) {
-    final overview = context.staffOverview;
+    final overview = context.watch<StaffListOverviewCubit>().state;
     return [
       AppTableColumn<Staff>(
         label: LocaleKeys.staff_columns_name.tr(),

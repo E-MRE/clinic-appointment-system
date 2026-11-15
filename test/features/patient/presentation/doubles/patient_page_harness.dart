@@ -25,8 +25,11 @@ import 'package:clinic_appointment_system/features/patient/presentation/cubit/pa
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_appointments_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_appointments_tab_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/staff_week_schedule_cubit.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/services/patient_appointment_cancellation_policy.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/services/patient_appointment_entry_formatter.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/services/patient_appointments_overview_factory.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/services/patient_booking_catalog_calculator.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/services/patient_booking_staff_selector.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/services/staff_week_schedule_factory.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/services/staff_week_schedule_reader.dart';
 import 'package:clinic_appointment_system/features/staff_management/domain/usecases/watch_staff_use_case.dart';
@@ -95,10 +98,17 @@ final class PatientPageHarness {
   void registerCubits() {
     final injector = AppDependency.injector;
     injector.registerSingleton<PatientAppointmentsOverviewFactory>(
-      const PatientAppointmentsOverviewFactory(AppointmentStartComparator()),
+      const PatientAppointmentsOverviewFactory(
+        AppointmentStartComparator(),
+        PatientAppointmentCancellationPolicy(),
+        PatientAppointmentEntryFormatter(),
+      ),
     );
     injector.registerSingleton<PatientBookingCatalogCalculator>(
       const PatientBookingCatalogCalculator(),
+    );
+    injector.registerSingleton<PatientBookingStaffSelector>(
+      const PatientBookingStaffSelector(),
     );
     injector.registerSingleton<StaffWeekScheduleFactory>(
       const StaffWeekScheduleFactory(SlotGenerator()),
@@ -132,8 +142,11 @@ final class PatientPageHarness {
       ),
     );
     injector.registerFactory<BookingSelectionCubit>(
-      () =>
-          BookingSelectionCubit(clock, injector.get<StaffWeekScheduleReader>()),
+      () => BookingSelectionCubit(
+        clock,
+        injector.get<StaffWeekScheduleReader>(),
+        injector.get<PatientBookingStaffSelector>(),
+      ),
     );
     injector.registerFactory<StaffWeekScheduleCubit>(
       () => StaffWeekScheduleCubit(

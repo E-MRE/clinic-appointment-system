@@ -18,10 +18,10 @@ final class _PatientAppointmentsDateTile extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          AppText.caption(entry.monthLabel, tone: TextTone.muted),
-          AppText.display(entry.dayLabel),
+          AppText.caption(entry.presentation.monthLabel, tone: TextTone.muted),
+          AppText.display(entry.presentation.dayLabel),
           AppText.caption(
-            entry.weekdayLabel,
+            entry.presentation.weekdayLabel,
             tone: TextTone.muted,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,

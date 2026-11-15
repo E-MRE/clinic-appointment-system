@@ -1,5 +1,5 @@
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_action.dart';
-import 'package:clinic_appointment_system/features/staff/presentation/extensions/appointment_action_offer.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/services/staff_appointment_action_offer_policy.dart';
 import 'package:clinic_appointment_system/features/users/domain/enums/user_role.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -8,13 +8,15 @@ import '../../../appointments/domain/support/appointment_fixture.dart';
 
 void main() {
   const fixture = AppointmentFixture();
+  const policy = StaffAppointmentActionOfferPolicy();
   final staff = fixture.actor(UserRole.doctor, 'staff');
 
   testWidgets('projects allowed, early, and refused actions', (tester) async {
     await loadTestTranslations(tester);
 
     final pending = fixture.request();
-    final allowed = AppointmentAction.approve.offerFor(
+    final allowed = policy.offerFor(
+      AppointmentAction.approve,
       pending,
       actor: staff,
       at: fixture.beforeStart,
@@ -22,12 +24,14 @@ void main() {
     final approved = fixture.success(
       pending.approve(by: staff, at: fixture.beforeStart),
     );
-    final early = AppointmentAction.complete.offerFor(
+    final early = policy.offerFor(
+      AppointmentAction.complete,
       approved,
       actor: staff,
       at: fixture.beforeStart,
     );
-    final refused = AppointmentAction.reject.offerFor(
+    final refused = policy.offerFor(
+      AppointmentAction.reject,
       approved,
       actor: staff,
       at: fixture.beforeStart,

@@ -44,7 +44,6 @@ import 'package:clinic_appointment_system/features/patient/presentation/extensio
 import 'package:clinic_appointment_system/features/patient/presentation/extensions/booking_selection_presentation.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/extensions/booking_service_presentation.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/extensions/booking_staff_presentation.dart';
-import 'package:clinic_appointment_system/features/patient/presentation/extensions/patient_catalog_views.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/extensions/staff_schedule_day_presentation.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/extensions/staff_slot_group_presentation.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/extensions/staff_slot_presentation.dart';

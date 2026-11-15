@@ -1,6 +1,6 @@
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status.dart';
-import 'package:clinic_appointment_system/features/patient/presentation/extensions/patient_appointment_entry_presentation.dart';
-import 'package:clinic_appointment_system/features/patient/presentation/models/patient_appointment_entry.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/models/patient_appointment_entry_presentation.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/services/patient_appointment_entry_formatter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../support/localization_test_app.dart';
@@ -9,7 +9,7 @@ import '../doubles/patient_fixtures.dart';
 void main() {
   const fixtures = PatientFixtures();
 
-  PatientAppointmentEntry buildEntry({
+  PatientAppointmentEntryPresentation formatEntry({
     required AppointmentStatus status,
     String? reason,
   }) {
@@ -22,14 +22,16 @@ void main() {
       20,
       reason: reason,
     );
-    return PatientAppointmentEntry(
+    return const PatientAppointmentEntryFormatter().format(
       appointment: appointment,
-      service: fixtures.services.firstWhere((s) => s.id == 'cardio-exam'),
-      staff: fixtures.staff.firstWhere((s) => s.id == 'ayse'),
+      service: fixtures.services.firstWhere(
+        (service) => service.id == 'cardio-exam',
+      ),
+      staff: fixtures.staff.firstWhere((member) => member.id == 'ayse'),
       branch: fixtures.branch,
-      department: fixtures.departments.firstWhere((d) => d.id == 'cardio'),
-      isUpcoming: false,
-      canCancel: false,
+      department: fixtures.departments.firstWhere(
+        (department) => department.id == 'cardio',
+      ),
     );
   }
 
@@ -39,7 +41,7 @@ void main() {
       await loadTestTranslations(tester);
 
       // Rejected with reason
-      final rejectedWithReason = buildEntry(
+      final rejectedWithReason = formatEntry(
         status: AppointmentStatus.rejected,
         reason: 'Cihaz bakımda',
       );
@@ -47,12 +49,12 @@ void main() {
       expect(rejectedWithReason.serviceCaption, 'Gerekçe: Cihaz bakımda');
 
       // Rejected without reason
-      final rejectedNoReason = buildEntry(status: AppointmentStatus.rejected);
+      final rejectedNoReason = formatEntry(status: AppointmentStatus.rejected);
       expect(rejectedNoReason.cancellationNote, isNull);
       expect(rejectedNoReason.serviceCaption, 'Muayene · 20 dk');
 
       // Cancelled by staff with reason
-      final cancelledByStaffWithReason = buildEntry(
+      final cancelledByStaffWithReason = formatEntry(
         status: AppointmentStatus.cancelledByStaff,
         reason: 'Doktor izinli',
       );
@@ -66,7 +68,7 @@ void main() {
       );
 
       // Cancelled by staff without reason
-      final cancelledByStaffNoReason = buildEntry(
+      final cancelledByStaffNoReason = formatEntry(
         status: AppointmentStatus.cancelledByStaff,
       );
       expect(
@@ -79,7 +81,7 @@ void main() {
       );
 
       // Cancelled by patient
-      final cancelledByPatient = buildEntry(
+      final cancelledByPatient = formatEntry(
         status: AppointmentStatus.cancelledByPatient,
       );
       expect(

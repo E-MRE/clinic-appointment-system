@@ -2,12 +2,18 @@ import 'package:clinic_appointment_system/features/institution/presentation/mode
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/medical_service.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/staff.dart';
 
-/// Patient booking views derived from the shared clinic directory snapshot.
-extension PatientCatalogViews on ClinicCatalog {
-  /// Staff assigned to [service] who work in the service's branch.
-  List<Staff> staffFor(MedicalService service) {
+/// Selects staff members who can provide a service at its assigned branch.
+final class PatientBookingStaffSelector {
+  /// Creates a stateless booking staff selector.
+  const PatientBookingStaffSelector();
+
+  /// Returns the catalog staff assigned to [service] in its branch order.
+  List<Staff> select({
+    required ClinicCatalog catalog,
+    required MedicalService service,
+  }) {
     return List<Staff>.unmodifiable(
-      staff.where(
+      catalog.staff.where(
         (Staff member) =>
             member.branchId == service.branchId &&
             member.serviceIds.contains(service.id),

@@ -63,11 +63,15 @@ import 'package:clinic_appointment_system/features/medical_services/domain/useca
 import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_filter_cubit.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_list_cubit.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_save_cubit.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/services/patient_appointment_cancellation_policy.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/services/patient_appointment_entry_formatter.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/services/patient_booking_staff_selector.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_approve_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_reject_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_request_selection_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_workspace_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/services/staff_appointment_action_offer_policy.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -248,6 +252,25 @@ void main() {
     expect(container.get<ThemeCubit>(), same(cubit));
     expect(container.get<GoRouter>(), same(router));
     expect(cubit.state, ThemeMode.light);
+    final offerPolicy = container.get<StaffAppointmentActionOfferPolicy>();
+    expect(offerPolicy, isA<StaffAppointmentActionOfferPolicy>());
+    expect(
+      container.get<StaffAppointmentActionOfferPolicy>(),
+      same(offerPolicy),
+    );
+    final cancellationPolicy = container
+        .get<PatientAppointmentCancellationPolicy>();
+    final entryFormatter = container.get<PatientAppointmentEntryFormatter>();
+    final staffSelector = container.get<PatientBookingStaffSelector>();
+    expect(
+      container.get<PatientAppointmentCancellationPolicy>(),
+      same(cancellationPolicy),
+    );
+    expect(
+      container.get<PatientAppointmentEntryFormatter>(),
+      same(entryFormatter),
+    );
+    expect(container.get<PatientBookingStaffSelector>(), same(staffSelector));
     final repository = container.get<AuthRepository>();
     expect(repository, isA<FirebaseAuthRepository>());
     expect(container.get<AuthRepository>(), same(repository));
