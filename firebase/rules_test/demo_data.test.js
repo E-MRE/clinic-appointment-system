@@ -1,6 +1,9 @@
 import { readFileSync } from 'node:fs';
 import { assertFails, assertSucceeds, initializeTestEnvironment } from '@firebase/rules-unit-testing';
-import { deleteDoc, doc, getDoc, serverTimestamp, setDoc, updateDoc, writeBatch } from 'firebase/firestore';
+import {
+  collectionGroup, deleteDoc, doc, getDoc, getDocs, query, serverTimestamp, setDoc, updateDoc, where,
+  writeBatch,
+} from 'firebase/firestore';
 
 const rules = readFileSync(new URL('../../firestore.rules', import.meta.url), 'utf8');
 const profileData = {
@@ -438,5 +441,19 @@ it('denies a patient reading a missing appointment id', async () => {
   await assertFails(getDoc(
     reference(signedIn('patient'), 'appointments', 'demo-missing-appointment'),
   ));
+});
+
+it('lets an admin list demo booking projections across owners', async () => {
+  await assertSucceeds(getDocs(query(
+    collectionGroup(signedIn('admin'), 'days'),
+    where('isDemo', '==', true),
+  )));
+});
+
+it('denies a patient listing booking projections across owners', async () => {
+  await assertFails(getDocs(query(
+    collectionGroup(signedIn('patient'), 'days'),
+    where('isDemo', '==', true),
+  )));
 });
 });

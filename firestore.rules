@@ -284,6 +284,12 @@ service cloud.firestore {
       allow delete: if resource != null && isDemoDelete(resource.data);
     }
 
+    // Collection-group listing of booking projections: the demo seed and its
+    // clear action find their own projections across all owners in one query.
+    match /{path=**}/days/{date} {
+      allow list: if isAdmin();
+    }
+
     match /patientBookings/{patientId}/days/{date} {
       allow read: if isUser(patientId) || isAdmin();
       allow create: if (isSignedIn()
