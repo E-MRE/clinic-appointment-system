@@ -1,6 +1,7 @@
 import 'package:clinic_appointment_system/features/appointments/domain/actors/appointment_actor.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
 import 'package:clinic_appointment_system/features/appointments/presentation/cubit/appointment_action_cubit.dart';
+import 'package:clinic_appointment_system/features/appointments/presentation/extensions/appointment_action_context.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_state.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/visitors/staff_appointment_actor_visitor.dart';
@@ -29,6 +30,6 @@ extension StaffAppointmentActionContext on BuildContext {
   }) async {
     final actor = staffAppointmentActor;
     if (actor == null) return;
-    await cubit.perform(appointment, by: actor, reason: reason);
+    await performAppointmentAction(cubit, appointment, actor, reason: reason);
   }
 }

@@ -33,6 +33,7 @@ import 'package:clinic_appointment_system/features/institution/presentation/cubi
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/working_hours_editor_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/pages/branch_detail_page.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/pages/institution_page.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/services/working_hours_summary_formatter.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/admin.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/doctor.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/patient.dart';
@@ -336,6 +337,9 @@ GoRouter _router(
   void Function(DepartmentListCubit)? onDepartments,
   AuthRouteGuard? guard,
 }) {
+  AppDependency.injector.registerSingleton<WorkingHoursSummaryFormatter>(
+    const WorkingHoursSummaryFormatter(),
+  );
   AppDependency.injector.registerFactory<ClinicListCubit>(
     () => ClinicListCubit(WatchClinicsUseCase(clinics)),
   );

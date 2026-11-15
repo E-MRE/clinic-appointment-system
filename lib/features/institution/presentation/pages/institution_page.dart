@@ -17,9 +17,9 @@ import 'package:clinic_appointment_system/features/institution/presentation/cubi
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/department_list_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/institution_save_state.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/extensions/institution_error_code_localization.dart';
-import 'package:clinic_appointment_system/features/institution/presentation/extensions/working_hours_summary.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/pages/institution_selection.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/pages/institution_selection_scope.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/services/working_hours_summary_formatter.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/widgets/department_section.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/widgets/institution_branch_card.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/widgets/institution_counts.dart';

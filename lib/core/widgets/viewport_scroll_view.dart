@@ -13,7 +13,9 @@ final class ViewportScrollView extends StatelessWidget {
       builder: (context, constraints) {
         return SingleChildScrollView(
           child: ConstrainedBox(
-            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            constraints: constraints.hasBoundedHeight
+                ? BoxConstraints(minHeight: constraints.maxHeight)
+                : const BoxConstraints(),
             child: child,
           ),
         );

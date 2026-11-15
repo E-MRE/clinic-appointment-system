@@ -1,10 +1,10 @@
 import 'package:clinic_appointment_system/core/di/app_dependency.dart';
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
 import 'package:clinic_appointment_system/core/errors/result.dart';
-import 'package:clinic_appointment_system/core/localization/app_formatters.dart';
 import 'package:clinic_appointment_system/core/localization/localization_wrapper.dart';
 import 'package:clinic_appointment_system/core/theme/theme.dart';
 import 'package:clinic_appointment_system/core/time/clock.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/services/appointment_start_comparator.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/book_appointment_use_case.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/change_appointment_status_use_case.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_patient_appointments_use_case.dart';
@@ -17,14 +17,18 @@ import 'package:clinic_appointment_system/features/availability/domain/usecases/
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_branches_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_clinics_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_departments_of_branches_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_catalog_cubit.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/usecases/watch_services_of_branches_use_case.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/book_appointment_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/booking_selection_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_appointment_cancel_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_appointments_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_appointments_tab_cubit.dart';
-import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_catalog_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/staff_week_schedule_cubit.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/services/patient_appointments_overview_factory.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/services/patient_booking_catalog_calculator.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/services/staff_week_schedule_factory.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/services/staff_week_schedule_reader.dart';
 import 'package:clinic_appointment_system/features/staff_management/domain/usecases/watch_staff_use_case.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -36,11 +40,12 @@ import 'package:mocktail/mocktail.dart';
 import '../../../../core/time/support/fixed_clock.dart';
 import '../../../../support/auth_cubit_factory.dart';
 import '../../../../support/auth_repository_doubles.dart';
+import '../../../../support/date_formatting_test_support.dart';
 import '../../../../support/localization_test_app.dart';
 import '../../../../support/user_repository_double.dart';
+import '../../../institution/presentation/doubles/clinic_catalog_repositories.dart';
 import 'patient_appointment_repository.dart';
 import 'patient_availability_repository.dart';
-import 'patient_catalog_repositories.dart';
 import 'patient_fixtures.dart';
 
 /// Real patient cubits over controllable catalog and appointment streams.
@@ -50,7 +55,7 @@ final class PatientPageHarness {
   static const Size desktop = Size(1440, 960);
   static const PatientFixtures fixtures = PatientFixtures();
 
-  final PatientCatalogRepositories catalog = PatientCatalogRepositories();
+  final ClinicCatalogRepositories catalog = ClinicCatalogRepositories();
   final PatientAppointmentRepository appointments =
       PatientAppointmentRepository();
   final PatientAvailabilityRepository availability =
@@ -61,7 +66,7 @@ final class PatientPageHarness {
 
   /// Signs the fixture patient in and registers the patient cubits.
   Future<void> initialize() async {
-    await AppFormatters.ensureInitialized();
+    await initializeDateFormattingForTests();
     final profile = fixtures.patient;
     when(() => authRepository.authStateChanges()).thenAnswer(
       (_) => Stream.value(
@@ -89,8 +94,20 @@ final class PatientPageHarness {
   /// Registers only the patient cubits; other harnesses own Clock and auth.
   void registerCubits() {
     final injector = AppDependency.injector;
-    injector.registerFactory<PatientCatalogCubit>(
-      () => PatientCatalogCubit(
+    injector.registerSingleton<PatientAppointmentsOverviewFactory>(
+      const PatientAppointmentsOverviewFactory(AppointmentStartComparator()),
+    );
+    injector.registerSingleton<PatientBookingCatalogCalculator>(
+      const PatientBookingCatalogCalculator(),
+    );
+    injector.registerSingleton<StaffWeekScheduleFactory>(
+      const StaffWeekScheduleFactory(SlotGenerator()),
+    );
+    injector.registerSingleton<StaffWeekScheduleReader>(
+      const StaffWeekScheduleReader(),
+    );
+    injector.registerFactory<ClinicCatalogCubit>(
+      () => ClinicCatalogCubit(
         WatchClinicsUseCase(catalog),
         WatchBranchesUseCase(catalog),
         WatchDepartmentsOfBranchesUseCase(catalog),
@@ -101,6 +118,9 @@ final class PatientPageHarness {
     injector.registerFactory<PatientAppointmentsCubit>(
       () => PatientAppointmentsCubit(
         WatchPatientAppointmentsUseCase(appointments),
+        clock,
+        injector.get<PatientAppointmentsOverviewFactory>(),
+        injector.get<PatientBookingCatalogCalculator>(),
       ),
     );
     injector.registerFactory<PatientAppointmentsTabCubit>(
@@ -112,14 +132,15 @@ final class PatientPageHarness {
       ),
     );
     injector.registerFactory<BookingSelectionCubit>(
-      () => BookingSelectionCubit(clock),
+      () =>
+          BookingSelectionCubit(clock, injector.get<StaffWeekScheduleReader>()),
     );
     injector.registerFactory<StaffWeekScheduleCubit>(
       () => StaffWeekScheduleCubit(
         WatchStaffAvailabilityUseCase(availability),
         WatchStaffBookedSlotsUseCase(appointments),
         clock,
-        const SlotGenerator(),
+        injector.get<StaffWeekScheduleFactory>(),
       ),
     );
     injector.registerFactory<BookAppointmentCubit>(
@@ -173,8 +194,8 @@ final class PatientPageHarness {
   /// Emits the fixture catalog and appointments.
   Future<void> load(WidgetTester tester) async {
     await tester.runAsync(() async {
-      catalog.clinics.emit(catalogAllKey, [fixtures.clinic]);
-      catalog.staff.emit(catalogAllKey, fixtures.staff);
+      catalog.clinics.emit(clinicCatalogAllKey, [fixtures.clinic]);
+      catalog.staff.emit(clinicCatalogAllKey, fixtures.staff);
       await Future<void>.delayed(Duration.zero);
       catalog.branches.emit('clinic', [fixtures.branch]);
       await Future<void>.delayed(Duration.zero);

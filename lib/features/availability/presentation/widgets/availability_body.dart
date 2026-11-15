@@ -62,6 +62,7 @@ import 'package:clinic_appointment_system/features/availability/presentation/vis
 import 'package:clinic_appointment_system/features/institution/domain/entities/branch.dart';
 import 'package:clinic_appointment_system/features/institution/domain/enums/institution_error_code.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/extensions/institution_error_code_localization.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/services/working_hours_summary_formatter.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/value_objects/service_duration.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/staff.dart';
 import 'package:flutter/material.dart';

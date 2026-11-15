@@ -17,7 +17,7 @@ final class _MedicalServicesContent extends StatelessWidget {
           }
         },
         emptyAction: _emptyAction(context),
-        loadedBuilder: (services) => _MedicalServicesLoaded(services: services),
+        loadedBuilder: (_) => const _MedicalServicesLoaded(),
       ),
     );
   }

@@ -1,4 +1,4 @@
-import 'package:clinic_appointment_system/features/staff/presentation/extensions/relative_time_label.dart';
+import 'package:clinic_appointment_system/core/extensions/relative_time_label.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../support/localization_test_app.dart';

@@ -2,17 +2,14 @@ part of 'medical_services_page.dart';
 
 /// Department-grouped scrollable cards view for mobile screens.
 final class _MedicalServicesMobileList extends StatelessWidget {
-  const _MedicalServicesMobileList({
-    required this.services,
-    required this.overview,
-  });
+  const _MedicalServicesMobileList({required this.groups});
 
-  final List<MedicalService> services;
-  final MedicalServiceListOverview overview;
+  final List<DepartmentServiceGroup> groups;
 
   @override
   Widget build(BuildContext context) {
-    final groups = overview.groupServices(services);
+    final formatter = AppDependency.injector
+        .get<MedicalServiceOverviewFormatter>();
     return ListView.builder(
       itemCount: groups.length,
       itemBuilder: (context, index) {
@@ -24,7 +21,9 @@ final class _MedicalServicesMobileList extends StatelessWidget {
             children: [
               Padding(
                 padding: const AppPadding.verticalSm(),
-                child: AppText.sectionTitle(group.departmentName),
+                child: AppText.sectionTitle(
+                  group.departmentName ?? formatter.otherDepartmentName,
+                ),
               ),
               const EmptySize.s4Height(),
               for (final service in group.services) ...[

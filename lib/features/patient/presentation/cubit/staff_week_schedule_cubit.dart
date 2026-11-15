@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
+import 'package:clinic_appointment_system/core/states/keyed_list_watch.dart';
 import 'package:clinic_appointment_system/core/time/calendar_date.dart';
 import 'package:clinic_appointment_system/core/time/clock.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/models/staff_booked_slots_query.dart';
@@ -8,12 +9,11 @@ import 'package:clinic_appointment_system/features/appointments/domain/usecases/
 import 'package:clinic_appointment_system/features/appointments/domain/value_objects/booked_slot.dart';
 import 'package:clinic_appointment_system/features/availability/domain/entities/staff_availability.dart';
 import 'package:clinic_appointment_system/features/availability/domain/models/availability_subject.dart';
-import 'package:clinic_appointment_system/features/availability/domain/services/slot_generator.dart';
 import 'package:clinic_appointment_system/features/availability/domain/usecases/watch_staff_availability_use_case.dart';
-import 'package:clinic_appointment_system/features/patient/presentation/cubit/keyed_list_watch.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/staff_week_schedule_state.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/models/staff_week_schedule.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/models/staff_week_schedule_request.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/services/staff_week_schedule_factory.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Observes one staff member's availability and the booked slots of every
@@ -22,12 +22,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 /// clock's current instant. Watching again replaces every subscription;
 /// any failure cancels them until [retry] or the next [watch].
 final class StaffWeekScheduleCubit extends Cubit<StaffWeekScheduleState> {
-  /// Injects the observation use cases, the clock and the slot generator.
+  /// Injects the observation use cases, the clock and schedule factory.
   StaffWeekScheduleCubit(
     this._watchAvailability,
     this._watchBookedSlots,
     this._clock,
-    this._generator,
+    this._scheduleFactory,
   ) : super(const StaffWeekScheduleIdle()) {
     _bookedWatch = KeyedListWatch<CalendarDate, BookedSlot>(
       onChanged: (List<BookedSlot> slots) {
@@ -41,7 +41,7 @@ final class StaffWeekScheduleCubit extends Cubit<StaffWeekScheduleState> {
   final WatchStaffAvailabilityUseCase _watchAvailability;
   final WatchStaffBookedSlotsUseCase _watchBookedSlots;
   final Clock _clock;
-  final SlotGenerator _generator;
+  final StaffWeekScheduleFactory _scheduleFactory;
 
   late final KeyedListWatch<CalendarDate, BookedSlot> _bookedWatch;
   StreamSubscription<DataResult<StaffAvailability>>? _availabilitySubscription;
@@ -107,12 +107,11 @@ final class StaffWeekScheduleCubit extends Cubit<StaffWeekScheduleState> {
     }
     emit(
       StaffWeekScheduleLoaded(
-        StaffWeekSchedule(
+        _scheduleFactory.create(
           request: request,
           availability: availability,
           bookedSlots: bookedSlots,
           now: _clock.now(),
-          generator: _generator,
         ),
       ),
     );

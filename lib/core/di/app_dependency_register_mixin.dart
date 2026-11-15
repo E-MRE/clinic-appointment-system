@@ -1,15 +1,23 @@
 import 'dart:math';
 
+import 'package:clinic_appointment_system/core/collections/count_ranking.dart';
 import 'package:clinic_appointment_system/core/di/injector/dependency_injector.dart';
 import 'package:clinic_appointment_system/core/router/app_router.dart';
 import 'package:clinic_appointment_system/core/states/theme_cubit.dart';
 import 'package:clinic_appointment_system/core/time/clock.dart';
 import 'package:clinic_appointment_system/core/time/system_clock.dart';
+import 'package:clinic_appointment_system/features/admin/presentation/cubit/admin_appointments_cubit.dart';
+import 'package:clinic_appointment_system/features/admin/presentation/cubit/admin_dashboard_cubit.dart';
+import 'package:clinic_appointment_system/features/admin/presentation/services/admin_appointment_list_calculator.dart';
+import 'package:clinic_appointment_system/features/admin/presentation/services/admin_dashboard_calculator.dart';
 import 'package:clinic_appointment_system/features/appointments/data/repositories/firestore_appointment_repository.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/repositories/appointment_repository.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/services/appointment_start_comparator.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/book_appointment_use_case.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/change_appointment_status_use_case.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_admin_appointments_use_case.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_patient_appointments_use_case.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_pending_appointments_use_case.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_staff_appointments_use_case.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_staff_booked_slots_use_case.dart';
 import 'package:clinic_appointment_system/features/auth/data/mappers/firebase_auth_exception_mapper.dart';
@@ -60,11 +68,13 @@ import 'package:clinic_appointment_system/features/institution/domain/usecases/w
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_departments_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/branch_list_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/branch_save_cubit.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_catalog_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_list_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_save_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/department_list_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/department_save_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/working_hours_editor_cubit.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/services/working_hours_summary_formatter.dart';
 import 'package:clinic_appointment_system/features/medical_services/data/models/medical_service_model_factory.dart';
 import 'package:clinic_appointment_system/features/medical_services/data/repositories/firestore_medical_service_repository.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/repositories/medical_service_repository.dart';
@@ -77,13 +87,18 @@ import 'package:clinic_appointment_system/features/medical_services/presentation
 import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_form_cubit.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_list_cubit.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_save_cubit.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/services/medical_service_overview_calculator.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/services/medical_service_overview_formatter.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/book_appointment_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/booking_selection_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_appointment_cancel_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_appointments_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_appointments_tab_cubit.dart';
-import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_catalog_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/staff_week_schedule_cubit.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/services/patient_appointments_overview_factory.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/services/patient_booking_catalog_calculator.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/services/staff_week_schedule_factory.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/services/staff_week_schedule_reader.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_approve_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_complete_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_no_show_cubit.dart';
@@ -93,6 +108,9 @@ import 'package:clinic_appointment_system/features/staff/presentation/cubit/staf
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_calendar_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_request_selection_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_workspace_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/models/staff_calendar_layout_factory.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/services/staff_patient_history_calculator.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/services/staff_patient_history_formatter.dart';
 import 'package:clinic_appointment_system/features/staff_management/data/models/staff_model_factory.dart';
 import 'package:clinic_appointment_system/features/staff_management/data/repositories/firestore_staff_repository.dart';
 import 'package:clinic_appointment_system/features/staff_management/data/services/firebase_secondary_auth_provider.dart';
@@ -191,6 +209,63 @@ mixin AppDependencyRegisterMixin {
       () =>
           WatchStaffAppointmentsUseCase(injector.get<AppointmentRepository>()),
     );
+    injector.registerLazySingleton<WatchAdminAppointmentsUseCase>(
+      () =>
+          WatchAdminAppointmentsUseCase(injector.get<AppointmentRepository>()),
+    );
+    injector.registerLazySingleton<WatchPendingAppointmentsUseCase>(
+      () => WatchPendingAppointmentsUseCase(
+        injector.get<AppointmentRepository>(),
+      ),
+    );
+    injector.registerLazySingleton<CountRanking>(() => const CountRanking());
+    injector.registerLazySingleton<AppointmentStartComparator>(
+      () => const AppointmentStartComparator(),
+    );
+    injector.registerLazySingleton<MedicalServiceOverviewCalculator>(
+      () => const MedicalServiceOverviewCalculator(),
+    );
+    injector.registerLazySingleton<MedicalServiceOverviewFormatter>(
+      () => const MedicalServiceOverviewFormatter(),
+    );
+    injector.registerLazySingleton<WorkingHoursSummaryFormatter>(
+      () => const WorkingHoursSummaryFormatter(),
+    );
+    injector.registerLazySingleton<PatientAppointmentsOverviewFactory>(
+      () => PatientAppointmentsOverviewFactory(
+        injector.get<AppointmentStartComparator>(),
+      ),
+    );
+    injector.registerLazySingleton<PatientBookingCatalogCalculator>(
+      () => const PatientBookingCatalogCalculator(),
+    );
+    injector.registerLazySingleton<StaffPatientHistoryCalculator>(
+      () => StaffPatientHistoryCalculator(
+        injector.get<AppointmentStartComparator>(),
+      ),
+    );
+    injector.registerLazySingleton<StaffPatientHistoryFormatter>(
+      () => const StaffPatientHistoryFormatter(),
+    );
+    injector.registerLazySingleton<StaffCalendarLayoutFactory>(
+      () => StaffCalendarLayoutFactory(
+        injector.get<AppointmentStartComparator>(),
+      ),
+    );
+    injector.registerLazySingleton<StaffWeekScheduleReader>(
+      () => const StaffWeekScheduleReader(),
+    );
+    injector.registerLazySingleton<AdminDashboardCalculator>(
+      () => AdminDashboardCalculator(
+        injector.get<CountRanking>(),
+        injector.get<AppointmentStartComparator>(),
+      ),
+    );
+    injector.registerLazySingleton<AdminAppointmentListCalculator>(
+      () => AdminAppointmentListCalculator(
+        injector.get<AppointmentStartComparator>(),
+      ),
+    );
     injector.registerLazySingleton<WatchStaffBookedSlotsUseCase>(
       () => WatchStaffBookedSlotsUseCase(injector.get<AppointmentRepository>()),
     );
@@ -199,6 +274,9 @@ mixin AppDependencyRegisterMixin {
       () => const AvailabilityPolicy.standard(),
     );
     injector.registerLazySingleton<SlotGenerator>(() => const SlotGenerator());
+    injector.registerLazySingleton<StaffWeekScheduleFactory>(
+      () => StaffWeekScheduleFactory(injector.get<SlotGenerator>()),
+    );
     injector.registerLazySingleton<WatchStaffAvailabilityUseCase>(
       () => WatchStaffAvailabilityUseCase(
         injector.get<StaffAvailabilityRepository>(),
@@ -379,8 +457,10 @@ mixin AppDependencyRegisterMixin {
       ),
     );
     injector.registerFactory<MedicalServiceListCubit>(
-      () =>
-          MedicalServiceListCubit(injector.get<WatchMedicalServicesUseCase>()),
+      () => MedicalServiceListCubit(
+        injector.get<WatchMedicalServicesUseCase>(),
+        injector.get<MedicalServiceOverviewCalculator>(),
+      ),
     );
     injector.registerFactory<MedicalServiceSaveCubit>(
       () => MedicalServiceSaveCubit(
@@ -445,8 +525,8 @@ mixin AppDependencyRegisterMixin {
         injector.get<RemoveAvailabilityWindowUseCase>(),
       ),
     );
-    injector.registerFactory<PatientCatalogCubit>(
-      () => PatientCatalogCubit(
+    injector.registerFactory<ClinicCatalogCubit>(
+      () => ClinicCatalogCubit(
         injector.get<WatchClinicsUseCase>(),
         injector.get<WatchBranchesUseCase>(),
         injector.get<WatchDepartmentsOfBranchesUseCase>(),
@@ -457,6 +537,24 @@ mixin AppDependencyRegisterMixin {
     injector.registerFactory<PatientAppointmentsCubit>(
       () => PatientAppointmentsCubit(
         injector.get<WatchPatientAppointmentsUseCase>(),
+        injector.get<Clock>(),
+        injector.get<PatientAppointmentsOverviewFactory>(),
+        injector.get<PatientBookingCatalogCalculator>(),
+      ),
+    );
+    injector.registerFactory<AdminAppointmentsCubit>(
+      () => AdminAppointmentsCubit(
+        injector.get<WatchAdminAppointmentsUseCase>(),
+        injector.get<Clock>(),
+        injector.get<AdminAppointmentListCalculator>(),
+      ),
+    );
+    injector.registerFactory<AdminDashboardCubit>(
+      () => AdminDashboardCubit(
+        injector.get<WatchAdminAppointmentsUseCase>(),
+        injector.get<WatchPendingAppointmentsUseCase>(),
+        injector.get<Clock>(),
+        injector.get<AdminDashboardCalculator>(),
       ),
     );
     injector.registerFactory<PatientAppointmentsTabCubit>(
@@ -471,10 +569,15 @@ mixin AppDependencyRegisterMixin {
       () => StaffAppointmentsCubit(
         injector.get<WatchStaffAppointmentsUseCase>(),
         injector.get<Clock>(),
+        injector.get<AppointmentStartComparator>(),
+        injector.get<StaffPatientHistoryCalculator>(),
       ),
     );
     injector.registerFactory<StaffCalendarCubit>(
-      () => StaffCalendarCubit(clock: injector.get<Clock>()),
+      () => StaffCalendarCubit(
+        clock: injector.get<Clock>(),
+        layoutFactory: injector.get<StaffCalendarLayoutFactory>(),
+      ),
     );
     injector.registerFactory<StaffWorkspaceCubit>(
       () => StaffWorkspaceCubit(
@@ -513,14 +616,17 @@ mixin AppDependencyRegisterMixin {
       StaffRequestSelectionCubit.new,
     );
     injector.registerFactory<BookingSelectionCubit>(
-      () => BookingSelectionCubit(injector.get<Clock>()),
+      () => BookingSelectionCubit(
+        injector.get<Clock>(),
+        injector.get<StaffWeekScheduleReader>(),
+      ),
     );
     injector.registerFactory<StaffWeekScheduleCubit>(
       () => StaffWeekScheduleCubit(
         injector.get<WatchStaffAvailabilityUseCase>(),
         injector.get<WatchStaffBookedSlotsUseCase>(),
         injector.get<Clock>(),
-        injector.get<SlotGenerator>(),
+        injector.get<StaffWeekScheduleFactory>(),
       ),
     );
     injector.registerFactory<BookAppointmentCubit>(

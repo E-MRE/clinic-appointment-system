@@ -9,12 +9,12 @@ final class _PatientBookView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final catalogState = context.watch<PatientCatalogCubit>().state;
+    final catalogState = context.watch<ClinicCatalogCubit>().state;
     return AppScaffold(child: _buildChild(catalogState));
   }
 
-  Widget _buildChild(PatientCatalogState catalogState) {
-    if (catalogState is PatientCatalogLoaded) {
+  Widget _buildChild(ClinicCatalogState catalogState) {
+    if (catalogState is ClinicCatalogLoaded) {
       return _PatientBookEffects(
         catalog: catalogState.catalog,
         child: _PatientBookContent(
@@ -25,7 +25,7 @@ final class _PatientBookView extends StatelessWidget {
       );
     }
 
-    if (catalogState is PatientCatalogFailure) {
+    if (catalogState is ClinicCatalogFailure) {
       return const _PatientBookFailure();
     }
 

@@ -1,15 +1,15 @@
-import 'package:clinic_appointment_system/core/localization/app_formatters.dart';
 import 'package:clinic_appointment_system/core/time/calendar_date.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/extensions/staff_calendar_header_title.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/models/staff_calendar_day.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/models/staff_calendar_layout.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../../../support/date_formatting_test_support.dart';
 import '../../../../support/localization_test_app.dart';
 
 void main() {
   setUpAll(() async {
-    await AppFormatters.ensureInitialized();
+    await initializeDateFormattingForTests();
   });
 
   StaffCalendarLayout makeLayout(List<CalendarDate> dates) {

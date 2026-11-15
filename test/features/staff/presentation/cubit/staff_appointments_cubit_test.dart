@@ -5,9 +5,11 @@ import 'package:clinic_appointment_system/core/time/time_range.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_error_code.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/services/appointment_start_comparator.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_staff_appointments_use_case.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_state.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/services/staff_patient_history_calculator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../core/time/support/fixed_clock.dart';
@@ -24,6 +26,8 @@ void main() {
     cubit = StaffAppointmentsCubit(
       WatchStaffAppointmentsUseCase(repository),
       FixedClock(DateTime(2026, 12, 15, 23, 5)),
+      const AppointmentStartComparator(),
+      const StaffPatientHistoryCalculator(AppointmentStartComparator()),
     );
   });
 

@@ -13,7 +13,7 @@ final class _PatientBookWeekSlots extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final date = selection.date;
-    final day = date == null ? null : schedule.dayOn(date);
+    final day = selection.scheduleDay;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: AppSizes.s20,

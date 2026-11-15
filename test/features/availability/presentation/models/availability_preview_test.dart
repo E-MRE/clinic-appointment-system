@@ -1,9 +1,9 @@
-import 'package:clinic_appointment_system/core/localization/app_formatters.dart';
 import 'package:clinic_appointment_system/features/availability/domain/services/slot_generator.dart';
 import 'package:clinic_appointment_system/features/availability/presentation/models/availability_preview.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/value_objects/service_duration.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../../../support/date_formatting_test_support.dart';
 import '../../../../support/localization_test_app.dart';
 import '../../domain/support/availability_fixture.dart';
 
@@ -12,7 +12,7 @@ void main() {
     tester,
   ) async {
     await loadTestTranslations(tester);
-    await AppFormatters.ensureInitialized();
+    await initializeDateFormattingForTests();
     const fixture = AvailabilityFixture();
     const generator = SlotGenerator();
     final window = fixture.weekly(540, 720);

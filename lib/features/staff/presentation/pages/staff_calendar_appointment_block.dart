@@ -13,10 +13,7 @@ final class _StaffCalendarAppointmentBlock extends StatelessWidget {
     final tone = appointment.status.calendarTone;
     final colors = context.statusColors.resolve(tone);
 
-    final formattedTime = AppFormatters.formatTime(
-      appointment.startsAt,
-      context: context,
-    );
+    final formattedTime = appointment.startsAt.timeLabel(context: context);
 
     return Material(
       type: MaterialType.transparency,

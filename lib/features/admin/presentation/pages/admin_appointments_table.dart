@@ -1,0 +1,134 @@
+part of 'admin_appointments_page.dart';
+
+/// Builds the horizontally scrollable result table from the current page rows.
+final class _AdminAppointmentsTable extends StatelessWidget {
+  const _AdminAppointmentsTable({
+    required this.clock,
+    required this.state,
+    required this.catalog,
+    required this.actor,
+    required this.searchController,
+  });
+
+  final Clock clock;
+  final AdminAppointmentsLoaded state;
+  final ClinicCatalog catalog;
+  final AdminAppointmentActor actor;
+  final TextEditingController searchController;
+
+  int get _singleLine => 1;
+
+  @override
+  Widget build(BuildContext context) {
+    final now = clock.now();
+    final rows = [
+      for (final appointment in state.currentPageAppointments)
+        AdminAppointmentRowPresentation(
+          appointment: appointment,
+          catalog: catalog,
+          actor: actor,
+          at: now,
+        ),
+    ];
+
+    if (rows.isEmpty) {
+      return _AdminAppointmentsEmptyTable(
+        footer: _AdminAppointmentsTableFooter(state: state),
+        header: _AdminAppointmentsTableHeader(
+          state: state,
+          searchController: searchController,
+        ),
+      );
+    }
+
+    return AppDataTable<AdminAppointmentRowPresentation>(
+      rows: rows,
+      minWidth: AdminLayoutConstants.appointmentsTableMinWidth,
+      footer: _AdminAppointmentsTableFooter(state: state),
+      density: AppTableDensity.regular,
+      rowVerticalPadding: AppSizes.s8,
+      columns: _buildColumns(),
+      header: _AdminAppointmentsTableHeader(
+        state: state,
+        searchController: searchController,
+      ),
+    );
+  }
+
+  List<AppTableColumn<AdminAppointmentRowPresentation>> _buildColumns() {
+    return [
+      AppTableColumn<AdminAppointmentRowPresentation>(
+        label: LocaleKeys.admin_appointmentsPage_columnDate.translate(),
+        noWrap: true,
+        maxWidth: AdminLayoutConstants.appointmentDateColumnMaxWidth,
+        cellBuilder: (_, row) => AppText.bodyStrong(
+          row.dateTimeLabel,
+          maxLines: _singleLine,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+      AppTableColumn<AdminAppointmentRowPresentation>(
+        label: LocaleKeys.admin_appointmentsPage_columnPatient.translate(),
+        noWrap: true,
+        maxWidth: AdminLayoutConstants.appointmentPatientColumnMaxWidth,
+        cellBuilder: (_, row) => AppText.body(
+          row.appointment.patientName,
+          maxLines: _singleLine,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+      AppTableColumn<AdminAppointmentRowPresentation>(
+        label: LocaleKeys.admin_appointmentsPage_columnService.translate(),
+        noWrap: true,
+        maxWidth: AdminLayoutConstants.appointmentServiceColumnMaxWidth,
+        cellBuilder: (_, row) => AppText.body(
+          row.appointment.serviceName,
+          maxLines: _singleLine,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+      AppTableColumn<AdminAppointmentRowPresentation>(
+        label: LocaleKeys.admin_appointmentsPage_columnStaff.translate(),
+        noWrap: true,
+        maxWidth: AdminLayoutConstants.appointmentStaffColumnMaxWidth,
+        cellBuilder: (_, row) => AppText.body(
+          row.staffName,
+          tone: TextTone.muted,
+          maxLines: _singleLine,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+      AppTableColumn<AdminAppointmentRowPresentation>(
+        label: LocaleKeys.admin_appointmentsPage_columnLocation.translate(),
+        noWrap: true,
+        maxWidth: AdminLayoutConstants.appointmentLocationColumnMaxWidth,
+        cellBuilder: (_, row) => AppText.body(
+          row.departmentBranchLabel,
+          tone: TextTone.muted,
+          maxLines: _singleLine,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+      AppTableColumn<AdminAppointmentRowPresentation>(
+        label: LocaleKeys.admin_appointmentsPage_columnStatus.translate(),
+        noWrap: true,
+        maxWidth: AdminLayoutConstants.appointmentStatusColumnMaxWidth,
+        cellBuilder: (_, row) {
+          return AppointmentStatusBadge(status: row.appointment.status);
+        },
+      ),
+      AppTableColumn<AdminAppointmentRowPresentation>(
+        label: LocaleKeys.admin_appointmentsPage_columnActions.translate(),
+        alignment: AppTableAlignment.end,
+        noWrap: true,
+        maxWidth: AdminLayoutConstants.appointmentActionsColumnMaxWidth,
+        cellBuilder: (_, row) {
+          return AdminAppointmentRowActions(
+            appointment: row.appointment,
+            offeredActions: row.actions,
+          );
+        },
+      ),
+    ];
+  }
+}

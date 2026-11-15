@@ -3,7 +3,6 @@ import 'package:clinic_appointment_system/core/di/app_dependency.dart';
 import 'package:clinic_appointment_system/core/localization/localization.dart';
 import 'package:clinic_appointment_system/core/router/app_routes.dart';
 import 'package:clinic_appointment_system/core/theme/theme.dart';
-import 'package:clinic_appointment_system/core/time/clock.dart';
 import 'package:clinic_appointment_system/core/widgets/app_scaffold.dart';
 import 'package:clinic_appointment_system/core/widgets/app_text.dart';
 import 'package:clinic_appointment_system/core/widgets/choice/app_choice.dart';
@@ -28,12 +27,12 @@ import 'package:clinic_appointment_system/features/appointments/presentation/ext
 import 'package:clinic_appointment_system/features/appointments/presentation/widgets/appointment_status_badge.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_state.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_catalog_cubit.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_catalog_state.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_appointment_cancel_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_appointments_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_appointments_state.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_appointments_tab_cubit.dart';
-import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_catalog_cubit.dart';
-import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_catalog_state.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/enums/patient_appointments_tab.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/extensions/patient_appointment_entry_presentation.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/extensions/patient_appointments_overview_presentation.dart';
@@ -57,10 +56,13 @@ part 'patient_appointments_date_tile.dart';
 part 'patient_appointments_department_row.dart';
 part 'patient_appointments_departments_card.dart';
 part 'patient_appointments_details_dialog.dart';
+part 'patient_appointments_details_content.dart';
 part 'patient_appointments_dialog_actions.dart';
 part 'patient_appointments_failure.dart';
 part 'patient_appointments_list_card.dart';
 part 'patient_appointments_next_actions.dart';
+part 'patient_appointments_next_cancel_button.dart';
+part 'patient_appointments_next_details_button.dart';
 part 'patient_appointments_next_card.dart';
 part 'patient_appointments_next_card_body.dart';
 part 'patient_appointments_next_summary.dart';
@@ -87,9 +89,14 @@ final class PatientAppointmentsPage extends StatelessWidget {
         key: ValueKey<String>(user.id),
         providers: [
           BlocProvider<PatientAppointmentsCubit>(
-            create: (_) {
-              return AppDependency.injector.get<PatientAppointmentsCubit>()
-                ..watch(user.id);
+            create: (context) {
+              final cubit = AppDependency.injector
+                  .get<PatientAppointmentsCubit>();
+              final catalogState = context.read<ClinicCatalogCubit>().state;
+              if (catalogState is ClinicCatalogLoaded) {
+                cubit.updateCatalog(catalogState.catalog);
+              }
+              return cubit..watch(user.id);
             },
           ),
           BlocProvider<PatientAppointmentsTabCubit>(
@@ -98,7 +105,16 @@ final class PatientAppointmentsPage extends StatelessWidget {
             },
           ),
         ],
-        child: _PatientAppointmentsView(user: user),
+        child: BlocListener<ClinicCatalogCubit, ClinicCatalogState>(
+          listener: (context, catalogState) {
+            if (catalogState is ClinicCatalogLoaded) {
+              context.read<PatientAppointmentsCubit>().updateCatalog(
+                catalogState.catalog,
+              );
+            }
+          },
+          child: _PatientAppointmentsView(user: user),
+        ),
       );
     }
     return const SizedBox.shrink();

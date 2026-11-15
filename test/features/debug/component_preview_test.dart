@@ -44,6 +44,7 @@ void main() {
       'states',
       'loading',
       'list',
+      'progressBar',
       'dataTable',
       'avatar',
       'fields',

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
 import 'package:clinic_appointment_system/core/errors/institution_exception.dart';
+import 'package:clinic_appointment_system/features/institution/domain/entities/department.dart';
 import 'package:clinic_appointment_system/features/institution/domain/enums/institution_error_code.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/institution_list_state.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/examination.dart';
@@ -11,11 +12,56 @@ import 'package:clinic_appointment_system/features/medical_services/domain/useca
 import 'package:clinic_appointment_system/features/medical_services/domain/value_objects/money.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/value_objects/service_duration.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_list_cubit.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_list_loaded.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/enums/medical_service_kind_filter.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/services/medical_service_overview_calculator.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 void main() {
   group('MedicalServiceListCubit', () {
+    test(
+      'recalculates overview, filter results and groups for new inputs',
+      () async {
+        final repository = _MockMedicalServiceRepository();
+        final controller =
+            StreamController<DataResult<List<MedicalService>>>.broadcast();
+        when(
+          () => repository.watchServices('branch-1'),
+        ).thenAnswer((_) => controller.stream);
+        final cubit = MedicalServiceListCubit(
+          WatchMedicalServicesUseCase(repository),
+          const MedicalServiceOverviewCalculator(),
+        );
+        await cubit.watch('branch-1');
+        final service = _createSampleService(id: 's-1');
+        controller.add(DataResult.success(data: [service]));
+        await Future<void>.delayed(Duration.zero);
+
+        final initial = cubit.state as MedicalServiceListLoaded;
+        expect(initial.overview.total, 1);
+        expect(initial.groups.single.departmentName, isNull);
+
+        cubit.updateDepartments([
+          const Department(
+            id: 'dept-1',
+            name: 'Kardiyoloji',
+            branchId: 'branch-1',
+          ),
+        ]);
+        final withDepartments = cubit.state as MedicalServiceListLoaded;
+        expect(withDepartments.groups.single.departmentName, 'Kardiyoloji');
+
+        cubit.updateFilter(MedicalServiceKindFilter.lab);
+        final filtered = cubit.state as MedicalServiceListLoaded;
+        expect(filtered.filteredServices, isEmpty);
+        expect(filtered.groups, isEmpty);
+
+        await cubit.close();
+        await controller.close();
+      },
+    );
+
     test('transitions from loading to loaded', () async {
       final repository = _MockMedicalServiceRepository();
       final controller =
@@ -25,6 +71,7 @@ void main() {
       ).thenAnswer((_) => controller.stream);
       final cubit = MedicalServiceListCubit(
         WatchMedicalServicesUseCase(repository),
+        const MedicalServiceOverviewCalculator(),
       );
 
       expect(cubit.state, isA<InstitutionListLoading<MedicalService>>());
@@ -55,6 +102,7 @@ void main() {
       ).thenAnswer((_) => controller.stream);
       final cubit = MedicalServiceListCubit(
         WatchMedicalServicesUseCase(repository),
+        const MedicalServiceOverviewCalculator(),
       );
 
       await cubit.watch('branch-1');
@@ -84,6 +132,7 @@ void main() {
       ).thenAnswer((_) => controller.stream);
       final cubit = MedicalServiceListCubit(
         WatchMedicalServicesUseCase(repository),
+        const MedicalServiceOverviewCalculator(),
       );
 
       await cubit.watch('branch-1');
@@ -120,6 +169,7 @@ void main() {
         });
         final cubit = MedicalServiceListCubit(
           WatchMedicalServicesUseCase(repository),
+          const MedicalServiceOverviewCalculator(),
         );
 
         await cubit.watch('branch-1');
@@ -153,6 +203,7 @@ void main() {
       });
       final cubit = MedicalServiceListCubit(
         WatchMedicalServicesUseCase(repository),
+        const MedicalServiceOverviewCalculator(),
       );
 
       await cubit.watch('branch-1');
@@ -184,6 +235,7 @@ void main() {
         });
         final cubit = MedicalServiceListCubit(
           WatchMedicalServicesUseCase(repository),
+          const MedicalServiceOverviewCalculator(),
         );
         await cubit.watch('first');
         final pendingSecond = cubit.watch('second');
@@ -220,6 +272,7 @@ void main() {
       ).thenAnswer((_) => controller.stream);
       final cubit = MedicalServiceListCubit(
         WatchMedicalServicesUseCase(repository),
+        const MedicalServiceOverviewCalculator(),
       );
       await cubit.watch('branch-1');
       final pending = cubit.close();

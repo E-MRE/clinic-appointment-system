@@ -12,6 +12,7 @@ import 'package:clinic_appointment_system/features/institution/domain/entities/b
 import 'package:clinic_appointment_system/features/institution/domain/entities/clinic.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/department.dart';
 import 'package:clinic_appointment_system/features/institution/domain/value_objects/working_hours.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/models/clinic_catalog.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/examination.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/lab_test.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/medical_service.dart';
@@ -21,7 +22,6 @@ import 'package:clinic_appointment_system/features/medical_services/domain/enums
 import 'package:clinic_appointment_system/features/medical_services/domain/value_objects/fasting_hours.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/value_objects/money.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/value_objects/service_duration.dart';
-import 'package:clinic_appointment_system/features/patient/presentation/models/patient_catalog.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/doctor.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/patient.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/staff.dart';
@@ -170,7 +170,8 @@ final class PatientFixtures {
     ),
   ];
 
-  PatientCatalog get catalog => PatientCatalog(
+  ClinicCatalog get catalog => ClinicCatalog(
+    clinics: [clinic],
     branches: [branch],
     departments: departments,
     services: services,

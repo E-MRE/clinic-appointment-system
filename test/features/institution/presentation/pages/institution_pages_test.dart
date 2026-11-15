@@ -31,6 +31,7 @@ import 'package:clinic_appointment_system/features/institution/presentation/page
 import 'package:clinic_appointment_system/features/institution/presentation/pages/institution_page.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/pages/institution_selection.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/pages/institution_selection_scope.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/services/working_hours_summary_formatter.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/widgets/department_section.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/widgets/working_hours_editor.dart';
 import 'package:flutter/material.dart';
@@ -81,6 +82,9 @@ void main() {
     branches = BranchListCubit(WatchBranchesUseCase(branchRepo));
     departments = DepartmentListCubit(WatchDepartmentsUseCase(departmentRepo));
     selection = InstitutionSelection();
+    AppDependency.injector.registerSingleton<WorkingHoursSummaryFormatter>(
+      const WorkingHoursSummaryFormatter(),
+    );
     AppDependency.injector.registerFactory<ClinicSaveCubit>(clinicSave);
     AppDependency.injector.registerFactory<BranchSaveCubit>(branchSave);
     AppDependency.injector.registerFactory<DepartmentSaveCubit>(departmentSave);

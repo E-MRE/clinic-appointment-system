@@ -10,18 +10,23 @@ import 'package:clinic_appointment_system/features/institution/domain/repositori
 import 'package:clinic_appointment_system/features/institution/domain/repositories/clinic_repository.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_branches_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_clinics_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_departments_of_branches_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_departments_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/domain/value_objects/working_hours.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/branch_list_cubit.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_catalog_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_list_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/department_list_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/institution_list_state.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/pages/institution_selection.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/pages/institution_selection_scope.dart';
+import 'package:clinic_appointment_system/features/medical_services/domain/usecases/watch_services_of_branches_use_case.dart';
+import 'package:clinic_appointment_system/features/staff_management/domain/usecases/watch_staff_use_case.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../institution/domain/doubles/fake_department_repository.dart';
+import '../../../institution/presentation/doubles/clinic_catalog_repositories.dart';
 
 final class _ReplayableBranchRepository implements BranchRepository {
   @override
@@ -86,6 +91,8 @@ void main() {
       final branchRepo = _ReplayableBranchRepository([branch]);
       final deptRepo = FakeDepartmentRepository()
         ..departmentsStream = const Stream.empty();
+      final catalogRepositories = ClinicCatalogRepositories();
+      addTearDown(catalogRepositories.close);
 
       final clinicCubit = ClinicListCubit(WatchClinicsUseCase(clinicRepo));
       final branchCubit = BranchListCubit(WatchBranchesUseCase(branchRepo));
@@ -105,6 +112,15 @@ void main() {
       );
       AppDependency.injector.registerFactory<DepartmentListCubit>(
         () => deptCubit,
+      );
+      AppDependency.injector.registerFactory<ClinicCatalogCubit>(
+        () => ClinicCatalogCubit(
+          WatchClinicsUseCase(catalogRepositories),
+          WatchBranchesUseCase(catalogRepositories),
+          WatchDepartmentsOfBranchesUseCase(catalogRepositories),
+          WatchServicesOfBranchesUseCase(catalogRepositories),
+          WatchStaffUseCase(catalogRepositories),
+        ),
       );
 
       InstitutionSelection? capturedSelection;

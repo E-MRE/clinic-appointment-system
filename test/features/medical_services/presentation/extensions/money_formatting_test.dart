@@ -1,11 +1,11 @@
-import 'package:clinic_appointment_system/core/localization/app_formatters.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/value_objects/money.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/extensions/money_formatting.dart';
 import 'package:flutter_test/flutter_test.dart';
+import '../../../../support/date_formatting_test_support.dart';
 
 void main() {
   setUpAll(() async {
-    await AppFormatters.ensureInitialized();
+    await initializeDateFormattingForTests();
   });
 
   group('MoneyFormatting', () {

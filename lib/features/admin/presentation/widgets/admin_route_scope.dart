@@ -4,6 +4,7 @@ import 'package:clinic_appointment_system/core/di/app_dependency.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/branch.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/clinic.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/branch_list_cubit.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_catalog_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/clinic_list_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/department_list_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/institution_list_state.dart';
@@ -15,7 +16,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 part 'admin_route_scope_content.dart';
 part 'admin_route_scope_state_mixin.dart';
 
-/// Provides clinic, branch, and department list cubits and institution selection
+/// Provides institution lists, one shared catalog, and institution selection
 /// across the admin shell.
 final class AdminRouteScope extends StatelessWidget {
   const AdminRouteScope({required this.child, this.routeClinicId, super.key});
@@ -35,6 +36,10 @@ final class AdminRouteScope extends StatelessWidget {
         ),
         BlocProvider<DepartmentListCubit>(
           create: (_) => AppDependency.injector.get<DepartmentListCubit>(),
+        ),
+        BlocProvider<ClinicCatalogCubit>(
+          create: (_) =>
+              AppDependency.injector.get<ClinicCatalogCubit>()..watch(),
         ),
       ],
       child: _AdminRouteScopeContent(

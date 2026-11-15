@@ -9,6 +9,8 @@ final class _InstitutionBranchItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final selection = InstitutionSelectionScope.of(context);
+    final summaryFormatter = AppDependency.injector
+        .get<WorkingHoursSummaryFormatter>();
     if (context.screenSize.isMobile) {
       return InstitutionBranchCard(
         branch: branch,
@@ -21,7 +23,8 @@ final class _InstitutionBranchItem extends StatelessWidget {
     return AppSurface(
       child: AppListTile(
         title: branch.name,
-        subtitle: '${branch.address} · ${branch.workingHours.localizedSummary}',
+        subtitle:
+            '${branch.address} · ${summaryFormatter.format(branch.workingHours)}',
         trailing: const Icon(Icons.chevron_right),
         onTap: () => selection.selectBranch(branch.id),
       ),

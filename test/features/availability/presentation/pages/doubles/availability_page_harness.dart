@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:clinic_appointment_system/core/di/app_dependency.dart';
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
 import 'package:clinic_appointment_system/core/errors/result.dart';
-import 'package:clinic_appointment_system/core/localization/app_formatters.dart';
 import 'package:clinic_appointment_system/core/localization/localization_wrapper.dart';
 import 'package:clinic_appointment_system/core/theme/theme.dart';
 import 'package:clinic_appointment_system/core/time/clock.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/services/appointment_start_comparator.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_staff_appointments_use_case.dart';
 import 'package:clinic_appointment_system/features/auth/domain/entities/auth_session.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_cubit.dart';
@@ -28,6 +28,7 @@ import 'package:clinic_appointment_system/features/institution/domain/entities/b
 import 'package:clinic_appointment_system/features/institution/domain/entities/department.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_branch_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_departments_use_case.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/services/working_hours_summary_formatter.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/examination.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/medical_service.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/usecases/watch_medical_services_use_case.dart';
@@ -36,6 +37,8 @@ import 'package:clinic_appointment_system/features/medical_services/domain/value
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_calendar_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_workspace_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/models/staff_calendar_layout_factory.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/services/staff_patient_history_calculator.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/staff.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/user.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -48,6 +51,7 @@ import 'package:mocktail/mocktail.dart';
 import '../../../../../core/time/support/fixed_clock.dart';
 import '../../../../../support/auth_cubit_factory.dart';
 import '../../../../../support/auth_repository_doubles.dart';
+import '../../../../../support/date_formatting_test_support.dart';
 import '../../../../../support/localization_test_app.dart';
 import '../../../../../support/user_repository_double.dart';
 import '../../../../appointments/presentation/doubles/staff_appointment_repository.dart';
@@ -104,7 +108,7 @@ final class AvailabilityPageHarness {
       .withOneOff([fixture.oneOff(990, 1050)]);
 
   Future<void> initialize({User? user}) async {
-    await AppFormatters.ensureInitialized();
+    await initializeDateFormattingForTests();
     final profile = user ?? staff;
     currentProfile = profile;
     when(() => authRepository.authStateChanges()).thenAnswer(
@@ -145,7 +149,21 @@ final class AvailabilityPageHarness {
     final services = FakeMedicalServiceRepository()
       ..servicesStream = serviceEvents.stream;
     final injector = AppDependency.injector;
+    if (!injector.isRegistered<WorkingHoursSummaryFormatter>()) {
+      injector.registerSingleton<WorkingHoursSummaryFormatter>(
+        const WorkingHoursSummaryFormatter(),
+      );
+    }
     injector.registerSingleton<Clock>(clock);
+    injector.registerSingleton<AppointmentStartComparator>(
+      const AppointmentStartComparator(),
+    );
+    injector.registerSingleton<StaffCalendarLayoutFactory>(
+      StaffCalendarLayoutFactory(injector.get<AppointmentStartComparator>()),
+    );
+    injector.registerSingleton<StaffPatientHistoryCalculator>(
+      StaffPatientHistoryCalculator(injector.get<AppointmentStartComparator>()),
+    );
     injector.registerSingleton<SlotGenerator>(const SlotGenerator());
     injector.registerFactory<StaffAvailabilityCubit>(() {
       availability = StaffAvailabilityCubit(
@@ -200,10 +218,15 @@ final class AvailabilityPageHarness {
       () => StaffAppointmentsCubit(
         WatchStaffAppointmentsUseCase(appointmentsRepository),
         clock,
+        injector.get<AppointmentStartComparator>(),
+        injector.get<StaffPatientHistoryCalculator>(),
       ),
     );
     injector.registerFactory<StaffCalendarCubit>(
-      () => StaffCalendarCubit(clock: clock),
+      () => StaffCalendarCubit(
+        clock: clock,
+        layoutFactory: injector.get<StaffCalendarLayoutFactory>(),
+      ),
     );
     injector.registerFactory<StaffWorkspaceCubit>(
       () => StaffWorkspaceCubit(

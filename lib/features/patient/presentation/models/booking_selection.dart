@@ -1,10 +1,13 @@
 import 'package:clinic_appointment_system/core/constants/booking_constants.dart';
+import 'package:clinic_appointment_system/core/extensions/turkish_case_folding.dart';
 import 'package:clinic_appointment_system/core/time/calendar_date.dart';
 import 'package:clinic_appointment_system/core/time/time_range.dart';
 import 'package:clinic_appointment_system/features/institution/domain/value_objects/working_hours.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/models/clinic_catalog.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/medical_service.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/extensions/calendar_date_week.dart';
-import 'package:clinic_appointment_system/features/patient/presentation/models/patient_catalog.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/extensions/patient_catalog_views.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/models/staff_schedule_day.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/models/staff_week_schedule_request.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/staff.dart';
 
@@ -22,6 +25,7 @@ final class BookingSelection {
        staff = null,
        date = null,
        slot = null,
+       scheduleDay = null,
        query = '';
 
   const BookingSelection._({
@@ -33,6 +37,7 @@ final class BookingSelection {
     required this.staff,
     required this.date,
     required this.slot,
+    required this.scheduleDay,
   });
 
   /// The Monday of the current week; earlier weeks cannot be shown.
@@ -59,6 +64,9 @@ final class BookingSelection {
   /// The chosen slot on [date].
   final TimeRange? slot;
 
+  /// The generated schedule day for [date], when its schedule has loaded.
+  final StaffScheduleDay? scheduleDay;
+
   /// Whether a week before the shown one may be shown.
   bool get canShowPreviousWeek => weekStart.isAfter(currentWeekStart);
 
@@ -69,12 +77,24 @@ final class BookingSelection {
 
   /// Chooses [service] and clears the staff member, day and slot.
   BookingSelection withService(MedicalService service) {
-    return _copy(service: service, staff: null, date: null, slot: null);
+    return _copy(
+      service: service,
+      staff: null,
+      date: null,
+      slot: null,
+      scheduleDay: null,
+    );
   }
 
   /// Chooses [staff] and clears the day and slot.
   BookingSelection withStaff(Staff staff) {
-    return _copy(service: service, staff: staff, date: null, slot: null);
+    return _copy(
+      service: service,
+      staff: staff,
+      date: null,
+      slot: null,
+      scheduleDay: null,
+    );
   }
 
   /// Shows the week starting on [weekStart] and clears the day and slot.
@@ -85,22 +105,41 @@ final class BookingSelection {
       staff: staff,
       date: null,
       slot: null,
+      scheduleDay: null,
     );
   }
 
   /// Chooses [date] and clears the slot.
   BookingSelection withDate(CalendarDate date) {
-    return _copy(service: service, staff: staff, date: date, slot: null);
+    return _copy(
+      service: service,
+      staff: staff,
+      date: date,
+      slot: null,
+      scheduleDay: null,
+    );
   }
 
   /// Chooses [slot] on the chosen day.
   BookingSelection withSlot(TimeRange slot) {
-    return _copy(service: service, staff: staff, date: date, slot: slot);
+    return _copy(
+      service: service,
+      staff: staff,
+      date: date,
+      slot: slot,
+      scheduleDay: scheduleDay,
+    );
   }
 
   /// Clears the chosen slot.
   BookingSelection withoutSlot() {
-    return _copy(service: service, staff: staff, date: date, slot: null);
+    return _copy(
+      service: service,
+      staff: staff,
+      date: date,
+      slot: null,
+      scheduleDay: scheduleDay,
+    );
   }
 
   /// Replaces the search text.
@@ -111,6 +150,18 @@ final class BookingSelection {
       staff: staff,
       date: date,
       slot: slot,
+      scheduleDay: scheduleDay,
+    );
+  }
+
+  /// Copies this selection with the generated day matching its selected date.
+  BookingSelection withScheduleDay(StaffScheduleDay? scheduleDay) {
+    return _copy(
+      service: service,
+      staff: staff,
+      date: date,
+      slot: slot,
+      scheduleDay: scheduleDay,
     );
   }
 
@@ -125,18 +176,19 @@ final class BookingSelection {
       staff: staff,
       date: date,
       slot: slot,
+      scheduleDay: scheduleDay,
     );
   }
 
   /// Bookable services of [catalog] in the department limit whose name
   /// contains the search text, ignoring case with Turkish dotted and
   /// dotless `i` rules.
-  List<MedicalService> servicesIn(PatientCatalog catalog) {
-    final needle = _folded(query.trim());
+  List<MedicalService> servicesIn(ClinicCatalog catalog) {
+    final needle = query.trim();
     return [
       for (final item in catalog.services)
         if ((departmentId == null || item.departmentId == departmentId) &&
-            _folded(item.name).contains(needle) &&
+            item.name.containsTurkishInsensitive(needle) &&
             catalog.staffFor(item).isNotEmpty)
           item,
     ];
@@ -145,7 +197,7 @@ final class BookingSelection {
   /// The schedule to observe for the chosen staff member and service in the
   /// shown week, or null before both are chosen. An unknown branch counts
   /// as closed every day.
-  StaffWeekScheduleRequest? scheduleRequest(PatientCatalog catalog) {
+  StaffWeekScheduleRequest? scheduleRequest(ClinicCatalog catalog) {
     final service = this.service;
     final staff = this.staff;
     if (service == null || staff == null) return null;
@@ -184,15 +236,12 @@ final class BookingSelection {
     return withWeek(weekStart.addDays(-BookingConstants.daysPerWeek));
   }
 
-  static String _folded(String text) {
-    return text.replaceAll('İ', 'i').replaceAll('I', 'ı').toLowerCase();
-  }
-
   BookingSelection _copy({
     required MedicalService? service,
     required Staff? staff,
     required CalendarDate? date,
     required TimeRange? slot,
+    required StaffScheduleDay? scheduleDay,
     CalendarDate? weekStart,
     String? query,
   }) {
@@ -205,6 +254,7 @@ final class BookingSelection {
       staff: staff,
       date: date,
       slot: slot,
+      scheduleDay: scheduleDay,
     );
   }
 }

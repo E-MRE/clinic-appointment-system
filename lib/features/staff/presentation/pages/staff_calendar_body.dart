@@ -30,15 +30,14 @@ final class _StaffCalendarBody extends StatelessWidget {
 
     final isDesktop = context.screenSize.isDesktop;
     final calendarState = context.watch<StaffCalendarCubit>().state;
-    final visibleDates = isDesktop
-        ? calendarState.visibleDates
-        : [calendarState.anchor];
+    final layout = isDesktop ? calendarState.layout : calendarState.dayLayout;
+    if (layout == null) {
+      return LoadingState(
+        variant: LoadingStateVariant.skeletonList,
+        label: LocaleKeys.staffCalendar_loading.translate(),
+      );
+    }
 
-    return _StaffCalendarGrid(
-      visibleDates: visibleDates,
-      appointments: appointmentsState.appointments,
-      availability: workspaceState.workspace.availability,
-      branchHours: workspaceState.workspace.branch.workingHours,
-    );
+    return _StaffCalendarGrid(layout: layout);
   }
 }

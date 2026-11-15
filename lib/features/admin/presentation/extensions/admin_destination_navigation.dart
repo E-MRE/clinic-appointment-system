@@ -8,28 +8,38 @@ import 'package:flutter/material.dart';
 extension AdminDestinationNavigation on AdminDestination {
   /// Navigation shell configuration item for this destination.
   AppNavigationDestination get destination {
-    return switch (this) {
-      AdminDestination.overview => AppNavigationDestination(
-        label: LocaleKeys.institution_overview.tr(),
-        icon: Icons.dashboard_outlined,
-        selectedIcon: Icons.dashboard,
-      ),
-      AdminDestination.institution => AppNavigationDestination(
-        label: LocaleKeys.institution_clinic.tr(),
-        icon: Icons.business_outlined,
-        selectedIcon: Icons.business,
-      ),
-      AdminDestination.services => AppNavigationDestination(
-        label: LocaleKeys.services_title.tr(),
-        icon: Icons.medical_services_outlined,
-        selectedIcon: Icons.medical_services,
-      ),
-      AdminDestination.staff => AppNavigationDestination(
-        label: LocaleKeys.staff_title.tr(),
-        icon: Icons.group_outlined,
-        selectedIcon: Icons.group,
-      ),
-    };
+    switch (this) {
+      case AdminDestination.overview:
+        return AppNavigationDestination(
+          label: LocaleKeys.institution_overview.tr(),
+          icon: Icons.dashboard_outlined,
+          selectedIcon: Icons.dashboard,
+        );
+      case AdminDestination.appointments:
+        return AppNavigationDestination(
+          label: LocaleKeys.appointment_appointments.tr(),
+          icon: Icons.calendar_month_outlined,
+          selectedIcon: Icons.calendar_month,
+        );
+      case AdminDestination.institution:
+        return AppNavigationDestination(
+          label: LocaleKeys.institution_title.tr(),
+          icon: Icons.business_outlined,
+          selectedIcon: Icons.business,
+        );
+      case AdminDestination.services:
+        return AppNavigationDestination(
+          label: LocaleKeys.services_title.tr(),
+          icon: Icons.medical_services_outlined,
+          selectedIcon: Icons.medical_services,
+        );
+      case AdminDestination.staff:
+        return AppNavigationDestination(
+          label: LocaleKeys.staff_title.tr(),
+          icon: Icons.group_outlined,
+          selectedIcon: Icons.group,
+        );
+    }
   }
 
   /// Whether [path] belongs to this admin destination; the overview matches

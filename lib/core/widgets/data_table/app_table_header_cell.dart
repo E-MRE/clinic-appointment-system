@@ -13,6 +13,7 @@ final class _AppTableHeaderCell<T> extends StatelessWidget {
       padding: padding,
       alignment: column.alignment.alignment,
       noWrap: column.noWrap,
+      maxWidth: column.maxWidth,
       child: Semantics(
         header: true,
         label: column.semanticsLabel ?? column.label,

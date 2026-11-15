@@ -1,5 +1,5 @@
 import 'package:clinic_appointment_system/core/constants/medical_service_constants.dart';
-import 'package:clinic_appointment_system/core/localization/app_formatters.dart';
+import 'package:clinic_appointment_system/core/extensions/currency_formatting.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/value_objects/money.dart';
 import 'package:flutter/widgets.dart';
 
@@ -20,11 +20,7 @@ extension MoneyFormatting on Money {
 
   /// Formats this money amount into currency text (e.g. `₺1.200` or `₺850,50`).
   String formatted([BuildContext? context]) {
-    return AppFormatters.formatCurrency(
-      lira,
-      context: context,
-      decimalDigits: _decimalDigits,
-    );
+    return lira.currencyLabel(context: context, decimalDigits: _decimalDigits);
   }
 
   /// Plain string representation used to prefill input forms (e.g. `850` or `850,50`).

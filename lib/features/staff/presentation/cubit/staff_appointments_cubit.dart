@@ -8,9 +8,11 @@ import 'package:clinic_appointment_system/features/appointments/domain/entities/
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_error_code.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/models/staff_appointments_query.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/services/appointment_start_comparator.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_staff_appointments_use_case.dart';
 import 'package:clinic_appointment_system/features/appointments/presentation/extensions/data_result_appointment_error_code.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_state.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/services/staff_patient_history_calculator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Observes all appointments assigned to one staff member from
@@ -20,11 +22,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 /// [AppointmentErrorCode.unavailable].
 final class StaffAppointmentsCubit extends Cubit<StaffAppointmentsState> {
   /// Injects the staff observation use case and the clock fixing "today".
-  StaffAppointmentsCubit(this._watchAppointments, this._clock)
-    : super(const StaffAppointmentsLoading());
+  StaffAppointmentsCubit(
+    this._watchAppointments,
+    this._clock,
+    this._startComparator,
+    this._patientHistoryCalculator,
+  ) : super(const StaffAppointmentsLoading());
 
   final WatchStaffAppointmentsUseCase _watchAppointments;
   final Clock _clock;
+  final AppointmentStartComparator _startComparator;
+  final StaffPatientHistoryCalculator _patientHistoryCalculator;
   StreamSubscription<DataResult<List<Appointment>>>? _subscription;
   String? _staffId;
   bool _isClosing = false;
@@ -91,23 +99,28 @@ final class StaffAppointmentsCubit extends Cubit<StaffAppointmentsState> {
       _emit(StaffAppointmentsFailure(result.appointmentErrorCode));
       return;
     }
+    final now = _clock.now();
     _emit(
       StaffAppointmentsLoaded(
         appointments: appointments,
-        pendingRequests: _pendingRequests(appointments),
+        pendingRequests: _pendingRequests(appointments, now),
+        patientHistories: _patientHistoryCalculator.calculateAll(appointments),
+        now: now,
       ),
     );
   }
 
   /// Pending appointments starting now or later, earliest first.
-  List<Appointment> _pendingRequests(List<Appointment> appointments) {
-    final now = _clock.now();
+  List<Appointment> _pendingRequests(
+    List<Appointment> appointments,
+    DateTime now,
+  ) {
     return [
       for (final appointment in appointments)
         if (appointment.status == AppointmentStatus.pending &&
             !appointment.startsAt.isBefore(now))
           appointment,
-    ]..sort((a, b) => a.startsAt.compareTo(b.startsAt));
+    ]..sort(_startComparator.compareByStartTime);
   }
 
   void _emit(StaffAppointmentsState state) {

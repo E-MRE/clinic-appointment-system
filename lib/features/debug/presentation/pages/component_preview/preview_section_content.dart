@@ -11,6 +11,7 @@ extension _PreviewSectionContent on _PreviewSection {
       _PreviewSection.states => const _StatesSection(),
       _PreviewSection.loading => const _LoadingSection(),
       _PreviewSection.list => const _ListSection(),
+      _PreviewSection.progressBar => const _ProgressBarSection(),
       _PreviewSection.dataTable => const _DataTableSection(),
       _PreviewSection.avatar => const _AvatarSection(),
       _PreviewSection.fields => const _FieldsSection(),

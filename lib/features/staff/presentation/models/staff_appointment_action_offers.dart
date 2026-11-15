@@ -1,9 +1,6 @@
 import 'package:clinic_appointment_system/features/appointments/domain/actors/appointment_actor.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
-import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_action.dart';
-import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_action_transition.dart';
-import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_error_code.dart';
-import 'package:clinic_appointment_system/features/staff/presentation/extensions/appointment_action_too_early_hint.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/extensions/appointment_action_offer.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/extensions/appointment_status_staff_actions.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/models/staff_appointment_action_offer.dart';
 
@@ -20,10 +17,12 @@ final class StaffAppointmentActionOffers {
     required DateTime at,
   }) {
     if (actor == null) return StaffAppointmentActionOffers._(const []);
-    return StaffAppointmentActionOffers._([
-      for (final action in appointment.status.staffActions)
-        ?_offer(action, appointment, actor, at),
-    ]);
+    final offers = <StaffAppointmentActionOffer>[];
+    for (final action in appointment.status.staffActions) {
+      final offer = action.offerFor(appointment, actor: actor, at: at);
+      if (offer != null) offers.add(offer);
+    }
+    return StaffAppointmentActionOffers._(offers);
   }
 
   StaffAppointmentActionOffers._(List<StaffAppointmentActionOffer> offers)
@@ -31,22 +30,4 @@ final class StaffAppointmentActionOffers {
 
   /// Actions the staff member may take now or after a time boundary.
   final List<StaffAppointmentActionOffer> offers;
-
-  static StaffAppointmentActionOffer? _offer(
-    AppointmentAction action,
-    Appointment appointment,
-    AppointmentActor actor,
-    DateTime at,
-  ) {
-    final result = action.apply(appointment, by: actor, at: at);
-    if (result.isSuccess) {
-      return StaffAppointmentActionOffer(action: action, isEnabled: true);
-    }
-    if (result.errorCode != AppointmentErrorCode.tooEarly) return null;
-    return StaffAppointmentActionOffer(
-      action: action,
-      isEnabled: false,
-      hint: action.tooEarlyHint(appointment),
-    );
-  }
 }

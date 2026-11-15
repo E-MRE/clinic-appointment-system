@@ -4,13 +4,14 @@ part of 'patient_book_page.dart';
 final class _PatientBookServiceSection extends StatelessWidget {
   const _PatientBookServiceSection({required this.catalog});
 
-  final PatientCatalog catalog;
+  final ClinicCatalog catalog;
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<BookingSelectionCubit, BookingSelection>(
       builder: (context, selection) {
         final services = selection.servicesIn(catalog);
+        final departmentId = selection.departmentId;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           spacing: AppSizes.s12,
@@ -19,10 +20,10 @@ final class _PatientBookServiceSection extends StatelessWidget {
               title: LocaleKeys.patient_book_serviceTitle.translate(),
             ),
             const _PatientBookSearchField(),
-            if (selection.departmentId != null)
+            if (departmentId != null)
               _PatientBookDepartmentChip(
                 name:
-                    catalog.departmentById(selection.departmentId!)?.name ??
+                    catalog.departmentById(departmentId)?.name ??
                     LocaleKeys.common_notAvailable.translate(),
               ),
             if (services.isEmpty)

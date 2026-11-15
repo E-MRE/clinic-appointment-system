@@ -16,7 +16,7 @@ final class InstitutionListFailure<T> extends InstitutionListState<T> {
 }
 
 /// The observed list contains [items].
-final class InstitutionListLoaded<T> extends InstitutionListState<T> {
+base class InstitutionListLoaded<T> extends InstitutionListState<T> {
   /// Creates a loaded state with the current [items].
   const InstitutionListLoaded(this.items);
 

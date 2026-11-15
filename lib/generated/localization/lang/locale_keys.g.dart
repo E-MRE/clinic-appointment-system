@@ -56,6 +56,105 @@ abstract class LocaleKeys {
   static const home_staff = 'home.staff';
   static const home_admin = 'home.admin';
   static const home = 'home';
+  static const admin_appointmentsTitle = 'admin.appointmentsTitle';
+  static const admin_appointmentsSubtitle = 'admin.appointmentsSubtitle';
+  static const admin_overview_title = 'admin.overview.title';
+  static const admin_overview_todaySubtitle = 'admin.overview.todaySubtitle';
+  static const admin_overview_todayAppointments =
+      'admin.overview.todayAppointments';
+  static const admin_overview_todayAppointmentsCaption =
+      'admin.overview.todayAppointmentsCaption';
+  static const admin_overview_pendingAppointments =
+      'admin.overview.pendingAppointments';
+  static const admin_overview_oldestPendingCaption =
+      'admin.overview.oldestPendingCaption';
+  static const admin_overview_completedToday = 'admin.overview.completedToday';
+  static const admin_overview_completedCaption =
+      'admin.overview.completedCaption';
+  static const admin_overview_noShowToday = 'admin.overview.noShowToday';
+  static const admin_overview_noShowCaption = 'admin.overview.noShowCaption';
+  static const admin_overview_statusBreakdown =
+      'admin.overview.statusBreakdown';
+  static const admin_overview_departmentBreakdown =
+      'admin.overview.departmentBreakdown';
+  static const admin_overview_staffBreakdown = 'admin.overview.staffBreakdown';
+  static const admin_overview_emptyStatus = 'admin.overview.emptyStatus';
+  static const admin_overview_emptyDepartments =
+      'admin.overview.emptyDepartments';
+  static const admin_overview_emptyStaff = 'admin.overview.emptyStaff';
+  static const admin_overview_pendingTableTitle =
+      'admin.overview.pendingTableTitle';
+  static const admin_overview_seeAll = 'admin.overview.seeAll';
+  static const admin_overview_columnRequestAge =
+      'admin.overview.columnRequestAge';
+  static const admin_overview_emptyPending = 'admin.overview.emptyPending';
+  static const admin_overview_loading = 'admin.overview.loading';
+  static const admin_overview_failureTitle = 'admin.overview.failureTitle';
+  static const admin_overview_catalogFailureTitle =
+      'admin.overview.catalogFailureTitle';
+  static const admin_overview_catalogFailureMessage =
+      'admin.overview.catalogFailureMessage';
+  static const admin_overview_sessionFailureTitle =
+      'admin.overview.sessionFailureTitle';
+  static const admin_overview_sessionFailureMessage =
+      'admin.overview.sessionFailureMessage';
+  static const admin_overview = 'admin.overview';
+  static const admin_appointmentsPage_loading =
+      'admin.appointmentsPage.loading';
+  static const admin_appointmentsPage_failureTitle =
+      'admin.appointmentsPage.failureTitle';
+  static const admin_appointmentsPage_catalogFailureTitle =
+      'admin.appointmentsPage.catalogFailureTitle';
+  static const admin_appointmentsPage_catalogFailureMessage =
+      'admin.appointmentsPage.catalogFailureMessage';
+  static const admin_appointmentsPage_sessionFailureTitle =
+      'admin.appointmentsPage.sessionFailureTitle';
+  static const admin_appointmentsPage_sessionFailureMessage =
+      'admin.appointmentsPage.sessionFailureMessage';
+  static const admin_appointmentsPage_retry = 'admin.appointmentsPage.retry';
+  static const admin_appointmentsPage_dateRange =
+      'admin.appointmentsPage.dateRange';
+  static const admin_appointmentsPage_branch = 'admin.appointmentsPage.branch';
+  static const admin_appointmentsPage_allBranches =
+      'admin.appointmentsPage.allBranches';
+  static const admin_appointmentsPage_department =
+      'admin.appointmentsPage.department';
+  static const admin_appointmentsPage_allDepartments =
+      'admin.appointmentsPage.allDepartments';
+  static const admin_appointmentsPage_staff = 'admin.appointmentsPage.staff';
+  static const admin_appointmentsPage_allStaff =
+      'admin.appointmentsPage.allStaff';
+  static const admin_appointmentsPage_status = 'admin.appointmentsPage.status';
+  static const admin_appointmentsPage_clearFilters =
+      'admin.appointmentsPage.clearFilters';
+  static const admin_appointmentsPage_searchPatient =
+      'admin.appointmentsPage.searchPatient';
+  static const admin_appointmentsPage_appointmentCount =
+      'admin.appointmentsPage.appointmentCount';
+  static const admin_appointmentsPage_columnDate =
+      'admin.appointmentsPage.columnDate';
+  static const admin_appointmentsPage_columnPatient =
+      'admin.appointmentsPage.columnPatient';
+  static const admin_appointmentsPage_columnService =
+      'admin.appointmentsPage.columnService';
+  static const admin_appointmentsPage_columnStaff =
+      'admin.appointmentsPage.columnStaff';
+  static const admin_appointmentsPage_columnLocation =
+      'admin.appointmentsPage.columnLocation';
+  static const admin_appointmentsPage_columnStatus =
+      'admin.appointmentsPage.columnStatus';
+  static const admin_appointmentsPage_columnActions =
+      'admin.appointmentsPage.columnActions';
+  static const admin_appointmentsPage_previousPage =
+      'admin.appointmentsPage.previousPage';
+  static const admin_appointmentsPage_nextPage =
+      'admin.appointmentsPage.nextPage';
+  static const admin_appointmentsPage_emptyTitle =
+      'admin.appointmentsPage.emptyTitle';
+  static const admin_appointmentsPage_emptyMessage =
+      'admin.appointmentsPage.emptyMessage';
+  static const admin_appointmentsPage = 'admin.appointmentsPage';
+  static const admin = 'admin';
   static const appointment_title = 'appointment.title';
   static const appointment_dateTime = 'appointment.dateTime';
   static const appointment_appointments = 'appointment.appointments';
@@ -296,6 +395,7 @@ abstract class LocaleKeys {
   static const componentPreview_states = 'componentPreview.states';
   static const componentPreview_loading = 'componentPreview.loading';
   static const componentPreview_list = 'componentPreview.list';
+  static const componentPreview_progressBar = 'componentPreview.progressBar';
   static const componentPreview_avatar = 'componentPreview.avatar';
   static const componentPreview_fields = 'componentPreview.fields';
   static const componentPreview_choices = 'componentPreview.choices';

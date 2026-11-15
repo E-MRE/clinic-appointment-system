@@ -4,6 +4,7 @@ import 'package:clinic_appointment_system/firebase_options.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 /// Initializes core bindings and services before running the application.
 final class AppInitializer with AppDependencyRegisterMixin {
@@ -18,6 +19,9 @@ final class AppInitializer with AppDependencyRegisterMixin {
       options: DefaultFirebaseOptions.currentPlatform,
     );
     await EasyLocalization.ensureInitialized();
+    for (final locale in const ['tr_TR', 'en_US', 'tr', 'en']) {
+      await initializeDateFormatting(locale, null);
+    }
     dependency.register(customInjections: registerDependencies);
   }
 }

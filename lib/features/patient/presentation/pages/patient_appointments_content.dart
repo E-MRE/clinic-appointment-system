@@ -5,10 +5,12 @@ final class _PatientAppointmentsContent extends StatelessWidget {
   const _PatientAppointmentsContent({
     required this.firstName,
     required this.overview,
+    required this.bookableDepartments,
   });
 
   final String firstName;
   final PatientAppointmentsOverview overview;
+  final List<PatientDepartmentSummary> bookableDepartments;
 
   @override
   Widget build(BuildContext context) {
@@ -42,13 +44,17 @@ final class _PatientAppointmentsContent extends StatelessWidget {
                       flex: PatientLayoutConstants.appointmentsSecondaryFlex,
                       child: _PatientAppointmentsSecondaryColumn(
                         overview: overview,
+                        departments: bookableDepartments,
                       ),
                     ),
                   ],
                 )
               else ...[
                 _PatientAppointmentsPrimaryColumn(overview: overview),
-                _PatientAppointmentsSecondaryColumn(overview: overview),
+                _PatientAppointmentsSecondaryColumn(
+                  overview: overview,
+                  departments: bookableDepartments,
+                ),
               ],
             ],
           ),

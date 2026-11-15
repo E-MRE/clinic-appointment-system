@@ -32,6 +32,8 @@ import 'package:clinic_appointment_system/features/medical_services/presentation
 import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_save_cubit.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/enums/medical_service_kind_filter.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/pages/medical_services_page.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/services/medical_service_overview_calculator.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/services/medical_service_overview_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -116,12 +118,19 @@ void main() {
     );
     serviceListCubit = MedicalServiceListCubit(
       WatchMedicalServicesUseCase(serviceRepo),
+      const MedicalServiceOverviewCalculator(),
     );
 
     selection = InstitutionSelection();
     selection.selectClinic('c1');
     selection.selectBranch('b1');
 
+    AppDependency.injector.registerSingleton<MedicalServiceOverviewCalculator>(
+      const MedicalServiceOverviewCalculator(),
+    );
+    AppDependency.injector.registerSingleton<MedicalServiceOverviewFormatter>(
+      const MedicalServiceOverviewFormatter(),
+    );
     AppDependency.injector.registerFactory<MedicalServiceFilterCubit>(
       MedicalServiceFilterCubit.new,
     );

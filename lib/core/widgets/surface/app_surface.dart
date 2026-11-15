@@ -1,4 +1,3 @@
-import 'package:clinic_appointment_system/core/theme/theme.dart';
 import 'package:clinic_appointment_system/core/widgets/surface/app_surface_padding.dart';
 import 'package:clinic_appointment_system/core/widgets/surface/app_surface_radius.dart';
 import 'package:clinic_appointment_system/core/widgets/surface/app_surface_variant.dart';
@@ -24,15 +23,14 @@ final class AppSurface extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colorScheme;
     return Container(
       padding: padding.value,
       clipBehavior: clipBehavior,
       decoration: BoxDecoration(
-        color: variant.background(colors),
+        color: variant.background(context),
         borderRadius: radius.value,
         border: Border.all(
-          color: variant.border(colors),
+          color: variant.border(context),
           width: variant.borderWidth,
         ),
       ),

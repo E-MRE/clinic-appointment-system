@@ -17,7 +17,7 @@ typedef AppointmentBookingCheck =
 typedef AppointmentStatusChange =
     AppointmentResult Function(Appointment current);
 
-/// Atomic appointment persistence and owner-scoped observation.
+/// Atomic appointment persistence and appointment observation.
 abstract interface class AppointmentRepository {
   /// Reads both day projections and evaluates [check] on each transaction
   /// attempt. Violations cause no writes; the result carries the first
@@ -49,6 +49,18 @@ abstract interface class AppointmentRepository {
     CalendarDate from,
     CalendarDate through,
   );
+
+  /// Watches appointments across all staff whose dates are within the
+  /// inclusive [from] through [through] range. Failures emit an error result
+  /// with an `AppointmentErrorCode`.
+  Stream<DataResult<List<Appointment>>> watchAdminAppointments(
+    CalendarDate from,
+    CalendarDate through,
+  );
+
+  /// Watches pending appointments across all staff and dates. Failures emit
+  /// an error result with an `AppointmentErrorCode`.
+  Stream<DataResult<List<Appointment>>> watchPendingAppointments();
 
   /// Watches occupied slots on [date], or an empty list for a missing day.
   /// Failures emit an error result with an `AppointmentErrorCode`.

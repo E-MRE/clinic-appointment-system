@@ -2,13 +2,16 @@ import 'package:clinic_appointment_system/core/enums/weekday.dart';
 import 'package:clinic_appointment_system/core/extensions/time_range_label.dart';
 import 'package:clinic_appointment_system/core/localization/localization.dart';
 import 'package:clinic_appointment_system/features/institution/domain/entities/branch.dart';
-import 'package:clinic_appointment_system/features/institution/presentation/extensions/working_hours_summary.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/services/working_hours_summary_formatter.dart';
 
 /// Branch-hour copy shared by the availability layouts and editor surfaces.
 extension AvailabilityBranchPresentation on Branch {
   /// Localized branch identity and weekly opening summary.
-  String get availabilityHoursMessage => LocaleKeys.availability_branchHours
-      .translate(args: [name, workingHours.localizedSummary]);
+  String availabilityHoursMessage(WorkingHoursSummaryFormatter formatter) {
+    return LocaleKeys.availability_branchHours.translate(
+      args: [name, formatter.format(workingHours)],
+    );
+  }
 
   /// Explains the selected day's allowable working ranges.
   String availabilityHelper(Weekday day) =>

@@ -8,7 +8,7 @@ final class _PatientBookContent extends StatelessWidget {
     required this.patientName,
   });
 
-  final PatientCatalog catalog;
+  final ClinicCatalog catalog;
   final PatientAppointmentActor patient;
   final String patientName;
 

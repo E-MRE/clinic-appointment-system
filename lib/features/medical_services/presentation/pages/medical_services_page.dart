@@ -30,13 +30,15 @@ import 'package:clinic_appointment_system/features/medical_services/domain/enums
 import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_editor_cubit.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_filter_cubit.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_list_cubit.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_list_loaded.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/enums/medical_service_kind_filter.dart';
-import 'package:clinic_appointment_system/features/medical_services/presentation/extensions/medical_service_kind_filter_matching.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/extensions/medical_service_kind_localization.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/extensions/money_formatting.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/extensions/service_duration_formatting.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/models/department_service_group.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/models/medical_service_list_overview.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/models/medical_service_summary.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/services/medical_service_overview_formatter.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/visitors/medical_service_summary_visitor.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/widgets/medical_service_form.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -78,8 +80,17 @@ final class MedicalServicesPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<MedicalServiceFilterCubit>(
-          create: (_) =>
-              AppDependency.injector.get<MedicalServiceFilterCubit>(),
+          create: (context) {
+            final cubit = AppDependency.injector
+                .get<MedicalServiceFilterCubit>();
+            final serviceCubit = context.read<MedicalServiceListCubit>();
+            final departmentState = context.read<DepartmentListCubit>().state;
+            if (departmentState is InstitutionListLoaded<Department>) {
+              serviceCubit.updateDepartments(departmentState.items);
+            }
+            serviceCubit.updateFilter(cubit.state);
+            return cubit;
+          },
         ),
         BlocProvider<MedicalServiceEditorCubit>(
           create: (_) =>

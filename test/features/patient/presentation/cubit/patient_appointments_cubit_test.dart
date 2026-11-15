@@ -1,12 +1,16 @@
 import 'package:clinic_appointment_system/core/errors/data_result.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_error_code.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/services/appointment_start_comparator.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/usecases/watch_patient_appointments_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/domain/enums/institution_error_code.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_appointments_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_appointments_state.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/services/patient_appointments_overview_factory.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/services/patient_booking_catalog_calculator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../../../core/time/support/fixed_clock.dart';
 import '../doubles/patient_appointment_repository.dart';
 import '../doubles/patient_fixtures.dart';
 
@@ -21,6 +25,9 @@ void main() {
     repository = PatientAppointmentRepository();
     cubit = PatientAppointmentsCubit(
       WatchPatientAppointmentsUseCase(repository),
+      FixedClock(fixtures.now),
+      const PatientAppointmentsOverviewFactory(AppointmentStartComparator()),
+      const PatientBookingCatalogCalculator(),
     );
   });
 
@@ -36,6 +43,8 @@ void main() {
 
     repository.emit([fixtures.lipid]);
     await flush();
+    expect(cubit.state, isA<PatientAppointmentsLoading>());
+    cubit.updateCatalog(fixtures.catalog);
     final first = cubit.state;
     expect(first, isA<PatientAppointmentsLoaded>());
     expect(

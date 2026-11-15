@@ -22,6 +22,7 @@ import 'package:clinic_appointment_system/features/medical_services/presentation
 import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_list_cubit.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_save_cubit.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/pages/medical_service_form_page.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/services/medical_service_overview_calculator.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -72,6 +73,7 @@ void main() {
     );
     serviceListCubit = MedicalServiceListCubit(
       WatchMedicalServicesUseCase(serviceRepo),
+      const MedicalServiceOverviewCalculator(),
     );
 
     selection = InstitutionSelection();

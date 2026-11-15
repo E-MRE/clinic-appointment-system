@@ -8,8 +8,10 @@ final class _AvailabilityBranchBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     final branch = context.watch<AvailabilityBranchCubit>().state;
     if (branch is WatchLoaded<Branch, InstitutionErrorCode>) {
+      final formatter = AppDependency.injector
+          .get<WorkingHoursSummaryFormatter>();
       return AppMessageBanner(
-        message: branch.data.availabilityHoursMessage,
+        message: branch.data.availabilityHoursMessage(formatter),
         variant: AppMessageBannerVariant.info,
         icon: Icons.apartment_outlined,
       );

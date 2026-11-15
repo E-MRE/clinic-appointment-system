@@ -1,6 +1,7 @@
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/value_objects/appointment_status_change.dart';
+import 'package:clinic_appointment_system/features/appointments/presentation/extensions/appointment_oldest_request.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/extensions/staff_requests_header_subtitle.dart';
 import 'package:clinic_appointment_system/features/users/domain/enums/user_role.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -44,7 +45,7 @@ void main() {
     );
 
     final list = <Appointment>[newer, older];
-    expect(list.oldestCreatedAt, DateTime(2026, 10, 20, 9, 20));
+    expect(list.oldestRequestedAt, DateTime(2026, 10, 20, 9, 20));
     expect(
       list.headerSubtitle(clock),
       '2 talep · en eskisi 2 saat önce oluşturuldu',

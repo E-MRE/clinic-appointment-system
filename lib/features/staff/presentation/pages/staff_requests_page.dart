@@ -20,6 +20,7 @@ import 'package:clinic_appointment_system/core/widgets/surface/app_surface_varia
 import 'package:clinic_appointment_system/core/widgets/tab_bar/app_tab_bar.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
 import 'package:clinic_appointment_system/features/appointments/presentation/cubit/appointment_action_state.dart';
+import 'package:clinic_appointment_system/features/appointments/presentation/extensions/appointment_action_feedback.dart';
 import 'package:clinic_appointment_system/features/appointments/presentation/extensions/appointment_error_code_localization.dart';
 import 'package:clinic_appointment_system/features/appointments/presentation/widgets/appointment_reason_dialog.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_cubit.dart';
@@ -39,6 +40,7 @@ import 'package:clinic_appointment_system/features/staff/presentation/extensions
 import 'package:clinic_appointment_system/features/staff/presentation/models/staff_patient_history.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/models/staff_rule_check_factory.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/models/staff_workspace.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/services/staff_patient_history_formatter.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/widgets/staff_appointment_detail_grid.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/widgets/staff_patient_header.dart';
 import 'package:flutter/material.dart';

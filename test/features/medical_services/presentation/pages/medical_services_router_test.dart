@@ -30,6 +30,7 @@ import 'package:clinic_appointment_system/features/institution/presentation/cubi
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/department_list_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/department_save_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/working_hours_editor_cubit.dart';
+import 'package:clinic_appointment_system/features/institution/presentation/services/working_hours_summary_formatter.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/medical_service.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/usecases/create_medical_service_use_case.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/usecases/update_medical_service_use_case.dart';
@@ -41,6 +42,8 @@ import 'package:clinic_appointment_system/features/medical_services/presentation
 import 'package:clinic_appointment_system/features/medical_services/presentation/cubit/medical_service_save_cubit.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/pages/medical_service_form_page.dart';
 import 'package:clinic_appointment_system/features/medical_services/presentation/pages/medical_services_page.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/services/medical_service_overview_calculator.dart';
+import 'package:clinic_appointment_system/features/medical_services/presentation/services/medical_service_overview_formatter.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/admin.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/patient.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -243,6 +246,15 @@ GoRouter _setupRouter(
   required FakeMedicalServiceRepository services,
   AuthRouteGuard? guard,
 }) {
+  AppDependency.injector.registerSingleton<WorkingHoursSummaryFormatter>(
+    const WorkingHoursSummaryFormatter(),
+  );
+  AppDependency.injector.registerSingleton<MedicalServiceOverviewCalculator>(
+    const MedicalServiceOverviewCalculator(),
+  );
+  AppDependency.injector.registerSingleton<MedicalServiceOverviewFormatter>(
+    const MedicalServiceOverviewFormatter(),
+  );
   AppDependency.injector.registerFactory<ClinicListCubit>(
     () => ClinicListCubit(WatchClinicsUseCase(clinics)),
   );
@@ -274,7 +286,10 @@ GoRouter _setupRouter(
     WorkingHoursEditorCubit.new,
   );
   AppDependency.injector.registerFactory<MedicalServiceListCubit>(
-    () => MedicalServiceListCubit(WatchMedicalServicesUseCase(services)),
+    () => MedicalServiceListCubit(
+      WatchMedicalServicesUseCase(services),
+      AppDependency.injector.get<MedicalServiceOverviewCalculator>(),
+    ),
   );
   AppDependency.injector.registerFactory<MedicalServiceSaveCubit>(
     () => MedicalServiceSaveCubit(

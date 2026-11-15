@@ -1,9 +1,19 @@
 import 'package:clinic_appointment_system/core/time/calendar_date.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/services/appointment_start_comparator.dart';
+import 'package:clinic_appointment_system/features/availability/domain/entities/staff_availability.dart';
+import 'package:clinic_appointment_system/features/institution/domain/entities/branch.dart';
+import 'package:clinic_appointment_system/features/institution/domain/entities/department.dart';
+import 'package:clinic_appointment_system/features/medical_services/domain/entities/medical_service.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_calendar_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/enums/staff_calendar_view.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/models/staff_calendar_layout.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/models/staff_calendar_layout_factory.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/models/staff_workspace.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../core/time/support/fixed_clock.dart';
+import '../../../availability/domain/support/availability_fixture.dart';
+import '../../../staff_management/domain/doubles/staff_fixtures.dart';
 
 void main() {
   group('StaffCalendarCubit', () {
@@ -14,7 +24,12 @@ void main() {
 
     setUp(() {
       clock = FixedClock(todayInstant);
-      cubit = StaffCalendarCubit(clock: clock);
+      cubit = StaffCalendarCubit(
+        clock: clock,
+        layoutFactory: const StaffCalendarLayoutFactory(
+          AppointmentStartComparator(),
+        ),
+      );
     });
 
     tearDown(() {
@@ -35,6 +50,47 @@ void main() {
       expect(visible[4], CalendarDate(year: 2026, month: 10, day: 30));
       expect(visible[5], CalendarDate(year: 2026, month: 10, day: 31));
       expect(visible.last, CalendarDate(year: 2026, month: 11, day: 1));
+    });
+
+    test('calculates week and anchor-day layouts from supplied data', () {
+      const availabilityFixture = AvailabilityFixture();
+      final staff = const StaffFixtures().doctor(
+        id: 'staff',
+        branchId: 'branch',
+        departmentId: 'department',
+      );
+      final workspace = StaffWorkspace(
+        staff: staff,
+        availability: StaffAvailability.empty(
+          staffId: 'staff',
+          branchId: 'branch',
+        ),
+        branch: Branch(
+          id: 'branch',
+          clinicId: 'clinic',
+          name: 'Branch',
+          address: 'Address',
+          workingHours: availabilityFixture.hours,
+        ),
+        department: const Department(
+          id: 'department',
+          name: 'Cardiology',
+          branchId: 'branch',
+        ),
+        services: const <MedicalService>[],
+      );
+
+      cubit.updateAppointments(const []);
+      expect(cubit.state.layout, isNull);
+      cubit.updateWorkspace(workspace);
+
+      final weekLayout = cubit.state.layout as StaffCalendarLayout;
+      final dayLayout = cubit.state.dayLayout as StaffCalendarLayout;
+      expect(weekLayout.days, hasLength(6));
+      expect(dayLayout.days, hasLength(1));
+
+      cubit.showDay();
+      expect(cubit.state.layout?.days, hasLength(1));
     });
 
     test('switches view mode between day and week', () {

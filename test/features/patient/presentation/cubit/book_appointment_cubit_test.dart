@@ -36,8 +36,7 @@ void main() {
       branchHours: fixtures.branchHours,
     ),
     availability: fixtures.muratAvailability,
-    bookedSlots: const [],
-    now: fixtures.now,
+    days: const [],
   );
 
   BookingSelection selection() {

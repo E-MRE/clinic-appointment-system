@@ -56,6 +56,25 @@ abstract final class AppRoutes {
   /// Administrator home location.
   static const String adminHome = '/admin';
 
+  /// Administrator appointment list location.
+  static const String adminAppointments = '/admin/appointments';
+
+  /// Query parameter used to preselect an appointment status on the admin list.
+  static const String adminAppointmentStatusParameter = 'status';
+
+  /// Query value that preselects pending appointments.
+  static const String adminPendingStatusValue = 'pending';
+
+  /// The administrator appointment list with pending requests preselected.
+  static String get adminAppointmentsWithPendingStatus {
+    return Uri(
+      path: adminAppointments,
+      queryParameters: {
+        adminAppointmentStatusParameter: adminPendingStatusValue,
+      },
+    ).toString();
+  }
+
   /// Institution overview and its branch routes.
   static const String institution = '/admin/institution';
   static const String branchNewSegment = 'clinics/:clinicId/branches/new';

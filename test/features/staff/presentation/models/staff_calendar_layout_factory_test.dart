@@ -4,6 +4,7 @@ import 'package:clinic_appointment_system/core/time/clock_time.dart';
 import 'package:clinic_appointment_system/core/time/time_range.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status.dart';
+import 'package:clinic_appointment_system/features/appointments/domain/services/appointment_start_comparator.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/value_objects/appointment_status_change.dart';
 import 'package:clinic_appointment_system/features/availability/domain/entities/staff_availability.dart';
 import 'package:clinic_appointment_system/features/availability/domain/entities/weekly_window.dart';
@@ -46,7 +47,7 @@ Appointment _makeAppointment({
 
 void main() {
   group('StaffCalendarLayoutFactory', () {
-    const factory = StaffCalendarLayoutFactory();
+    const factory = StaffCalendarLayoutFactory(AppointmentStartComparator());
     // Mon 2026-10-26 .. Sun 2026-11-01
     final monday = CalendarDate(year: 2026, month: 10, day: 26);
     final weekDates = List<CalendarDate>.generate(7, (i) => monday.addDays(i));

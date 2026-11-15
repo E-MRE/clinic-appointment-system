@@ -10,7 +10,9 @@ final class AppTableColumn<T> {
     this.semanticsLabel,
     this.alignment = AppTableAlignment.start,
     this.noWrap = false,
-  }) : assert(label != '' || (semanticsLabel != null && semanticsLabel != ''));
+    this.maxWidth,
+  }) : assert(label != '' || (semanticsLabel != null && semanticsLabel != '')),
+       assert(maxWidth == null || maxWidth > 0);
 
   /// Visible header text, empty for an icon-only column.
   final String label;
@@ -23,6 +25,9 @@ final class AppTableColumn<T> {
 
   /// Prevents text in this column from wrapping at soft breaks.
   final bool noWrap;
+
+  /// Optional content width before a long value wraps or ellipsizes.
+  final double? maxWidth;
 
   /// Builds the content for one row.
   final Widget Function(BuildContext, T) cellBuilder;
