@@ -20,7 +20,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 part 'department_section_state.dart';
 part 'department_rows.dart';
 part 'department_add_row.dart';
-part 'department_edit_content.dart';
 part 'department_section_content.dart';
 part 'department_edit_dialog.dart';
 

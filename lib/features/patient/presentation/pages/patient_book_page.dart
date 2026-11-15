@@ -60,7 +60,6 @@ import 'package:go_router/go_router.dart';
 
 part 'patient_book_choice_cell.dart';
 part 'patient_book_content.dart';
-part 'patient_book_day_cell.dart';
 part 'patient_book_effects.dart';
 part 'patient_book_failure.dart';
 part 'patient_book_option_card.dart';
