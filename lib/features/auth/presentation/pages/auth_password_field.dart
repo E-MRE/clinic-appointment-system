@@ -54,11 +54,27 @@ final class _AuthPasswordFieldState extends State<_AuthPasswordField> {
       helper: widget.helper,
       obscureText: _obscured,
       prefixIconAsset: widget.showPrefix ? Assets.images.auth.lock : null,
-      suffix: _AuthPasswordSuffix(
-        obscured: _obscured,
-        enabled: widget.enabled,
-        onPressed: _toggleObscured,
-      ),
+      suffix: _buildSuffix(context),
+    );
+  }
+
+  /// Builds the visibility control while preserving this field's toggle state.
+  Widget _buildSuffix(BuildContext context) {
+    return IconButton(
+      iconSize: AppSizes.s20,
+      tooltip:
+          (_obscured
+                  ? LocaleKeys.auth_showPassword
+                  : LocaleKeys.auth_hidePassword)
+              .translate(),
+      onPressed: widget.enabled ? _toggleObscured : null,
+      icon: _obscured
+          ? SquareSvgIcon(
+              asset: Assets.images.auth.eye,
+              color: context.colorScheme.onSurfaceVariant,
+              size: AppSizes.s20,
+            )
+          : const Icon(Icons.visibility_off_outlined, size: AppSizes.s20),
     );
   }
 

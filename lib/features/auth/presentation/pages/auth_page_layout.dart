@@ -25,12 +25,34 @@ final class _AuthPageLayout extends StatelessWidget {
     }
     return AppScaffold(
       child: context.screenSize.isMobile
-          ? _AuthMobileForm(kind: kind, canNavigate: canNavigate, child: child)
+          ? _buildMobileForm()
           : _AuthScrollingForm(
               kind: kind,
               canNavigate: canNavigate,
               child: child,
             ),
+    );
+  }
+
+  /// Fills the mobile viewport with an auth form.
+  Widget _buildMobileForm() {
+    return Align(
+      alignment: Alignment.topCenter,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: kind.config.formWidth),
+        child: CustomScrollView(
+          slivers: [
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: _AuthFormSurface(
+                kind: kind,
+                canNavigate: canNavigate,
+                child: child,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

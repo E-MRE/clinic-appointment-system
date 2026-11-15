@@ -1,5 +1,6 @@
 part of 'startup_error_page.dart';
 
+/// Selects the matching layout for startup error actions.
 final class _StartupErrorActions extends StatelessWidget {
   const _StartupErrorActions({
     required this.kind,
@@ -17,19 +18,43 @@ final class _StartupErrorActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (isMobile) {
-      return _StartupErrorMobileActions(
-        kind: kind,
-        onRetry: onRetry,
-        onGoHome: onGoHome,
-        onSignOut: onSignOut,
-      );
+      return _buildMobile();
     }
 
-    return _StartupErrorDesktopActions(
-      kind: kind,
-      onRetry: onRetry,
-      onGoHome: onGoHome,
-      onSignOut: onSignOut,
+    return _buildDesktop();
+  }
+
+  /// Builds the vertical action layout used on mobile.
+  Widget _buildMobile() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: AppSizes.s8,
+      children: [
+        if (kind.config.offersRetry) _StartupRetryButton(onRetry: onRetry),
+        if (onSignOut != null || kind.config.offersGoHome)
+          _StartupSecondaryActionButton(
+            onSignOut: onSignOut,
+            onGoHome: onGoHome,
+          ),
+      ],
+    );
+  }
+
+  /// Builds the centered action wrap used on tablet and desktop.
+  Widget _buildDesktop() {
+    return Wrap(
+      alignment: WrapAlignment.center,
+      spacing: AppSizes.s12,
+      runSpacing: AppSizes.s8,
+      children: [
+        if (onSignOut != null || kind.config.offersGoHome)
+          _StartupSecondaryActionButton(
+            onSignOut: onSignOut,
+            onGoHome: onGoHome,
+          ),
+        if (kind.config.offersRetry) _StartupRetryButton(onRetry: onRetry),
+      ],
     );
   }
 }
