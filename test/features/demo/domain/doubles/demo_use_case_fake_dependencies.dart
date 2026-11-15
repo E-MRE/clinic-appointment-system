@@ -11,6 +11,8 @@ final class DemoUseCaseFakeDependencies
   DemoUseCaseFakeDependencies({
     required this.accountResult,
     this.replaceResult = const DataResult.success(data: null),
+    this.clearResult = const DataResult.success(data: null),
+    this.clearOperation,
   });
 
   /// The result returned from account resolution.
@@ -19,11 +21,20 @@ final class DemoUseCaseFakeDependencies
   /// The result returned from demo data replacement.
   final DataResult<void> replaceResult;
 
+  /// The result returned from demo data clearing.
+  final DataResult<void> clearResult;
+
+  /// Optional delayed clear operation used to exercise request concurrency.
+  final Future<DataResult<void>> Function()? clearOperation;
+
   /// Number of account-resolution requests received.
   int resolveCalls = 0;
 
   /// Number of replacement requests received.
   int replaceCalls = 0;
+
+  /// Number of clear requests received.
+  int clearCalls = 0;
 
   /// The latest set passed to [replace].
   DemoDataSet? replacedDataSet;
@@ -39,5 +50,13 @@ final class DemoUseCaseFakeDependencies
     replaceCalls++;
     replacedDataSet = set;
     return replaceResult;
+  }
+
+  @override
+  Future<DataResult<void>> clear() async {
+    clearCalls++;
+    final operation = clearOperation;
+    if (operation != null) return await operation();
+    return clearResult;
   }
 }

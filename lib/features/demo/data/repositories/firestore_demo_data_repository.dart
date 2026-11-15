@@ -36,8 +36,27 @@ final class FirestoreDemoDataRepository implements DemoDataRepository {
         );
       }
       await _deleteInstitutionRecords();
-      await _deleteDemoRecords(set);
+      await _deleteDemoRecords(
+        retainedUserIds: <String>{
+          set.staff[_firstProfileIndex].id,
+          set.patients[_firstProfileIndex].id,
+        },
+      );
       await _writeDataSet(set);
+      return const DataResult.success(data: null);
+    } on FirebaseException {
+      return const DataResult.error(errorCode: DemoErrorCode.unavailable);
+    } on Exception {
+      return const DataResult.error(errorCode: DemoErrorCode.invalidScenario);
+    }
+  }
+
+  /// Removes only demo-marked records and leaves all unmarked records intact.
+  @override
+  Future<DataResult<void>> clear() async {
+    try {
+      await _deleteDemoInstitutionRecords();
+      await _deleteDemoRecords();
       return const DataResult.success(data: null);
     } on FirebaseException {
       return const DataResult.error(errorCode: DemoErrorCode.unavailable);
@@ -146,16 +165,21 @@ final class FirestoreDemoDataRepository implements DemoDataRepository {
     await _deleteDocuments(_firestore.collection(FirestoreConstants.clinics));
   }
 
-  Future<void> _deleteDemoRecords(DemoDataSet set) async {
-    final linkedIds = <String>{
-      set.staff[_firstProfileIndex].id,
-      set.patients[_firstProfileIndex].id,
-    };
+  Future<void> _deleteDemoInstitutionRecords() async {
+    await _deleteDemoDocuments(FirestoreConstants.services);
+    await _deleteDemoDocuments(FirestoreConstants.departments);
+    await _deleteDemoDocuments(FirestoreConstants.branches);
+    await _deleteDemoDocuments(FirestoreConstants.clinics);
+  }
+
+  Future<void> _deleteDemoRecords({
+    Set<String> retainedUserIds = const <String>{},
+  }) async {
     await _deleteDocuments(
       _firestore
           .collection(FirestoreConstants.users)
           .where(FirestoreConstants.isDemo, isEqualTo: true),
-      retainedIds: linkedIds,
+      retainedIds: retainedUserIds,
     );
     await _deleteDocuments(
       _firestore
@@ -168,6 +192,14 @@ final class FirestoreDemoDataRepository implements DemoDataRepository {
           .where(FirestoreConstants.isDemo, isEqualTo: true),
     );
     await _deleteDemoBookingProjections();
+  }
+
+  Future<void> _deleteDemoDocuments(String collection) async {
+    await _deleteDocuments(
+      _firestore
+          .collection(collection)
+          .where(FirestoreConstants.isDemo, isEqualTo: true),
+    );
   }
 
   Future<void> _deleteDemoBookingProjections() async {

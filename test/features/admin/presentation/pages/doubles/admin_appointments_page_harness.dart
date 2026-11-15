@@ -25,6 +25,7 @@ import 'package:clinic_appointment_system/features/auth/domain/entities/auth_ses
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_state.dart';
 import 'package:clinic_appointment_system/features/demo/domain/models/demo_accounts.dart';
+import 'package:clinic_appointment_system/features/demo/domain/usecases/clear_demo_data_use_case.dart';
 import 'package:clinic_appointment_system/features/demo/domain/usecases/load_demo_data_use_case.dart';
 import 'package:clinic_appointment_system/features/demo/presentation/cubit/demo_data_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_branches_use_case.dart';
@@ -312,6 +313,7 @@ final class AdminAppointmentsPageHarness {
     injector.registerFactory<DemoDataCubit>(
       () => DemoDataCubit(
         LoadDemoDataUseCase(demoDependencies, demoDependencies, clock),
+        ClearDemoDataUseCase(demoDependencies),
       ),
     );
     injector.registerFactory<AppointmentApproveCubit>(

@@ -35,6 +35,7 @@ import 'package:clinic_appointment_system/features/auth/presentation/pages/passw
 import 'package:clinic_appointment_system/features/auth/presentation/pages/sign_in_page.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/pages/sign_up_page.dart';
 import 'package:clinic_appointment_system/features/demo/domain/models/demo_accounts.dart';
+import 'package:clinic_appointment_system/features/demo/domain/usecases/clear_demo_data_use_case.dart';
 import 'package:clinic_appointment_system/features/demo/domain/usecases/load_demo_data_use_case.dart';
 import 'package:clinic_appointment_system/features/demo/presentation/cubit/demo_data_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_branches_use_case.dart';
@@ -641,6 +642,7 @@ final class _AuthTestApp {
           demoDependencies,
           AppDependency.injector.get<Clock>(),
         ),
+        ClearDemoDataUseCase(demoDependencies),
       ),
     );
     availability.registerCubits();

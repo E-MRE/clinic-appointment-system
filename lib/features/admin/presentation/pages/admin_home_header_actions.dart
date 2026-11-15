@@ -26,21 +26,22 @@ final class _AdminHomeHeaderActions extends StatelessWidget {
                 _branchSelector(context, catalogState, selectedBranchId),
                 _appointmentsButton(context),
                 _buildDemoDataButton(context, demoState),
+                _buildClearDemoDataButton(context, demoState),
               ],
             ),
             if (demoState is DemoDataLoading)
               _buildDemoFeedback(
-                LocaleKeys.demoData_loading.translate(),
+                _loadingMessage(demoState.command),
                 AppMessageBannerVariant.info,
               ),
             if (demoState is DemoDataSuccess)
               _buildDemoFeedback(
-                LocaleKeys.demoData_success.translate(),
+                _successMessage(demoState.command),
                 AppMessageBannerVariant.highlight,
               ),
             if (demoState is DemoDataFailure)
               _buildDemoFeedback(
-                demoState.errorCode.message,
+                _failureMessage(demoState),
                 AppMessageBannerVariant.error,
               ),
           ],
@@ -97,16 +98,22 @@ final class _AdminHomeHeaderActions extends StatelessWidget {
   }
 
   FilledButton _buildDemoDataButton(BuildContext context, DemoDataState state) {
-    final isLoading = state is DemoDataLoading;
+    final isRequestInProgress = state is DemoDataLoading;
+    final isLoading =
+        state is DemoDataLoading && state.command == DemoDataCommand.load;
     VoidCallback? onPressed;
-    if (!isLoading) {
+    if (!isRequestInProgress) {
       onPressed = () {
         _confirmDemoDataLoad(context);
       };
     }
     return FilledButton.icon(
       onPressed: onPressed,
-      icon: _buildDemoDataIcon(isLoading),
+      icon: _buildDemoDataIcon(
+        isLoading,
+        icon: Icons.cloud_download_outlined,
+        color: context.colorScheme.onPrimary,
+      ),
       label: AppText.label(
         LocaleKeys.demoData_loadButton.translate(),
         tone: TextTone.onPrimary,
@@ -114,14 +121,49 @@ final class _AdminHomeHeaderActions extends StatelessWidget {
     );
   }
 
-  Widget _buildDemoDataIcon(bool isLoading) {
+  FilledButton _buildClearDemoDataButton(
+    BuildContext context,
+    DemoDataState state,
+  ) {
+    final isRequestInProgress = state is DemoDataLoading;
+    final isLoading =
+        state is DemoDataLoading && state.command == DemoDataCommand.clear;
+    VoidCallback? onPressed;
+    if (!isRequestInProgress) {
+      onPressed = () {
+        _confirmDemoDataClear(context);
+      };
+    }
+    return FilledButton.icon(
+      onPressed: onPressed,
+      style: FilledButton.styleFrom(
+        backgroundColor: context.colorScheme.errorContainer,
+        foregroundColor: context.colorScheme.onErrorContainer,
+      ),
+      icon: _buildDemoDataIcon(
+        isLoading,
+        icon: Icons.delete_sweep_outlined,
+        color: context.colorScheme.onErrorContainer,
+      ),
+      label: AppText.label(
+        LocaleKeys.demoData_clearButton.translate(),
+        tone: TextTone.onErrorContainer,
+      ),
+    );
+  }
+
+  Widget _buildDemoDataIcon(
+    bool isLoading, {
+    required IconData icon,
+    required Color color,
+  }) {
     if (isLoading) {
-      return const SizedBox.square(
+      return SizedBox.square(
         dimension: AppSizes.s16,
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator(color: color),
       );
     }
-    return const Icon(Icons.cloud_download_outlined);
+    return Icon(icon);
   }
 
   Widget _buildDemoFeedback(String message, AppMessageBannerVariant variant) {
@@ -134,9 +176,54 @@ final class _AdminHomeHeaderActions extends StatelessWidget {
   Future<void> _confirmDemoDataLoad(BuildContext context) async {
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (_) => const _AdminHomeDemoDataDialog(),
+      builder: (_) => _AdminHomeDemoDataDialog(
+        title: LocaleKeys.demoData_confirmTitle.translate(),
+        message: LocaleKeys.demoData_confirmMessage.translate(),
+        actionLabel: LocaleKeys.demoData_confirmAction.translate(),
+        actionTone: TextTone.onPrimary,
+      ),
     );
     if (confirmed != true || !context.mounted) return;
     await context.read<DemoDataCubit>().load();
+  }
+
+  Future<void> _confirmDemoDataClear(BuildContext context) async {
+    final colors = context.colorScheme;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (_) => _AdminHomeDemoDataDialog(
+        title: LocaleKeys.demoData_clearConfirmTitle.translate(),
+        message: LocaleKeys.demoData_clearConfirmMessage.translate(),
+        actionLabel: LocaleKeys.demoData_clearConfirmAction.translate(),
+        actionTone: TextTone.onErrorContainer,
+        actionStyle: FilledButton.styleFrom(
+          backgroundColor: colors.errorContainer,
+          foregroundColor: colors.onErrorContainer,
+        ),
+      ),
+    );
+    if (confirmed != true || !context.mounted) return;
+    await context.read<DemoDataCubit>().clear();
+  }
+
+  String _loadingMessage(DemoDataCommand command) {
+    return switch (command) {
+      DemoDataCommand.load => LocaleKeys.demoData_loading.translate(),
+      DemoDataCommand.clear => LocaleKeys.demoData_clearLoading.translate(),
+    };
+  }
+
+  String _successMessage(DemoDataCommand command) {
+    return switch (command) {
+      DemoDataCommand.load => LocaleKeys.demoData_success.translate(),
+      DemoDataCommand.clear => LocaleKeys.demoData_clearSuccess.translate(),
+    };
+  }
+
+  String _failureMessage(DemoDataFailure failure) {
+    return switch (failure.command) {
+      DemoDataCommand.load => failure.errorCode.message,
+      DemoDataCommand.clear => LocaleKeys.demoData_clearFailure.translate(),
+    };
   }
 }

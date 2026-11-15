@@ -57,11 +57,18 @@ abstract class LocaleKeys {
   static const home_admin = 'home.admin';
   static const home = 'home';
   static const demoData_loadButton = 'demoData.loadButton';
+  static const demoData_clearButton = 'demoData.clearButton';
   static const demoData_confirmTitle = 'demoData.confirmTitle';
   static const demoData_confirmMessage = 'demoData.confirmMessage';
   static const demoData_confirmAction = 'demoData.confirmAction';
   static const demoData_loading = 'demoData.loading';
   static const demoData_success = 'demoData.success';
+  static const demoData_clearConfirmTitle = 'demoData.clearConfirmTitle';
+  static const demoData_clearConfirmMessage = 'demoData.clearConfirmMessage';
+  static const demoData_clearConfirmAction = 'demoData.clearConfirmAction';
+  static const demoData_clearLoading = 'demoData.clearLoading';
+  static const demoData_clearSuccess = 'demoData.clearSuccess';
+  static const demoData_clearFailure = 'demoData.clearFailure';
   static const demoData_errors_doctorAccountMissing =
       'demoData.errors.doctorAccountMissing';
   static const demoData_errors_patientAccountMissing =

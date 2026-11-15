@@ -8,7 +8,7 @@ import 'package:clinic_appointment_system/features/demo/domain/repositories/demo
 import 'package:clinic_appointment_system/features/demo/domain/services/demo_scenario_builder.dart';
 
 /// Resolves the owner's accounts, builds the clock-relative scenario and
-/// persists it through the demo data boundary.
+/// persists it through the demo data repository.
 final class LoadDemoDataUseCase implements UseCase<DataResult<void>, NoParams> {
   /// Injects the account resolver, replacement repository and scenario clock.
   const LoadDemoDataUseCase(this._accounts, this._repository, this._clock);

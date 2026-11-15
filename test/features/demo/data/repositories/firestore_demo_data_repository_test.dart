@@ -357,4 +357,137 @@ void main() {
       );
     },
   );
+
+  test('clears only demo-marked records in all owned collections', () async {
+    final firestore = FakeFirebaseFirestore();
+    final repository = FirestoreDemoDataRepository(
+      firestore,
+      const MedicalServiceModelFactory(),
+    );
+    final markedReferences = <DocumentReference<Map<String, dynamic>>>[
+      firestore.collection(FirestoreConstants.services).doc('demo-service'),
+      firestore
+          .collection(FirestoreConstants.departments)
+          .doc('demo-department'),
+      firestore.collection(FirestoreConstants.branches).doc('demo-branch'),
+      firestore.collection(FirestoreConstants.clinics).doc('demo-clinic'),
+      firestore.collection(FirestoreConstants.users).doc('demo-user'),
+      firestore
+          .collection(FirestoreConstants.staffAvailability)
+          .doc('demo-staff'),
+      firestore
+          .collection(FirestoreConstants.appointments)
+          .doc('demo-appointment'),
+      firestore
+          .collection(FirestoreConstants.staffBookings)
+          .doc('demo-staff')
+          .collection(FirestoreConstants.days)
+          .doc('2026-11-15'),
+      firestore
+          .collection(FirestoreConstants.patientBookings)
+          .doc('demo-patient')
+          .collection(FirestoreConstants.days)
+          .doc('2026-11-15'),
+    ];
+    for (final reference in markedReferences) {
+      await reference.set({FirestoreConstants.isDemo: true});
+    }
+
+    final linkedDoctorProfile = <String, dynamic>{
+      FirestoreConstants.role: 'doctor',
+      FirestoreConstants.fullName: 'Existing Doctor Name',
+      FirestoreConstants.email: 'servet@doktor.com',
+    };
+    final linkedPatientProfile = <String, dynamic>{
+      FirestoreConstants.role: 'patient',
+      FirestoreConstants.fullName: 'Existing Patient Name',
+      FirestoreConstants.email: 'remzi@pala.com',
+    };
+    final linkedAvailability = <String, dynamic>{
+      FirestoreConstants.branchId: 'real-branch',
+      FirestoreConstants.weekly: <String, dynamic>{},
+      FirestoreConstants.oneOff: <dynamic>[],
+    };
+    final linkedDoctorReference = firestore
+        .collection(FirestoreConstants.users)
+        .doc('linked-doctor');
+    final linkedPatientReference = firestore
+        .collection(FirestoreConstants.users)
+        .doc('linked-patient');
+    final linkedAvailabilityReference = firestore
+        .collection(FirestoreConstants.staffAvailability)
+        .doc('linked-doctor');
+    await linkedDoctorReference.set(linkedDoctorProfile);
+    await linkedPatientReference.set(linkedPatientProfile);
+    await linkedAvailabilityReference.set(linkedAvailability);
+
+    final realInstitutionReference = firestore
+        .collection(FirestoreConstants.clinics)
+        .doc('real-clinic');
+    final realUserReference = firestore
+        .collection(FirestoreConstants.users)
+        .doc('real-user');
+    final realAppointmentReference = firestore
+        .collection(FirestoreConstants.appointments)
+        .doc('real-appointment');
+    final realProjectionReference = firestore
+        .collection(FirestoreConstants.patientBookings)
+        .doc('real-patient')
+        .collection(FirestoreConstants.days)
+        .doc('2026-11-15');
+    final otherProjectionReference = firestore
+        .collection('otherBookings')
+        .doc('owner')
+        .collection(FirestoreConstants.days)
+        .doc('2026-11-15');
+    await realInstitutionReference.set({
+      FirestoreConstants.name: 'Real clinic',
+      FirestoreConstants.isDemo: false,
+    });
+    await realUserReference.set({FirestoreConstants.fullName: 'Real User'});
+    await realAppointmentReference.set({
+      FirestoreConstants.patientId: 'real-patient',
+      FirestoreConstants.isDemo: false,
+    });
+    await realProjectionReference.set({FirestoreConstants.isDemo: false});
+    await otherProjectionReference.set({FirestoreConstants.isDemo: true});
+
+    final result = await repository.clear();
+
+    expect(result.isSuccess, isTrue);
+    for (final reference in markedReferences) {
+      expect((await reference.get()).exists, isFalse);
+    }
+    expect((await realInstitutionReference.get()).exists, isTrue);
+    expect((await realUserReference.get()).exists, isTrue);
+    expect((await realAppointmentReference.get()).exists, isTrue);
+    expect((await realProjectionReference.get()).exists, isTrue);
+    expect((await otherProjectionReference.get()).exists, isTrue);
+    expect(
+      (await linkedDoctorReference.get()).data(),
+      equals(linkedDoctorProfile),
+    );
+    expect(
+      (await linkedPatientReference.get()).data(),
+      equals(linkedPatientProfile),
+    );
+    expect(
+      (await linkedAvailabilityReference.get()).data(),
+      equals(linkedAvailability),
+    );
+  });
+
+  test(
+    'clearing empty data succeeds without requiring account resolution',
+    () async {
+      final repository = FirestoreDemoDataRepository(
+        FakeFirebaseFirestore(),
+        const MedicalServiceModelFactory(),
+      );
+
+      final result = await repository.clear();
+
+      expect(result.isSuccess, isTrue);
+    },
+  );
 }

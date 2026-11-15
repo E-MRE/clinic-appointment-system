@@ -58,11 +58,18 @@
   },
   "demoData": {
     "loadButton": "Demo verisini yükle",
+    "clearButton": "Demo verisini temizle",
     "confirmTitle": "Demo verisi yüklensin mi?",
     "confirmMessage": "Klinik, şube, bölüm, hizmet ve demo kayıtları yenilenir. Demo dışı kullanıcılar ve randevular korunur; eski kurum kimliklerine bağlı kayıtlar konsoldan düzeltilmelidir.",
     "confirmAction": "Demo verisini yükle",
     "loading": "Demo verisi yükleniyor.",
     "success": "Demo verisi başarıyla yüklendi.",
+    "clearConfirmTitle": "Demo verileri temizlensin mi?",
+    "clearConfirmMessage": "Klinik, şube, bölüm, hizmet, kullanıcı, uygunluk, randevu ve rezervasyon kayıtlarındaki demo işaretli veriler silinir. Demo dışı kayıtlar, bağlı giriş profilleri ve doktorun gerçek uygunluk kaydı korunur. Bu işlem geri alınamaz.",
+    "clearConfirmAction": "Demo verisini temizle",
+    "clearLoading": "Demo verisi temizleniyor.",
+    "clearSuccess": "Demo verisi başarıyla temizlendi.",
+    "clearFailure": "Demo verisi temizlenemedi. Bağlantıyı kontrol edip tekrar deneyin.",
     "errors": {
       "doctorAccountMissing": "Servet doktor hesabı bulunamadı. Hesabı oluşturup tekrar deneyin.",
       "patientAccountMissing": "Remzi hasta hesabı bulunamadı. Hesabı oluşturup tekrar deneyin.",

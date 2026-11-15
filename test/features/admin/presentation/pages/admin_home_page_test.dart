@@ -77,6 +77,30 @@ void main() {
     expect(find.text('Demo verisi başarıyla yüklendi.'), findsOneWidget);
   });
 
+  testWidgets('clears demo data only after confirming the dialog', (
+    tester,
+  ) async {
+    final harness = AdminAppointmentsPageHarness();
+    await harness.initialize();
+    addTearDown(() => harness.dispose(tester));
+    await harness.pumpHomePage(tester);
+
+    final clearButton = find.widgetWithText(
+      FilledButton,
+      'Demo verisini temizle',
+    );
+    await tester.tap(clearButton.first);
+    await tester.pumpAndSettle();
+    expect(find.text('Demo verileri temizlensin mi?'), findsOneWidget);
+
+    await tester.tap(clearButton.last);
+    await tester.pumpAndSettle();
+
+    expect(harness.demoDependencies.clearCalls, 1);
+    expect(harness.demoDependencies.replaceCalls, 0);
+    expect(find.text('Demo verisi başarıyla temizlendi.'), findsOneWidget);
+  });
+
   testWidgets('renders KPI values, breakdown rows and pending actions', (
     tester,
   ) async {

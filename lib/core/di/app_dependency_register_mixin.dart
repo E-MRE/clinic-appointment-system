@@ -54,6 +54,7 @@ import 'package:clinic_appointment_system/features/demo/data/repositories/firest
 import 'package:clinic_appointment_system/features/demo/data/services/firestore_demo_account_resolver.dart';
 import 'package:clinic_appointment_system/features/demo/domain/repositories/demo_account_resolver.dart';
 import 'package:clinic_appointment_system/features/demo/domain/repositories/demo_data_repository.dart';
+import 'package:clinic_appointment_system/features/demo/domain/usecases/clear_demo_data_use_case.dart';
 import 'package:clinic_appointment_system/features/demo/domain/usecases/load_demo_data_use_case.dart';
 import 'package:clinic_appointment_system/features/demo/presentation/cubit/demo_data_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/data/repositories/firestore_branch_repository.dart';
@@ -214,6 +215,9 @@ mixin AppDependencyRegisterMixin {
         injector.get<DemoDataRepository>(),
         injector.get<Clock>(),
       ),
+    );
+    injector.registerLazySingleton<ClearDemoDataUseCase>(
+      () => ClearDemoDataUseCase(injector.get<DemoDataRepository>()),
     );
     injector.registerLazySingleton<AppointmentRepository>(
       () => FirestoreAppointmentRepository(injector.get<FirebaseFirestore>()),
@@ -588,7 +592,10 @@ mixin AppDependencyRegisterMixin {
       ),
     );
     injector.registerFactory<DemoDataCubit>(
-      () => DemoDataCubit(injector.get<LoadDemoDataUseCase>()),
+      () => DemoDataCubit(
+        injector.get<LoadDemoDataUseCase>(),
+        injector.get<ClearDemoDataUseCase>(),
+      ),
     );
     injector.registerFactory<PatientAppointmentsTabCubit>(
       PatientAppointmentsTabCubit.new,
