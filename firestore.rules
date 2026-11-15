@@ -335,8 +335,9 @@ service cloud.firestore {
 
     // appointments/{appointmentId}: lifecycle changes append an audit entry.
     match /appointments/{appointmentId} {
-      allow read: if resource != null && (isAdmin()
-        || isUser(resource.data.patientId) || isUser(resource.data.staffId));
+      // Admins may read a missing id: the demo seed checks its fixed ids first.
+      allow read: if isAdmin() || (resource != null
+        && (isUser(resource.data.patientId) || isUser(resource.data.staffId)));
       // Demo appointments keep the shared field, fee, date/time format, status,
       // final-history-entry and staff/profile checks below. They bypass live
       // patient caller ownership, pending-only and single-entry booking

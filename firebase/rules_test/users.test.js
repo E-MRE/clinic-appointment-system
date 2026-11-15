@@ -380,7 +380,7 @@ describe('users delete', () => {
 describe('other paths', () => {
   it('denies reads and writes outside matched collections', async () => {
     const db = signedIn('admin');
-    await assertFails(getDoc(doc(db, 'appointments', 'a1')));
-    await assertFails(setDoc(doc(db, 'appointments', 'a1'), { status: 'x' }));
+    await assertFails(getDoc(doc(db, 'unmatchedRecords', 'a1')));
+    await assertFails(setDoc(doc(db, 'unmatchedRecords', 'a1'), { status: 'x' }));
   });
 });
