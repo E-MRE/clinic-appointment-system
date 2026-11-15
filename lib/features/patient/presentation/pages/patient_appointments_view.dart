@@ -11,41 +11,12 @@ final class _PatientAppointmentsView extends StatelessWidget {
     final catalogState = context.watch<ClinicCatalogCubit>().state;
     final appointmentsState = context.watch<PatientAppointmentsCubit>().state;
 
-    return AppScaffold(child: _buildChild(appointmentsState, catalogState));
-  }
-
-  Widget _buildChild(
-    PatientAppointmentsState appointmentsState,
-    ClinicCatalogState catalogState,
-  ) {
-    if (appointmentsState is PatientAppointmentsFailure) {
-      return _failure(appointmentsState.errorCode);
-    }
-
-    if (catalogState is ClinicCatalogFailure) {
-      return _failure(AppointmentErrorCode.unavailable);
-    }
-
-    if (catalogState is ClinicCatalogLoaded &&
-        appointmentsState is PatientAppointmentsLoaded) {
-      return _loadedContent(appointmentsState);
-    }
-
-    return LoadingState(
-      variant: LoadingStateVariant.skeletonList,
-      label: LocaleKeys.patient_appointments_loading.translate(),
-    );
-  }
-
-  Widget _failure(AppointmentErrorCode errorCode) {
-    return _PatientAppointmentsFailure(errorCode: errorCode);
-  }
-
-  Widget _loadedContent(PatientAppointmentsLoaded appointmentsState) {
-    return _PatientAppointmentsContent(
-      firstName: user.firstName,
-      overview: appointmentsState.overview,
-      bookableDepartments: appointmentsState.bookableDepartments,
+    return AppScaffold(
+      child: _PatientAppointmentsViewChild(
+        user: user,
+        appointmentsState: appointmentsState,
+        catalogState: catalogState,
+      ),
     );
   }
 }

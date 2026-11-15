@@ -39,31 +39,8 @@ final class _PatientBookScheduleCard extends StatelessWidget {
     }
     return BlocBuilder<StaffWeekScheduleCubit, StaffWeekScheduleState>(
       builder: (context, state) {
-        return _buildScheduleState(state, selection);
+        return _PatientBookScheduleBody(state: state, selection: selection);
       },
-    );
-  }
-
-  /// Builds the schedule content for the current selection.
-  Widget _buildScheduleState(
-    StaffWeekScheduleState state,
-    BookingSelection selection,
-  ) {
-    if (state is StaffWeekScheduleLoaded &&
-        selection.isScheduledBy(state.schedule.request)) {
-      return _PatientBookWeekSlots(
-        schedule: state.schedule,
-        selection: selection,
-      );
-    }
-
-    if (state is StaffWeekScheduleFailure) {
-      return const _PatientBookScheduleFailure();
-    }
-
-    return LoadingState(
-      variant: LoadingStateVariant.centeredIndicator,
-      label: LocaleKeys.patient_book_scheduleLoading.translate(),
     );
   }
 }

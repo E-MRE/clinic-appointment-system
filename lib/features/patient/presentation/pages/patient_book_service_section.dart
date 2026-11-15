@@ -34,8 +34,7 @@ final class _PatientBookServiceSection extends StatelessWidget {
                 message: LocaleKeys.patient_book_noServices.translate(),
               ),
             for (final service in services)
-              _buildServiceCard(
-                context,
+              _PatientBookServiceCard(
                 service: service,
                 catalog: catalog,
                 isSelected: service.id == selection.service?.id,
@@ -68,24 +67,6 @@ final class _PatientBookServiceSection extends StatelessWidget {
         removeTooltip: LocaleKeys.patient_book_removeDepartment.translate(),
         onRemove: context.read<BookingSelectionCubit>().removeDepartmentLimit,
       ),
-    );
-  }
-
-  /// Builds a service card with its selected state and booking captions.
-  _PatientBookOptionCard _buildServiceCard(
-    BuildContext context, {
-    required MedicalService service,
-    required ClinicCatalog catalog,
-    required bool isSelected,
-  }) {
-    return _PatientBookOptionCard(
-      leading: AppIconTile(icon: service.kind.icon),
-      title: service.name,
-      captions: [service.bookingCaption, service.bookingDetail(catalog)],
-      isSelected: isSelected,
-      onTap: () {
-        context.read<BookingSelectionCubit>().selectService(service);
-      },
     );
   }
 }
