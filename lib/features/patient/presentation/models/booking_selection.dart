@@ -1,12 +1,10 @@
 import 'package:clinic_appointment_system/core/constants/booking_constants.dart';
-import 'package:clinic_appointment_system/core/extensions/turkish_case_folding.dart';
 import 'package:clinic_appointment_system/core/time/calendar_date.dart';
 import 'package:clinic_appointment_system/core/time/time_range.dart';
 import 'package:clinic_appointment_system/features/institution/domain/value_objects/working_hours.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/models/clinic_catalog.dart';
 import 'package:clinic_appointment_system/features/medical_services/domain/entities/medical_service.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/extensions/calendar_date_week.dart';
-import 'package:clinic_appointment_system/features/patient/presentation/extensions/patient_catalog_views.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/models/staff_schedule_day.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/models/staff_week_schedule_request.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/staff.dart';
@@ -178,20 +176,6 @@ final class BookingSelection {
       slot: slot,
       scheduleDay: scheduleDay,
     );
-  }
-
-  /// Bookable services of [catalog] in the department limit whose name
-  /// contains the search text, ignoring case with Turkish dotted and
-  /// dotless `i` rules.
-  List<MedicalService> servicesIn(ClinicCatalog catalog) {
-    final needle = query.trim();
-    return [
-      for (final item in catalog.services)
-        if ((departmentId == null || item.departmentId == departmentId) &&
-            item.name.containsTurkishInsensitive(needle) &&
-            catalog.staffFor(item).isNotEmpty)
-          item,
-    ];
   }
 
   /// The schedule to observe for the chosen staff member and service in the

@@ -22,9 +22,10 @@ abstract final class AdminLayoutConstants {
   /// value = 1200
   static const double overviewContentMaxWidth = 1200;
 
-  /// Width at which header actions fit beside the title.
-  /// value = 720
-  static const double overviewHeaderActionsInlineMinWidth = 720;
+  /// Width at which the title and complete overview actions fit on one row.
+  /// value = 1200
+  static const double overviewHeaderActionsInlineMinWidth =
+      overviewContentMaxWidth;
 
   /// Width of the branch selector in the overview header.
   /// value = 176

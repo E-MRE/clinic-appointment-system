@@ -6,15 +6,16 @@ final class _StaffRequestCard extends StatelessWidget {
     required this.request,
     required this.isSelected,
     required this.onTap,
+    required this.now,
   });
 
   final Appointment request;
   final bool isSelected;
   final VoidCallback onTap;
+  final DateTime now;
 
   @override
   Widget build(BuildContext context) {
-    final clock = AppDependency.injector.get<Clock>();
     final surfaceVariant = isSelected
         ? AppSurfaceVariant.highlighted
         : AppSurfaceVariant.plain;
@@ -33,7 +34,7 @@ final class _StaffRequestCard extends StatelessWidget {
               spacing: AppSizes.s12,
               children: [
                 AppAvatar(initials: request.patientInitials),
-                Expanded(child: _buildCardBody(clock)),
+                Expanded(child: _buildCardBody()),
                 Icon(
                   Icons.chevron_right,
                   size: AppSizes.s20,
@@ -47,17 +48,14 @@ final class _StaffRequestCard extends StatelessWidget {
     );
   }
 
-  Column _buildCardBody(Clock clock) {
+  Column _buildCardBody() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: AppSizes.s4,
       children: [
         AppText.bodyStrong(request.displayPatientName),
         AppText.caption(request.scheduleAndServiceLabel, tone: TextTone.muted),
-        AppText.caption(
-          request.requestedAgoLabel(clock.now()),
-          tone: TextTone.muted,
-        ),
+        AppText.caption(request.requestedAgoLabel(now), tone: TextTone.muted),
       ],
     );
   }

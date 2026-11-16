@@ -25,10 +25,13 @@ final class _PatientAppointmentsNextSummary extends StatelessWidget {
           ],
         ),
         AppText.sectionTitle(
-          entry.serviceName,
+          entry.presentation.serviceName,
           tone: TextTone.onPrimaryContainer,
         ),
-        AppText.body(entry.detailLine, tone: TextTone.onPrimaryContainer),
+        AppText.body(
+          entry.presentation.detailLine,
+          tone: TextTone.onPrimaryContainer,
+        ),
       ],
     );
   }

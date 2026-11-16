@@ -24,6 +24,10 @@ import 'package:clinic_appointment_system/features/appointments/domain/usecases/
 import 'package:clinic_appointment_system/features/auth/domain/entities/auth_session.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:clinic_appointment_system/features/auth/presentation/cubit/auth_state.dart';
+import 'package:clinic_appointment_system/features/demo/domain/models/demo_accounts.dart';
+import 'package:clinic_appointment_system/features/demo/domain/usecases/clear_demo_data_use_case.dart';
+import 'package:clinic_appointment_system/features/demo/domain/usecases/load_demo_data_use_case.dart';
+import 'package:clinic_appointment_system/features/demo/presentation/cubit/demo_data_cubit.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_branches_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_clinics_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_departments_of_branches_use_case.dart';
@@ -48,6 +52,7 @@ import '../../../../../support/date_formatting_test_support.dart';
 import '../../../../../support/localization_test_app.dart';
 import '../../../../../support/user_repository_double.dart';
 import '../../../../appointments/presentation/doubles/staff_appointment_repository.dart';
+import '../../../../demo/domain/doubles/demo_use_case_fake_dependencies.dart';
 import '../../../../institution/presentation/doubles/clinic_catalog_repositories.dart';
 import '../../support/admin_dashboard_fixture.dart';
 
@@ -60,6 +65,19 @@ final class AdminAppointmentsPageHarness {
       ClinicCatalogRepositories();
   final StaffAppointmentRepository appointments = StaffAppointmentRepository();
   final FixedClock clock = FixedClock(DateTime(2026, 11, 14, 8));
+  final DemoUseCaseFakeDependencies demoDependencies =
+      DemoUseCaseFakeDependencies(
+        accountResult: const DataResult.success(
+          data: DemoAccounts(
+            doctorUid: 'doctor-uid',
+            doctorFullName: 'Dr. Servet',
+            doctorEmail: 'servet@doktor.com',
+            patientUid: 'patient-uid',
+            patientFullName: 'Remzi Pala',
+            patientEmail: 'remzi@pala.com',
+          ),
+        ),
+      );
   final MockAuthRepository authRepository = MockAuthRepository();
   late final AuthCubit auth;
   ClinicCatalogCubit? catalogCubit;
@@ -112,7 +130,7 @@ final class AdminAppointmentsPageHarness {
       settle: false,
       child: _withSessionAndCatalog(
         catalogWatch,
-        const AdminAppointmentsPage(),
+        AdminAppointmentsPage(clock: clock),
       ),
     );
     await tester.pump();
@@ -129,7 +147,7 @@ final class AdminAppointmentsPageHarness {
       tester,
       theme: LightTheme(screenSize).themeData,
       settle: false,
-      child: _withSessionAndCatalog(catalogWatch, const AdminHomePage()),
+      child: _withSessionAndCatalog(catalogWatch, AdminHomePage(clock: clock)),
     );
     await tester.pump();
   }
@@ -152,11 +170,12 @@ final class AdminAppointmentsPageHarness {
           routes: [
             GoRoute(
               path: AppRoutes.adminHome,
-              builder: (context, state) => const AdminHomePage(),
+              builder: (context, state) => AdminHomePage(clock: clock),
             ),
             GoRoute(
               path: AppRoutes.adminAppointments,
               builder: (context, state) => AdminAppointmentsPage(
+                clock: clock,
                 initialStatuses: state.uri.initialAdminAppointmentStatuses,
               ),
             ),
@@ -292,6 +311,12 @@ final class AdminAppointmentsPageHarness {
       adminDashboardCubit = cubit;
       return cubit;
     });
+    injector.registerFactory<DemoDataCubit>(
+      () => DemoDataCubit(
+        LoadDemoDataUseCase(demoDependencies, demoDependencies, clock),
+        ClearDemoDataUseCase(demoDependencies),
+      ),
+    );
     injector.registerFactory<AppointmentApproveCubit>(
       () => AppointmentApproveCubit(
         ChangeAppointmentStatusUseCase(appointments, clock),

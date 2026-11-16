@@ -6,11 +6,13 @@ final class _StaffRequestsList extends StatelessWidget {
     required this.requests,
     required this.selectedId,
     required this.onCardTap,
+    required this.now,
   });
 
   final List<Appointment> requests;
   final String? selectedId;
   final ValueChanged<Appointment> onCardTap;
+  final DateTime now;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +25,7 @@ final class _StaffRequestsList extends StatelessWidget {
           request: request,
           isSelected: request.id == selectedId,
           onTap: () => onCardTap(request),
+          now: now,
         );
       },
     );

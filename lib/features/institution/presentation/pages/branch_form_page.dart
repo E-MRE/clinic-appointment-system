@@ -23,10 +23,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 part 'branch_form_fields.dart';
-part 'branch_form_save_error.dart';
+part 'branch_form.dart';
 part 'branch_form_actions.dart';
 part 'branch_form_provider.dart';
-part 'branch_form.dart';
 
 /// Creates or edits a branch after resolving route ids from the shared list.
 final class BranchFormPage extends StatelessWidget {
@@ -35,7 +34,9 @@ final class BranchFormPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (branchId == null) return const _BranchFormProvider();
+    if (branchId == null) {
+      return const _BranchFormProvider();
+    }
     return InstitutionListView<Branch, BranchListCubit>(
       emptyTitle: LocaleKeys.institution_notFound.tr(),
       emptyMessage: LocaleKeys.institution_notFoundDescription.tr(),

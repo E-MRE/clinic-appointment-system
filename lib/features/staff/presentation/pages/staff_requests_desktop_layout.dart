@@ -5,6 +5,7 @@ final class _StaffRequestsDesktopLayout extends StatelessWidget {
   const _StaffRequestsDesktopLayout({
     required this.requests,
     required this.selectedId,
+    required this.now,
   });
 
   /// Flex weight of the list column.
@@ -17,6 +18,7 @@ final class _StaffRequestsDesktopLayout extends StatelessWidget {
 
   final List<Appointment> requests;
   final String? selectedId;
+  final DateTime now;
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +39,7 @@ final class _StaffRequestsDesktopLayout extends StatelessWidget {
             onCardTap: (request) {
               context.read<StaffRequestSelectionCubit>().select(request.id);
             },
+            now: now,
           ),
         ),
         Expanded(

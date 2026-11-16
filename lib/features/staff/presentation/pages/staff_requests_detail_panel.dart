@@ -47,6 +47,7 @@ final class _StaffRequestsDetailPanel extends StatelessWidget {
                 workspace: workspace,
                 service: service,
                 appointments: appointments,
+                now: appointmentsState.now,
               ),
             if (history.completedCount > _noCompletedVisits)
               _StaffRequestDetailPatientHistory(history: history),

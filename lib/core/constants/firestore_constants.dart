@@ -150,6 +150,9 @@ abstract final class FirestoreConstants {
   /// Field storing a user profile's email address.
   static const String email = 'email';
 
+  /// Marks a document as owned by the repeatable demo seed.
+  static const String isDemo = 'isDemo';
+
   /// Field storing a doctor's clinical specialty.
   static const String specialty = 'specialty';
 

@@ -6,6 +6,9 @@ final class _StaffManagementBranchContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final branchCount = context.select<StaffListOverviewCubit, int>(
+      (cubit) => cubit.state.branchCount,
+    );
     final clinicId = InstitutionSelectionScope.of(context).clinicId;
     if (clinicId == null) return const _StaffManagementNoBranch();
     return InstitutionListView<Branch, BranchListCubit>(
@@ -14,7 +17,7 @@ final class _StaffManagementBranchContent extends StatelessWidget {
       onRetry: () => context.read<BranchListCubit>().watch(clinicId),
       emptyAction: const _StaffManagementInstitutionButton(),
       loadedBuilder: (_) {
-        if (context.staffOverview.branchCount == 0) {
+        if (branchCount == 0) {
           return const _StaffManagementNoBranch();
         }
         return const _StaffManagementContent();

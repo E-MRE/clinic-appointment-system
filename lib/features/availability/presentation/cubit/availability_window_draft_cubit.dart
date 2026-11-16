@@ -17,6 +17,9 @@ final class AvailabilityWindowDraftCubit
 
   final Clock _clock;
 
+  /// Returns today's date according to the injected clock.
+  CalendarDate get today => _clock.today;
+
   /// Starts a recurring window for [day] with both times unset.
   void startWeekly(Weekday day) {
     emit(AvailabilityWindowDraft(weekday: day, date: state.date));

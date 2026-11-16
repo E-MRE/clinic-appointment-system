@@ -8,6 +8,7 @@ import 'package:clinic_appointment_system/features/medical_services/domain/value
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_request_selection_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_request_selection_state.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/enums/staff_request_sort.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/services/staff_request_sorter.dart';
 import 'package:clinic_appointment_system/features/users/domain/enums/user_role.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -75,7 +76,7 @@ void main() {
 
     late StaffRequestSelectionCubit cubit;
 
-    setUp(() => cubit = StaffRequestSelectionCubit());
+    setUp(() => cubit = StaffRequestSelectionCubit(const StaffRequestSorter()));
     tearDown(() => cubit.close());
 
     test('starts sorted by date with nothing selected', () {
@@ -94,6 +95,22 @@ void main() {
       cubit.changeSort(StaffRequestSort.byRequestTime);
       cubit.syncRequests([req1, req2, req3]);
       expect(cubit.state.selectedRequestId, 'req_3');
+    });
+
+    test('exposes requests ordered by the active sort', () {
+      cubit.syncRequests([req3, req2, req1]);
+      expect(cubit.state.sortedRequests.map((request) => request.id), [
+        'req_1',
+        'req_2',
+        'req_3',
+      ]);
+
+      cubit.changeSort(StaffRequestSort.byRequestTime);
+      expect(cubit.state.sortedRequests.map((request) => request.id), [
+        'req_3',
+        'req_2',
+        'req_1',
+      ]);
     });
 
     test('select chooses a request by id', () {
@@ -128,9 +145,10 @@ void main() {
       cubit.changeSort(StaffRequestSort.byRequestTime);
       expect(
         cubit.state,
-        const StaffRequestSelectionState(
+        StaffRequestSelectionState(
           sort: StaffRequestSort.byRequestTime,
           selectedRequestId: 'req_2',
+          sortedRequests: [req2, req1],
         ),
       );
     });

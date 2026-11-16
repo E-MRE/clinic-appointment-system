@@ -30,7 +30,7 @@ final class _DepartmentEditDialogState extends State<_DepartmentEditDialog> {
     return BlocBuilder<DepartmentSaveCubit, InstitutionSaveState<Department>>(
       builder: (context, state) => AlertDialog(
         title: AppText.sectionTitle(LocaleKeys.institution_departments.tr()),
-        content: _DepartmentEditContent(controller: controller, state: state),
+        content: _buildContent(state),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -47,6 +47,21 @@ final class _DepartmentEditDialogState extends State<_DepartmentEditDialog> {
           ),
         ],
       ),
+    );
+  }
+
+  /// Builds the department name field and any save error.
+  Widget _buildContent(InstitutionSaveState<Department> state) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        AppTextField(
+          label: LocaleKeys.institution_newDepartmentName.tr(),
+          controller: controller,
+        ),
+        if (state is InstitutionSaveFailure<Department>)
+          AppText.caption(state.code.message, tone: TextTone.error),
+      ],
     );
   }
 

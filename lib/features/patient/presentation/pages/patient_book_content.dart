@@ -30,9 +30,14 @@ final class _PatientBookContent extends StatelessWidget {
                 subtitle: LocaleKeys.patient_book_subtitle.translate(),
               ),
               if (context.screenSize.isDesktop)
-                _buildDesktop()
+                _PatientBookContentDesktop(
+                  catalog: catalog,
+                  patient: patient,
+                  patientName: patientName,
+                  choiceColumn: _buildChoiceColumn(),
+                )
               else ...[
-                _PatientBookChoiceColumn(catalog: catalog),
+                _buildChoiceColumn(),
                 _PatientBookScheduleCard(catalog: catalog),
                 _PatientBookSummaryCard(
                   catalog: catalog,
@@ -47,27 +52,14 @@ final class _PatientBookContent extends StatelessWidget {
     );
   }
 
-  Row _buildDesktop() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+  /// Builds the service and staff selection steps.
+  Column _buildChoiceColumn() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: AppSizes.s20,
       children: [
-        Expanded(
-          flex: PatientLayoutConstants.bookingChoiceFlex,
-          child: _PatientBookChoiceColumn(catalog: catalog),
-        ),
-        Expanded(
-          flex: PatientLayoutConstants.bookingScheduleFlex,
-          child: _PatientBookScheduleCard(catalog: catalog),
-        ),
-        Expanded(
-          flex: PatientLayoutConstants.bookingSummaryFlex,
-          child: _PatientBookSummaryCard(
-            catalog: catalog,
-            patient: patient,
-            patientName: patientName,
-          ),
-        ),
+        _PatientBookServiceSection(catalog: catalog),
+        _PatientBookStaffSection(catalog: catalog),
       ],
     );
   }

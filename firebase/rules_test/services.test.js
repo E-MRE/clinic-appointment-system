@@ -385,10 +385,17 @@ describe('service rules', () => {
   });
 
   describe('deletes', () => {
+    // Admins may delete services (the demo seed replaces them).
     for (const role of Object.keys(profiles)) {
-      it(`denies ${role} deleting a service`, async () => {
-        await assertFails(deleteDoc(doc(signedIn(role), 'services', 'service-1')));
-      });
+      if (role === 'admin') {
+        it('lets admin delete a service', async () => {
+          await assertSucceeds(deleteDoc(doc(signedIn(role), 'services', 'service-1')));
+        });
+      } else {
+        it(`denies ${role} deleting a service`, async () => {
+          await assertFails(deleteDoc(doc(signedIn(role), 'services', 'service-1')));
+        });
+      }
     }
 
     it('denies a signed-out delete', async () => {

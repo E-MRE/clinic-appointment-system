@@ -12,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'availability_staff_header.dart';
-part 'availability_not_found.dart';
 
 /// Signed-in staff entry point for weekly and one-off availability.
 final class AvailabilityPage extends StatelessWidget {
@@ -33,6 +32,21 @@ final class AvailabilityPage extends StatelessWidget {
         );
       }
     }
-    return const _AvailabilityNotFound();
+    return _buildNotFound(context);
+  }
+
+  /// Builds the safe empty presentation when the authenticated profile is not staff.
+  Widget _buildNotFound(BuildContext context) {
+    return AppScaffold(
+      child: EmptyState(
+        title: LocaleKeys.availability_notFoundTitle.translate(),
+        message: LocaleKeys.availability_notFoundMessage.translate(),
+        icon: Icon(
+          Icons.person_outline,
+          color: context.colorScheme.onSecondaryContainer,
+        ),
+        iconBackground: context.colorScheme.secondaryContainer,
+      ),
+    );
   }
 }

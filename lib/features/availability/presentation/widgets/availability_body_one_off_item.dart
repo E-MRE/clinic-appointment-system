@@ -23,8 +23,11 @@ final class _AvailabilityOneOffItem extends StatelessWidget {
       child: Row(
         spacing: AppSizes.s12,
         children: [
-          const _AvailabilityOneOffIcon(),
-          Expanded(child: _AvailabilityOneOffIdentity(window: window)),
+          const AppIconTile(
+            icon: Icons.calendar_today_outlined,
+            variant: AppIconTileVariant.tertiary,
+          ),
+          Expanded(child: _buildIdentity()),
           SizedBox.square(
             dimension: AppSizes.s40,
             child: IconButton(
@@ -42,6 +45,23 @@ final class _AvailabilityOneOffItem extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  /// Builds the localized dated-window identity.
+  Widget _buildIdentity() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: AppSizes.s4,
+      children: [
+        AppText.bodyStrong(
+          window.accept(const AvailabilityWindowLabelVisitor()),
+        ),
+        AppText.caption(
+          LocaleKeys.availability_oneOffSubtitle.translate(),
+          tone: TextTone.muted,
+        ),
+      ],
     );
   }
 }

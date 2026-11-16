@@ -19,6 +19,36 @@ final class FirestoreUserRepository implements UserRepository {
   final FirebaseFirestore _firestore;
   final UserModelFactory _models;
 
+  /// Finds one user profile by its exact email address.
+  @override
+  Future<DataResult<User>> findUserByEmail(String email) async {
+    try {
+      final snapshot = await _firestore
+          .collection(FirestoreConstants.users)
+          .where(FirestoreConstants.email, isEqualTo: email.trim())
+          .limit(_maximumEmailMatches)
+          .get();
+      if (snapshot.docs.isEmpty) {
+        return const DataResult.error(errorCode: UserErrorCode.profileMissing);
+      }
+      if (snapshot.docs.length > _singleEmailMatchCount) {
+        return const DataResult.error(errorCode: UserErrorCode.invalidProfile);
+      }
+      final document = snapshot.docs.first;
+      return DataResult.success(
+        data: _models.fromJson({...document.data(), 'id': document.id}),
+      );
+    } on FirebaseException {
+      return const DataResult.error(errorCode: UserErrorCode.unavailable);
+    } on CheckedFromJsonException {
+      return const DataResult.error(errorCode: UserErrorCode.invalidProfile);
+    } on TypeError {
+      return const DataResult.error(errorCode: UserErrorCode.invalidProfile);
+    } on ArgumentError {
+      return const DataResult.error(errorCode: UserErrorCode.invalidProfile);
+    }
+  }
+
   @override
   Stream<DataResult<User>> watchUser(String uid) {
     return _firestore
@@ -75,4 +105,10 @@ final class FirestoreUserRepository implements UserRepository {
       throw const UserException(UserErrorCode.unavailable);
     }
   }
+
+  /// value = 1
+  int get _singleEmailMatchCount => 1;
+
+  /// value = 2
+  int get _maximumEmailMatches => _singleEmailMatchCount + 1;
 }

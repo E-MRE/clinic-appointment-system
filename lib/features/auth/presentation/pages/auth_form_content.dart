@@ -38,13 +38,29 @@ final class _AuthFormContent<C extends AuthRequestCubit>
           enabled: enabled,
           onSubmit: onSubmit,
         ),
-        if (kind.isSignIn) _AuthForgotPasswordButton(enabled: enabled),
+        if (kind.isSignIn) _buildForgotPasswordButton(context),
         const EmptySize.s24Height(),
-        _AuthFormActions<C>(kind: kind, onSubmit: onSubmit),
+        _AuthFormFeedback<C>(kind: kind),
+        _AuthSubmitButton<C>(kind: kind, onSubmit: onSubmit),
         const EmptySize.s32Height(),
         if (context.screenSize.isMobile) const Spacer(),
         _AuthFormFooter(kind: kind, enabled: enabled),
       ],
+    );
+  }
+
+  /// Builds the enabled forgot-password route action.
+  Widget _buildForgotPasswordButton(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: TextButton(
+        onPressed: enabled
+            ? () {
+                context.go(AppRoutes.passwordReset);
+              }
+            : null,
+        child: Text(LocaleKeys.auth_forgotPassword.translate()),
+      ),
     );
   }
 }

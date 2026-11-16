@@ -6,6 +6,7 @@ import 'package:clinic_appointment_system/features/staff_management/presentation
 import 'package:clinic_appointment_system/features/staff_management/presentation/cubit/staff_filter_cubit.dart';
 import 'package:clinic_appointment_system/features/staff_management/presentation/cubit/staff_form_cubit.dart';
 import 'package:clinic_appointment_system/features/staff_management/presentation/cubit/staff_list_cubit.dart';
+import 'package:clinic_appointment_system/features/staff_management/presentation/cubit/staff_list_overview_cubit.dart';
 import 'package:clinic_appointment_system/features/staff_management/presentation/cubit/staff_save_cubit.dart';
 import 'package:clinic_appointment_system/features/staff_management/presentation/cubit/staff_service_list_cubit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -31,6 +32,10 @@ void main() {
     () async {
       final pairs = <(Cubit<Object?>, Cubit<Object?>)>[
         (container.get<StaffListCubit>(), container.get<StaffListCubit>()),
+        (
+          container.get<StaffListOverviewCubit>(),
+          container.get<StaffListOverviewCubit>(),
+        ),
         (
           container.get<StaffDepartmentListCubit>(),
           container.get<StaffDepartmentListCubit>(),

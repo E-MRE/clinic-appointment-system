@@ -1,3 +1,4 @@
+import 'package:clinic_appointment_system/core/constants/admin_layout_constants.dart';
 import 'package:clinic_appointment_system/core/router/app_routes.dart';
 import 'package:clinic_appointment_system/core/widgets/data_table/app_data_table.dart';
 import 'package:clinic_appointment_system/core/widgets/loading/loading_state.dart';
@@ -5,6 +6,7 @@ import 'package:clinic_appointment_system/core/widgets/surface/app_surface.dart'
 import 'package:clinic_appointment_system/features/admin/presentation/cubit/admin_appointments_state.dart';
 import 'package:clinic_appointment_system/features/admin/presentation/cubit/admin_dashboard_state.dart';
 import 'package:clinic_appointment_system/features/admin/presentation/enums/admin_status_filter.dart';
+import 'package:clinic_appointment_system/features/admin/presentation/extensions/admin_status_filter_color.dart';
 import 'package:clinic_appointment_system/features/admin/presentation/models/admin_appointment_row_presentation.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/enums/appointment_status.dart';
@@ -48,6 +50,58 @@ void main() {
       ),
     ];
   }
+
+  testWidgets('loads demo data only after confirming the dialog', (
+    tester,
+  ) async {
+    final harness = AdminAppointmentsPageHarness();
+    await harness.initialize();
+    addTearDown(() => harness.dispose(tester));
+    await harness.pumpHomePage(tester);
+
+    final demoButton = find.widgetWithText(FilledButton, 'Demo verisini yükle');
+    await tester.tap(demoButton);
+    await tester.pumpAndSettle();
+    expect(find.text('Demo verisi yüklensin mi?'), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(TextButton, 'İptal'));
+    await tester.pumpAndSettle();
+    expect(harness.demoDependencies.replaceCalls, 0);
+
+    await tester.tap(demoButton);
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.widgetWithText(FilledButton, 'Demo verisini yükle').last,
+    );
+    await tester.pumpAndSettle();
+
+    expect(harness.demoDependencies.replaceCalls, 1);
+    expect(find.text('Demo verisi başarıyla yüklendi.'), findsOneWidget);
+  });
+
+  testWidgets('clears demo data only after confirming the dialog', (
+    tester,
+  ) async {
+    final harness = AdminAppointmentsPageHarness();
+    await harness.initialize();
+    addTearDown(() => harness.dispose(tester));
+    await harness.pumpHomePage(tester);
+
+    final clearButton = find.widgetWithText(
+      FilledButton,
+      'Demo verisini temizle',
+    );
+    await tester.tap(clearButton.first);
+    await tester.pumpAndSettle();
+    expect(find.text('Demo verileri temizlensin mi?'), findsOneWidget);
+
+    await tester.tap(clearButton.last);
+    await tester.pumpAndSettle();
+
+    expect(harness.demoDependencies.clearCalls, 1);
+    expect(harness.demoDependencies.replaceCalls, 0);
+    expect(find.text('Demo verisi başarıyla temizlendi.'), findsOneWidget);
+  });
 
   testWidgets('renders KPI values, breakdown rows and pending actions', (
     tester,
@@ -103,6 +157,88 @@ void main() {
     expect(find.widgetWithText(FilledButton, 'Onayla'), findsNWidgets(2));
     expect(find.widgetWithText(OutlinedButton, 'Reddet'), findsNWidgets(2));
     expect(harness.adminDashboardCubit?.state, isA<AdminDashboardLoaded>());
+  });
+
+  testWidgets('status breakdown draws colored segments at non-zero size', (
+    tester,
+  ) async {
+    final harness = AdminAppointmentsPageHarness();
+    await harness.initialize();
+    addTearDown(() => harness.dispose(tester));
+    await harness.pumpHomePage(tester);
+    await harness.loadData(tester, [
+      AdminAppointmentsPageHarness.fixtures.appointment(
+        id: 'completed-one',
+        status: AppointmentStatus.completed,
+      ),
+      AdminAppointmentsPageHarness.fixtures.appointment(
+        id: 'completed-two',
+        status: AppointmentStatus.completed,
+        startMinutes: 630,
+      ),
+      AdminAppointmentsPageHarness.fixtures.appointment(
+        id: 'approved-one',
+        status: AppointmentStatus.approved,
+        startMinutes: 660,
+      ),
+      AdminAppointmentsPageHarness.fixtures.appointment(
+        id: 'approved-two',
+        status: AppointmentStatus.approved,
+        startMinutes: 690,
+      ),
+      AdminAppointmentsPageHarness.fixtures.appointment(
+        id: 'pending-one',
+        status: AppointmentStatus.pending,
+        startMinutes: 720,
+      ),
+      AdminAppointmentsPageHarness.fixtures.appointment(
+        id: 'no-show-one',
+        status: AppointmentStatus.noShow,
+        startMinutes: 750,
+      ),
+    ]);
+
+    final statusTitle = find.text('Duruma göre');
+    final statusCard = find.ancestor(
+      of: statusTitle,
+      matching: find.byType(AppSurface),
+    );
+    final segments = find.descendant(
+      of: statusCard,
+      matching: find.byType(ColoredBox),
+    );
+    final bar = find.descendant(
+      of: statusCard,
+      matching: find.byWidgetPredicate(
+        (widget) =>
+            widget is SizedBox &&
+            widget.height == AdminLayoutConstants.overviewStackedBarHeight,
+      ),
+    );
+    final statusContext = tester.element(statusCard);
+    const statuses = [
+      AdminStatusFilter.completed,
+      AdminStatusFilter.approved,
+      AdminStatusFilter.pending,
+      AdminStatusFilter.noShow,
+    ];
+
+    expect(segments, findsNWidgets(statuses.length));
+    expect(bar, findsOneWidget);
+    expect(
+      tester.getSize(bar).height,
+      AdminLayoutConstants.overviewStackedBarHeight,
+    );
+    for (int index = 0; index < statuses.length; index++) {
+      final segmentFinder = segments.at(index);
+      final segmentSize = tester.getSize(segmentFinder);
+      expect(segmentSize.width, greaterThan(0));
+      expect(segmentSize.height, AdminLayoutConstants.overviewStackedBarHeight);
+      expect(
+        tester.widget<ColoredBox>(segmentFinder).color,
+        statuses[index].color(statusContext),
+      );
+    }
   });
 
   testWidgets('branch selection filters the dashboard summary', (tester) async {

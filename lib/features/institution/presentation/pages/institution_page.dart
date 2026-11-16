@@ -33,17 +33,12 @@ import 'package:go_router/go_router.dart';
 part 'clinic_name_dialog_content.dart';
 part 'clinic_name_dialog_actions.dart';
 part 'clinic_name_save_button.dart';
-part 'institution_branches.dart';
-part 'institution_branch_list.dart';
 part 'institution_branch_item.dart';
 part 'institution_branch_details.dart';
 part 'institution_content.dart';
 part 'institution_clinic_header.dart';
 part 'institution_clinic_picker.dart';
-part 'institution_new_clinic_button.dart';
 part 'institution_branch_header.dart';
-part 'institution_content_branches.dart';
-part 'institution_mobile_add_branch.dart';
 part 'institution_page_content.dart';
 part 'clinic_name_dialog.dart';
 

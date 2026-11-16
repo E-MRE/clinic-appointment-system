@@ -13,6 +13,7 @@ import 'package:clinic_appointment_system/features/appointments/domain/usecases/
 import 'package:clinic_appointment_system/features/appointments/presentation/extensions/data_result_appointment_error_code.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_state.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/services/staff_patient_history_calculator.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/services/staff_request_header_formatter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Observes all appointments assigned to one staff member from
@@ -27,12 +28,14 @@ final class StaffAppointmentsCubit extends Cubit<StaffAppointmentsState> {
     this._clock,
     this._startComparator,
     this._patientHistoryCalculator,
+    this._requestHeaderFormatter,
   ) : super(const StaffAppointmentsLoading());
 
   final WatchStaffAppointmentsUseCase _watchAppointments;
   final Clock _clock;
   final AppointmentStartComparator _startComparator;
   final StaffPatientHistoryCalculator _patientHistoryCalculator;
+  final StaffRequestHeaderFormatter _requestHeaderFormatter;
   StreamSubscription<DataResult<List<Appointment>>>? _subscription;
   String? _staffId;
   bool _isClosing = false;
@@ -100,12 +103,17 @@ final class StaffAppointmentsCubit extends Cubit<StaffAppointmentsState> {
       return;
     }
     final now = _clock.now();
+    final pendingRequests = _pendingRequests(appointments, now);
     _emit(
       StaffAppointmentsLoaded(
         appointments: appointments,
-        pendingRequests: _pendingRequests(appointments, now),
+        pendingRequests: pendingRequests,
         patientHistories: _patientHistoryCalculator.calculateAll(appointments),
         now: now,
+        headerSubtitle: _requestHeaderFormatter.format(
+          pendingRequests,
+          now: now,
+        ),
       ),
     );
   }

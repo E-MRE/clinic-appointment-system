@@ -23,7 +23,8 @@ final class _PatientAppointmentsTable extends StatelessWidget {
       AppTableColumn<PatientAppointmentEntry>(
         label: LocaleKeys.patient_appointments_columns_date.translate(),
         noWrap: true,
-        cellBuilder: (_, entry) => AppText.bodyStrong(entry.dateTimeLabel),
+        cellBuilder: (_, entry) =>
+            AppText.bodyStrong(entry.presentation.dateTimeLabel),
       ),
       AppTableColumn<PatientAppointmentEntry>(
         label: LocaleKeys.patient_appointments_columns_service.translate(),
@@ -34,7 +35,10 @@ final class _PatientAppointmentsTable extends StatelessWidget {
       AppTableColumn<PatientAppointmentEntry>(
         label: LocaleKeys.patient_appointments_columns_staff.translate(),
         cellBuilder: (_, entry) {
-          return AppText.body(entry.staffName, tone: TextTone.muted);
+          return AppText.body(
+            entry.presentation.staffName,
+            tone: TextTone.muted,
+          );
         },
       ),
       AppTableColumn<PatientAppointmentEntry>(

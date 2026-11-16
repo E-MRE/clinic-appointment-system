@@ -19,13 +19,22 @@ final class _StartupErrorState extends StatelessWidget {
       title: kind.config.titleKey.translate(),
       primaryAction: isMobile ? null : actions,
       message: kind.config.descriptionKey.translate(),
-      icon: _StartupErrorIcon(kind: kind, isMobile: isMobile),
+      icon: _buildIcon(context),
       iconBackground: kind.containerColor(colors),
       iconSize: context.screenSize.select(
         mobile: AppSizes.s96,
         tablet: AppSizes.illustrationLarge,
         desktop: AppSizes.illustrationLarge,
       ),
+    );
+  }
+
+  /// Builds the illustration for the current startup error kind.
+  Widget _buildIcon(BuildContext context) {
+    return SquareSvgIcon(
+      asset: kind.illustration,
+      size: isMobile ? AppSizes.s32 : AppSizes.s48,
+      color: kind.onContainerColor(context.colorScheme),
     );
   }
 }

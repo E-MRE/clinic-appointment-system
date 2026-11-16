@@ -5,6 +5,11 @@ import 'package:clinic_appointment_system/features/users/domain/entities/user.da
 
 /// User profile boundary. Success uses results; failures throw [UserException].
 abstract interface class UserRepository {
+  /// Finds a profile by its exact email address.
+  /// Returns profileMissing when no profile matches and invalidProfile when
+  /// multiple or malformed profiles match; provider failures are unavailable.
+  Future<DataResult<User>> findUserByEmail(String email);
+
   /// Watches the profile stored for the authentication [uid].
   /// Failures are emitted as [UserException] stream errors.
   /// Stream setup failures can throw synchronously and must also be handled.

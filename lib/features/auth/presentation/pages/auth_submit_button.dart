@@ -16,13 +16,16 @@ final class _AuthSubmitButton<C extends AuthRequestCubit>
         return FilledButton(
           key: const WidgetKey.authSubmit(),
           onPressed: isBusy ? null : onSubmit,
-          child: isBusy ? _progress : Text(kind.config.actionKey.translate()),
+          child: isBusy
+              ? _buildProgress()
+              : Text(kind.config.actionKey.translate()),
         );
       },
     );
   }
 
-  Widget get _progress {
+  /// Builds the announced progress indicator shown during submission.
+  Widget _buildProgress() {
     return AnnouncedSemantics(
       label: LocaleKeys.auth_submitting.translate(),
       child: const SizedBox.square(

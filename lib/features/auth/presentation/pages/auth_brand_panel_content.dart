@@ -1,6 +1,6 @@
 part of 'auth_page.dart';
 
-/// Content column inside desktop auth brand panel.
+/// Builds the desktop brand panel header, message, and supporting subtitle.
 final class _AuthBrandPanelContent extends StatelessWidget {
   const _AuthBrandPanelContent({required this.kind});
 

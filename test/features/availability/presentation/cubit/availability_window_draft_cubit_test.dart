@@ -21,6 +21,7 @@ void main() {
   });
 
   test('initial draft is weekly Monday with today and no times', () {
+    expect(cubit.today, fixture.monday);
     expect(cubit.state.repeat, AvailabilityRepeat.weekly);
     expect(cubit.state.weekday, Weekday.monday);
     expect(cubit.state.date, fixture.monday);

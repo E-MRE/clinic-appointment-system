@@ -5,9 +5,11 @@ import 'package:clinic_appointment_system/features/institution/domain/entities/d
 import 'package:clinic_appointment_system/features/institution/domain/usecases/watch_departments_of_branches_use_case.dart';
 import 'package:clinic_appointment_system/features/institution/presentation/cubit/institution_list_state.dart';
 import 'package:clinic_appointment_system/features/staff_management/presentation/cubit/staff_department_list_cubit.dart';
+import 'package:clinic_appointment_system/features/staff_management/presentation/services/staff_availability_subtitle_formatter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../institution/domain/doubles/fake_department_repository.dart';
+import '../../domain/doubles/staff_fixtures.dart';
 
 void main() {
   test(
@@ -24,6 +26,7 @@ void main() {
       ).asBroadcastStream();
       final cubit = StaffDepartmentListCubit(
         WatchDepartmentsOfBranchesUseCase(repository),
+        const StaffAvailabilitySubtitleFormatter(),
       );
       addTearDown(cubit.close);
       const branchIds = ['first', 'second'];
@@ -37,6 +40,17 @@ void main() {
           'items',
           [sample],
         ),
+      );
+      expect(
+        cubit.subtitleFor(
+          const StaffFixtures().doctor(
+            id: 'doctor',
+            fullName: 'Ada Kaya',
+            departmentId: 'department',
+          ),
+          roleLabel: 'Doktor',
+        ),
+        'Ada Kaya · Doktor · Cardiology',
       );
       await cubit.watch(['replacement']);
       expect(repository.watchedBranchIds, ['replacement']);

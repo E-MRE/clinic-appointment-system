@@ -13,14 +13,14 @@ final class _PatientAppointmentsNoteRow extends StatelessWidget {
       spacing: AppSizes.s12,
       children: [
         AppIconTile(
-          icon: note.entry.kindIcon,
+          icon: note.entry.presentation.kindIcon,
           variant: AppIconTileVariant.tertiary,
         ),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              AppText.bodyStrong(note.entry.noteHeading),
+              AppText.bodyStrong(note.entry.presentation.noteHeading),
               AppText.body(note.note, tone: TextTone.muted),
             ],
           ),

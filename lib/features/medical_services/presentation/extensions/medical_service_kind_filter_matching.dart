@@ -5,7 +5,4 @@ import 'package:clinic_appointment_system/features/medical_services/presentation
 extension MedicalServiceKindFilterMatching on MedicalServiceKindFilter {
   /// Whether [service] belongs to this filter category.
   bool matches(MedicalService service) => kind == null || service.kind == kind;
-
-  /// Counts the services matching this filter in [services].
-  int countIn(List<MedicalService> services) => services.where(matches).length;
 }

@@ -7,16 +7,17 @@ final class _StaffRequestDetailRuleChecks extends StatelessWidget {
     required this.workspace,
     required this.service,
     required this.appointments,
+    required this.now,
   });
 
   final Appointment request;
   final StaffWorkspace workspace;
   final MedicalService service;
   final List<Appointment> appointments;
+  final DateTime now;
 
   @override
   Widget build(BuildContext context) {
-    final clock = AppDependency.injector.get<Clock>();
     final checks = const StaffRuleCheckFactory().create(
       request: request,
       staff: workspace.staff,
@@ -24,7 +25,7 @@ final class _StaffRequestDetailRuleChecks extends StatelessWidget {
       availability: workspace.availability,
       branchHours: workspace.branch.workingHours,
       appointments: appointments,
-      now: clock.now(),
+      now: now,
     );
 
     final colors = context.colorScheme;

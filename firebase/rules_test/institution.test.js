@@ -358,10 +358,17 @@ describe('institution rules', () => {
       const id = collectionName === 'departments' ? 'department-1' :
         collectionName === 'branches' ? 'branch-1' : 'clinic-1';
 
+      // Admins may delete institution records (the demo seed replaces them).
       for (const role of actors) {
-        it(`denies ${actorLabels[role]} deleting a ${label} document`, async () => {
-          await assertFails(deleteDoc(doc(signedIn(role), collectionName, id)));
-        });
+        if (role === 'admin') {
+          it(`lets ${actorLabels[role]} delete a ${label} document`, async () => {
+            await assertSucceeds(deleteDoc(doc(signedIn(role), collectionName, id)));
+          });
+        } else {
+          it(`denies ${actorLabels[role]} deleting a ${label} document`, async () => {
+            await assertFails(deleteDoc(doc(signedIn(role), collectionName, id)));
+          });
+        }
       }
 
       it(`denies a signed-out user deleting a ${collectionName} document`, async () => {
