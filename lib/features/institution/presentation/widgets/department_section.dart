@@ -18,11 +18,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'department_section_state.dart';
-part 'department_list.dart';
 part 'department_rows.dart';
 part 'department_add_row.dart';
-part 'department_save_error.dart';
-part 'department_edit_content.dart';
 part 'department_section_content.dart';
 part 'department_edit_dialog.dart';
 

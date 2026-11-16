@@ -6,6 +6,7 @@ final class _AvailabilityTimelineOpening extends StatelessWidget {
     required this.segment,
     required this.trackWidth,
   });
+
   final TimelineSegment segment;
   final double trackWidth;
 

@@ -1,3 +1,4 @@
+import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/enums/staff_request_sort.dart';
 import 'package:equatable/equatable.dart';
 
@@ -7,6 +8,7 @@ final class StaffRequestSelectionState extends Equatable {
   const StaffRequestSelectionState({
     required this.sort,
     this.selectedRequestId,
+    this.sortedRequests = const [],
   });
 
   /// The active sort order.
@@ -15,6 +17,9 @@ final class StaffRequestSelectionState extends Equatable {
   /// The identifier of the selected request, or null when there is none.
   final String? selectedRequestId;
 
+  /// The requests ordered by [sort].
+  final List<Appointment> sortedRequests;
+
   @override
-  List<Object?> get props => [sort, selectedRequestId];
+  List<Object?> get props => [sort, selectedRequestId, sortedRequests];
 }

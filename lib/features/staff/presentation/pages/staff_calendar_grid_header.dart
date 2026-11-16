@@ -22,9 +22,9 @@ final class _StaffCalendarGridHeader extends StatelessWidget {
           ),
           for (int i = 0; i < layout.days.length; i++)
             Expanded(
-              child: _buildDayHeaderCell(
-                context,
+              child: _StaffCalendarGridDayHeaderCell(
                 day: layout.days[i],
+                today: today,
                 showsRightBorder: i < layout.days.length - _lastIndexOffset,
               ),
             ),
@@ -40,54 +40,6 @@ final class _StaffCalendarGridHeader extends StatelessWidget {
           color: context.colorScheme.outlineVariant,
           width: AppSizes.borderThin,
         ),
-      ),
-    );
-  }
-
-  Widget _buildDayHeaderCell(
-    BuildContext context, {
-    required StaffCalendarDay day,
-    required bool showsRightBorder,
-  }) {
-    final isToday = day.date == today;
-
-    return Container(
-      padding: const AppPadding.horizontalSm(),
-      decoration: BoxDecoration(
-        border: showsRightBorder
-            ? Border(
-                right: BorderSide(
-                  color: context.colorScheme.outlineVariant,
-                  width: AppSizes.borderThin,
-                ),
-              )
-            : null,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              AppText.label(
-                day.date.weekday.shortLabel,
-                tone: isToday ? TextTone.primary : TextTone.muted,
-              ),
-              const EmptySize.s4Width(),
-              AppText.cardTitle(
-                '${day.date.day}',
-                tone: isToday ? TextTone.primary : TextTone.normal,
-              ),
-            ],
-          ),
-          if (!day.isClosed)
-            AppText.caption(
-              LocaleKeys.staffCalendar_dayHeader_appointmentCount.translate(
-                args: ['${day.appointmentCount}'],
-              ),
-              tone: TextTone.muted,
-            ),
-        ],
       ),
     );
   }

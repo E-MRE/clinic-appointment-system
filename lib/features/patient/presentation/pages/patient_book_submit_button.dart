@@ -25,8 +25,22 @@ final class _PatientBookSubmitButton extends StatelessWidget {
           ? null
           : () => _submit(context, schedule),
       child: isBusy
-          ? const _PatientBookSubmitProgress()
+          ? _buildSubmitProgress(context)
           : Text(LocaleKeys.patient_book_submit.translate()),
+    );
+  }
+
+  /// Builds the announced request progress indicator.
+  AnnouncedSemantics _buildSubmitProgress(BuildContext context) {
+    return AnnouncedSemantics(
+      label: LocaleKeys.patient_book_submitting.translate(),
+      child: SizedBox.square(
+        dimension: AppSizes.s20,
+        child: CircularProgressIndicator(
+          strokeWidth: AppSizes.s2,
+          color: context.colorScheme.onPrimary,
+        ),
+      ),
     );
   }
 
@@ -39,6 +53,7 @@ final class _PatientBookSubmitButton extends StatelessWidget {
     return selection.isScheduledBy(schedule.request) ? schedule : null;
   }
 
+  /// Starts the appointment request with the matching loaded schedule.
   void _submit(BuildContext context, StaffWeekSchedule schedule) {
     context.read<BookAppointmentCubit>().submit(
       selection: selection,

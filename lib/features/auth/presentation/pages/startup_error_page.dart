@@ -11,11 +11,8 @@ import 'package:clinic_appointment_system/generated/assets.gen.dart';
 import 'package:flutter/material.dart';
 
 part 'startup_error_actions.dart';
-part 'startup_error_desktop_actions.dart';
-part 'startup_error_mobile_actions.dart';
 part 'startup_error_retry_button.dart';
 part 'startup_error_secondary_button.dart';
-part 'startup_error_icon.dart';
 part 'startup_error_state.dart';
 part 'startup_error_content.dart';
 

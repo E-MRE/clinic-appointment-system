@@ -1,36 +1,27 @@
 part of 'patient_book_page.dart';
 
-/// The chosen staff member's week, or a hint, progress or failure.
+/// Shows the current schedule, its loading state or its failure state.
 final class _PatientBookScheduleBody extends StatelessWidget {
-  const _PatientBookScheduleBody({required this.selection});
+  const _PatientBookScheduleBody({
+    required this.state,
+    required this.selection,
+  });
 
+  final StaffWeekScheduleState state;
   final BookingSelection selection;
 
   @override
   Widget build(BuildContext context) {
-    if (selection.staff == null) {
-      return AppText.body(
-        LocaleKeys.patient_book_scheduleHint.translate(),
-        tone: TextTone.muted,
-      );
-    }
-    return BlocBuilder<StaffWeekScheduleCubit, StaffWeekScheduleState>(
-      builder: (context, state) {
-        return _buildChild(state);
-      },
-    );
-  }
-
-  Widget _buildChild(StaffWeekScheduleState state) {
-    if (state is StaffWeekScheduleLoaded &&
-        selection.isScheduledBy(state.schedule.request)) {
+    final scheduleState = state;
+    if (scheduleState is StaffWeekScheduleLoaded &&
+        selection.isScheduledBy(scheduleState.schedule.request)) {
       return _PatientBookWeekSlots(
-        schedule: state.schedule,
+        schedule: scheduleState.schedule,
         selection: selection,
       );
     }
 
-    if (state is StaffWeekScheduleFailure) {
+    if (scheduleState is StaffWeekScheduleFailure) {
       return const _PatientBookScheduleFailure();
     }
 

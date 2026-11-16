@@ -10,9 +10,11 @@ import 'package:clinic_appointment_system/features/appointments/domain/usecases/
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_state.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/services/staff_patient_history_calculator.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/services/staff_request_header_formatter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../core/time/support/fixed_clock.dart';
+import '../../../../support/localization_test_app.dart';
 import '../../../appointments/domain/support/appointment_fixture.dart';
 import '../../../appointments/presentation/doubles/staff_appointment_repository.dart';
 
@@ -28,6 +30,7 @@ void main() {
       FixedClock(DateTime(2026, 12, 15, 23, 5)),
       const AppointmentStartComparator(),
       const StaffPatientHistoryCalculator(AppointmentStartComparator()),
+      const StaffRequestHeaderFormatter(),
     );
   });
 
@@ -99,6 +102,27 @@ void main() {
       );
     },
   );
+
+  testWidgets('stores the formatted pending request subtitle in loaded state', (
+    tester,
+  ) async {
+    await loadTestTranslations(tester);
+    cubit.watch('staff-7');
+    repository.emit([
+      _appointment(
+        fixture,
+        id: 'pending',
+        status: AppointmentStatus.pending,
+        startsAt: DateTime(2026, 12, 20, 9),
+      ),
+    ]);
+    await tester.pump();
+
+    expect(
+      (cubit.state as StaffAppointmentsLoaded).headerSubtitle,
+      '1 talep · en eskisi 44 gün önce oluşturuldu',
+    );
+  });
 
   test(
     'preserves typed failures and maps stream errors to unavailable',

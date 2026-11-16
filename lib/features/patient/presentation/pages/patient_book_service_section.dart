@@ -10,7 +10,9 @@ final class _PatientBookServiceSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<BookingSelectionCubit, BookingSelection>(
       builder: (context, selection) {
-        final services = selection.servicesIn(catalog);
+        final services = context.read<BookingSelectionCubit>().servicesIn(
+          catalog,
+        );
         final departmentId = selection.departmentId;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -19,9 +21,10 @@ final class _PatientBookServiceSection extends StatelessWidget {
             _PatientBookSectionTitle(
               title: LocaleKeys.patient_book_serviceTitle.translate(),
             ),
-            const _PatientBookSearchField(),
+            _buildSearchField(context),
             if (departmentId != null)
-              _PatientBookDepartmentChip(
+              _buildDepartmentChip(
+                context,
                 name:
                     catalog.departmentById(departmentId)?.name ??
                     LocaleKeys.common_notAvailable.translate(),
@@ -39,6 +42,31 @@ final class _PatientBookServiceSection extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+
+  /// Builds the localized search field for the services.
+  AppTextField _buildSearchField(BuildContext context) {
+    final label = LocaleKeys.patient_book_search.translate();
+    return AppTextField(
+      label: label,
+      hint: label,
+      isLabelVisible: false,
+      textInputAction: TextInputAction.search,
+      prefix: Icon(Icons.search, color: context.colorScheme.onSurfaceVariant),
+      onChanged: context.read<BookingSelectionCubit>().search,
+    );
+  }
+
+  /// Builds the removable department filter when the page is limited.
+  Align _buildDepartmentChip(BuildContext context, {required String name}) {
+    return Align(
+      alignment: AlignmentDirectional.centerStart,
+      child: AppTimeRangeChip(
+        label: name,
+        removeTooltip: LocaleKeys.patient_book_removeDepartment.translate(),
+        onRemove: context.read<BookingSelectionCubit>().removeDepartmentLimit,
+      ),
     );
   }
 }

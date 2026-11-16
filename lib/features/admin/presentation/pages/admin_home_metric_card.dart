@@ -3,12 +3,14 @@ part of 'admin_home_page.dart';
 /// Displays one KPI using a shared tone-aware surface and text hierarchy.
 final class _AdminHomeMetricCard extends StatelessWidget {
   const _AdminHomeMetricCard({
+    required this.width,
     required this.title,
     required this.value,
     required this.tone,
     this.caption,
   });
 
+  final double width;
   final String title;
   final String value;
   final String? caption;
@@ -18,6 +20,7 @@ final class _AdminHomeMetricCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final captionText = caption;
     return SizedBox(
+      width: width,
       height: AdminLayoutConstants.overviewMetricCardHeight,
       child: AppSurface(
         variant: tone.surfaceVariant,

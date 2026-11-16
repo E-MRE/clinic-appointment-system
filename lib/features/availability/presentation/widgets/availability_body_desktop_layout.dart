@@ -6,22 +6,35 @@ final class _AvailabilityDesktopLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const AppSidePanelLayout(
+    return AppSidePanelLayout(
       showsPanel: true,
-      panel: AppSidePanel(child: _AvailabilityWindowPanel()),
+      panel: const AppSidePanel(child: _AvailabilityWindowPanel()),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           spacing: AppSizes.s24,
           children: [
-            _AvailabilityWeeklyCard(),
-            AppSurface(
+            _buildWeeklyCard(),
+            const AppSurface(
               padding: AppSurfacePadding.spacious,
               radius: AppSurfaceRadius.panel,
               child: _AvailabilityOneOffSection(),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  /// Builds the weekly timeline surface and its heading.
+  Widget _buildWeeklyCard() {
+    return const AppSurface(
+      radius: AppSurfaceRadius.panel,
+      padding: AppSurfacePadding.spacious,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: AppSizes.s16,
+        children: [_AvailabilityWeeklyHeading(), _AvailabilityTimeline()],
       ),
     );
   }

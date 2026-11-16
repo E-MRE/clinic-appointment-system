@@ -14,19 +14,22 @@ final class _PatientAppointmentsServiceCell extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       spacing: AppSizes.s12,
       children: [
-        AppIconTile(icon: entry.kindIcon, size: AppIconTileSize.small),
+        AppIconTile(
+          icon: entry.presentation.kindIcon,
+          size: AppIconTileSize.small,
+        ),
         Flexible(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              AppText.bodyStrong(entry.serviceName),
+              AppText.bodyStrong(entry.presentation.serviceName),
               ConstrainedBox(
                 constraints: const BoxConstraints(
                   maxWidth: AppSizes.patientAppointmentsCaptionMaxWidth,
                 ),
                 child: AppText.caption(
-                  entry.serviceCaption,
+                  entry.presentation.serviceCaption,
                   tone: TextTone.muted,
                   maxLines: _captionLines,
                   overflow: TextOverflow.ellipsis,

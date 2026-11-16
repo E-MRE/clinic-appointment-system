@@ -284,6 +284,12 @@ service cloud.firestore {
       allow delete: if resource != null && isDemoDelete(resource.data);
     }
 
+    // Collection-group listing of booking projections: the demo seed and its
+    // clear action find their own projections across all owners in one query.
+    match /{path=**}/days/{date} {
+      allow list: if isAdmin();
+    }
+
     match /patientBookings/{patientId}/days/{date} {
       allow read: if isUser(patientId) || isAdmin();
       allow create: if (isSignedIn()
@@ -335,8 +341,9 @@ service cloud.firestore {
 
     // appointments/{appointmentId}: lifecycle changes append an audit entry.
     match /appointments/{appointmentId} {
-      allow read: if resource != null && (isAdmin()
-        || isUser(resource.data.patientId) || isUser(resource.data.staffId));
+      // Admins may read a missing id: the demo seed checks its fixed ids first.
+      allow read: if isAdmin() || (resource != null
+        && (isUser(resource.data.patientId) || isUser(resource.data.staffId)));
       // Demo appointments keep the shared field, fee, date/time format, status,
       // final-history-entry and staff/profile checks below. They bypass live
       // patient caller ownership, pending-only and single-entry booking

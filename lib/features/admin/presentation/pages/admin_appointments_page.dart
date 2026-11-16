@@ -40,21 +40,33 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'admin_appointments_view.dart';
 part 'admin_appointments_data_state.dart';
+part 'admin_appointments_data_state_loaded_content.dart';
 part 'admin_appointments_failure.dart';
 part 'admin_appointments_loaded_content.dart';
 part 'admin_appointments_filter_card.dart';
 part 'admin_appointments_filter_fields.dart';
+part 'admin_appointments_filter_branch_field.dart';
+part 'admin_appointments_filter_department_field.dart';
+part 'admin_appointments_filter_staff_field.dart';
 part 'admin_appointments_filter_statuses.dart';
 part 'admin_appointments_date_range_field.dart';
 part 'admin_appointments_table.dart';
 part 'admin_appointments_table_header.dart';
+part 'admin_appointments_table_header_summary.dart';
 part 'admin_appointments_table_footer.dart';
 part 'admin_appointments_empty_state.dart';
 
 /// Lists, filters and manages the administrator's appointments.
 final class AdminAppointmentsPage extends StatefulWidget {
   /// Creates the routed administrator appointment page.
-  const AdminAppointmentsPage({this.initialStatuses = const {}, super.key});
+  const AdminAppointmentsPage({
+    required this.clock,
+    this.initialStatuses = const {},
+    super.key,
+  });
+
+  /// Time boundary used for relative timestamps.
+  final Clock clock;
 
   /// Status groups selected when the route supplies a status query.
   final Set<AdminStatusFilter> initialStatuses;
@@ -77,7 +89,7 @@ final class _AdminAppointmentsPageState extends State<AdminAppointmentsPage>
           return cubit;
         },
         child: _AdminAppointmentsView(
-          clock: _clock,
+          clock: widget.clock,
           searchController: _searchController,
           onClearFilters: _clearFilters,
         ),
@@ -87,13 +99,11 @@ final class _AdminAppointmentsPageState extends State<AdminAppointmentsPage>
 }
 
 mixin _AdminAppointmentsPageMixin on State<AdminAppointmentsPage> {
-  late final Clock _clock;
   late final TextEditingController _searchController;
 
   @override
   void initState() {
     super.initState();
-    _clock = AppDependency.injector.get<Clock>();
     _searchController = TextEditingController();
   }
 

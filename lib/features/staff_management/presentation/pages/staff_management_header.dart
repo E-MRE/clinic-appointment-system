@@ -6,7 +6,7 @@ final class _StaffManagementHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final overview = context.staffOverview;
+    final overview = context.watch<StaffListOverviewCubit>().state;
     final state = context.watch<StaffListCubit>().state;
     return PageHeader(
       title: LocaleKeys.staff_title.tr(),

@@ -13,7 +13,7 @@ final class _AdminHomeStaffRow extends StatelessWidget {
       child: Row(
         spacing: AppSizes.s8,
         children: [
-          Expanded(child: _buildIdentity()),
+          Expanded(child: _AdminHomeStaffRowIdentity(row: row)),
           SizedBox(
             width: AdminLayoutConstants.overviewStaffProgressWidth,
             child: AppProgressBar(
@@ -30,26 +30,6 @@ final class _AdminHomeStaffRow extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildIdentity() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        AppText.bodyStrong(
-          row.fullName,
-          maxLines: AdminLayoutConstants.overviewMinimumColumnCount,
-          overflow: TextOverflow.ellipsis,
-        ),
-        AppText.caption(
-          row.caption,
-          tone: TextTone.muted,
-          maxLines: AdminLayoutConstants.overviewMinimumColumnCount,
-          overflow: TextOverflow.ellipsis,
-        ),
-      ],
     );
   }
 }

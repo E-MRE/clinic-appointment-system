@@ -38,7 +38,9 @@ import 'package:clinic_appointment_system/features/staff/presentation/cubit/staf
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_calendar_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_workspace_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/models/staff_calendar_layout_factory.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/services/staff_appointment_action_offer_policy.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/services/staff_patient_history_calculator.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/services/staff_request_header_formatter.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/staff.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/user.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -161,6 +163,9 @@ final class AvailabilityPageHarness {
     injector.registerSingleton<StaffCalendarLayoutFactory>(
       StaffCalendarLayoutFactory(injector.get<AppointmentStartComparator>()),
     );
+    injector.registerSingleton<StaffAppointmentActionOfferPolicy>(
+      const StaffAppointmentActionOfferPolicy(),
+    );
     injector.registerSingleton<StaffPatientHistoryCalculator>(
       StaffPatientHistoryCalculator(injector.get<AppointmentStartComparator>()),
     );
@@ -220,6 +225,7 @@ final class AvailabilityPageHarness {
         clock,
         injector.get<AppointmentStartComparator>(),
         injector.get<StaffPatientHistoryCalculator>(),
+        const StaffRequestHeaderFormatter(),
       ),
     );
     injector.registerFactory<StaffCalendarCubit>(

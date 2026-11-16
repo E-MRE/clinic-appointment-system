@@ -170,6 +170,25 @@ void main() {
     },
   );
 
+  testWidgets('overview refreshes when the staff source emits', (tester) async {
+    addTearDown(() => harness.dispose(tester));
+    await harness.pump(tester, const StaffManagementPage());
+    await harness.load(tester);
+
+    expect(find.text('2 doktor · 1 teknisyen · 2 şube'), findsOneWidget);
+    expect(find.text('Ece Kaya'), findsOneWidget);
+
+    await harness.emitStaff(
+      tester,
+      DataResult.success(data: [harness.records.first]),
+    );
+
+    expect(find.text('1 doktor · 0 teknisyen · 2 şube'), findsOneWidget);
+    expect(find.text('Ada Kaya'), findsOneWidget);
+    expect(find.text('Ece Kaya'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
   for (final size in [StaffPageHarness.mobile, StaffPageHarness.tablet]) {
     testWidgets('clinic-empty list offers an add action at $size', (
       tester,

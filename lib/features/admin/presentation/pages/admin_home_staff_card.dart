@@ -19,31 +19,9 @@ final class _AdminHomeStaffCard extends StatelessWidget {
               LocaleKeys.admin_overview_staffBreakdown.translate(),
             ),
             const EmptySize.s16Height(),
-            Expanded(child: _buildBody()),
+            Expanded(child: _AdminHomeStaffCardBody(summary: summary)),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildBody() {
-    if (summary.staffRows.isEmpty) {
-      return Center(
-        child: AppText.body(
-          LocaleKeys.admin_overview_emptyStaff.translate(),
-          tone: TextTone.muted,
-          textAlign: TextAlign.center,
-        ),
-      );
-    }
-
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        spacing: AdminLayoutConstants.overviewBreakdownRowGap,
-        children: [
-          for (final row in summary.staffRows) _AdminHomeStaffRow(row: row),
-        ],
       ),
     );
   }

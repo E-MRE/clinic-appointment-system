@@ -1,6 +1,6 @@
 part of 'auth_page.dart';
 
-/// Toggles the visibility of one password field.
+/// Toggles the visibility of a password field through its owner callback.
 final class _AuthPasswordSuffix extends StatelessWidget {
   const _AuthPasswordSuffix({
     required this.obscured,

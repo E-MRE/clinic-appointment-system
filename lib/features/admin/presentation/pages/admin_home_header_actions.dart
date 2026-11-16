@@ -23,10 +23,19 @@ final class _AdminHomeHeaderActions extends StatelessWidget {
               runSpacing: AppSizes.s8,
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
-                _branchSelector(context, catalogState, selectedBranchId),
+                _AdminHomeHeaderBranchSelector(
+                  catalogState: catalogState,
+                  selectedBranchId: selectedBranchId,
+                ),
                 _appointmentsButton(context),
-                _buildDemoDataButton(context, demoState),
-                _buildClearDemoDataButton(context, demoState),
+                _AdminHomeHeaderDemoDataButton(
+                  state: demoState,
+                  onConfirm: _confirmDemoDataLoad,
+                ),
+                _AdminHomeHeaderClearDemoDataButton(
+                  state: demoState,
+                  onConfirm: _confirmDemoDataClear,
+                ),
               ],
             ),
             if (demoState is DemoDataLoading)
@@ -50,41 +59,6 @@ final class _AdminHomeHeaderActions extends StatelessWidget {
     );
   }
 
-  String? _branchId(String? value) {
-    if (value == _allBranchesValue) return null;
-    return value;
-  }
-
-  String get _allBranchesValue => '';
-
-  Widget _branchSelector(
-    BuildContext context,
-    ClinicCatalogState catalogState,
-    String? selectedBranchId,
-  ) {
-    return SizedBox(
-      width: AdminLayoutConstants.overviewBranchSelectWidth,
-      child: AppSelectField<String>(
-        label: LocaleKeys.admin_appointmentsPage_branch.translate(),
-        showLabel: false,
-        enabled: catalogState is ClinicCatalogLoaded,
-        value: selectedBranchId ?? _allBranchesValue,
-        options: [
-          AppSelectOption<String>(
-            value: _allBranchesValue,
-            label: LocaleKeys.admin_appointmentsPage_allBranches.translate(),
-          ),
-          if (catalogState is ClinicCatalogLoaded)
-            for (final branch in catalogState.catalog.branches)
-              AppSelectOption<String>(value: branch.id, label: branch.name),
-        ],
-        onChanged: (value) {
-          context.read<AdminDashboardCubit>().selectBranch(_branchId(value));
-        },
-      ),
-    );
-  }
-
   Widget _appointmentsButton(BuildContext context) {
     return FilledButton(
       onPressed: () {
@@ -95,75 +69,6 @@ final class _AdminHomeHeaderActions extends StatelessWidget {
         tone: TextTone.onPrimary,
       ),
     );
-  }
-
-  FilledButton _buildDemoDataButton(BuildContext context, DemoDataState state) {
-    final isRequestInProgress = state is DemoDataLoading;
-    final isLoading =
-        state is DemoDataLoading && state.command == DemoDataCommand.load;
-    VoidCallback? onPressed;
-    if (!isRequestInProgress) {
-      onPressed = () {
-        _confirmDemoDataLoad(context);
-      };
-    }
-    return FilledButton.icon(
-      onPressed: onPressed,
-      icon: _buildDemoDataIcon(
-        isLoading,
-        icon: Icons.cloud_download_outlined,
-        color: context.colorScheme.onPrimary,
-      ),
-      label: AppText.label(
-        LocaleKeys.demoData_loadButton.translate(),
-        tone: TextTone.onPrimary,
-      ),
-    );
-  }
-
-  FilledButton _buildClearDemoDataButton(
-    BuildContext context,
-    DemoDataState state,
-  ) {
-    final isRequestInProgress = state is DemoDataLoading;
-    final isLoading =
-        state is DemoDataLoading && state.command == DemoDataCommand.clear;
-    VoidCallback? onPressed;
-    if (!isRequestInProgress) {
-      onPressed = () {
-        _confirmDemoDataClear(context);
-      };
-    }
-    return FilledButton.icon(
-      onPressed: onPressed,
-      style: FilledButton.styleFrom(
-        backgroundColor: context.colorScheme.errorContainer,
-        foregroundColor: context.colorScheme.onErrorContainer,
-      ),
-      icon: _buildDemoDataIcon(
-        isLoading,
-        icon: Icons.delete_sweep_outlined,
-        color: context.colorScheme.onErrorContainer,
-      ),
-      label: AppText.label(
-        LocaleKeys.demoData_clearButton.translate(),
-        tone: TextTone.onErrorContainer,
-      ),
-    );
-  }
-
-  Widget _buildDemoDataIcon(
-    bool isLoading, {
-    required IconData icon,
-    required Color color,
-  }) {
-    if (isLoading) {
-      return SizedBox.square(
-        dimension: AppSizes.s16,
-        child: CircularProgressIndicator(color: color),
-      );
-    }
-    return Icon(icon);
   }
 
   Widget _buildDemoFeedback(String message, AppMessageBannerVariant variant) {

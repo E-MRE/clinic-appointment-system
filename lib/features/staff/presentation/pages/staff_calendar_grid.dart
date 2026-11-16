@@ -6,10 +6,6 @@ final class _StaffCalendarGrid extends StatelessWidget {
 
   final StaffCalendarLayout layout;
 
-  int get _firstIndex => 0;
-
-  int get _lastIndexOffset => 1;
-
   @override
   Widget build(BuildContext context) {
     final today = CalendarDate.fromDateTime(layout.now);
@@ -32,40 +28,16 @@ final class _StaffCalendarGrid extends StatelessWidget {
             child: SingleChildScrollView(
               child: SizedBox(
                 height: totalHeight,
-                child: _buildContentRow(layout, today, totalHeight),
+                child: _StaffCalendarGridContentRow(
+                  layout: layout,
+                  today: today,
+                  totalHeight: totalHeight,
+                ),
               ),
             ),
           ),
         ],
       ),
-    );
-  }
-
-  Row _buildContentRow(
-    StaffCalendarLayout layout,
-    CalendarDate today,
-    double totalHeight,
-  ) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        _StaffCalendarHourColumn(
-          startHour: layout.startHour,
-          endHour: layout.endHour,
-          hourHeight: AppSizes.staffCalendarHourHeight,
-        ),
-        for (int index = _firstIndex; index < layout.days.length; index++)
-          Expanded(
-            child: _StaffCalendarDayColumn(
-              day: layout.days[index],
-              layout: layout,
-              today: today,
-              totalHeight: totalHeight,
-              hourHeight: AppSizes.staffCalendarHourHeight,
-              showsRightBorder: index < layout.days.length - _lastIndexOffset,
-            ),
-          ),
-      ],
     );
   }
 

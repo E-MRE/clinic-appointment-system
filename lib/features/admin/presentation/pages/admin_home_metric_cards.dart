@@ -69,29 +69,29 @@ final class _AdminHomeMetricCards extends StatelessWidget {
           spacing: AppSizes.s16,
           runSpacing: AppSizes.s16,
           children: [
-            _buildCard(
-              cardWidth,
+            _AdminHomeMetricCard(
+              width: cardWidth,
               title: LocaleKeys.admin_overview_todayAppointments.translate(),
               value: summary.todayAppointmentCount.toString(),
               caption: _todayCaption,
               tone: AdminMetricTone.primary,
             ),
-            _buildCard(
-              cardWidth,
+            _AdminHomeMetricCard(
+              width: cardWidth,
               title: LocaleKeys.admin_overview_pendingAppointments.translate(),
               value: summary.pendingCount.toString(),
               caption: _pendingCaption(clock.now()),
               tone: AdminMetricTone.pending,
             ),
-            _buildCard(
-              cardWidth,
+            _AdminHomeMetricCard(
+              width: cardWidth,
               title: LocaleKeys.admin_overview_completedToday.translate(),
               value: summary.completedCount.toString(),
               caption: _completedCaption,
               tone: AdminMetricTone.neutral,
             ),
-            _buildCard(
-              cardWidth,
+            _AdminHomeMetricCard(
+              width: cardWidth,
               title: LocaleKeys.admin_overview_noShowToday.translate(),
               value: summary.noShowCount.toString(),
               caption: _noShowCaption,
@@ -100,24 +100,6 @@ final class _AdminHomeMetricCards extends StatelessWidget {
           ],
         );
       },
-    );
-  }
-
-  Widget _buildCard(
-    double width, {
-    required String title,
-    required String value,
-    required String? caption,
-    required AdminMetricTone tone,
-  }) {
-    return SizedBox(
-      width: width,
-      child: _AdminHomeMetricCard(
-        title: title,
-        value: value,
-        caption: caption,
-        tone: tone,
-      ),
     );
   }
 

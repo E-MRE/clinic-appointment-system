@@ -28,25 +28,26 @@ final class _StaffRequestsBody extends StatelessWidget {
       );
     }
 
-    final requests = appointmentsState.pendingRequests;
-    if (requests.isEmpty) {
+    final selectionState = context.watch<StaffRequestSelectionCubit>().state;
+    final sortedRequests = selectionState.sortedRequests;
+    if (sortedRequests.isEmpty) {
       return const _StaffRequestsEmpty();
     }
 
-    final selectionState = context.watch<StaffRequestSelectionCubit>().state;
-    final sortedRequests = selectionState.sort.sort(requests);
     final selectedId = selectionState.selectedRequestId;
 
     if (context.screenSize.isDesktop) {
       return _StaffRequestsDesktopLayout(
         requests: sortedRequests,
         selectedId: selectedId,
+        now: appointmentsState.now,
       );
     }
 
     return _StaffRequestsNarrowLayout(
       requests: sortedRequests,
       selectedId: selectedId,
+      now: appointmentsState.now,
     );
   }
 }

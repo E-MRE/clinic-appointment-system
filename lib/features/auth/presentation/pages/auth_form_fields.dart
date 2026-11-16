@@ -25,8 +25,7 @@ final class _AuthFormFields extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (kind.isRegistration)
-          _AuthNameGroup(controller: fullName, enabled: enabled),
+        if (kind.isRegistration) _buildNameGroup(),
         _AuthEmailField(
           kind: kind,
           controller: email,
@@ -41,6 +40,18 @@ final class _AuthFormFields extends StatelessWidget {
             enabled: enabled,
             onSubmit: onSubmit,
           ),
+      ],
+    );
+  }
+
+  /// Builds the registration name field with its existing bottom spacing.
+  Widget _buildNameGroup() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _AuthNameField(controller: fullName, enabled: enabled),
+        const EmptySize.s16Height(),
       ],
     );
   }

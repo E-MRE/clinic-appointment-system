@@ -6,8 +6,6 @@ final class _StaffCalendarAppointmentBlock extends StatelessWidget {
 
   final Appointment appointment;
 
-  int get _singleLine => 1;
-
   @override
   Widget build(BuildContext context) {
     final tone = appointment.status.calendarTone;
@@ -23,60 +21,13 @@ final class _StaffCalendarAppointmentBlock extends StatelessWidget {
         child: Semantics(
           button: true,
           label: '$formattedTime ${appointment.displayPatientName}',
-          child: _buildChild(tone, colors, formattedTime),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildChild(
-    AppointmentStatus tone,
-    StatusColorPair colors,
-    String formattedTime,
-  ) {
-    if (tone == AppointmentStatus.pending) {
-      return AppDashedBorder(
-        color: colors.fg,
-        strokeWidth: AppSizes.borderThin,
-        radius: const AppRadius.xSmall(),
-        child: Container(
-          color: colors.bg,
-          alignment: Alignment.centerLeft,
-          child: _buildContent(formattedTime, colors),
-        ),
-      );
-    }
-
-    return Container(
-      alignment: Alignment.centerLeft,
-      decoration: BoxDecoration(
-        color: colors.bg,
-        borderRadius: const AppRadius.xSmall(),
-      ),
-      child: _buildContent(formattedTime, colors),
-    );
-  }
-
-  Padding _buildContent(String formattedTime, StatusColorPair colors) {
-    return Padding(
-      padding: const AppPadding.horizontalSm(),
-      child: Row(
-        children: [
-          AppText.label(
-            formattedTime,
-            color: colors.fg,
-            fontWeight: FontWeight.w600,
+          child: _StaffCalendarAppointmentBlockSurface(
+            appointment: appointment,
+            tone: tone,
+            colors: colors,
+            formattedTime: formattedTime,
           ),
-          const EmptySize.s8Width(),
-          Expanded(
-            child: AppText.label(
-              appointment.displayPatientName,
-              color: colors.fg,
-              maxLines: _singleLine,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -84,14 +35,24 @@ final class _StaffCalendarAppointmentBlock extends StatelessWidget {
   /// Calls the page's tap hook when one is set; otherwise opens the staff
   /// appointment dialog.
   void _open(BuildContext context) {
-    final onAppointmentTap = _StaffCalendarScope.maybeOf(
-      context,
-    )?.onAppointmentTap;
+    final scope = _StaffCalendarScope.maybeOf(context);
+    final onAppointmentTap = scope?.onAppointmentTap;
 
     if (onAppointmentTap != null) {
       onAppointmentTap(appointment);
       return;
     }
-    unawaited(StaffAppointmentDialog.show(context, appointment));
+    final clock = scope?.clock;
+    final actionOfferPolicy = scope?.actionOfferPolicy;
+    if (clock != null && actionOfferPolicy != null) {
+      unawaited(
+        StaffAppointmentDialog.show(
+          context,
+          appointment,
+          clock: clock,
+          actionOfferPolicy: actionOfferPolicy,
+        ),
+      );
+    }
   }
 }

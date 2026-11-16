@@ -7,6 +7,8 @@ import 'package:clinic_appointment_system/features/patient/presentation/enums/pa
 import 'package:clinic_appointment_system/features/patient/presentation/extensions/patient_appointments_tab_selection.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/models/patient_appointment_entry.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/models/patient_appointments_overview.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/services/patient_appointment_cancellation_policy.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/services/patient_appointment_entry_formatter.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/services/patient_appointments_overview_factory.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -18,6 +20,8 @@ void main() {
   final patient = PatientAppointmentActor(id: fixtures.patient.id);
   const overviewFactory = PatientAppointmentsOverviewFactory(
     AppointmentStartComparator(),
+    PatientAppointmentCancellationPolicy(),
+    PatientAppointmentEntryFormatter(),
   );
 
   PatientAppointmentsOverview overview({
@@ -37,7 +41,10 @@ void main() {
     return [for (final entry in entries) entry.appointment.id];
   }
 
-  test('upcoming ascends, past descends and all puts upcoming first', () {
+  testWidgets('upcoming ascends, past descends and all puts upcoming first', (
+    tester,
+  ) async {
+    await loadTestTranslations(tester);
     final result = overview();
     expect(ids(result.upcoming), ['a1', 'a2', 'a3']);
     expect(ids(result.past), ['a4', 'a5', 'a6', 'a7']);
@@ -51,7 +58,10 @@ void main() {
     expect(ids(PatientAppointmentsTab.all.select(result)), ids(result.all));
   });
 
-  test('an open appointment starting exactly now is still upcoming', () {
+  testWidgets('an open appointment starting exactly now is still upcoming', (
+    tester,
+  ) async {
+    await loadTestTranslations(tester);
     final start = fixtures.cardiology.startsAt;
     final atStart = overview(appointments: [fixtures.cardiology], now: start);
     expect(ids(atStart.upcoming), ['a1']);
@@ -65,7 +75,10 @@ void main() {
     expect(afterStart.next, isNull);
   });
 
-  test('closed statuses are past even when they start later', () {
+  testWidgets('closed statuses are past even when they start later', (
+    tester,
+  ) async {
+    await loadTestTranslations(tester);
     final futureCancelled = fixtures.appointment(
       'late',
       'cardio-exam',
@@ -79,7 +92,10 @@ void main() {
     expect(ids(result.past), ['late']);
   });
 
-  test('cancel follows the domain: open and not started only', () {
+  testWidgets('cancel follows the domain: open and not started only', (
+    tester,
+  ) async {
+    await loadTestTranslations(tester);
     final result = overview();
     final cancellable = {
       for (final entry in result.all) entry.appointment.id: entry.canCancel,
@@ -100,7 +116,10 @@ void main() {
     expect(started.all.single.canCancel, isFalse);
   });
 
-  test('missing catalog records stay null instead of failing', () {
+  testWidgets('missing catalog records stay null instead of failing', (
+    tester,
+  ) async {
+    await loadTestTranslations(tester);
     final result = overview(
       catalog: ClinicCatalog(
         clinics: const [],

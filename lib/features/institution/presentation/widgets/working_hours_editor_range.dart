@@ -25,8 +25,18 @@ final class _WorkingHoursEditorRange extends StatelessWidget {
           onPressed: () => _pick(context, start: false),
           child: AppText.label(range.end.toString()),
         ),
-        _WorkingHoursEditorRangeRemove(day: day, index: index),
+        _buildRemove(context),
       ],
+    );
+  }
+
+  /// Builds the control for removing this opening range.
+  Widget _buildRemove(BuildContext context) {
+    return IconButton(
+      tooltip: LocaleKeys.institution_rangeRemove.tr(),
+      onPressed: () =>
+          context.read<WorkingHoursEditorCubit>().removeRange(day, index),
+      icon: const Icon(Icons.remove_circle_outline),
     );
   }
 

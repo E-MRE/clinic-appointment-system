@@ -29,12 +29,23 @@ final class _AvailabilityBodyFrame extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _AvailabilityHeader(header: header),
+            _buildHeader(context),
             const EmptySize.s16Height(),
             const Expanded(child: _AvailabilityBodyContent()),
           ],
         ),
       ),
+    );
+  }
+
+  /// Builds the header and includes the add action on tablet screens.
+  Widget _buildHeader(BuildContext context) {
+    return Row(
+      spacing: AppSizes.s16,
+      children: [
+        Expanded(child: header),
+        if (context.screenSize.isTablet) const _AvailabilityAddButton(),
+      ],
     );
   }
 }

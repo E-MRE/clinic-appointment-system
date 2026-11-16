@@ -5,10 +5,12 @@ final class _StaffRequestsNarrowLayout extends StatelessWidget {
   const _StaffRequestsNarrowLayout({
     required this.requests,
     required this.selectedId,
+    required this.now,
   });
 
   final List<Appointment> requests;
   final String? selectedId;
+  final DateTime now;
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +21,7 @@ final class _StaffRequestsNarrowLayout extends StatelessWidget {
         context.read<StaffRequestSelectionCubit>().select(request.id);
         _openDetailDialog(context, request);
       },
+      now: now,
     );
   }
 

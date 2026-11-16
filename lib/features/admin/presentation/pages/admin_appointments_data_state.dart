@@ -28,7 +28,13 @@ final class _AdminAppointmentsDataState extends StatelessWidget {
                 appointmentsState is! AdminAppointmentsLoaded) {
               return _loading;
             }
-            return _loadedContent(context, appointmentsState, catalogState);
+            return _AdminAppointmentsDataLoadedContent(
+              clock: clock,
+              appointmentsState: appointmentsState,
+              catalogState: catalogState,
+              searchController: searchController,
+              onClearFilters: onClearFilters,
+            );
           },
         );
       },
@@ -59,32 +65,6 @@ final class _AdminAppointmentsDataState extends StatelessWidget {
     return LoadingState(
       variant: LoadingStateVariant.skeletonList,
       label: LocaleKeys.admin_appointmentsPage_loading.translate(),
-    );
-  }
-
-  Widget _sessionFailure(BuildContext context) {
-    return _AdminAppointmentsFailure(
-      title: LocaleKeys.admin_appointmentsPage_sessionFailureTitle.translate(),
-      message: LocaleKeys.admin_appointmentsPage_sessionFailureMessage
-          .translate(),
-      onRetry: context.read<AdminAppointmentsCubit>().retry,
-    );
-  }
-
-  Widget _loadedContent(
-    BuildContext context,
-    AdminAppointmentsLoaded appointmentsState,
-    ClinicCatalogLoaded catalogState,
-  ) {
-    final actor = context.adminAppointmentActor;
-    if (actor == null) return _sessionFailure(context);
-    return _AdminAppointmentsLoadedContent(
-      clock: clock,
-      state: appointmentsState,
-      catalog: catalogState.catalog,
-      actor: actor,
-      searchController: searchController,
-      onClearFilters: onClearFilters,
     );
   }
 }

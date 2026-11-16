@@ -51,39 +51,38 @@ part 'admin_home_data_state.dart';
 part 'admin_home_loaded_content.dart';
 part 'admin_home_header.dart';
 part 'admin_home_header_actions.dart';
+part 'admin_home_header_branch_selector.dart';
+part 'admin_home_header_demo_data_button.dart';
+part 'admin_home_header_clear_demo_data_button.dart';
+part 'admin_home_header_demo_data_button_icon.dart';
 part 'admin_home_demo_data_dialog.dart';
+part 'admin_home_demo_data_dialog_actions.dart';
 part 'admin_home_metric_cards.dart';
 part 'admin_home_metric_card.dart';
 part 'admin_home_breakdown_cards.dart';
 part 'admin_home_status_card.dart';
+part 'admin_home_status_distribution.dart';
+part 'admin_home_status_bar.dart';
+part 'admin_home_status_legend.dart';
 part 'admin_home_department_card.dart';
+part 'admin_home_department_card_body.dart';
 part 'admin_home_department_row.dart';
 part 'admin_home_staff_card.dart';
+part 'admin_home_staff_card_body.dart';
 part 'admin_home_staff_row.dart';
+part 'admin_home_staff_row_identity.dart';
 part 'admin_home_pending_table.dart';
 part 'admin_home_pending_table_header.dart';
 part 'admin_home_pending_empty.dart';
 part 'admin_home_failure_state.dart';
 
 /// Presents the administrator's daily appointment overview.
-final class AdminHomePage extends StatefulWidget {
+final class AdminHomePage extends StatelessWidget {
   /// Creates the administrator overview page.
-  const AdminHomePage({super.key});
+  const AdminHomePage({required this.clock, super.key});
 
-  @override
-  State<AdminHomePage> createState() {
-    return _AdminHomePageState();
-  }
-}
-
-final class _AdminHomePageState extends State<AdminHomePage> {
-  late final Clock _clock;
-
-  @override
-  void initState() {
-    super.initState();
-    _clock = AppDependency.injector.get<Clock>();
-  }
+  /// Time source used to display current time and relative intervals.
+  final Clock clock;
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +104,7 @@ final class _AdminHomePageState extends State<AdminHomePage> {
           },
           child: BlocProvider<DemoDataCubit>(
             create: (_) => AppDependency.injector.get<DemoDataCubit>(),
-            child: _AdminHomeView(clock: _clock),
+            child: _AdminHomeView(clock: clock),
           ),
         ),
       ),

@@ -26,8 +26,22 @@ final class _InstitutionClinicPicker extends StatelessWidget {
           },
         ),
         const EmptySize.s12Height(),
-        const _InstitutionNewClinicButton(),
+        _buildNewClinicButton(context),
       ],
+    );
+  }
+
+  /// Opens the clinic creation dialog from the selector.
+  Widget _buildNewClinicButton(BuildContext context) {
+    return OutlinedButton.icon(
+      onPressed: () => showDialog<void>(
+        context: context,
+        builder: (_) => _ClinicNameDialog(
+          selection: InstitutionSelectionScope.read(context),
+        ),
+      ),
+      icon: const Icon(Icons.add),
+      label: AppText.label(LocaleKeys.institution_newClinic.tr()),
     );
   }
 }

@@ -31,9 +31,12 @@ import 'package:clinic_appointment_system/features/staff_management/presentation
 import 'package:clinic_appointment_system/features/staff_management/presentation/cubit/staff_filter_cubit.dart';
 import 'package:clinic_appointment_system/features/staff_management/presentation/cubit/staff_form_cubit.dart';
 import 'package:clinic_appointment_system/features/staff_management/presentation/cubit/staff_list_cubit.dart';
+import 'package:clinic_appointment_system/features/staff_management/presentation/cubit/staff_list_overview_cubit.dart';
 import 'package:clinic_appointment_system/features/staff_management/presentation/cubit/staff_save_cubit.dart';
 import 'package:clinic_appointment_system/features/staff_management/presentation/cubit/staff_service_list_cubit.dart';
 import 'package:clinic_appointment_system/features/staff_management/presentation/pages/staff_management_route_scope.dart';
+import 'package:clinic_appointment_system/features/staff_management/presentation/services/staff_availability_subtitle_formatter.dart';
+import 'package:clinic_appointment_system/features/staff_management/presentation/services/staff_list_overview_factory.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/staff.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -148,6 +151,7 @@ final class StaffPageHarness {
     AppDependency.injector.registerFactory<StaffDepartmentListCubit>(() {
       departments = StaffDepartmentListCubit(
         WatchDepartmentsOfBranchesUseCase(departmentRepository),
+        const StaffAvailabilitySubtitleFormatter(),
       );
       return departments;
     });
@@ -157,6 +161,9 @@ final class StaffPageHarness {
       );
       return services;
     });
+    AppDependency.injector.registerFactory<StaffListOverviewCubit>(
+      () => StaffListOverviewCubit(const StaffListOverviewFactory()),
+    );
     AppDependency.injector.registerFactory<StaffFilterCubit>(
       StaffFilterCubit.new,
     );

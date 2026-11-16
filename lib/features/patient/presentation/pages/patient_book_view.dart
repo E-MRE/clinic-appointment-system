@@ -10,28 +10,12 @@ final class _PatientBookView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final catalogState = context.watch<ClinicCatalogCubit>().state;
-    return AppScaffold(child: _buildChild(catalogState));
-  }
-
-  Widget _buildChild(ClinicCatalogState catalogState) {
-    if (catalogState is ClinicCatalogLoaded) {
-      return _PatientBookEffects(
-        catalog: catalogState.catalog,
-        child: _PatientBookContent(
-          catalog: catalogState.catalog,
-          patient: patient,
-          patientName: patientName,
-        ),
-      );
-    }
-
-    if (catalogState is ClinicCatalogFailure) {
-      return const _PatientBookFailure();
-    }
-
-    return LoadingState(
-      variant: LoadingStateVariant.skeletonList,
-      label: LocaleKeys.patient_book_loading.translate(),
+    return AppScaffold(
+      child: _PatientBookViewChild(
+        catalogState: catalogState,
+        patient: patient,
+        patientName: patientName,
+      ),
     );
   }
 }
