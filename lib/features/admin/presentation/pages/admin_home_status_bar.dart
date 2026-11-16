@@ -14,6 +14,7 @@ final class _AdminHomeStatusBar extends StatelessWidget {
       child: ClipRRect(
         borderRadius: const AppRadius.full(),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             for (final row in summary.statusCounts)
               Expanded(
