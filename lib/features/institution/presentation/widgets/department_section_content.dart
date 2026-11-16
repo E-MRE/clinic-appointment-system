@@ -20,12 +20,51 @@ final class _DepartmentSectionState extends State<_DepartmentSectionContent>
         children: [
           AppText.sectionTitle(LocaleKeys.institution_departments.tr()),
           const EmptySize.s12Height(),
-          const _DepartmentList(),
+          _buildDepartmentList(),
           const EmptySize.s12Height(),
           _DepartmentAddRow(controller: controller, onAdd: add),
-          const _DepartmentSaveError(),
+          _buildSaveError(),
         ],
       ),
+    );
+  }
+
+  /// Shows department request states and the loaded rows.
+  Widget _buildDepartmentList() {
+    return BlocBuilder<DepartmentListCubit, InstitutionListState<Department>>(
+      builder: (context, state) {
+        if (state is InstitutionListLoaded<Department> &&
+            state.items.isNotEmpty) {
+          return _buildDepartmentListContent(context);
+        }
+        return SizedBox(
+          height: AppSizes.s144,
+          child: _buildDepartmentListContent(context),
+        );
+      },
+    );
+  }
+
+  /// Builds the shared list state presentation for this section.
+  Widget _buildDepartmentListContent(BuildContext context) {
+    return InstitutionListView<Department, DepartmentListCubit>(
+      loadingVariant: LoadingStateVariant.centeredIndicator,
+      emptyTitle: LocaleKeys.institution_empty_departmentsTitle.tr(),
+      emptyMessage: LocaleKeys.institution_empty_departmentsDescription.tr(),
+      onRetry: context.read<DepartmentListCubit>().retry,
+      loadedBuilder: (items) => _DepartmentRows(items: items),
+    );
+  }
+
+  /// Displays a failed department create request.
+  Widget _buildSaveError() {
+    return BlocBuilder<DepartmentSaveCubit, InstitutionSaveState<Department>>(
+      builder: (context, state) {
+        if (state is InstitutionSaveFailure<Department>) {
+          return AppText.caption(state.code.message, tone: TextTone.error);
+        }
+        return const SizedBox.shrink();
+      },
     );
   }
 }

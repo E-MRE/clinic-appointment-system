@@ -9,7 +9,6 @@ final class _AuthFormHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = context.screenSize;
     final centered = size.isTablet && kind.isSignIn;
-    final heading = _AuthHeading(kind: kind, centered: centered);
     if (size.isTablet && kind.isRegistration) {
       return Row(
         spacing: AppSizes.s16,
@@ -18,10 +17,12 @@ final class _AuthFormHeader extends StatelessWidget {
             width: AppSizes.s48,
             excludeFromSemantics: true,
           ),
-          Expanded(child: heading),
+          Expanded(
+            child: _AuthHeading(kind: kind, centered: centered),
+          ),
         ],
       );
     }
-    return heading;
+    return _AuthHeading(kind: kind, centered: centered);
   }
 }

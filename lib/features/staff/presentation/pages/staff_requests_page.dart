@@ -35,7 +35,6 @@ import 'package:clinic_appointment_system/features/staff/presentation/enums/staf
 import 'package:clinic_appointment_system/features/staff/presentation/extensions/staff_appointment_action_context.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/extensions/staff_appointment_presentation.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/extensions/staff_request_sort_ordering.dart';
-import 'package:clinic_appointment_system/features/staff/presentation/extensions/staff_requests_header_subtitle.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/models/staff_patient_history.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/models/staff_rule_check_factory.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/models/staff_workspace.dart';
@@ -50,6 +49,8 @@ part 'staff_request_card.dart';
 part 'staff_requests_body.dart';
 part 'staff_requests_desktop_layout.dart';
 part 'staff_requests_detail_actions.dart';
+part 'staff_requests_detail_approve_label.dart';
+part 'staff_requests_detail_reject_button.dart';
 part 'staff_requests_detail_panel.dart';
 part 'staff_requests_detail_patient_history.dart';
 part 'staff_requests_detail_rule_checks.dart';
@@ -78,7 +79,8 @@ final class StaffRequestsPage extends StatelessWidget {
         ),
         BlocProvider<StaffRequestSelectionCubit>(
           create: (context) {
-            final cubit = StaffRequestSelectionCubit();
+            final cubit = AppDependency.injector
+                .get<StaffRequestSelectionCubit>();
             final pending = context
                 .read<StaffAppointmentsCubit>()
                 .state

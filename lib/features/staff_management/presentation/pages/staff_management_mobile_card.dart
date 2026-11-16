@@ -13,7 +13,7 @@ final class _StaffManagementMobileCard extends StatelessWidget {
       child: AppListTile(
         leading: AppAvatar(initials: staff.initials),
         title: staff.fullName,
-        subtitle: context.staffOverview.subtitle(staff),
+        subtitle: context.watch<StaffListOverviewCubit>().state.subtitle(staff),
         trailing: IconButton(
           onPressed: () => context.openStaffAvailability(staff),
           tooltip: LocaleKeys.staff_availabilityTooltip.tr(),

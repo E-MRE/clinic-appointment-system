@@ -8,7 +8,11 @@ final class _StaffManagementAddButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppAddButton(
       label: LocaleKeys.staff_addTitle.tr(),
-      onPressed: context.staffOverview.branchCount == 0
+      onPressed:
+          context.select<StaffListOverviewCubit, int>(
+                (cubit) => cubit.state.branchCount,
+              ) ==
+              0
           ? null
           : context.openStaffCreate,
     );

@@ -5,10 +5,13 @@ final class _StaffAppointmentDialogContent extends StatelessWidget {
   const _StaffAppointmentDialogContent({
     required this.appointment,
     required this.clock,
+    required this.actionOfferPolicy,
   });
 
   final Appointment appointment;
   final Clock clock;
+
+  final StaffAppointmentActionOfferPolicy actionOfferPolicy;
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +21,7 @@ final class _StaffAppointmentDialogContent extends StatelessWidget {
     final reason = appointment.statusReason;
 
     final offers = StaffAppointmentActionOffers(
+      policy: actionOfferPolicy,
       appointment: appointment,
       actor: context.staffAppointmentActor,
       at: clock.now(),

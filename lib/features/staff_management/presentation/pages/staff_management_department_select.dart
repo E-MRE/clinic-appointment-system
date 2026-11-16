@@ -6,7 +6,7 @@ final class _StaffManagementDepartmentSelect extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final overview = context.staffOverview;
+    final overview = context.watch<StaffListOverviewCubit>().state;
     final selected = context.watch<StaffFilterCubit>().state.departmentName;
     return AppSelectField<String?>(
       label: LocaleKeys.staff_department.tr(),

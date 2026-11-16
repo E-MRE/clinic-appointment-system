@@ -6,7 +6,11 @@ final class _StaffManagementPageShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hasBranches = context.staffOverview.branchCount > 0;
+    final hasBranches =
+        context.select<StaffListOverviewCubit, int>(
+          (cubit) => cubit.state.branchCount,
+        ) >
+        0;
     return AppScaffold(
       floatingActionButton: context.screenSize.isMobile && hasBranches
           ? AppAddFab(

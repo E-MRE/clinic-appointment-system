@@ -1,8 +1,8 @@
 import 'package:clinic_appointment_system/features/appointments/domain/actors/appointment_actor.dart';
 import 'package:clinic_appointment_system/features/appointments/domain/entities/appointment.dart';
-import 'package:clinic_appointment_system/features/staff/presentation/extensions/appointment_action_offer.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/extensions/appointment_status_staff_actions.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/models/staff_appointment_action_offer.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/services/staff_appointment_action_offer_policy.dart';
 
 /// The actions offered to a staff member for one appointment at one instant.
 /// Each candidate is tried on the domain without side effects: allowed
@@ -12,6 +12,7 @@ final class StaffAppointmentActionOffers {
   /// Classifies the candidate actions of [appointment] for [actor] at [at];
   /// nothing is offered without an actor.
   factory StaffAppointmentActionOffers({
+    required StaffAppointmentActionOfferPolicy policy,
     required Appointment appointment,
     required AppointmentActor? actor,
     required DateTime at,
@@ -19,7 +20,7 @@ final class StaffAppointmentActionOffers {
     if (actor == null) return StaffAppointmentActionOffers._(const []);
     final offers = <StaffAppointmentActionOffer>[];
     for (final action in appointment.status.staffActions) {
-      final offer = action.offerFor(appointment, actor: actor, at: at);
+      final offer = policy.offerFor(action, appointment, actor: actor, at: at);
       if (offer != null) offers.add(offer);
     }
     return StaffAppointmentActionOffers._(offers);

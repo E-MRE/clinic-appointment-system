@@ -15,9 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-part 'branch_detail_content.dart';
 part 'branch_detail_body.dart';
-part 'branch_detail_sections.dart';
 
 /// Mobile branch detail sharing the inline hours and department sections.
 final class BranchDetailPage extends StatefulWidget {
@@ -44,7 +42,21 @@ final class _BranchDetailPageState extends State<BranchDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(child: _BranchDetailContent(branchId: widget.branchId));
+    return AppScaffold(child: _buildContent(context));
+  }
+
+  /// Resolves the selected branch and shows its details.
+  Widget _buildContent(BuildContext context) {
+    return InstitutionListView<Branch, BranchListCubit>(
+      emptyTitle: LocaleKeys.institution_notFound.tr(),
+      emptyMessage: LocaleKeys.institution_notFoundDescription.tr(),
+      onRetry: context.read<BranchListCubit>().retry,
+      loadedBuilder: (items) {
+        final matches = items.where((item) => item.id == widget.branchId);
+        if (matches.isEmpty) return const InstitutionNotFound();
+        return _BranchDetailBody(branch: matches.first);
+      },
+    );
   }
 
   void _selectBranchAfterFrame() {

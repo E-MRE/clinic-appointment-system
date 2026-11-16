@@ -6,7 +6,7 @@ final class _StaffManagementLoaded extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final overview = context.staffOverview;
+    final overview = context.watch<StaffListOverviewCubit>().state;
     if (overview.staff.isEmpty) return const _StaffManagementEmpty();
     final filter = context.watch<StaffFilterCubit>().state;
     final staff = overview.filtered(filter);

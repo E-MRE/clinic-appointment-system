@@ -23,15 +23,39 @@ final class _AuthRequestFormState<C extends AuthRequestCubit>
         BlocListener<AuthCubit, AuthState>(listener: _onSessionChanged),
         BlocListener<C, AuthRequestState>(listener: _onRequestChanged),
       ],
-      child: _AuthRequestView<C>(
-        kind: _kind,
-        formKey: _formKey,
-        fullName: _fullName,
-        email: _email,
-        password: _password,
-        confirmation: _confirmation,
-        onSubmit: _submit,
-        busyStateChanged: _busyStateChanged,
+      child: BlocBuilder<C, AuthRequestState>(
+        buildWhen: _busyStateChanged,
+        builder: (context, state) {
+          return _buildAuthPage(context, state);
+        },
+      ),
+    );
+  }
+
+  /// Builds the responsive form while request state controls its availability.
+  Widget _buildAuthPage(BuildContext context, AuthRequestState state) {
+    final enabled = !_kind.isBusy(state);
+    return _AuthPageLayout(
+      kind: _kind,
+      canNavigate: enabled,
+      child: _buildForm(enabled),
+    );
+  }
+
+  /// Hosts the form content with its validation and autofill scopes.
+  Widget _buildForm(bool enabled) {
+    return Form(
+      key: _formKey,
+      child: AutofillGroup(
+        child: _AuthFormContent<C>(
+          kind: _kind,
+          fullName: _fullName,
+          email: _email,
+          password: _password,
+          confirmation: _confirmation,
+          enabled: enabled,
+          onSubmit: _submit,
+        ),
       ),
     );
   }

@@ -10,8 +10,6 @@ final class _AdminAppointmentsTableHeader extends StatelessWidget {
   final AdminAppointmentsLoaded state;
   final TextEditingController searchController;
 
-  int get _noAppointments => 0;
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -20,37 +18,23 @@ final class _AdminAppointmentsTableHeader extends StatelessWidget {
           ? Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               spacing: AppSizes.s12,
-              children: [_buildSummary(), _searchField(context)],
+              children: [
+                _AdminAppointmentsTableHeaderSummary(state: state),
+                _searchField(context),
+              ],
             )
           : Row(
               spacing: AppSizes.s20,
               children: [
-                Expanded(child: _buildSummary()),
+                Expanded(
+                  child: _AdminAppointmentsTableHeaderSummary(state: state),
+                ),
                 SizedBox(
                   width: AppSizes.progressWidthMd,
                   child: _searchField(context),
                 ),
               ],
             ),
-    );
-  }
-
-  Widget _buildSummary() {
-    return Wrap(
-      spacing: AppSizes.s8,
-      runSpacing: AppSizes.s4,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      children: [
-        AppText.bodyStrong(
-          '${state.filteredAppointments.length} ${LocaleKeys.admin_appointmentsPage_appointmentCount.translate()}',
-        ),
-        for (final status in AdminStatusFilter.values)
-          if ((state.statusCounts[status] ?? _noAppointments) > _noAppointments)
-            AppText.body(
-              '· ${state.statusCounts[status]} ${status.label.toLowerCase()}',
-              tone: TextTone.muted,
-            ),
-      ],
     );
   }
 

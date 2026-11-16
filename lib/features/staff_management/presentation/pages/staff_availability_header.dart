@@ -18,10 +18,10 @@ final class _StaffAvailabilityHeader extends StatelessWidget {
         Expanded(
           child: PageHeader(
             title: LocaleKeys.availability_title.tr(),
-            subtitle: context
-                .watch<StaffDepartmentListCubit>()
-                .state
-                .subtitleFor(staff),
+            subtitle: context.watch<StaffDepartmentListCubit>().subtitleFor(
+              staff,
+              roleLabel: staff.role.staffLabel,
+            ),
           ),
         ),
       ],

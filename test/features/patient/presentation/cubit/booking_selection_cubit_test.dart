@@ -3,6 +3,7 @@ import 'package:clinic_appointment_system/features/availability/domain/services/
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/booking_selection_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/models/staff_week_schedule.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/models/staff_week_schedule_request.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/services/patient_booking_staff_selector.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/services/staff_week_schedule_factory.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/services/staff_week_schedule_reader.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -23,6 +24,7 @@ void main() {
     () => cubit = BookingSelectionCubit(
       FixedClock(fixtures.now),
       const StaffWeekScheduleReader(),
+      const PatientBookingStaffSelector(),
     ),
   );
   tearDown(() => cubit.close());
@@ -148,9 +150,7 @@ void main() {
   test('search and department limit filter bookable services', () {
     final catalog = fixtures.catalog;
     List<String> ids() {
-      return [
-        for (final service in cubit.state.servicesIn(catalog)) service.id,
-      ];
+      return [for (final service in cubit.servicesIn(catalog)) service.id];
     }
 
     cubit.limitToDepartment('cardio');
@@ -163,5 +163,21 @@ void main() {
     expect(ids(), isEmpty);
     cubit.search('dahiliye');
     expect(ids(), ['internal-exam']);
+  });
+
+  test('catalog queries share the injected staff selector', () {
+    final catalog = fixtures.catalog;
+    final service = catalog.serviceById('cardio-exam');
+    if (service == null) fail('Fixture service is missing.');
+
+    expect(cubit.staffFor(catalog, service).map((member) => member.id), [
+      'ayse',
+    ]);
+    expect(cubit.servicesIn(catalog).map((item) => item.id), [
+      'xray',
+      'internal-exam',
+      'cardio-exam',
+      'lipid',
+    ]);
   });
 }

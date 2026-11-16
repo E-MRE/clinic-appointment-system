@@ -6,6 +6,9 @@ final class _AvailabilityTimelineBar extends StatelessWidget {
   final AvailabilityWindow window;
   final AvailabilityTimelineBarVariant variant;
 
+  /// Keeps range text on a single timeline line.
+  int get _labelLines => 1;
+
   @override
   Widget build(BuildContext context) {
     return Semantics(
@@ -20,8 +23,8 @@ final class _AvailabilityTimelineBar extends StatelessWidget {
           color: variant.background(context.colorScheme),
           borderRadius: const AppRadius.small(),
         ),
-        child: _AvailabilityTimelineBarOutline(
-          variant: variant,
+        child: _buildOutline(
+          context,
           child: Center(
             child: AppText.caption(
               window.range.label,
@@ -36,6 +39,17 @@ final class _AvailabilityTimelineBar extends StatelessWidget {
     );
   }
 
-  /// Keeps range text on a single timeline line.
-  int get _labelLines => 1;
+  /// Adds the pending outline when this range needs one.
+  Widget _buildOutline(BuildContext context, {required Widget child}) {
+    final border = variant.border(context.colorScheme);
+    if (border != null) {
+      return AppDashedBorder(
+        color: border.color,
+        strokeWidth: border.width,
+        radius: const AppRadius.small(),
+        child: child,
+      );
+    }
+    return child;
+  }
 }

@@ -6,11 +6,14 @@ import 'package:clinic_appointment_system/features/appointments/domain/usecases/
 import 'package:clinic_appointment_system/features/institution/domain/enums/institution_error_code.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_appointments_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_appointments_state.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/services/patient_appointment_cancellation_policy.dart';
+import 'package:clinic_appointment_system/features/patient/presentation/services/patient_appointment_entry_formatter.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/services/patient_appointments_overview_factory.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/services/patient_booking_catalog_calculator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../core/time/support/fixed_clock.dart';
+import '../../../../support/localization_test_app.dart';
 import '../doubles/patient_appointment_repository.dart';
 import '../doubles/patient_fixtures.dart';
 
@@ -26,7 +29,11 @@ void main() {
     cubit = PatientAppointmentsCubit(
       WatchPatientAppointmentsUseCase(repository),
       FixedClock(fixtures.now),
-      const PatientAppointmentsOverviewFactory(AppointmentStartComparator()),
+      const PatientAppointmentsOverviewFactory(
+        AppointmentStartComparator(),
+        PatientAppointmentCancellationPolicy(),
+        PatientAppointmentEntryFormatter(),
+      ),
       const PatientBookingCatalogCalculator(),
     );
   });
@@ -36,13 +43,16 @@ void main() {
     await repository.events.close();
   });
 
-  test('watches only the patient and emits each new list', () async {
+  testWidgets('watches only the patient and emits each new list', (
+    tester,
+  ) async {
+    await loadTestTranslations(tester);
     cubit.watch('elif');
     expect(cubit.state, isA<PatientAppointmentsLoading>());
     expect(repository.watchedPatients, ['elif']);
 
     repository.emit([fixtures.lipid]);
-    await flush();
+    await tester.pump();
     expect(cubit.state, isA<PatientAppointmentsLoading>());
     cubit.updateCatalog(fixtures.catalog);
     final first = cubit.state;
@@ -61,7 +71,7 @@ void main() {
       10,
     );
     repository.emit([approved]);
-    await flush();
+    await tester.pump();
     final second = cubit.state as PatientAppointmentsLoaded;
     expect(second.appointments.single.status, AppointmentStatus.approved);
   });

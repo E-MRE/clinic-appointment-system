@@ -28,10 +28,7 @@ final class _PatientBookSlotGroup extends StatelessWidget {
           ),
           children: [
             for (final slot in group.slots)
-              _PatientBookSlotCell(
-                slot: slot,
-                isSelected: slot.range == selectedSlot,
-              ),
+              _PatientBookSlotCell(slot: slot, selectedSlot: selectedSlot),
           ],
         ),
       ],

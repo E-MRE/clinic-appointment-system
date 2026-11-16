@@ -29,12 +29,16 @@ import 'package:clinic_appointment_system/features/staff/presentation/cubit/appo
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/appointment_staff_cancel_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_appointments_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_calendar_cubit.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_request_selection_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/cubit/staff_workspace_cubit.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/models/staff_calendar_layout_factory.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/pages/staff_calendar_page.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/pages/staff_requests_page.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/services/staff_appointment_action_offer_policy.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/services/staff_patient_history_calculator.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/services/staff_patient_history_formatter.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/services/staff_request_header_formatter.dart';
+import 'package:clinic_appointment_system/features/staff/presentation/services/staff_request_sorter.dart';
 import 'package:clinic_appointment_system/features/staff/presentation/widgets/staff_appointment_dialog.dart';
 import 'package:clinic_appointment_system/features/users/domain/entities/doctor.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -126,6 +130,15 @@ final class StaffRequestsPageHarness {
     AppDependency.injector.registerSingleton<StaffPatientHistoryFormatter>(
       const StaffPatientHistoryFormatter(),
     );
+    AppDependency.injector.registerSingleton<StaffAppointmentActionOfferPolicy>(
+      const StaffAppointmentActionOfferPolicy(),
+    );
+    AppDependency.injector.registerSingleton<StaffRequestHeaderFormatter>(
+      const StaffRequestHeaderFormatter(),
+    );
+    AppDependency.injector.registerSingleton<StaffRequestSorter>(
+      const StaffRequestSorter(),
+    );
     AppDependency.injector.registerSingleton<StaffCalendarLayoutFactory>(
       StaffCalendarLayoutFactory(
         AppDependency.injector.get<AppointmentStartComparator>(),
@@ -137,6 +150,12 @@ final class StaffRequestsPageHarness {
         clock,
         AppDependency.injector.get<AppointmentStartComparator>(),
         AppDependency.injector.get<StaffPatientHistoryCalculator>(),
+        AppDependency.injector.get<StaffRequestHeaderFormatter>(),
+      ),
+    );
+    AppDependency.injector.registerFactory<StaffRequestSelectionCubit>(
+      () => StaffRequestSelectionCubit(
+        AppDependency.injector.get<StaffRequestSorter>(),
       ),
     );
     AppDependency.injector.registerFactory<AppointmentApproveCubit>(
@@ -267,6 +286,8 @@ final class StaffRequestsPageHarness {
         ],
         child: StaffCalendarPage(
           clock: clock,
+          actionOfferPolicy: AppDependency.injector
+              .get<StaffAppointmentActionOfferPolicy>(),
           onAppointmentTap: onAppointmentTap,
         ),
       ),
@@ -299,7 +320,13 @@ final class StaffRequestsPageHarness {
           body: Builder(
             builder: (context) => TextButton(
               onPressed: () => unawaited(
-                StaffAppointmentDialog.show(context, appointment, clock: clock),
+                StaffAppointmentDialog.show(
+                  context,
+                  appointment,
+                  clock: clock,
+                  actionOfferPolicy: AppDependency.injector
+                      .get<StaffAppointmentActionOfferPolicy>(),
+                ),
               ),
               child: const Text('Open appointment'),
             ),

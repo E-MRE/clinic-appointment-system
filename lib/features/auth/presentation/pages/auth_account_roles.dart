@@ -8,19 +8,38 @@ final class _AuthAccountRoles extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _AuthRoleItem(
+        _buildRoleItem(
+          context,
           textKey: LocaleKeys.auth_patientDescription,
           asset: Assets.images.auth.patient,
         ),
-        _AuthRoleItem(
+        _buildRoleItem(
+          context,
           textKey: LocaleKeys.auth_staffDescription,
           asset: Assets.images.auth.staff,
         ),
-        _AuthRoleItem(
+        _buildRoleItem(
+          context,
           textKey: LocaleKeys.auth_adminDescription,
           asset: Assets.images.auth.admin,
         ),
       ],
+    );
+  }
+
+  /// Builds a role row from its description and SVG asset.
+  Widget _buildRoleItem(
+    BuildContext context, {
+    required String textKey,
+    required SvgGenImage asset,
+  }) {
+    return _AuthBrandItem(
+      textKey: textKey,
+      leading: SquareSvgIcon(
+        asset: asset,
+        size: AppSizes.retryIcon,
+        color: context.colorScheme.onPrimary,
+      ),
     );
   }
 }

@@ -214,11 +214,18 @@ final class FirestoreDemoDataRepository implements DemoDataRepository {
     await _deleteReferences(references);
   }
 
+  /// Reads the path: on web, `parent` of a top-level collection throws
+  /// instead of returning null.
   bool _isBookingProjection(DocumentReference<Map<String, dynamic>> reference) {
-    final collection = reference.parent.parent?.parent.id;
+    final segments = reference.path.split('/');
+    if (segments.length != _projectionPathSegmentCount) return false;
+    final collection = segments.first;
     return collection == FirestoreConstants.staffBookings ||
         collection == FirestoreConstants.patientBookings;
   }
+
+  /// value = 4
+  int get _projectionPathSegmentCount => 4;
 
   Future<void> _deleteDocuments(
     Query<Map<String, dynamic>> query, {

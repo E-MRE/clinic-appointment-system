@@ -34,7 +34,6 @@ import 'package:clinic_appointment_system/features/patient/presentation/cubit/pa
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_appointments_state.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/cubit/patient_appointments_tab_cubit.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/enums/patient_appointments_tab.dart';
-import 'package:clinic_appointment_system/features/patient/presentation/extensions/patient_appointment_entry_presentation.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/extensions/patient_appointments_overview_presentation.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/extensions/patient_appointments_tab_selection.dart';
 import 'package:clinic_appointment_system/features/patient/presentation/extensions/patient_department_summary_presentation.dart';
@@ -49,31 +48,33 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 part 'patient_appointments_cancel_confirm_dialog.dart';
-part 'patient_appointments_cancel_error.dart';
 part 'patient_appointments_cancel_request.dart';
 part 'patient_appointments_content.dart';
+part 'patient_appointments_content_body.dart';
+part 'patient_appointments_content_desktop_columns.dart';
 part 'patient_appointments_date_tile.dart';
-part 'patient_appointments_department_row.dart';
 part 'patient_appointments_departments_card.dart';
+part 'patient_appointments_department_row.dart';
 part 'patient_appointments_details_dialog.dart';
 part 'patient_appointments_details_content.dart';
+part 'patient_appointments_details_dialog_content.dart';
 part 'patient_appointments_dialog_actions.dart';
 part 'patient_appointments_failure.dart';
 part 'patient_appointments_list_card.dart';
-part 'patient_appointments_next_actions.dart';
 part 'patient_appointments_next_cancel_button.dart';
 part 'patient_appointments_next_details_button.dart';
 part 'patient_appointments_next_card.dart';
 part 'patient_appointments_next_card_body.dart';
+part 'patient_appointments_next_card_body_mobile.dart';
+part 'patient_appointments_next_card_actions.dart';
 part 'patient_appointments_next_summary.dart';
-part 'patient_appointments_note_row.dart';
 part 'patient_appointments_notes_card.dart';
-part 'patient_appointments_primary_column.dart';
-part 'patient_appointments_secondary_column.dart';
+part 'patient_appointments_note_row.dart';
 part 'patient_appointments_service_cell.dart';
 part 'patient_appointments_table.dart';
 part 'patient_appointments_tabs.dart';
 part 'patient_appointments_view.dart';
+part 'patient_appointments_view_child.dart';
 
 /// The signed-in patient's appointments, preparation notes and departments.
 final class PatientAppointmentsPage extends StatelessWidget {

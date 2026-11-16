@@ -6,7 +6,7 @@ final class _StaffManagementRoleChips extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final overview = context.staffOverview;
+    final overview = context.watch<StaffListOverviewCubit>().state;
     final filter = context.watch<StaffFilterCubit>().state;
     return AppFilterChips<StaffRoleFilter>(
       selected: filter.role,

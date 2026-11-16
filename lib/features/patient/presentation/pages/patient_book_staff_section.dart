@@ -24,15 +24,34 @@ final class _PatientBookStaffSection extends StatelessWidget {
                 tone: TextTone.muted,
               )
             else
-              for (final staff in catalog.staffFor(service))
-                _PatientBookStaffCard(
-                  staff: staff,
-                  catalog: catalog,
+              for (final staff
+                  in context.read<BookingSelectionCubit>().staffFor(
+                    catalog,
+                    service,
+                  ))
+                _buildStaffCard(
+                  context,
+                  staff,
                   isSelected: staff.id == selection.staff?.id,
                 ),
           ],
         );
       },
+    );
+  }
+
+  /// Builds a staff card with the member's department and branch.
+  _PatientBookOptionCard _buildStaffCard(
+    BuildContext context,
+    Staff staff, {
+    required bool isSelected,
+  }) {
+    return _PatientBookOptionCard(
+      leading: AppAvatar(initials: staff.initials),
+      title: staff.fullName,
+      captions: [staff.bookingCaption(catalog)],
+      isSelected: isSelected,
+      onTap: () => context.read<BookingSelectionCubit>().selectStaff(staff),
     );
   }
 }

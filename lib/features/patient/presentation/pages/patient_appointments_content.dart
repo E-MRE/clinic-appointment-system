@@ -21,42 +21,10 @@ final class _PatientAppointmentsContent extends StatelessWidget {
           constraints: const BoxConstraints(
             maxWidth: AppSizes.patientContentMaxWidth,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            spacing: AppSizes.s24,
-            children: [
-              PageHeader(
-                title: LocaleKeys.patient_appointments_title.translate(),
-                subtitle: overview.greeting(firstName),
-              ),
-              if (context.screenSize.isDesktop)
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: AppSizes.s24,
-                  children: [
-                    Expanded(
-                      flex: PatientLayoutConstants.appointmentsPrimaryFlex,
-                      child: _PatientAppointmentsPrimaryColumn(
-                        overview: overview,
-                      ),
-                    ),
-                    Expanded(
-                      flex: PatientLayoutConstants.appointmentsSecondaryFlex,
-                      child: _PatientAppointmentsSecondaryColumn(
-                        overview: overview,
-                        departments: bookableDepartments,
-                      ),
-                    ),
-                  ],
-                )
-              else ...[
-                _PatientAppointmentsPrimaryColumn(overview: overview),
-                _PatientAppointmentsSecondaryColumn(
-                  overview: overview,
-                  departments: bookableDepartments,
-                ),
-              ],
-            ],
+          child: _PatientAppointmentsContentBody(
+            firstName: firstName,
+            overview: overview,
+            bookableDepartments: bookableDepartments,
           ),
         ),
       ),

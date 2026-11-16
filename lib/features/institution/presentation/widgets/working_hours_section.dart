@@ -10,8 +10,6 @@ import 'package:clinic_appointment_system/features/institution/presentation/widg
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-part 'working_hours_section_header.dart';
-
 /// Read-only branch hours used by both detail and inline panels.
 final class WorkingHoursSection extends StatelessWidget {
   const WorkingHoursSection({
@@ -29,12 +27,27 @@ final class WorkingHoursSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _WorkingHoursSectionHeader(onEdit: onEdit),
+          _buildHeader(),
           const EmptySize.s12Height(),
           for (final day in Weekday.values)
             AppListTile(title: day.label, subtitle: hours.rangeLabel(day)),
         ],
       ),
+    );
+  }
+
+  /// Builds the heading and edit action for read-only hours.
+  Widget _buildHeader() {
+    return Row(
+      children: [
+        Expanded(
+          child: AppText.sectionTitle(LocaleKeys.institution_workingHours.tr()),
+        ),
+        TextButton(
+          onPressed: onEdit,
+          child: AppText.label(LocaleKeys.institution_editWorkingHours.tr()),
+        ),
+      ],
     );
   }
 }
